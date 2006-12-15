@@ -1,0 +1,78 @@
+package icecube.daq.payload;
+import java.io.IOException;
+
+import icecube.daq.payload.splicer.Payload;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * This object is a PayloadDestination that does nothing. It does know how
+ * to close, and can therefore be used by the PayloadDestinationOutputEngine.
+ *
+ * @author pat
+ */
+public class SinkPayloadDestination extends ByteBufferPayloadDestination   {
+
+    /**
+     * Logger for this class.
+     */
+    private static final Log log = LogFactory.getLog(SinkPayloadDestination.class);
+
+    /**
+     * Constructor.
+     * @param tReceiver IByteBufferReceiver the object which will recieve the ByteBuffer
+     *  which has been created by subsiquent calls to the PayloadDestination.
+     *
+     */
+    public SinkPayloadDestination(IByteBufferReceiver tReceiver) {
+        super(tReceiver, null);
+    }
+
+    /**
+     * This method does nothing.
+     *
+     * @param tPayload ...... Payload to which to write to this destination
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     *
+     * @throws IOException if an error occurs during the process
+     */
+    public int writePayload(Payload tPayload) throws IOException {
+        return writePayload(false,tPayload);
+    }
+
+    /**
+     * This method does nothing.
+     *
+     * @param bWriteLoaded ...... boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tPayload ...... Payload to which to write to this destination
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     *
+     * @throws IOException if an error occurs during the process
+     */
+    public int writePayload(boolean bWriteLoaded, Payload tPayload) throws IOException {
+        return 0;
+    }
+
+    /**
+     * Closes this channel.
+     *
+     * <p> After a channel is closed, any further attempt to invoke I/O
+     * operations upon it will cause a {@link java.nio.channels.ClosedChannelException} to be
+     * thrown.
+     *
+     * <p> If this channel is already closed then invoking this method has no
+     * effect.
+     *
+     * <p> This method may be invoked at any time.  If some other thread has
+     * already invoked it, however, then another invocation will block until
+     * the first invocation is complete, after which it will return without
+     * effect. </p>
+     *
+     * @throws  IOException  If an I/O error occurs
+     */
+    public void close() throws IOException {
+        mtByteBufferReciever.destinationClosed();
+        mtByteBufferReciever = null;
+    }
+
+}
