@@ -1,6 +1,5 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.dor.TimeCalibRecord;
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
