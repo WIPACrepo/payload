@@ -20,8 +20,12 @@ import icecube.daq.trigger.ITriggerRequestPayload;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import java.nio.ByteBuffer;
+
+import java.nio.channels.FileChannel;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -1394,6 +1398,44 @@ public class DebugDumper
     /** XXX This should be in IDomHubPacket */
     private static final int STRINGHUB_ENGHIT_REC = 601;
 
+    private static final void dumpFile(FileInputStream inStream)
+    {
+        FileChannel inChan = inStream.getChannel();
+
+        ByteBuffer lenBuf = ByteBuffer.allocate(4);
+        while (true) {
+            lenBuf.clear();
+
+            int numRead;
+            try {
+                numRead = inChan.read(lenBuf);
+            } catch (IOException ioe) {
+                System.err.println("Read failed");
+                ioe.printStackTrace();
+                break;
+            }
+
+            if (numRead < 0) {
+                break;
+            }
+
+            int pLen = lenBuf.getInt(0);
+
+            ByteBuffer payBuf = ByteBuffer.allocate(pLen);
+            payBuf.putInt(pLen);
+
+            try {
+                numRead = inChan.read(payBuf);
+            } catch (IOException ioe) {
+                System.err.println("Read failed");
+                ioe.printStackTrace();
+                break;
+            }
+
+            System.out.println(toString(payBuf));
+        }
+    }
+
     private static void formatDOMHitPacket(StringBuffer buf,
                                            DomHitEngineeringFormatPayload rec,
                                            boolean includeTitle,
@@ -2534,5 +2576,31 @@ public class DebugDumper
         StringBuffer buf = new StringBuffer();
         formatTriggerRequest(buf, trigReq, false, NO_INDENT);
         return buf.toString();
+    }
+
+    public static void main(String[] args)
+    {
+        for (int i = 0; i < args.length; i++) {
+            FileInputStream inStream;
+            try {
+                inStream = new FileInputStream(args[i]);
+            } catch (FileNotFoundException fnfe) {
+                System.err.println("Could not find \"" + args[i] + "\"");
+                continue;
+            } catch (IOException ioe) {
+                System.err.println("Could not open \"" + args[i] + "\"");
+                continue;
+            }
+
+            try {
+                dumpFile(inStream);
+            } finally {
+                try {
+                    inStream.close();
+                } catch (IOException ioe) {
+                    // ignore errors on close
+                }
+            }
+        }
     }
 }
