@@ -7,10 +7,12 @@ import java.nio.ByteOrder;
 
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.splicer.Spliceable;
+import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
+import icecube.daq.trigger.impl.DOMID8B;
 import icecube.util.Poolable;
 import java.nio.ByteBuffer;
 import icecube.misc.hex;
@@ -127,6 +129,26 @@ public class DomHitEngineeringFormatPayload extends Payload {
         return PayloadRegistry.PAYLOAD_ID_ENGFORMAT_HIT;
     }
     //-IPayload implementation (end)
+
+    /**
+     * Get hit time.
+     *
+     * @return hit time in UTC
+     */
+    public IUTCTime getHitTimeUTC()
+    {
+        return super.mttime;
+    }
+
+    /**
+     * Get ID of DOM which detected this hit.
+     *
+     * @return DOM ID
+     */
+    public IDOMID getDOMID()
+    {
+        return new DOMID8B(mlDomId);
+    }
 
     //-Payload abstract method implementation (start)
     /**
