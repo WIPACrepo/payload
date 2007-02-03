@@ -7,6 +7,7 @@ import java.util.Iterator;
 import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.payload.IPayload;
+import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.impl.TimeCalibrationPayload;
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IByteBufferCache;
@@ -72,7 +73,8 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
      * NOTE: This uses the internal IByteBufferCache to create the new ByteBuffer to back the payload.
      *
      */
-    public Payload createPayload(IDOMID tDomId, int iDomHubRecOffset, ByteBuffer tDomHubRecBuffer) throws IOException, DataFormatException {
+    public Payload createPayload(IDOMID tDomId, int iDomHubRecOffset, ByteBuffer tDomHubRecBuffer, IUTCTime tTime) 
+		throws IOException {
         ByteBuffer tNewPayloadBuffer = null;
         Payload tNewPayload = null;
         //-get the cache for use in creating the new buffer
@@ -84,7 +86,8 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
         //-if the new buffer was created successfully, then use the factory method to create a payload from it.
         try {
             //-create a new buffer that is formatted as a new payload
-            tNewPayloadBuffer = createFormattedBufferFromDomHubRecord( tCache, tDomId, iDomHubRecOffset, tDomHubRecBuffer);
+            tNewPayloadBuffer = createFormattedBufferFromDomHubRecord(tCache, tDomId, iDomHubRecOffset, 
+																	  tDomHubRecBuffer, tTime);
             if ( tNewPayloadBuffer != null ) {
                 tNewPayload = createPayload(0, tNewPayloadBuffer);
             }
@@ -109,22 +112,21 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
      * @param   tReferenceBuffer - ByteBuffer which contains the reference code
      * @return ByteBuffer a new buffer created by the IByteBufferCache
      */
-    public static ByteBuffer createFormattedBufferFromDomHubRecord(IByteBufferCache tCache, IDOMID tDomId, int iOffset, ByteBuffer tReferenceBuffer) throws IOException {
+    public static ByteBuffer createFormattedBufferFromDomHubRecord(IByteBufferCache tCache, 
+																   IDOMID tDomId, int iOffset, 
+																   ByteBuffer tReferenceBuffer,
+																   IUTCTime tTime) 
+		throws IOException {
+
         long lutctime = 0L;
-        //-pull out the utc time from this record, to make sure there is no error in the formatting.
-        try {
-            //-pull out the utc time including validation
-            //-the reference buffer contains the domhub-format record, which is just past the TimeCalibrationRecord
-            lutctime = GpsRecord.read_UTCTime_10th_ns(iOffset + TimeCalibrationRecord.SIZE_TOTAL, tReferenceBuffer);
-            if (lutctime <= 0L) {
-                mtLog.error("TCAL: failed-tcal domid="+tDomId.getDomIDAsString()+" domclock="+lutctime);
-            }
-            //-TODO: remove this debugging code.
-            // System.out.println("DOMID="+tDomId.getDomIDAsString()+" GPS_Seconds="+lutctime);
-        } catch (DataFormatException tDataFormatException) {
-            mtLog.error("Cannot Create TCal Record, syncgps record invalid.");
-            return null;
-        }
+
+		// feb-03-2007 kael-dylan-hanson: don't use GPS times - they are not necessarily
+		// representative of the wall clock time of the TCAL event
+		lutctime = tTime.getUTCTimeAsLong();
+		if (lutctime <= 0L) {
+			mtLog.error("TCAL: failed-tcal domid="+tDomId.getDomIDAsString()+" domclock="+lutctime);
+		}
+
         //-allocate the new Payload buffer for the new Payload
         ByteBuffer tNewBuffer = tCache.acquireBuffer(TimeCalibrationPayload.SIZE_TOTAL);
         if (tNewBuffer != null) {
