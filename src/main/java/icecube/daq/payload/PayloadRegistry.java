@@ -14,7 +14,10 @@ import icecube.daq.trigger.impl.HitPayloadFactory;
 import icecube.daq.trigger.impl.ReadoutRequestPayloadFactory;
 import icecube.daq.trigger.impl.TriggerRequestPayloadFactory;
 import icecube.daq.trigger.impl.BeaconPayloadFactory;
-
+import icecube.daq.payload.impl.DomHitEngineeringFormatPayloadFactory;
+import icecube.daq.payload.impl.SuperNovaPayloadFactory;
+import icecube.daq.payload.impl.TimeCalibrationPayloadFactory;
+import icecube.daq.payload.impl.MonitorPayloadFactory;
 
 /**
  * This object is a singleton object which holds the constants
@@ -170,12 +173,11 @@ public final class PayloadRegistry {
         mt_PayloadFactories.setElementAt( null                                            , PAYLOAD_ID_UNKNOWN                );
         mt_PayloadFactories.setElementAt( new  HitPayloadFactory()                        , PAYLOAD_ID_SIMPLE_HIT             );
         mt_PayloadFactories.setElementAt( null                                            , PAYLOAD_ID_MULTI_HIT              );
- // TODO: This are commented out for now
- //       mt_PayloadFactories.setElementAt( new  DomHitEngineeringFormatPayloadFactory()    , PAYLOAD_ID_ENGFORMAT_HIT          );
- //       mt_PayloadFactories.setElementAt( new  TimeCalibrationPayloadFactory()            , PAYLOAD_ID_TCAL                   );
- //       mt_PayloadFactories.setElementAt( new  MonitorPayloadFactory()                    , PAYLOAD_ID_MON                    );
- //       mt_PayloadFactories.setElementAt( new  MuxDomHitEngineeringFormatPayloadFactory() , PAYLOAD_ID_MUX_ENGFORMAT_HIT      );
- //       mt_PayloadFactories.setElementAt( new  SuperNovaPayloadFactory()                  , PAYLOAD_ID_SN                     );
+        mt_PayloadFactories.setElementAt( new  DomHitEngineeringFormatPayloadFactory()    , PAYLOAD_ID_ENGFORMAT_HIT          );
+        mt_PayloadFactories.setElementAt( new  TimeCalibrationPayloadFactory()            , PAYLOAD_ID_TCAL                   );
+        mt_PayloadFactories.setElementAt( new  MonitorPayloadFactory()                    , PAYLOAD_ID_MON                    );
+        // mt_PayloadFactories.setElementAt( new  MuxDomHitEngineeringFormatPayloadFactory() , PAYLOAD_ID_MUX_ENGFORMAT_HIT      );
+        mt_PayloadFactories.setElementAt( new  SuperNovaPayloadFactory()                  , PAYLOAD_ID_SN                     );
         mt_PayloadFactories.setElementAt( new  EngFormatTriggerPayloadFactory()           , PAYLOAD_ID_ENGFORMAT_TRIGGER      );
         mt_PayloadFactories.setElementAt( new  EngFormatHitPayloadFactory()               , PAYLOAD_ID_ENGFORMAT_HIT_TRIGGER  );
         mt_PayloadFactories.setElementAt( new  ReadoutRequestPayloadFactory()             , PAYLOAD_ID_READOUT_REQUEST        );
@@ -185,6 +187,7 @@ public final class PayloadRegistry {
         mt_PayloadFactories.setElementAt( new  EventPayloadFactory()                      , PAYLOAD_ID_EVENT                  );
         mt_PayloadFactories.setElementAt( new  EventPayload_v2Factory()                   , PAYLOAD_ID_EVENT_V2               );
         mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                     , PAYLOAD_ID_BEACON                 );
+		mt_PayloadFactories.setElementAt( null                                            , PAYLOAD_ID_COMPRESSED_HIT         );
         //-Install the recycler if present
         if (mtByteBufferCache != null) {
             for (int ii=0; ii < mt_PayloadFactories.size(); ii++) {
