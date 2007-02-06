@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author dwharton
  */
-public class ByteBufferCache implements IByteBufferCache {
+public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
 
     private static Log mtLog = LogFactory.getLog(ByteBufferCache.class);
     public static final int DEFAULT_GRANULARITY = 128;
