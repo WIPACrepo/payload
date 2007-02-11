@@ -41,6 +41,10 @@ public class ByteBufferPayloadDestination extends PayloadDestination   {
      * 
      */
     public ByteBufferPayloadDestination(IByteBufferReceiver tReceiver, IByteBufferCache tCache) {
+        if (tCache == null) {
+            throw new Error("ByteBufferCache is null");
+        }
+
         mtByteBufferReciever = tReceiver;
         mtCache = tCache;
     }
