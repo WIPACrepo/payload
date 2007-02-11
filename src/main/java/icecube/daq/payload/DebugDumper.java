@@ -443,6 +443,11 @@ class DumpHitDataRecord
         this.recData = recData;
     }
 
+    public Object getRecord()
+    {
+        return recData;
+    }
+
     public int getRecordType()
     {
         return recType;
@@ -451,11 +456,6 @@ class DumpHitDataRecord
     public int getVersion()
     {
         return version;
-    }
-
-    public Object getRecord()
-    {
-        return recData;
     }
 }
 
