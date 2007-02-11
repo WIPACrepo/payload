@@ -489,9 +489,9 @@ class DumpHitEngFmt
 
         if (len - offset < 24 + recLen) {
             throw new DumpPayloadException("EngFmtHitData+record#" + index +
-                                           " payload too short (" + len +
-                                           " bytes, not " + (24 + recLen) +
-                                           ")");
+                                           " payload too short (" +
+                                           (len - offset) + " bytes, not " +
+                                           (24 + recLen) + ")");
         }
 
         initialize(time, srcId, domId, recId);
