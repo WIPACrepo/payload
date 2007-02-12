@@ -8,6 +8,7 @@ import java.nio.ByteOrder;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.splicer.Spliceable;
 import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IDomHit;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.UTCTime8B;
@@ -43,7 +44,7 @@ import icecube.misc.hex;
  *  @see icecube.daq.trigger.impl.EngineeringFormatTriggerPayload
  *  @see icecube.daq.trigger.impl.EngineeringFormatHitDataPayload
  */
-public class DomHitEngineeringFormatPayload extends Payload {
+public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
     /**
      * true if payload information has been filled in from
      * the payload source into the container variables. False
