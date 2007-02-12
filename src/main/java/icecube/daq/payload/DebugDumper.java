@@ -2182,7 +2182,7 @@ public class DebugDumper
     {
         if (obj instanceof Payload) {
             try {
-                ((Payload) obj).loadPayload();
+                ((ILoadablePayload) obj).loadPayload();
             } catch (Exception ex) {
                 System.err.println("Couldn't load Payload for " +
                                    obj.getClass().getName());

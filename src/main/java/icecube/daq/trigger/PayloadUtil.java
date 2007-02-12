@@ -11,6 +11,7 @@
 package icecube.daq.trigger;
 
 import icecube.daq.payload.splicer.Payload;
+import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IPayload;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 
@@ -48,7 +49,7 @@ public final class PayloadUtil
     public static List getPayloads(ICompositePayload payload)
             throws IOException, DataFormatException {
 
-        ((Payload) payload).loadPayload();
+        ((ILoadablePayload) payload).loadPayload();
         return new ArrayList(payload.getPayloads());
     }
 

@@ -7,6 +7,8 @@ import java.util.zip.DataFormatException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import icecube.daq.payload.ILoadablePayload;
+
 import icecube.daq.payload.splicer.PayloadFactory;
 
 /**
@@ -89,9 +91,9 @@ public class CompositePayloadFactory extends PayloadFactory {
      */
     public static void recyclePayloads(Vector tPayloads) {
         for (int ii=0; ii < tPayloads.size(); ii++) {
-            Object tObject = tPayloads.get(ii);
-            if (tObject != null) {
-                ((Payload) tObject).recycle();
+            ILoadablePayload tPay = (ILoadablePayload) tPayloads.get(ii);
+            if (tPay != null) {
+                tPay.recycle();
             }
         }
     }

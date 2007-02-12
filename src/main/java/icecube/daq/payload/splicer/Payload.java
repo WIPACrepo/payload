@@ -14,6 +14,7 @@ import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
 import icecube.daq.payload.IByteBufferCache;
+import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IPayload;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadDestination;
@@ -24,6 +25,7 @@ import icecube.util.Poolable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 /**
  * Payload implements the IPayload interface and the Splicable interface
  * It contains trigger information that is send through the DAQ system
@@ -37,7 +39,7 @@ import org.apache.commons.logging.LogFactory;
  *   to the source for reuse. See below for criterion for 'ownership'.
  */
 public abstract class Payload extends Poolable
-    implements IPayload, Spliceable
+    implements ILoadablePayload, Spliceable
 {
     /**
      * Log object for this class

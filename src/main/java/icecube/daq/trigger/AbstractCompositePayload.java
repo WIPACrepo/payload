@@ -10,6 +10,7 @@ import icecube.daq.trigger.impl.CompositePayloadEnvelope;
 import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.splicer.Payload;
 import icecube.util.Poolable;
 
@@ -218,7 +219,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
 			// eventually takes care of the dispose, so null the reference after recycle
 			// so when the dispose() is called, this won't be redone.
 			for (int ii=0; ii < mt_Payloads.size(); ii++) {
-				((Poolable) mt_Payloads.get(ii)).recycle();
+				((ILoadablePayload) mt_Payloads.get(ii)).recycle();
 			}
 			mt_Payloads = null;
 		}
