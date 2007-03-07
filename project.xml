@@ -1,0 +1,26 @@
+<project>
+    <name>payload</name>
+    <packages default="icecube.daq.payload">
+    </packages>
+    <uses>
+        <libs>
+            daq-common.jar
+            icebucket.jar
+            splicer.jar
+        </libs>
+        <tools>
+            commons-logging.jar
+        </tools>
+    </uses>
+    <test>
+        <uses>
+            <libs></libs>
+            <tools>
+                <!--
+                log4j.jar
+                -->
+                junit.jar
+            </tools>
+        </uses>
+    </test>
+</project>

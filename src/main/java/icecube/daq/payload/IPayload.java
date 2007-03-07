@@ -1,7 +1,7 @@
 /*
  * class: IPayload
  *
- * Version $Id: IPayload.java 17771 2020-03-19 22:06:07Z dglo $
+ * Version $Id: IPayload.java,v 1.6 2006/08/08 22:42:51 toale Exp $
  *
  * Date: September 17 2004
  *
@@ -11,73 +11,39 @@
 package icecube.daq.payload;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.util.zip.DataFormatException;
+
+import icecube.daq.payload.IUTCTime;
+import icecube.util.ICopyable;
 
 /**
  * Basic interface defining a trigger primitive payload
  *
- * @version $Id: IPayload.java 17771 2020-03-19 22:06:07Z dglo $
+ * @version $Id: IPayload.java,v 1.6 2006/08/08 22:42:51 toale Exp $
  * @author hellwig, dwharton
  */
-public interface IPayload
-    extends ICopyable, IManagedObject
-{
+public interface IPayload extends ICopyable {
     /**
-     * Returns the ByteBuffer which backs this payload
-     * if it has one.
-     * @return the backing of this payload if it has one.
-     *                        this will be null if it is not 'backed'.
-     * NOTE: dbw: this is for Chuck McParland for testing...
+     * returns the length in bytes of this payload
      */
-    ByteBuffer getPayloadBacking();
+    public int getPayloadLength();
 
     /**
      * returns the Payload type
-     * @return type from PayloadRegistry
      */
-    int getPayloadType();
+    public int getPayloadType();
+
+    /**
+     * returns the Payload interface type as defined
+     * in the PayloadInterfaceRegistry.
+     * @return int ... one of the defined types in icecube.daq.payload.PayloadInterfaceRegistry
+     */
+    public int getPayloadInterfaceType();
 
     /**
      * gets the UTC time tag of a payload
-     * @return time
      */
-    IUTCTime getPayloadTimeUTC();
+    public IUTCTime getPayloadTimeUTC();
 
-    /**
-     * gets the UTC time for this payload as a long value
-     * @return time
-     */
-    long getUTCTime();
 
-    /**
-     * returns the length in bytes of this payload
-     * @return payload length
-     */
-    int length();
-
-    /**
-     * Initializes Payload from backing so it can be used as an IPayload.
-     * @throws IOException if the payload cannot be loaded
-     * @throws PayloadFormatException if there is a problem loading the payload
-     */
-    void loadPayload()
-        throws IOException, PayloadFormatException;
-
-    /**
-     * Set the buffer cache for this payload.
-     *
-     * @param cache ByteBuffer cache
-     */
-    void setCache(IByteBufferCache cache);
-
-    /**
-     * Write this payload's binary representation to the ByteBuffer.
-     * @param writeLoaded if <tt>false</tt>, write the original data
-     * @param destOffset index into <tt>buf</tt> where payload is written
-     * @param buf buffer where payload is written
-     * @return number of bytes written
-     * @throws IOException if there is a problem
-     */
-    int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
-        throws IOException;
 }
