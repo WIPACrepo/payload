@@ -84,6 +84,10 @@ public class ByteBufferPayloadDestination extends PayloadDestination   {
 
         int iPayloadLength = tPayload.getPayloadLength();
         ByteBuffer tBuffer = mtCache.acquireBuffer(iPayloadLength);
+        if (tBuffer == null) {
+            throw new RuntimeException("Could not acquire buffer");
+        }
+
         tBuffer.clear();
         int iWrittenLength = tPayload.writePayload(bWriteLoaded,0,tBuffer);
         if (iPayloadLength != iWrittenLength) {
