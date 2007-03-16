@@ -89,6 +89,11 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
      */
 	protected String msCacheName = "";
 
+    // returnBuffer() debugging counters
+    private int returnEntry;
+    private int returnCount;
+    private int returnTime;
+
     /**
      * Constructor.
      *
@@ -318,6 +323,20 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
         return mbCACHE_BOUNDED;
     }
 
+    public int getReturnBufferEntryCount()
+    {
+        return returnEntry;
+    }
+
+    public int getReturnBufferCount()
+    {
+        return returnCount;
+    }
+
+    public long getReturnBufferTime()
+    {
+        return returnTime;
+    }
 
     /**
      * Records the stats for a buffer that has been
@@ -489,26 +508,42 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
 		return mtCacheHistogram.getHistogramSnapshot();
 	}
 
-	/**
+    /**
      * This will log the histogram to the info() log if needed.
-	 */
-	private void logHistogramIfNeeded() {
-		long lNow = System.currentTimeMillis();
-		long lTimeSinceLastLog = lNow - mlTimeOfLastHistogramLog;
-		//
-		//-Log the histogram summary if enough time has elapsed
-		//
-		if (lTimeSinceLastLog >= mlHistogramLogTimeInterval) {
-			mtLog.info("ByteBufferCache("+getCacheName()+") Histogram:\n" + mtCacheHistogram.getHistogramSnapshot());
-			mlTimeOfLastHistogramLog = lNow;
-		}
-	}
+     */
+    private void logHistogramIfNeeded() { }
+
+    //private void logHistogramIfNeeded() {
+    //long lNow = System.currentTimeMillis();
+    //long lTimeSinceLastLog = lNow - mlTimeOfLastHistogramLog;
+	//
+	//-Log the histogram summary if enough time has elapsed
+	//
+	//if (lTimeSinceLastLog >= mlHistogramLogTimeInterval) {
+    //  mtLog.info("ByteBufferCache("+getCacheName()+") Histogram:\n" + mtCacheHistogram.getHistogramSnapshot());
+    //    mlTimeOfLastHistogramLog = lNow;
+    //   }
+    //}
+
     /**
      * Returns the ByteBuffer to the cache.
      *
      * @param tByteBuffer ByteBuffer to be returned.
      */
-    public synchronized void returnBuffer(ByteBuffer tByteBuffer) {
+    public void returnBuffer(ByteBuffer tByteBuffer)
+    {
+        returnEntry++;
+        final long startTime = System.currentTimeMillis();
+        returnBufferInternal(tByteBuffer);
+        returnTime += System.currentTimeMillis() - startTime;
+        returnCount++;
+    }
+    /**
+     * Returns the ByteBuffer to the cache.
+     *
+     * @param tByteBuffer ByteBuffer to be returned.
+     */
+    public synchronized void returnBufferInternal(ByteBuffer tByteBuffer) {
         boolean bBufferCached = false;
 		//-Check to see if logging is needed.
 		//logHistogramIfNeeded();
