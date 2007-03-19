@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
  * @author kael
  *
  */
-public class VitreousBufferCache implements IByteBufferCache, ByteBufferCacheMBean
+public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCacheMBean
 {
     private int acquiredBufferCount;
     private long acquiredBytes;
