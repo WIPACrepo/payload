@@ -67,11 +67,19 @@ public class VitreousBufferCache implements IByteBufferCache, ByteBufferCacheMBe
         return false;
     }
 
-    public void returnBuffer(ByteBuffer tByteBuffer) { }
+    public void returnBuffer(ByteBuffer tByteBuffer) 
+    { 
+        acquiredBufferCount--;
+        acquiredBytes -= tByteBuffer.capacity();
+        returnedBuffers++;
+    }
 
     public void destinationClosed() { }
 
-    public void receiveByteBuffer(ByteBuffer tBuffer) { }
+    public void receiveByteBuffer(ByteBuffer tBuffer) 
+    { 
+        
+    }
 
     public synchronized int getReturnBufferCount()
     {
