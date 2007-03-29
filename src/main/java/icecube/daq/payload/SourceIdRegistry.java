@@ -33,6 +33,7 @@ public final class SourceIdRegistry {
     public static final int AMANDA_TRIGGER_SOURCE_ID = 10000;
     public static final int SNBUILDER_SOURCE_ID = 11000;
     public static final int STRING_HUB_SOURCE_ID = 12000;
+    public static final int SIMULATION_HUB_SOURCE_ID = 13000;
 
     /**
      * Generates an integer source ID based on a string and an integer.
