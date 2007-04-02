@@ -2191,6 +2191,13 @@ public class DebugDumper
         }
     }
 
+    public static String toHexString(ByteBuffer buf)
+    {
+        StringBuffer sBuf = new StringBuffer();
+        formatHexDump(sBuf, buf);
+        return sBuf.toString();
+    }
+
     public static String toString(ByteBuffer buf)
     {
         if (buf == null) {
