@@ -26,6 +26,9 @@ import icecube.daq.splicer.SpliceableFactory;
 import icecube.daq.splicer.Splicer;
 import icecube.util.Poolable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Interface for the Payload Factory (Trigger primitive)
  *
@@ -36,6 +39,9 @@ public abstract class PayloadFactory
     implements SpliceableFactory {
     protected Poolable mt_PoolablePayloadFactory = null;
 	protected IByteBufferCache mtByteBufferCache = null;
+
+    /** logging object */
+    private static final Log LOG = LogFactory.getLog(PayloadFactory.class);
 
     /**
      * Byte count of the Length data which is embedded in the backing buffer
@@ -137,13 +143,9 @@ public abstract class PayloadFactory
             tSpliceable =  (Spliceable) createPayload(iCurrentSpliceableOffset, tBuffer);
 
         } catch ( IOException tIOException) {
-            //-TODO log the error here
-            System.out.println("Class("+this.getClass().getName()+"):PayloadFactory.createSpliceable() IOException="+tIOException);
-            tIOException.printStackTrace();
+            LOG.error("Couldn't create a spliceable", tIOException);
         } catch ( DataFormatException tDataFormatException) {
-            //-TODO log the error here
-            System.out.println("Class("+this.getClass().getName()+"):PayloadFactory.createSpliceable() DataFormatException="+tDataFormatException);
-            tDataFormatException.printStackTrace();
+            LOG.error("Couldn't create a spliceable", tDataFormatException);
         }
         return tSpliceable;
     }
@@ -197,22 +199,23 @@ public abstract class PayloadFactory
 
         } catch ( IOException tIOException) {
             //-log the error here
-            System.out.println("Class("+this.getClass().getName()+"):PayloadFactory.skipSpliceable() IOException="+tIOException);
-            tIOException.printStackTrace();
+            LOG.error("Couldn't get spliceable length", tIOException);
             return false;
         } catch ( DataFormatException tDataFormatException) {
             //-log the error here
-            System.out.println("Class("+this.getClass().getName()+"):PayloadFactory.skipSpliceable() DataFormatException="+tDataFormatException);
-            tDataFormatException.printStackTrace();
+            LOG.error("Couldn't get spliceable length", tDataFormatException);
             return false;
         }
         if (iSpliceableLength < 0) {
+            LOG.error("Negative spliceable length " + iSpliceableLength);
             return false;
         }
 
         // Check that the Splicable is fully contained.
         final int iNextSpliceableBegin = iBegin + iSpliceableLength;
         if (iNextSpliceableBegin > tBuffer.limit()) {
+            LOG.error("Next spliceable position " + iNextSpliceableBegin +
+                      " is past buffer limit " + tBuffer.limit());
             return false;
         }
         tBuffer.position(iNextSpliceableBegin);
