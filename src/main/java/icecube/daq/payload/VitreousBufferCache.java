@@ -18,9 +18,6 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
     
     public VitreousBufferCache()
     {
-        acquiredBufferCount = 0;
-        acquiredBytes = 0L;
-        returnedBuffers = 0;
     }
     
     public synchronized ByteBuffer acquireBuffer(int iLength)
