@@ -15,6 +15,7 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
     private int acquiredBufferCount;
     private long acquiredBytes;
     private int returnedBuffers;
+    private int totalBufferCount;
     
     public VitreousBufferCache()
     {
@@ -23,6 +24,7 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
     public synchronized ByteBuffer acquireBuffer(int iLength)
     {
         acquiredBufferCount++;
+        totalBufferCount++;
         acquiredBytes += iLength;
         return ByteBuffer.allocate(iLength);
     }
@@ -41,12 +43,12 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
 
     public synchronized int getTotalBuffersAcquired()
     {
-        return acquiredBufferCount;
+        return totalBufferCount;
     }
 
     public synchronized int getTotalBuffersCreated()
     {
-        return acquiredBufferCount;
+        return totalBufferCount;
     }
 
     public synchronized int getTotalBuffersReturned()
@@ -61,7 +63,7 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
 
     public boolean isBalanced()
     {
-        return false;
+        return acquiredBufferCount == 0;
     }
 
     public void returnBuffer(ByteBuffer tByteBuffer) 
