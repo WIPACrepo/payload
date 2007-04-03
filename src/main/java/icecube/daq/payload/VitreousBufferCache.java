@@ -61,12 +61,12 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
         return acquiredBytes;
     }
 
-    public boolean isBalanced()
+    public synchronized boolean isBalanced()
     {
         return acquiredBufferCount == 0;
     }
 
-    public void returnBuffer(ByteBuffer tByteBuffer) 
+    public synchronized void returnBuffer(ByteBuffer tByteBuffer) 
     { 
         acquiredBufferCount--;
         acquiredBytes -= tByteBuffer.capacity();
