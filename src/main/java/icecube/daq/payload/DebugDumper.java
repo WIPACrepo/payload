@@ -2191,12 +2191,19 @@ public class DebugDumper
         }
     }
 
+    public static String toHexString(ByteBuffer buf)
+    {
+        StringBuffer sBuf = new StringBuffer();
+        formatHexDump(sBuf, buf);
+        return sBuf.toString();
+    }
+
     public static String toString(ByteBuffer buf)
     {
         if (buf == null) {
             return "Null buffer";
         } else if (buf.capacity() < 4) {
-            return "Buffer only hold " + buf.capacity() + " bytes";
+            return "Buffer only holds " + buf.capacity() + " bytes";
         }
 
         final int origPos = buf.position();

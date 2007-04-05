@@ -10,22 +10,21 @@ import java.nio.ByteBuffer;
  * @author kael
  *
  */
-public class VitreousBufferCache implements IByteBufferCache, ByteBufferCacheMBean
+public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCacheMBean
 {
     private int acquiredBufferCount;
     private long acquiredBytes;
     private int returnedBuffers;
+    private int totalBufferCount;
     
     public VitreousBufferCache()
     {
-        acquiredBufferCount = 0;
-        acquiredBytes = 0L;
-        returnedBuffers = 0;
     }
     
     public synchronized ByteBuffer acquireBuffer(int iLength)
     {
         acquiredBufferCount++;
+        totalBufferCount++;
         acquiredBytes += iLength;
         return ByteBuffer.allocate(iLength);
     }
@@ -44,12 +43,12 @@ public class VitreousBufferCache implements IByteBufferCache, ByteBufferCacheMBe
 
     public synchronized int getTotalBuffersAcquired()
     {
-        return acquiredBufferCount;
+        return totalBufferCount;
     }
 
     public synchronized int getTotalBuffersCreated()
     {
-        return acquiredBufferCount;
+        return totalBufferCount;
     }
 
     public synchronized int getTotalBuffersReturned()
@@ -62,12 +61,12 @@ public class VitreousBufferCache implements IByteBufferCache, ByteBufferCacheMBe
         return acquiredBytes;
     }
 
-    public boolean isBalanced()
+    public synchronized boolean isBalanced()
     {
-        return false;
+        return acquiredBufferCount == 0;
     }
 
-    public void returnBuffer(ByteBuffer tByteBuffer) 
+    public synchronized void returnBuffer(ByteBuffer tByteBuffer) 
     { 
         acquiredBufferCount--;
         acquiredBytes -= tByteBuffer.capacity();

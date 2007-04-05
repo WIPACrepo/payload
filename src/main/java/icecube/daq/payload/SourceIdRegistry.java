@@ -33,6 +33,7 @@ public final class SourceIdRegistry {
     public static final int AMANDA_TRIGGER_SOURCE_ID = 10000;
     public static final int SNBUILDER_SOURCE_ID = 11000;
     public static final int STRING_HUB_SOURCE_ID = 12000;
+    public static final int SIMULATION_HUB_SOURCE_ID = 13000;
 
     /**
      * Generates an integer source ID based on a string and an integer.
@@ -189,4 +190,120 @@ public final class SourceIdRegistry {
 
     }
 
+    /**
+     * Is the source ID for an AMANDA hub?
+     *
+     * @param srcId integer source ID
+     *
+     * @return <tt>true</tt> if the source ID is for an AMANDA hub component
+     */
+    public static boolean isAmandaHubSourceID(ISourceID sourceID)
+    {
+        return isAmandaHubSourceID(sourceID.getSourceID());
+    }
+
+    /**
+     * Is the source ID for an AMANDA hub?
+     *
+     * @param srcId integer source ID
+     *
+     * @return <tt>true</tt> if the source ID is for an AMANDA hub component
+     */
+    public static boolean isAmandaHubSourceID(int srcId)
+    {
+        if (!isAnyHubSourceID(srcId)) {
+            return false;
+        }
+
+        int daqId = srcId % 1000;
+
+        return daqId == 0;
+    }
+
+    /**
+     * Is the source ID for an amanda hub, string hub, or icetop hub?
+     *
+     * @param srcId integer source ID
+     *
+     * @return <tt>true</tt> if the source ID is for a hub component
+     */
+    public static boolean isAnyHubSourceID(ISourceID sourceID)
+    {
+        return isAnyHubSourceID(sourceID.getSourceID());
+    }
+
+    /**
+     * Is the source ID for an amanda hub, string hub, or icetop hub?
+     *
+     * @param srcId integer source ID
+     *
+     * @return <tt>true</tt> if the source ID is for a hub component
+     */
+    public static boolean isAnyHubSourceID(int srcId)
+    {
+        return (srcId >= STRING_HUB_SOURCE_ID &&
+                srcId < (SIMULATION_HUB_SOURCE_ID + 1000));
+    }
+
+    /**
+     * Is the source ID for an icetop hub?
+     *
+     * @param srcId integer source ID
+     *
+     * @return <tt>true</tt> if the source ID is for an icetop hub component
+     */
+    public static boolean isIcetopHubSourceID(ISourceID sourceID)
+    {
+        return isIcetopHubSourceID(sourceID.getSourceID());
+    }
+
+    /**
+     * Is the source ID for an icetop hub?
+     *
+     * @param srcId integer source ID
+     *
+     * @return <tt>true</tt> if the source ID is for an icetop hub component
+     */
+    public static boolean isIcetopHubSourceID(int srcId)
+    {
+        if (!isAnyHubSourceID(srcId)) {
+            return false;
+        }
+
+        int daqId = srcId % 1000;
+
+        return daqId > DAQCmdInterface.DAQ_MAX_NUM_STRINGS &&
+            daqId <= (DAQCmdInterface.DAQ_MAX_NUM_STRINGS +
+                      DAQCmdInterface.DAQ_MAX_NUM_IDH);
+    }
+
+    /**
+     * Is the source ID for an in-ice hub?
+     *
+     * @param srcId integer source ID
+     *
+     * @return <tt>true</tt> if the source ID is for an in-ice hub component
+     */
+    public static boolean isIniceHubSourceID(ISourceID sourceID)
+    {
+        return isIniceHubSourceID(sourceID.getSourceID());
+    }
+
+    /**
+     * Is the source ID for an in-ice hub?
+     *
+     * @param srcId integer source ID
+     *
+     * @return <tt>true</tt> if the source ID is for an in-ice hub component
+     */
+    public static boolean isIniceHubSourceID(int srcId)
+    {
+        if (!isAnyHubSourceID(srcId)) {
+            return false;
+        }
+
+        int daqId = srcId % 1000;
+
+        return daqId > 0 && daqId <= DAQCmdInterface.DAQ_MAX_NUM_STRINGS;
+    }
 }

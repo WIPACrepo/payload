@@ -228,6 +228,10 @@ public abstract class Payload extends Poolable
      * compare Timestamps of two payloads
      */
     public int compareTo(Object object) {
+        if (!(object instanceof IPayload)) {
+            return object.getClass().getName().compareTo(getClass().getName());
+        }
+
         return mttime.compareTo(((IPayload) object).getPayloadTimeUTC());
     }
 
