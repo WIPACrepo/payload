@@ -69,7 +69,7 @@ public final class SourceIdRegistry {
         } else if (name.compareTo(DAQCmdInterface.DAQ_SNBUILDER) == 0) {
             return SNBUILDER_SOURCE_ID + id;
         } else if (name.compareTo(DAQCmdInterface.DAQ_STRING_HUB) == 0) {
-            return STRING_HUB_SOURCE_ID + id;
+            return STRING_HUB_SOURCE_ID + (id % 1000);
         }
 
         return 0;
