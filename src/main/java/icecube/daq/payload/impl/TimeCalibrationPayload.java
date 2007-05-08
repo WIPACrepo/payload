@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
  *       need to be created/garbage collected needlessly.
  *
  * FORMAT
- *   PaloadEnvelope (16)
+ *   PayloadEnvelope (16)
  *   domid (8)
  *   domhub-TimeCalibrationRecord (292)
  *   domhub-GpsRecord (22)

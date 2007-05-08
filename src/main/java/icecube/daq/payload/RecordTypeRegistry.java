@@ -3,9 +3,11 @@ package icecube.daq.payload;
 
 /**
  * This object is a singleton object which holds the constants
- * associated with the Payload types and their human readable names
+ * associated with the Payload Record types and their human readable names
  *
  * @author dwharton
+ * 
+ * ====================================================================
  */
 public final class RecordTypeRegistry {
     public static final int RECORD_TYPE_DOMHIT_ENGINEERING_FORMAT = 1;

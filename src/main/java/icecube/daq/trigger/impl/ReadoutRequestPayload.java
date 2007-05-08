@@ -76,7 +76,6 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
         if (mt_ReadoutRequestRecord != null) {
@@ -86,17 +85,6 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
 		//-this must be called LAST!!
         super.recycle();
     }
-    /**
-     * Returns an instance of this object so that it can be
-     * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
-     */
-	/*
-    public static void recycle(Object tReadoutRequestPayload) {
-        ((ReadoutRequestPayload) tReadoutRequestPayload).dispose();
-    }
-	*/
-
 
 
     /**

@@ -335,6 +335,9 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload {
         return mt_sourceId;
     }
 
+    /**
+     * Get DOM ID
+     */
     public IDOMID getDOMID() {
         if ( mb_IsHitPayloadLoaded == false ) {
             try {

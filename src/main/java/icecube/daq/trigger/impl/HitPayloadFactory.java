@@ -18,7 +18,7 @@ import icecube.daq.trigger.IHitPayload;
 import icecube.daq.trigger.impl.HitPayload;
 
 /**
- * This Factory class produces EngFormatTriggerPayload's from
+ * This Factory class produces HitPayload's from
  * the supported backing buffer.
  * TODO: Add Pooling to this Factory
  *
