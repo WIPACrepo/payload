@@ -25,6 +25,9 @@ import icecube.daq.trigger.AbstractTriggerPayload;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This class is an implementation of IHitPayload
  * It is designed to provide a minimal payload for hits.
@@ -33,6 +36,9 @@ import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
  * @author divya, dwharton
  */
 public class HitPayload  extends AbstractTriggerPayload implements IHitPayload {
+
+    //-Specific log for this class
+    private static Log mtLog = LogFactory.getLog(HitPayload.class);
 
     public static final int SIZE_TRIGGER_TYPE      = 4;
     public static final int SIZE_TRIGGER_CONFIG_ID = 4;
@@ -280,13 +286,11 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload {
                 //-Load the engineering payload so it can be accessed
                 loadHitPayload();
             } catch ( IOException tIOException ) {
-                //-TODO log the error here
-                System.out.println("Class("+this.getClass().getName()+"):HitPayload.getTriggerType() IOException="+tIOException);
-                tIOException.printStackTrace();
+                //-dbw: added appropriate logging
+                mtLog.error("Class("+this.getClass().getName()+"):HitPayload.getTriggerConfigID()", tIOException);
             } catch ( DataFormatException tDataFormatException ) {
-                //-TODO log the error here
-                System.out.println("Class("+this.getClass().getName()+"):HitPayload.getTriggerType() DataFormatException="+tDataFormatException);
-                tDataFormatException.printStackTrace();
+                //-dbw: added appropriate logging
+                mtLog.error("Class("+this.getClass().getName()+"):HitPayload.getTriggerConfigID()", tDataFormatException);
             }
         }
         return mi_TriggerConfigID;
@@ -300,13 +304,11 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload {
                 //-Load the engineering payload so it can be accessed
                 loadHitPayload();
             } catch ( IOException tIOException ) {
-                //-TODO log the error here
-                System.out.println("Class("+this.getClass().getName()+"):HitPayload.getTriggerType() IOException="+tIOException);
-                tIOException.printStackTrace();
+                //-dbw: added proper logging
+                mtLog.error("Class("+this.getClass().getName()+"):HitPayload.getTriggerType()", tIOException);
             } catch ( DataFormatException tDataFormatException ) {
-                //-TODO log the error here
-                System.out.println("Class("+this.getClass().getName()+"):HitPayload.getTriggerType() DataFormatException="+tDataFormatException);
-                tDataFormatException.printStackTrace();
+                //-dbw: added proper logging
+                mtLog.error("Class("+this.getClass().getName()+"):HitPayload.getTriggerType()", tDataFormatException);
             }
         }
 
@@ -323,13 +325,11 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload {
                 //-Load the engineering payload so it can be accessed
                 loadHitPayload();
             } catch ( IOException tIOException ) {
-                //-TODO log the error here
-                System.out.println("Class("+this.getClass().getName()+"):HitPayload.getTriggerType() IOException="+tIOException);
-                tIOException.printStackTrace();
+                //-dbw: added appropriate logging
+                mtLog.error("Class("+this.getClass().getName()+"):HitPayload.getSourceID()", tIOException);
             } catch ( DataFormatException tDataFormatException ) {
-                //-TODO log the error here
-                System.out.println("Class("+this.getClass().getName()+"):HitPayload.getTriggerType() DataFormatException="+tDataFormatException);
-                tDataFormatException.printStackTrace();
+                //-dbw: added appropriate logging
+                mtLog.error("Class("+this.getClass().getName()+"):HitPayload.getSourceID()", tDataFormatException);
             }
         }
         return mt_sourceId;
