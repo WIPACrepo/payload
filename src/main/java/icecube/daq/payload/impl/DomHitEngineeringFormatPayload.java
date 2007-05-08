@@ -56,7 +56,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      * Internal format for actual Engineering Record if the payload
      * is completely loaded.
      */
-    private DomHitEngineeringFormatRecord mtDomHitEngineeringFormat = null;
+    private DomHitEngineeringFormatRecord mtDomHitEngineeringFormatRecord = null;
 
     /**
      * true if the spliceable information has been loaded into
@@ -264,7 +264,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
     public int getTriggerMode() {
         int iTriggerMode = -1;
         if (mbEngineeringPayloadLoaded) {
-            iTriggerMode =  mtDomHitEngineeringFormat.miTrigMode;
+            iTriggerMode =  mtDomHitEngineeringFormatRecord.miTrigMode;
         } else {
             try {
                 iTriggerMode = DomHitEngineeringFormatRecord.getTriggerMode(mioffset + OFFSET_ENGREC, mtbuffer);
@@ -289,9 +289,9 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
             if (!mbSpliceablePayloadLoaded) {
                 loadSpliceablePayload();
             }
-            if (mtDomHitEngineeringFormat == null) {
-                mtDomHitEngineeringFormat = (DomHitEngineeringFormatRecord) DomHitEngineeringFormatRecord.getFromPool();
-                mtDomHitEngineeringFormat.loadData(mioffset+OFFSET_ENGREC, mtbuffer);
+            if (mtDomHitEngineeringFormatRecord == null) {
+                mtDomHitEngineeringFormatRecord = (DomHitEngineeringFormatRecord) DomHitEngineeringFormatRecord.getFromPool();
+                mtDomHitEngineeringFormatRecord.loadData(mioffset+OFFSET_ENGREC, mtbuffer);
                 mbPayloadCreated = true;
                 mbEngineeringPayloadLoaded = true;
             }
@@ -316,7 +316,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
     public DomHitEngineeringFormatRecord getPayloadRecord() {
         try {
             loadPayload();
-            return mtDomHitEngineeringFormat;
+            return mtDomHitEngineeringFormatRecord;
         } catch (Exception tException) {
             //-This returns null if cannot read the record
             // into the container object for the information.
@@ -334,9 +334,9 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      * Dispose method to be called when Object may be reused.
      */
     public void dispose() {
-        if (mtDomHitEngineeringFormat != null) {
-            mtDomHitEngineeringFormat.dispose();
-            mtDomHitEngineeringFormat = null;
+        if (mtDomHitEngineeringFormatRecord != null) {
+            mtDomHitEngineeringFormatRecord.dispose();
+            mtDomHitEngineeringFormatRecord = null;
         }
         mbSpliceablePayloadLoaded = false;
         mbEngineeringPayloadLoaded = false;
@@ -365,9 +365,9 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		if (mtDomHitEngineeringFormat != null) {
-			mtDomHitEngineeringFormat.recycle();
-			mtDomHitEngineeringFormat = null;
+		if (mtDomHitEngineeringFormatRecord != null) {
+			mtDomHitEngineeringFormatRecord.recycle();
+			mtDomHitEngineeringFormatRecord = null;
 		}
 		//-CALLTHIS LAST!!!!!  Payload takes care of eventually calling dispose() once it reaches the base class
 		// (in other words: .dispose() is only call ONCE by Payload.recycle() after it has finnished its work!
@@ -430,7 +430,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
                 throw new IOException("DataFormatException thrown during load");
             }
             iLength += writeTestDaqHdr(tDestination);
-            iLength += mtDomHitEngineeringFormat.writeData(tDestination);
+            iLength += mtDomHitEngineeringFormatRecord.writeData(tDestination);
         } else {
             iLength = super.writePayload(false, tDestination);
         }
