@@ -14,6 +14,8 @@ import icecube.daq.trigger.impl.HitPayloadFactory;
 import icecube.daq.trigger.impl.ReadoutRequestPayloadFactory;
 import icecube.daq.trigger.impl.TriggerRequestPayloadFactory;
 import icecube.daq.trigger.impl.BeaconPayloadFactory;
+import icecube.daq.trigger.impl.DeltaCompressedFormatHitPayloadFactory;
+import icecube.daq.trigger.impl.DeltaCompressedFormatHitDataPayloadFactory;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayloadFactory;
 import icecube.daq.payload.impl.SuperNovaPayloadFactory;
 import icecube.daq.payload.impl.TimeCalibrationPayloadFactory;
@@ -50,7 +52,8 @@ public final class PayloadRegistry {
     public static final int PAYLOAD_ID_BEACON                = 15;  // yea, becons
     public static final int PAYLOAD_ID_SN                    = 16;  //-SuperNovaPayload
     public static final int PAYLOAD_ID_COMPRESSED_HIT        = 17;  // delta and SLC hits
-    public static final int PAYLOAD_ID_LASTVALID             = PAYLOAD_ID_COMPRESSED_HIT;
+    public static final int PAYLOAD_ID_COMPRESSED_HIT_DATA   = 18;  // delta and SLC hits including the compressed waveform data
+    public static final int PAYLOAD_ID_LASTVALID             = PAYLOAD_ID_COMPRESSED_HIT_DATA;
 
     //-dbw: if this value is non-null then it will be installed into all
     //      the managed PayloadFactory's and subsiquently all the Payload's which
@@ -154,6 +157,17 @@ public final class PayloadRegistry {
             case PAYLOAD_ID_SN :
                 iPayloadInterfaceType = PayloadInterfaceRegistry.I_SUPER_NOVA_PAYLOAD;
                 break;
+            case PAYLOAD_ID_COMPRESSED_HIT :
+                iPayloadInterfaceType = PayloadInterfaceRegistry.I_HIT_PAYLOAD;
+                break;
+            case PAYLOAD_ID_COMPRESSED_HIT_DATA :
+                //-dbw: This new payload implements the IHitDataPayload interface
+                //      Note: will have to make sure that the factory which creates
+                //      the IHitPayload from the IHitDataPayload (actual hard objects)
+                //      uses the interface to create it's 'reduced' IHitPayload which
+                //      will be sent on to the trigger.
+                iPayloadInterfaceType = PayloadInterfaceRegistry.I_HIT_DATA_PAYLOAD;
+                break;
             default:
                 iPayloadInterfaceType = PayloadInterfaceRegistry.I_UNKNOWN_PAYLOAD;
                 break;
@@ -170,23 +184,25 @@ public final class PayloadRegistry {
         mt_PayloadFactories = new Vector();
         mt_PayloadFactories.setSize(PayloadRegistry.PAYLOAD_ID_LASTVALID +1);
 
-        mt_PayloadFactories.setElementAt( null                                            , PAYLOAD_ID_UNKNOWN                );
-        mt_PayloadFactories.setElementAt( new  HitPayloadFactory()                        , PAYLOAD_ID_SIMPLE_HIT             );
-        mt_PayloadFactories.setElementAt( null                                            , PAYLOAD_ID_MULTI_HIT              );
-        mt_PayloadFactories.setElementAt( new  DomHitEngineeringFormatPayloadFactory()    , PAYLOAD_ID_ENGFORMAT_HIT          );
-        mt_PayloadFactories.setElementAt( new  TimeCalibrationPayloadFactory()            , PAYLOAD_ID_TCAL                   );
-        mt_PayloadFactories.setElementAt( new  MonitorPayloadFactory()                    , PAYLOAD_ID_MON                    );
-        // mt_PayloadFactories.setElementAt( new  MuxDomHitEngineeringFormatPayloadFactory() , PAYLOAD_ID_MUX_ENGFORMAT_HIT      );
-        mt_PayloadFactories.setElementAt( new  SuperNovaPayloadFactory()                  , PAYLOAD_ID_SN                     );
-        mt_PayloadFactories.setElementAt( new  EngFormatTriggerPayloadFactory()           , PAYLOAD_ID_ENGFORMAT_TRIGGER      );
-        mt_PayloadFactories.setElementAt( new  EngFormatHitPayloadFactory()               , PAYLOAD_ID_ENGFORMAT_HIT_TRIGGER  );
-        mt_PayloadFactories.setElementAt( new  ReadoutRequestPayloadFactory()             , PAYLOAD_ID_READOUT_REQUEST        );
-        mt_PayloadFactories.setElementAt( new  TriggerRequestPayloadFactory()             , PAYLOAD_ID_TRIGGER_REQUEST        );
-        mt_PayloadFactories.setElementAt( new  EngineeringFormatHitDataPayloadFactory()   , PAYLOAD_ID_ENGFORMAT_HIT_DATA     );
-        mt_PayloadFactories.setElementAt( new  ReadoutDataPayloadFactory()                , PAYLOAD_ID_READOUT_DATA           );
-        mt_PayloadFactories.setElementAt( new  EventPayloadFactory()                      , PAYLOAD_ID_EVENT                  );
-        mt_PayloadFactories.setElementAt( new  EventPayload_v2Factory()                   , PAYLOAD_ID_EVENT_V2               );
-        mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                     , PAYLOAD_ID_BEACON                 );
+        mt_PayloadFactories.setElementAt( null                                              , PAYLOAD_ID_UNKNOWN                );
+        mt_PayloadFactories.setElementAt( new  HitPayloadFactory()                          , PAYLOAD_ID_SIMPLE_HIT             );
+        mt_PayloadFactories.setElementAt( null                                              , PAYLOAD_ID_MULTI_HIT              );
+        mt_PayloadFactories.setElementAt( new  DomHitEngineeringFormatPayloadFactory()      , PAYLOAD_ID_ENGFORMAT_HIT          );
+        mt_PayloadFactories.setElementAt( new  TimeCalibrationPayloadFactory()              , PAYLOAD_ID_TCAL                   );
+        mt_PayloadFactories.setElementAt( new  MonitorPayloadFactory()                      , PAYLOAD_ID_MON                    );
+        // mt_PayloadFactories.setElementAt( new  MuxDomHitEngineeringFormatPayloadFactory()   , PAYLOAD_ID_MUX_ENGFORMAT_HIT      );
+        mt_PayloadFactories.setElementAt( new  SuperNovaPayloadFactory()                    , PAYLOAD_ID_SN                     );
+        mt_PayloadFactories.setElementAt( new  EngFormatTriggerPayloadFactory()             , PAYLOAD_ID_ENGFORMAT_TRIGGER      );
+        mt_PayloadFactories.setElementAt( new  EngFormatHitPayloadFactory()                 , PAYLOAD_ID_ENGFORMAT_HIT_TRIGGER  );
+        mt_PayloadFactories.setElementAt( new  ReadoutRequestPayloadFactory()               , PAYLOAD_ID_READOUT_REQUEST        );
+        mt_PayloadFactories.setElementAt( new  TriggerRequestPayloadFactory()               , PAYLOAD_ID_TRIGGER_REQUEST        );
+        mt_PayloadFactories.setElementAt( new  EngineeringFormatHitDataPayloadFactory()     , PAYLOAD_ID_ENGFORMAT_HIT_DATA     );
+        mt_PayloadFactories.setElementAt( new  ReadoutDataPayloadFactory()                  , PAYLOAD_ID_READOUT_DATA           );
+        mt_PayloadFactories.setElementAt( new  EventPayloadFactory()                        , PAYLOAD_ID_EVENT                  );
+        mt_PayloadFactories.setElementAt( new  EventPayload_v2Factory()                     , PAYLOAD_ID_EVENT_V2               );
+        mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                       , PAYLOAD_ID_BEACON                 );
+        mt_PayloadFactories.setElementAt( new  DeltaCompressedFormatHitPayloadFactory()     , PAYLOAD_ID_COMPRESSED_HIT         );
+        mt_PayloadFactories.setElementAt( new  DeltaCompressedFormatHitDataPayloadFactory() , PAYLOAD_ID_COMPRESSED_HIT_DATA    );
 		mt_PayloadFactories.setElementAt( null                                            , PAYLOAD_ID_COMPRESSED_HIT         );
         //-Install the recycler if present
         if (mtByteBufferCache != null) {
