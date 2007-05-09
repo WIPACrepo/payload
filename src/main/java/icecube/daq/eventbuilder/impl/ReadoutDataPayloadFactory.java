@@ -40,7 +40,9 @@ public class ReadoutDataPayloadFactory extends CompositePayloadFactory {
      * Standard Constructor.
      */
     public ReadoutDataPayloadFactory() {
-        super.setPoolablePayloadFactory(ReadoutDataPayload.getFromPool());
+        ReadoutDataPayload tPayloadPoolableFactory = (ReadoutDataPayload) ReadoutDataPayload.getFromPool();
+        tPayloadPoolableFactory.mtParentPayloadFactory = this;
+        setPoolablePayloadFactory(tPayloadPoolableFactory);
     }
 
     /**

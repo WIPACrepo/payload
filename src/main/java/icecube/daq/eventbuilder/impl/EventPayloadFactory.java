@@ -27,8 +27,9 @@ public class EventPayloadFactory  extends CompositePayloadFactory {
      * Standard Constructor.
      */
     public EventPayloadFactory() {
-        super();
-        setPoolablePayloadFactory(EventPayload.getFromPool());
+        EventPayload tPayloadPoolableFactory = (EventPayload) EventPayload.getFromPool();
+        tPayloadPoolableFactory.mtParentPayloadFactory = this;
+        setPoolablePayloadFactory(tPayloadPoolableFactory);
     }
 
     /**

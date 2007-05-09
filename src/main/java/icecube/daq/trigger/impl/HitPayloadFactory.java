@@ -29,10 +29,9 @@ public class HitPayloadFactory extends PayloadFactory {
      * Standard Constructor.
      */
     public HitPayloadFactory() {
-        super();
-        HitPayload tPayloadPoolableFactory = (HitPayload) HitPayload.getFromPool(); 
+        HitPayload tPayloadPoolableFactory = (HitPayload) HitPayload.getFromPool();
         tPayloadPoolableFactory.mtParentPayloadFactory = this;
-        super.setPoolablePayloadFactory(tPayloadPoolableFactory);
+        setPoolablePayloadFactory(tPayloadPoolableFactory);
     }
 
     /**

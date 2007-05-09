@@ -31,11 +31,10 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
      * Standard Constructor.
      */
     public ReadoutRequestPayloadFactory() {
-        super();
-        ReadoutRequestPayload tPayloadPoolableFactory 
-                = (ReadoutRequestPayload) ReadoutRequestPayload.getFromPool(); 
+        ReadoutRequestPayload tPayloadPoolableFactory
+                = (ReadoutRequestPayload) ReadoutRequestPayload.getFromPool();
         tPayloadPoolableFactory.mtParentPayloadFactory = this;
-        super.setPoolablePayloadFactory(tPayloadPoolableFactory);
+        setPoolablePayloadFactory(tPayloadPoolableFactory);
     }
 
     /**

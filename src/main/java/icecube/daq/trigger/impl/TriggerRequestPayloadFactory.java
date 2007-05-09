@@ -39,11 +39,10 @@ public class TriggerRequestPayloadFactory extends CompositePayloadFactory {
      * Standard Constructor.
      */
     public TriggerRequestPayloadFactory() {
-        super();
-        TriggerRequestPayload tPayloadPoolableFactory 
-                = (TriggerRequestPayload) TriggerRequestPayload.getFromPool(); 
+        TriggerRequestPayload tPayloadPoolableFactory
+                = (TriggerRequestPayload) TriggerRequestPayload.getFromPool();
         tPayloadPoolableFactory.mtParentPayloadFactory = this;
-        super.setPoolablePayloadFactory(tPayloadPoolableFactory);
+        setPoolablePayloadFactory(tPayloadPoolableFactory);
     }
 
     //--[PayloadFactory]---(end) abstract Method implementation

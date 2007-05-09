@@ -21,10 +21,9 @@ public class BeaconPayloadFactory extends PayloadFactory {
      * Standard Constructor.
      */
     public BeaconPayloadFactory() {
-        super();
-        HitPayload tPayloadPoolableFactory = (HitPayload) HitPayload.getFromPool(); 
+        BeaconPayload tPayloadPoolableFactory = (BeaconPayload) BeaconPayload.getFromPool();
         tPayloadPoolableFactory.mtParentPayloadFactory = this;
-        super.setPoolablePayloadFactory(tPayloadPoolableFactory);
+        setPoolablePayloadFactory(tPayloadPoolableFactory);
     }
 
     /**

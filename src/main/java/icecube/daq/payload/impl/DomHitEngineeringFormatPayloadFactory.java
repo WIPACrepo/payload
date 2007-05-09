@@ -26,10 +26,9 @@ public class DomHitEngineeringFormatPayloadFactory extends PayloadFactory {
      * Standard Constructor.
      */
     public DomHitEngineeringFormatPayloadFactory() {
-        super();
         DomHitEngineeringFormatPayload tPayload = (DomHitEngineeringFormatPayload) DomHitEngineeringFormatPayload.getFromPool();
         tPayload.mtParentPayloadFactory = this;
-        super.setPoolablePayloadFactory(tPayload);
+        setPoolablePayloadFactory(tPayload);
     }
 
 

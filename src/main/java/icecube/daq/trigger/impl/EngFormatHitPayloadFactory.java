@@ -28,11 +28,10 @@ public class EngFormatHitPayloadFactory extends EngFormatTriggerPayloadFactory {
      * Standard Constructor.
      */
     public EngFormatHitPayloadFactory() {
-        super();
-        EngineeringFormatHitPayload tPayloadPoolableFactory 
-                = (EngineeringFormatHitPayload) EngineeringFormatHitPayload.getFromPool(); 
+        EngineeringFormatHitPayload tPayloadPoolableFactory
+                = (EngineeringFormatHitPayload) EngineeringFormatHitPayload.getFromPool();
         tPayloadPoolableFactory.mtParentPayloadFactory = this;
-        super.setPoolablePayloadFactory(tPayloadPoolableFactory);
+        setPoolablePayloadFactory(tPayloadPoolableFactory);
     }
 
     /**

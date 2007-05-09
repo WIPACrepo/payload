@@ -28,8 +28,9 @@ public class EngineeringFormatHitDataPayloadFactory extends EngFormatHitPayloadF
      * Standard Constructor.
      */
     public EngineeringFormatHitDataPayloadFactory() {
-        super();
-        super.setPoolablePayloadFactory(EngineeringFormatHitDataPayload.getFromPool());
+        EngineeringFormatHitDataPayload tPayloadPoolableFactory = (EngineeringFormatHitDataPayload) EngineeringFormatHitDataPayload.getFromPool();
+        tPayloadPoolableFactory.mtParentPayloadFactory = this;
+        setPoolablePayloadFactory(tPayloadPoolableFactory);
     }
 
     /**

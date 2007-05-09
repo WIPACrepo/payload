@@ -45,8 +45,9 @@ public class EventPayload_v2Factory  extends PayloadFactory {
      * Standard Constructor.
      */
     public EventPayload_v2Factory() {
-        super();
-        super.setPoolablePayloadFactory(EventPayload_v2.getFromPool());
+        EventPayload_v2 tPayloadPoolableFactory = (EventPayload_v2) EventPayload_v2.getFromPool();
+        tPayloadPoolableFactory.mtParentPayloadFactory = this;
+        setPoolablePayloadFactory(tPayloadPoolableFactory);
     }
 
     /**

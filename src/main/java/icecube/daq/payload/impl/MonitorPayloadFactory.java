@@ -26,8 +26,9 @@ public class MonitorPayloadFactory extends PayloadFactory {
      * Standard constructor.
      */
     public MonitorPayloadFactory() {
-        super();
-        super.setPoolablePayloadFactory(MonitorPayload.getFromPool());
+        MonitorPayload tPayloadPoolableFactory = (MonitorPayload) MonitorPayload.getFromPool();
+        tPayloadPoolableFactory.mtParentPayloadFactory = this;
+        setPoolablePayloadFactory(tPayloadPoolableFactory);
     }
 
     /**

@@ -34,11 +34,9 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
      * Standard constructor.
      */
     public TimeCalibrationPayloadFactory() {
-        super();
-        super.setPoolablePayloadFactory(TimeCalibrationPayload.getFromPool());
         TimeCalibrationPayload tPayload = (TimeCalibrationPayload) TimeCalibrationPayload.getFromPool();
         tPayload.mtParentPayloadFactory = this;
-        super.setPoolablePayloadFactory(tPayload);
+        setPoolablePayloadFactory(tPayload);
     }
     /**
      * Get's the Payload length from a Backing buffer (ByteBuffer)

@@ -39,8 +39,9 @@ public class SuperNovaPayloadFactory extends PayloadFactory {
      * Standard constructor.
      */
     public SuperNovaPayloadFactory() {
-        super();
-        super.setPoolablePayloadFactory(SuperNovaPayload.getFromPool());
+        SuperNovaPayload tPayload = (SuperNovaPayload) SuperNovaPayload.getFromPool();
+        tPayload.mtParentPayloadFactory = this;
+        setPoolablePayloadFactory(tPayload);
     }
 
     /**
