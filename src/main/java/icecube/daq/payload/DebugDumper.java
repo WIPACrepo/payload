@@ -945,7 +945,7 @@ class DumpReadoutType
     public static String toString(int type)
     {
         switch (type) {
-        case IReadoutRequestElement.READOUT_TYPE_IIIT_GLOBAL:
+        case IReadoutRequestElement.READOUT_TYPE_GLOBAL:
             return "Global";
         case IReadoutRequestElement.READOUT_TYPE_II_GLOBAL:
             return "InIceGlobal";

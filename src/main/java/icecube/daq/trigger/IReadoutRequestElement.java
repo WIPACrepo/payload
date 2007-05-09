@@ -28,8 +28,8 @@ public interface IReadoutRequestElement {
     /**
      * Definition of Readout Types
      */
-    public static final int READOUT_TYPE_IIIT_GLOBAL = 0; // Readout of both all InIce and all IceTop
-    public static final int READOUT_TYPE_IT_GLOBAL = READOUT_TYPE_IIIT_GLOBAL + 1; //Readout of all IceTop
+    public static final int READOUT_TYPE_GLOBAL = 0; // Readout of both all InIce and all IceTop
+    public static final int READOUT_TYPE_IT_GLOBAL = READOUT_TYPE_GLOBAL + 1; //Readout of all IceTop
     public static final int READOUT_TYPE_II_GLOBAL = READOUT_TYPE_IT_GLOBAL + 1;             // Readout of InIce
     // -- NOTE: if StringProcessor gets a GLOBAL request it will read out the whole string as if if where a string request
     public static final int READOUT_TYPE_II_STRING = READOUT_TYPE_II_GLOBAL + 1; // Readout of complete String
