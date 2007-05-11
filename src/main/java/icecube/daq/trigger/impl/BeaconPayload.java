@@ -314,7 +314,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     }
 
     public static Poolable getFromPool() {
-        return(Poolable) new HitPayload();
+        return(Poolable) new BeaconPayload();
     }
 
     /**
