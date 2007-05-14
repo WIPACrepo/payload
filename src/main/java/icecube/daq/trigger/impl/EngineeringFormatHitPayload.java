@@ -82,7 +82,7 @@ public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload
                         mt_EngFormatPayload.loadSpliceablePayload();
                         if (mt_DomID == null) {
                             mt_DomID = (DOMID8B) DOMID8B.getFromPool();
-                            mt_DomID.initialize(mt_EngFormatPayload.mlDomId);
+                            mt_DomID.initialize(mt_EngFormatPayload.getDomId());
                         }
                 } catch ( Exception tException) {
                     System.out.println("EngineeringFormatHitPayload.loadEngSpliceable() has thrown exception="+tException);
@@ -104,7 +104,7 @@ public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload
                 super.loadPayload();
                 super.mt_EngFormatPayload.loadSpliceablePayload();
                 mt_DomID = (DOMID8B) DOMID8B.getFromPool();
-                mt_DomID.initialize(mt_EngFormatPayload.mlDomId);
+                mt_DomID.initialize(mt_EngFormatPayload.getDomId());
             } catch ( Exception tException) {
                 System.out.println("EngineeringFormatHitPayload.getDOMID() has thrown exception="+tException);
             }
