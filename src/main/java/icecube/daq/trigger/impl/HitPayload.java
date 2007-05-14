@@ -98,7 +98,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload {
         //-This stores the actual reason for the hit
         msi_TriggerMode = (short) tPayload.getTriggerMode();
         mt_domID = (IDOMID) DOMID8B.getFromPool();
-        ((DOMID8B)mt_domID).initialize(tPayload.mlDomId);
+        ((DOMID8B)mt_domID).initialize(tPayload.getDomId());
         mb_IsHitPayloadLoaded = true;
     }
 
