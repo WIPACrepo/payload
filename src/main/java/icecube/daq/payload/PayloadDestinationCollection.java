@@ -164,7 +164,9 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @throws IOException
      */
     public void stopAllPayloadDestinations() throws IOException {
-        controller.allPayloadDestinationsClosed();
+        if (controller != null) {
+            controller.allPayloadDestinationsClosed();
+        }
     }
 
     /**
@@ -173,6 +175,8 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @throws IOException
      */
     public void stopPayloadDestination(ISourceID sourceId) throws IOException{
-        controller.payloadDestinationClosed(sourceId);
+        if (controller != null) {
+            controller.payloadDestinationClosed(sourceId);
+        }
     }
 }
