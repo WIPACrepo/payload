@@ -356,7 +356,7 @@ public abstract class Payload extends Poolable
 			mt_PayloadEnvelope = null;
 		}
         if (mttime != null) {
-            ((UTCTime8B)mttime).dispose();
+            ((Poolable)mttime).dispose();
             mttime = null;
         }
 		if (mtbuffer != null) {
