@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
  * Generic DomHit interface
  */
 public interface IDomHit
+    extends ILoadablePayload
 {
     /**
      * Get this hit's DOM ID.
@@ -27,4 +28,11 @@ public interface IDomHit
      * @return timestamp
      */
     long getTimestamp();
+
+    /**
+     * Get trigger mode.
+     *
+     * @return mode
+     */
+    int getTriggerMode();
 }

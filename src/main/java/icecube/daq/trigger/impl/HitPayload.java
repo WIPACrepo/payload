@@ -8,6 +8,7 @@ import java.nio.ByteOrder;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IDomHit;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.payload.PayloadRegistry;
@@ -85,7 +86,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload {
     /**
      * Initialize the hit information from a test-daq payload.
      */
-    public void initialize(ISourceID tSourceID, int iTriggerType, int iTriggerConfigID, DomHitEngineeringFormatPayload tPayload) {
+    public void initialize(ISourceID tSourceID, int iTriggerType, int iTriggerConfigID, IDomHit tPayload) {
         mt_sourceId = tSourceID;
         mi_TriggerConfigID = iTriggerConfigID;
         mi_TriggerType = iTriggerType;

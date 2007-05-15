@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.zip.DataFormatException;
 
 import icecube.daq.payload.IByteBufferReceiver;
+import icecube.daq.payload.IDomHit;
 import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
@@ -50,7 +51,7 @@ public class HitPayloadFactory extends PayloadFactory {
      * @exception IOException ..........this is thrown if there is an error reading the ByteBuffer
      * @exception DataFormatException...is thrown if the format of the data is incorrect.
      */
-    public Payload createPayload(ISourceID tSourceID, int iTriggerType, int iTriggerConfigID, DomHitEngineeringFormatPayload tPayload) {
+    public Payload createPayload(ISourceID tSourceID, int iTriggerType, int iTriggerConfigID, IDomHit tPayload) {
         HitPayload tNewPayload = (HitPayload) mt_PoolablePayloadFactory.getPoolable();
         tNewPayload.initialize((ISourceID) tSourceID.deepCopy(), 
                                iTriggerType, iTriggerConfigID, tPayload);
