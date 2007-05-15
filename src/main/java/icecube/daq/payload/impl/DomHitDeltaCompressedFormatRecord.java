@@ -34,7 +34,7 @@ import org.apache.commons.logging.LogFactory;
  * NOTE: The DomClock is spread between 2 fields for compression
  * purposes. However, the MSB 16 bits will be included in the
  * first part of the record (in addition to the fields defined
- * below) so that it may be kept for refrence. Typically the
+ * below) so that it may be kept for reference. Typically the
  * UTCTime of the hit will be kept in the PayloadEnvelope.
  * Record Header:
  * 
@@ -42,9 +42,6 @@ import org.apache.commons.logging.LogFactory;
  * sorting time streams from individual doms. (at least it used
  * to be)
  * 
- * + 2 bytes DOMCLOCK_MSB16 This is the most significant bits of
- * the dom clock as commented above.
- *
  * COMPRESSION HEADER:
  * FORMAT:                      bit-position            num-bits
  * WORD0:   Compr Flag          D31                     1
@@ -89,7 +86,7 @@ import org.apache.commons.logging.LogFactory;
  *
  *          Hit Size            D10..D0, D10=msb        11
  *
- *              { Used to tell when yo uget to the end of the
+ *              { Used to tell when you get to the end of the
  *              hit data.  the Header size is 12 Bytes (strictly
  *              for the DELTA FORMAT HEADER, and this includes
  *              the total bytes for WORD0, WORD1, WORD2 + 0 or
@@ -220,45 +217,30 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     private static Log mtLog = LogFactory.getLog(DomHitDeltaCompressedFormatRecord.class);
 
     //-Mux Record Header
-    public static final int SIZE_DOMID                   = 8;  //-domid is contained in a long
-    public static final int SIZE_MSB_DOMCLOCK            = 2;  //-number of bytes in the Most Significant Bits of clock
+    public static final int SIZE_DOMCLOCK                = 8;  //-number of bytes in the DOM clock
     //-Individual Mux Record Header
-    public static final int SIZE_TRIGGER_INFO            = 2;  //- 2ytes of trigger information (see doc's)
-    public static final int SIZE_WAVEFORM_FLAGS_HIT_SIZE = 2;  //- fADC avail, ATWD avail, ATWD size, ATWD_AB, HIT_SIZE
-    public static final int SIZE_DOMCLOCK_LSB            = 4;  //-least significant bits of the dom clock
-    public static final int SIZE_PEAKINFO_FIELD          = 4;  //-
+    public static final int SIZE_WORD0                   = 4;  //-trigger info/waveform word
+    public static final int SIZE_WORD2                   = 4;  //-peak word
 
-    //-Sizes of the header portions
-    public static final int SIZE_DELTA_MUX_HDR           = 10;  //-size of the mux header from dom
-    public static final int SIZE_DELTA_MUX_SINGLE_HDR    = 12;   //-size of the individual record header
-
-    public static final int SIZE_DELTA_RECORD_HDR        = 22;  //-when converted to a payload, both headers are included
+    public static final int SIZE_DELTA_RECORD_HDR        = SIZE_DOMCLOCK + SIZE_WORD0 + SIZE_WORD2;  //-when converted to a payload, both headers are included
     public static final int SIZE_TOTAL                   = SIZE_DELTA_RECORD_HDR;
     //-----------------------------------------
     // FORMAT of Record can be derived from
     // these constants.
     //-----------------------------------------
     //-Record header offsets
-    public static final int OFFSET_RECORD_HDR              = 0;
-    public static final int OFFSET_DOMID                   = OFFSET_RECORD_HDR;          //-offset of the long containing 
-                                                                                         // the dom mainboard id
-    public static final int OFFSET_DOMCLOCK_MSB16          = OFFSET_DOMID + SIZE_DOMID;  //-offset of the Most Significant Bytes 
-                                                                                         // of domclock (2 bytes)
-    public static final int OFFSET_TRIGGER_INFO            = OFFSET_DOMCLOCK_MSB16 +  SIZE_MSB_DOMCLOCK;
-    public static final int OFFSET_WAVEFORM_FLAGS_HIT_SIZE = OFFSET_TRIGGER_INFO   + SIZE_TRIGGER_INFO;
-    public static final int OFFSET_DOMCLOCK_LSB            = OFFSET_WAVEFORM_FLAGS_HIT_SIZE 
-                                                                                   + SIZE_WAVEFORM_FLAGS_HIT_SIZE;
-    public static final int OFFSET_PEAK_WORD               = OFFSET_DOMCLOCK_LSB   + SIZE_DOMCLOCK_LSB;
+    public static final int OFFSET_DOMCLOCK                = 0;
+    public static final int OFFSET_WORD0                   = OFFSET_DOMCLOCK + SIZE_DOMCLOCK;  //-offset of WORD0 as defined above
+    public static final int OFFSET_WORD2                   = OFFSET_WORD0 + SIZE_WORD0;           //-offset of WORD2 as defined above
 
-    //-Usefull masks
+    //-Useful offsets
+    public static final int OFFSET_TRIGGER_INFO            = OFFSET_WORD0;
+
+    //-Useful masks
     public static final short MASK_HIT_SIZE_SHORT = (short) 0x07FF;
     public static final short MASK_RAW_TRIGGER    = (short) 0x7FFF;
 
     //-Delta Compressed Header offsets
-    public static final int OFFSET_DELTA_FMT_WORD0  = OFFSET_RECORD_HDR + SIZE_DELTA_MUX_HDR;  //-offset of WORD0 as defined above
-    public static final int OFFSET_DELTA_FMT_WORD1  = OFFSET_DELTA_FMT_WORD0 + 4;           //-offset of WORD1 as defined above
-    public static final int OFFSET_DELTA_FMT_WORD2  = OFFSET_DELTA_FMT_WORD1 + 4;           //-offset of WORD2 as defined above
-    public static final int OFFSET_DELTA_FMT_WORD3  = OFFSET_DELTA_FMT_WORD2 + 4;           //-offset of the 3rd WORD
     /**
      * This is the offset into the deta-format record of the
      * beginning of the variable lenght data. This is where a
@@ -266,19 +248,18 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      * data. (This is not a function of this record at the time of
      * this writing 2-2-2007)
      * 
-     * offset of WORD2...WORDN the actual compressed, variable
+     * offset of WORD3...WORDN the actual compressed, variable
      * length data the end of this is goverend by hit-size
      * 
      */
     //-Delta Compressed data offset
-    public static final int OFFSET_DELTA_FMT_COMPRESSED_DATA = OFFSET_DELTA_FMT_WORD3;
+    public static final int OFFSET_DELTA_FMT_COMPRESSED_DATA = OFFSET_WORD2 + SIZE_WORD2;
 
     //-field names
     public static final String DOMID                   = "DOMID";
-    public static final String DOMCLOCK_MSB16          = "DOMCLOCK_MSB16";
+    public static final String DOMCLOCK                = "DOMCLOCK";
     public static final String TRIGGER_INFO            = "TRIGGER_INFO";
     public static final String WAVEFORM_FLAGS_HIT_SIZE = "WAVEFORM_FLAGS_HIT_SIZE";
-    public static final String DOMCLOCK_LSB            = "DOMCLOCK_LSB";
     public static final String PEAK_WORD               = "PEAK_WORD";
 
     /**
@@ -287,22 +268,11 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     public boolean mbLoaded = false;
     //-basic data
     //-Header
-    public DOMID8B mt_IDOMID;                   //-this is used to wrapper the ml_DOMID
-    //public long  ml_DOMID;                    //-HDR 8 bytes domid is contained in a long (domid)
-    public short msi_MSB_DOMCLOCK;              //-HDR 2 bytes number of bytes in the Most Significant Bits of clock
+    public long ml_DOMCLOCK;                    //-HDR 8 bytes DOM clock
     //-Individual Mux Record Header
     public short msi_TRIGGER_INFO;              //- WORD0(0,1) 2 bytes: 2 bytes of trigger information (see doc's)
     public short msi_WAVEFORM_FLAGS_HIT_SIZE;   //- WORD0(2,3) next 2 bytes fADC avail, ATWD avail, ATWD size, ATWD_AB, HIT_SIZE
-    public int   mi_DOMCLOCK_LSB;               //- WORD1 4 bytes least significant bits of the dom clock
     public int   mi_PEAKINFO_FIELD;             //- WORD2 4 bytes Peak information
-
-    //.
-    //-- convienient container variables (start)
-    //
-    //-Header Information
-    public long mlDomClock;         //-value of the reconstructed dom-clock (48 bits)
-
-    //-Individualized information
 
     /**
      *
@@ -411,23 +381,13 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
         ByteOrder tOrder = tBuffer.order();
         if (!mbLoaded) {
+            tBuffer.order(ByteOrder.LITTLE_ENDIAN);
             //---------------------------
             //-RAW FIELDS
             //---------------------------
-            //-load the domid
-            long lDomId = tBuffer.getLong(iRecordOffset + OFFSET_DOMID);
-            //-create the container object (this is for consistency)
-            mt_IDOMID = (DOMID8B) DOMID8B.getFromPool();
-            mt_IDOMID.initialize(lDomId);
-            //-load the MSB of the dom-clock
-            tBuffer.order(ByteOrder.LITTLE_ENDIAN);
-            msi_MSB_DOMCLOCK = tBuffer.getShort(iRecordOffset + OFFSET_DOMCLOCK_MSB16);
-            int iWORD0 = tBuffer.getInt(iRecordOffset + OFFSET_DELTA_FMT_WORD0 );
-            int iWORD1 = tBuffer.getInt(iRecordOffset + OFFSET_DELTA_FMT_WORD1 );
-            int iWORD2 = tBuffer.getInt(iRecordOffset + OFFSET_DELTA_FMT_WORD2 );
-            int iWORD3 = tBuffer.getInt(iRecordOffset + OFFSET_DELTA_FMT_WORD3 );
-            //-restore order
-            tBuffer.order(tOrder);
+            ml_DOMCLOCK = tBuffer.getLong(iRecordOffset + OFFSET_DOMCLOCK);
+            int iWORD0 = tBuffer.getInt(iRecordOffset + OFFSET_WORD0 );
+            int iWORD2 = tBuffer.getInt(iRecordOffset + OFFSET_WORD2 );
 
             //-load the trigger information
             // msi_TRIGGER_INFO = tBuffer.getShort(iRecordOffset + OFFSET_TRIGGER_INFO);
@@ -436,19 +396,13 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
             // msi_WAVEFORM_FLAGS_HIT_SIZE = (short) tBuffer.getShort(iRecordOffset + OFFSET_WAVEFORM_FLAGS_HIT_SIZE);
             msi_WAVEFORM_FLAGS_HIT_SIZE = (short) (iWORD0 & 0x0000FFFF);
 
-            //-load the least significant bits of the domclock
-            // mi_DOMCLOCK_LSB = tBuffer.getInt(iRecordOffset + OFFSET_DOMCLOCK_LSB);
-            mi_DOMCLOCK_LSB = iWORD1;
-            //-load the raw information about he peaks
+            //-load the raw information about the peaks
             //mi_PEAKINFO_FIELD = tBuffer.getInt(iRecordOffset + OFFSET_PEAK_WORD);
             mi_PEAKINFO_FIELD = iWORD2;
             
             //---------------------------------
             //-CONSTRUCTED FIELDS
             //---------------------------------
-            //-reconstruct the dom-clock
-            mlDomClock = ( ((long) msi_MSB_DOMCLOCK) << 32) | (((long) mi_DOMCLOCK_LSB) & 0x00000000FFFFFFFFL);
-
             //-strip out the hit size (which is the record-length - size-of-hdr)
             msi_HitSize = (short) ((short) msi_WAVEFORM_FLAGS_HIT_SIZE & (short) MASK_HIT_SIZE_SHORT);
             //-strip off the compressed bit (which is also the sign bit)
@@ -464,6 +418,8 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
             //-don't load if un-needed.
             mbLoaded = true;
         }
+        //-restore order
+        tBuffer.order(tOrder);
     }
 
 
@@ -511,21 +467,15 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
         //---------------------------
         //-RAW FIELDS
         //---------------------------
-        //-write the domid
-        tDestination.writeLong(DOMID, mt_IDOMID.getDomIDAsLong());
+        //-write the dom-clock
+        tDestination.writeLong(DOMCLOCK, ml_DOMCLOCK);
         // iBytesWritten+=8;
-        //-write the MSB of the dom-clock
-        tDestination.writeShort(DOMCLOCK_MSB16, msi_MSB_DOMCLOCK);
-        // iBytesWritten+=2;
         //-write the trigger information
         tDestination.writeShort(TRIGGER_INFO, msi_TRIGGER_INFO);
         // iBytesWritten+=2;
         //-write combined waveform and hit size information
         tDestination.writeShort(WAVEFORM_FLAGS_HIT_SIZE, msi_WAVEFORM_FLAGS_HIT_SIZE);
         // iBytesWritten+=2;
-        //-write the least significant bits of the domclock
-        tDestination.writeInt(DOMCLOCK_LSB, mi_DOMCLOCK_LSB);
-        // iBytesWritten+=4;
         //-write the raw information about he peaks
         tDestination.writeInt(PEAK_WORD, mi_PEAKINFO_FIELD);
         // iBytesWritten+=4;
@@ -563,8 +513,21 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      * @exception IOException if errors are detected reading the record
      */
     public static short getTriggerMode(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
-            return (short) (((tBuffer.getShort(iRecordOffset + OFFSET_DELTA_FMT_WORD0) & 0x0000FFFF) >> 2) & ( TRIGGER_WORD_SHIFTED_MASK & 0x0000FFFF));
+            return getTriggerMode(tBuffer.getShort(iRecordOffset + OFFSET_TRIGGER_INFO));
     }
+    /**
+     * Pulls out the Trigger Mode from the trigger flags.
+     * 
+     * @param msiTriggerFlags ...short 
+     * 
+     * @return short containing the flags indicating the trigger
+     *         conditions as defined in the DOM Raw Trigger format
+     *         (lower 11 bits)
+     */
+    public static short getTriggerMode(short msiTriggerFlags) {
+            return (short) (((msiTriggerFlags & 0x0000FFFF) >> 2) & ( TRIGGER_WORD_SHIFTED_MASK & 0x0000FFFF));
+    }
+
     /**
      * Pulls out the Local Coincidence Flags from the compresssed
      * record. This assumes the ByteBuffer has been set to
@@ -578,7 +541,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      * @exception IOException if errors are detected reading the record
      */
     public static short getLocalCoincidenceFlags(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
-            return (short) ((tBuffer.getShort(iRecordOffset + OFFSET_DELTA_FMT_WORD0)) & (LC_STATE_SHIFTED_MASK));
+            return (short) ((tBuffer.getShort(iRecordOffset + OFFSET_TRIGGER_INFO)) & (LC_STATE_SHIFTED_MASK));
     }
 
     /**
@@ -639,13 +602,10 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     public void initialize(DomHitDeltaCompressedFormatRecord tReferenceRecord) {
         //-make a copy of all the member fields.
         mbLoaded = tReferenceRecord.mbLoaded;
-        mt_IDOMID = (DOMID8B) tReferenceRecord.mt_IDOMID.deepCopy();
-        msi_MSB_DOMCLOCK = tReferenceRecord.msi_MSB_DOMCLOCK;
+        ml_DOMCLOCK = tReferenceRecord.ml_DOMCLOCK;
         msi_TRIGGER_INFO = tReferenceRecord.msi_TRIGGER_INFO;
         msi_WAVEFORM_FLAGS_HIT_SIZE = tReferenceRecord.msi_WAVEFORM_FLAGS_HIT_SIZE;
-        mi_DOMCLOCK_LSB = tReferenceRecord.mi_DOMCLOCK_LSB;
         mi_PEAKINFO_FIELD = tReferenceRecord.mi_PEAKINFO_FIELD;
-        mlDomClock = tReferenceRecord.mlDomClock;
         msiTriggerFlags = tReferenceRecord.msiTriggerFlags;
         msi_LC_StateFlags = tReferenceRecord.msi_LC_StateFlags;
         msi_fADC_ATWD_flags = tReferenceRecord.msi_fADC_ATWD_flags;
@@ -660,6 +620,11 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
         DomHitDeltaCompressedFormatRecord tCopy = (DomHitDeltaCompressedFormatRecord) getPoolable();
         tCopy.initialize(this);
         return tCopy;
+    }
+
+    public int getTriggerMode()
+    {
+        return getTriggerMode(msiTriggerFlags);
     }
 }
 
