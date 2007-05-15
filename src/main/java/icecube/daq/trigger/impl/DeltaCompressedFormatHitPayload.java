@@ -147,6 +147,8 @@ public class DeltaCompressedFormatHitPayload extends AbstractTriggerPayload impl
      * 
      */
     public IDOMID getDOMID() {
+        throw new Error("Unimplemented");
+/*
         IDOMID tIDOMID = null;
         //-double check if we have succesfully loaded the record
         if (mt_DomHitDeltaCompressedFormatRecord != null) {
@@ -164,6 +166,7 @@ public class DeltaCompressedFormatHitPayload extends AbstractTriggerPayload impl
         }
         //-return the real domid of this object.
         return tIDOMID;
+*/
     }
 
     /**
