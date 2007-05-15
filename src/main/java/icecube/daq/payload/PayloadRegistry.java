@@ -17,6 +17,7 @@ import icecube.daq.trigger.impl.BeaconPayloadFactory;
 import icecube.daq.trigger.impl.DeltaCompressedFormatHitPayloadFactory;
 import icecube.daq.trigger.impl.DeltaCompressedFormatHitDataPayloadFactory;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayloadFactory;
+import icecube.daq.payload.impl.DomHitDeltaCompressedFormatPayloadFactory;
 import icecube.daq.payload.impl.SuperNovaPayloadFactory;
 import icecube.daq.payload.impl.TimeCalibrationPayloadFactory;
 import icecube.daq.payload.impl.MonitorPayloadFactory;
@@ -53,7 +54,8 @@ public final class PayloadRegistry {
     public static final int PAYLOAD_ID_SN                    = 16;  //-SuperNovaPayload
     public static final int PAYLOAD_ID_COMPRESSED_HIT        = 17;  // delta and SLC hits
     public static final int PAYLOAD_ID_COMPRESSED_HIT_DATA   = 18;  // delta and SLC hits including the compressed waveform data
-    public static final int PAYLOAD_ID_LASTVALID             = PAYLOAD_ID_COMPRESSED_HIT_DATA;
+    public static final int PAYLOAD_ID_DELTA_HIT             = 19; // DomHitDeltaCompressedFormatPayload
+    public static final int PAYLOAD_ID_LASTVALID             = PAYLOAD_ID_DELTA_HIT;
 
     //-dbw: if this value is non-null then it will be installed into all
     //      the managed PayloadFactory's and subsiquently all the Payload's which
@@ -203,7 +205,7 @@ public final class PayloadRegistry {
         mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                       , PAYLOAD_ID_BEACON                 );
         mt_PayloadFactories.setElementAt( new  DeltaCompressedFormatHitPayloadFactory()     , PAYLOAD_ID_COMPRESSED_HIT         );
         mt_PayloadFactories.setElementAt( new  DeltaCompressedFormatHitDataPayloadFactory() , PAYLOAD_ID_COMPRESSED_HIT_DATA    );
-		mt_PayloadFactories.setElementAt( null                                            , PAYLOAD_ID_COMPRESSED_HIT         );
+        mt_PayloadFactories.setElementAt( new  DomHitDeltaCompressedFormatPayloadFactory() , PAYLOAD_ID_DELTA_HIT    );
         //-Install the recycler if present
         if (mtByteBufferCache != null) {
             for (int ii=0; ii < mt_PayloadFactories.size(); ii++) {
