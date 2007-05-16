@@ -6,12 +6,10 @@ import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 
 import icecube.daq.trigger.IHitDataRecord;
-import icecube.daq.trigger.impl.DOMID8B;
 
 import icecube.daq.payload.IWriteablePayloadRecord;
 import icecube.daq.payload.RecordTypeRegistry;
 import icecube.daq.payload.PayloadDestination;
-import icecube.daq.payload.IDOMID;
 
 import icecube.util.Poolable;
 import icecube.util.ICopyable;
@@ -50,7 +48,7 @@ import org.apache.commons.logging.LogFactory;
  *          -  2 bits - ATWD Size 0(0), 01(1), 012(2), 0123(3)
  *          -  1 bit  - ATWD_AB
  *          - 11 bits - Hit Size
- * word2 - Peak word as defined above
+ * word2 - Peak word as defined below
  * word3 - compressed data start wordn - last of the compressed
  * data
  * 
@@ -156,24 +154,28 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopyable, IWriteablePayloadRecord, IHitDataRecord {
 
-    public static final int VERSION = 0;
     //-Specific log for this class
     private static Log mtLog = LogFactory.getLog(DomHitDeltaCompressedFormatRecord.class);
 
     //-Mux Record Header
+    public static final int SIZE_ORDERCHECK              = 2;
+    public static final int SIZE_VERSION                 = 2;
+    public static final int SIZE_PEDESTAL                = 2;
     public static final int SIZE_DOMCLOCK                = 8;  //-number of bytes in the DOM clock
     //-Individual Mux Record Header
     public static final int SIZE_WORD0                   = 4;  //-trigger info/waveform word
     public static final int SIZE_WORD2                   = 4;  //-peak word
 
-    public static final int SIZE_DELTA_RECORD_HDR        = SIZE_DOMCLOCK + SIZE_WORD0 + SIZE_WORD2;  //-when converted to a payload, both headers are included
-    public static final int SIZE_DATA_HDR                = 12;  //-3 words of header before compressed data
+    public static final int SIZE_DELTA_RECORD_HDR        = SIZE_ORDERCHECK + SIZE_VERSION + SIZE_PEDESTAL + SIZE_DOMCLOCK + SIZE_WORD0 + SIZE_WORD2;  //-when converted to a payload, both headers are included
     //-----------------------------------------
     // FORMAT of Record can be derived from
     // these constants.
     //-----------------------------------------
     //-Record header offsets
-    public static final int OFFSET_DOMCLOCK                = 0;
+    public static final int OFFSET_ORDERCHECK              = 0;
+    public static final int OFFSET_VERSION                 = OFFSET_ORDERCHECK + SIZE_ORDERCHECK;
+    public static final int OFFSET_PEDESTAL                = OFFSET_VERSION + SIZE_VERSION;
+    public static final int OFFSET_DOMCLOCK                = OFFSET_PEDESTAL + SIZE_PEDESTAL;
     public static final int OFFSET_WORD0                   = OFFSET_DOMCLOCK + SIZE_DOMCLOCK;  //-offset of WORD0 as defined above
     public static final int OFFSET_WORD2                   = OFFSET_WORD0 + SIZE_WORD0;           //-offset of WORD2 as defined above
     public static final int OFFSET_DATA                    = OFFSET_WORD2 + SIZE_WORD2;           //-offset of WORD2 as defined above
@@ -201,7 +203,9 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     public static final int OFFSET_DELTA_FMT_COMPRESSED_DATA = OFFSET_WORD2 + SIZE_WORD2;
 
     //-field names
-    public static final String DOMID                   = "DOMID";
+    public static final String ORDERCHECK              = "ORDERCHECK";
+    public static final String VERSION                 = "VERSION";
+    public static final String PEDESTAL                = "PEDESTAL";
     public static final String DOMCLOCK                = "DOMCLOCK";
     public static final String TRIGGER_INFO            = "TRIGGER_INFO";
     public static final String WAVEFORM_FLAGS_HIT_SIZE = "WAVEFORM_FLAGS_HIT_SIZE";
@@ -214,6 +218,8 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     public boolean mbLoaded = false;
     //-basic data
     //-Header
+    public short msi_version;
+    public short msi_pedestal;
     public long ml_DOMCLOCK;                    //-HDR 8 bytes DOM clock
     //-Individual Mux Record Header
     public short msi_TRIGGER_INFO;              //- WORD0(0,1) 2 bytes: 2 bytes of trigger information (see doc's)
@@ -327,22 +333,33 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
         ByteOrder tOrder = tBuffer.order();
         if (!mbLoaded) {
-            tBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            short chk = tBuffer.getShort(iRecordOffset + OFFSET_ORDERCHECK);
+            if (chk != 1) {
+                ByteOrder tReadOrder = (tOrder == ByteOrder.LITTLE_ENDIAN ?
+                                        ByteOrder.BIG_ENDIAN :
+                                        ByteOrder.LITTLE_ENDIAN);
+                tBuffer.order(tReadOrder);
+                chk = tBuffer.getShort(iRecordOffset + OFFSET_ORDERCHECK);
+                if (chk != 1) {
+                    throw new DataFormatException("Not a delta compressed" +
+                                                  " record");
+                }
+            }
             //---------------------------
             //-RAW FIELDS
             //---------------------------
+            msi_version = tBuffer.getShort(iRecordOffset + OFFSET_VERSION);
+            msi_pedestal = tBuffer.getShort(iRecordOffset + OFFSET_PEDESTAL);
             ml_DOMCLOCK = tBuffer.getLong(iRecordOffset + OFFSET_DOMCLOCK);
             int iWORD0 = tBuffer.getInt(iRecordOffset + OFFSET_WORD0 );
             int iWORD2 = tBuffer.getInt(iRecordOffset + OFFSET_WORD2 );
 
             //-load the trigger information
-            msi_TRIGGER_INFO = (short) (((iWORD0 & 0xFFFF0000) >> 16) & 0x0000FFFF);
+            msi_TRIGGER_INFO = (short) ((iWORD0 >> 16) & 0x0000FFFF);
             //-load combined waveform and hit size information
-            // msi_WAVEFORM_FLAGS_HIT_SIZE = (short) tBuffer.getShort(iRecordOffset + OFFSET_WAVEFORM_FLAGS_HIT_SIZE);
             msi_WAVEFORM_FLAGS_HIT_SIZE = (short) (iWORD0 & 0x0000FFFF);
 
             //-load the raw information about the peaks
-            //mi_PEAKINFO_FIELD = tBuffer.getInt(iRecordOffset + OFFSET_PEAK_WORD);
             mi_PEAKINFO_FIELD = iWORD2;
             
             //---------------------------------
@@ -353,7 +370,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
             //-strip off the compressed bit (which is also the sign bit)
             short siTriggerRaw  = (short) ((short) msi_TRIGGER_INFO & (short) MASK_RAW_TRIGGER);
             //-shift over the trigger-flags
-            msiTriggerFlags = (short)(((short) (siTriggerRaw >> 2)) & (short) TRIGGER_WORD_SHIFTED_MASK);
+            msiTriggerFlags = (short)((siTriggerRaw >> 2) & TRIGGER_WORD_SHIFTED_MASK);
             //-pull out the local coincidence flags
             msi_LC_StateFlags = (short) (siTriggerRaw & LC_STATE_SHIFTED_MASK);
 
@@ -363,7 +380,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
             //-load compressed data
             final int origPos = tBuffer.position();
             tBuffer.position(iRecordOffset + OFFSET_DATA);
-            compressedData = new byte[msi_HitSize - SIZE_DATA_HDR];
+            compressedData = new byte[msi_HitSize - SIZE_DELTA_RECORD_HDR];
             tBuffer.get(compressedData);
             tBuffer.position(origPos);
 
@@ -392,7 +409,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      * NOTE: This should probably be deprecated from the interface
      */
     public int getVersion() {
-        return VERSION;
+        return msi_version;
     }
 
 
@@ -419,6 +436,12 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
         //---------------------------
         //-RAW FIELDS
         //---------------------------
+        //-write the check bytes
+        tDestination.writeShort(ORDERCHECK, (short) 1);
+        //-write the version
+        tDestination.writeShort(VERSION, msi_version);
+        //-write the pedestal info
+        tDestination.writeShort(PEDESTAL, msi_pedestal);
         //-write the dom-clock
         tDestination.writeLong(DOMCLOCK, ml_DOMCLOCK);
         // iBytesWritten+=8;
@@ -485,40 +508,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      *         (lower 11 bits)
      */
     public static short getTriggerMode(short msiTriggerFlags) {
-            return (short) (((msiTriggerFlags & 0x0000FFFF) >> 2) & ( TRIGGER_WORD_SHIFTED_MASK & 0x0000FFFF));
-    }
-
-    /**
-     * Pulls out the Local Coincidence Flags from the compresssed
-     * record. This assumes the ByteBuffer has been set to
-     * BIG_ENDIAN.
-     * 
-     * @param iRecordOffset ...int the offset of the delta record
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
-     *
-     * @return short whose lower 2 bits are the state of local coincidence.
-     *
-     * @exception IOException if errors are detected reading the record
-     */
-    public static short getLocalCoincidenceFlags(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
-            return (short) ((tBuffer.getShort(iRecordOffset + OFFSET_TRIGGER_INFO)) & (LC_STATE_SHIFTED_MASK));
-    }
-
-    /**
-     * Pulls out the Raw Trigger which includes local coincidence
-     * assumes the ByteBuffer has been set to BIG_ENDIAN.
-     * 
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
-     * 
-     * @return short containing the flags indicating the trigger
-     *         conditions as defined in the DOM Raw Trigger format
-     *         (lower 11 bits) and (3 bits) of LC
-     *
-     * @exception IOException if errors are detected reading the record
-     */
-    public static short getTriggerRaw(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
-            return (short) ((int) (tBuffer.getShort(iRecordOffset + OFFSET_TRIGGER_INFO)) & (int) MASK_RAW_TRIGGER);
+            return (short) ((msiTriggerFlags >> 2) & TRIGGER_WORD_SHIFTED_MASK);
     }
 
     /**
@@ -595,7 +585,11 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      */
     public int getRecordLength()
     {
-        return SIZE_DELTA_RECORD_HDR + msi_HitSize;
+        if (!mbLoaded) {
+            throw new Error("Record has not been loaded");
+        }
+
+        return msi_HitSize;
     }
 }
 
