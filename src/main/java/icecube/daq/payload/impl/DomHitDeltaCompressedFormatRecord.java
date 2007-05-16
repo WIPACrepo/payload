@@ -189,6 +189,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
 
     //-Useful offsets
     public static final int OFFSET_TRIGGER_INFO            = OFFSET_WORD0;
+    public static final int OFFSET_WAVEFORM_HITSIZE        = OFFSET_WORD0 + 2;
 
     //-Useful masks
     public static final short MASK_HIT_SIZE_SHORT = (short) 0x07FF;
@@ -483,7 +484,39 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      * @return int the number of bytes written to this destination.
      */
     public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
-        throw new IOException("this method is not implemented yet");
+        int iBytesWritten = 0;
+        //-create a label for output if needed (beginning of record)
+        //---------------------------
+        //-RAW FIELDS
+        //---------------------------
+        //-write the check bytes
+        tBuffer.putShort(iOffset + OFFSET_ORDERCHECK, (short) 1);
+        //-write the version
+        tBuffer.putShort(iOffset + OFFSET_VERSION, msi_version);
+        //-write the pedestal info
+        tBuffer.putShort(iOffset + OFFSET_PEDESTAL, msi_pedestal);
+        //-write the dom-clock
+        tBuffer.putLong(iOffset + OFFSET_DOMCLOCK, ml_DOMCLOCK);
+        // iBytesWritten+=8;
+        //-write the trigger information
+        tBuffer.putShort(iOffset + OFFSET_TRIGGER_INFO, msi_TRIGGER_INFO);
+        // iBytesWritten+=2;
+        //-write combined waveform and hit size information
+        tBuffer.putShort(iOffset + OFFSET_WAVEFORM_HITSIZE, msi_WAVEFORM_FLAGS_HIT_SIZE);
+        // iBytesWritten+=2;
+        //-write the raw information about he peaks
+        tBuffer.putInt(iOffset + OFFSET_WORD2, mi_PEAKINFO_FIELD);
+        // iBytesWritten+=4;
+        iBytesWritten = SIZE_DELTA_RECORD_HDR;
+
+        //-write out the sequence of compressed data
+        final int origPos = tBuffer.position();
+        tBuffer.position(iOffset + OFFSET_DATA);
+        tBuffer.put(compressedData);
+        tBuffer.position(origPos);
+
+        //-return the number of bytes written to the stream
+        return iBytesWritten;
     }
     //-------------------------------------------------------
     // STATIC METHODS
