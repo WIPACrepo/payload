@@ -36,6 +36,9 @@ import org.apache.commons.logging.LogFactory;
  * domid    8 bytes
  * filler   8 bytes
  * utctime  8 bytes
+ * orderchk 2 bytes
+ * version  2 bytes
+ * pedestal 2 bytes
  * domclock 8 bytes
  * word0 -  4 bytes record header
  *       -  2 Bytes of Trigger Information
