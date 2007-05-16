@@ -167,6 +167,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     public static final int SIZE_WORD2                   = 4;  //-peak word
 
     public static final int SIZE_DELTA_RECORD_HDR        = SIZE_DOMCLOCK + SIZE_WORD0 + SIZE_WORD2;  //-when converted to a payload, both headers are included
+    public static final int SIZE_DATA_HDR                = 12;  //-3 words of header before compressed data
     //-----------------------------------------
     // FORMAT of Record can be derived from
     // these constants.
@@ -360,9 +361,11 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
             msi_fADC_ATWD_flags = (short) (msi_WAVEFORM_FLAGS_HIT_SIZE & ~MASK_HIT_SIZE_SHORT);
 
             //-load compressed data
-            final int dataPos = iRecordOffset + OFFSET_DATA;
-            compressedData = new byte[msi_HitSize];
-            tBuffer.get(compressedData, dataPos, msi_HitSize);
+            final int origPos = tBuffer.position();
+            tBuffer.position(iRecordOffset + OFFSET_DATA);
+            compressedData = new byte[msi_HitSize - SIZE_DATA_HDR];
+            tBuffer.get(compressedData);
+            tBuffer.position(origPos);
 
             //-don't load if un-needed.
             mbLoaded = true;
