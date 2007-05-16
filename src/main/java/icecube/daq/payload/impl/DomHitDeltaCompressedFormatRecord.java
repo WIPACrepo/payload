@@ -31,11 +31,6 @@ import org.apache.commons.logging.LogFactory;
  * -------------------------------------------------------------------
  * Quick overview of the format
  * -------------------------------------------------------------------
- * rec len  4 bytes
- * hit type 4 bytes
- * domid    8 bytes
- * filler   8 bytes
- * utctime  8 bytes
  * orderchk 2 bytes
  * version  2 bytes
  * pedestal 2 bytes
@@ -54,7 +49,16 @@ import org.apache.commons.logging.LogFactory;
  * word2 - Peak word as defined below
  * word3 - compressed data start wordn - last of the compressed
  * data
- * 
+ *
+ * The delta compressed format payload also includes a 32 byte header at
+ * the front:
+ *
+ * rec len  4 bytes
+ * hit type 4 bytes
+ * domid    8 bytes
+ * filler   8 bytes
+ * utctime  8 bytes
+ *
  * COMPRESSION HEADER:
  * FORMAT:                      bit-position            num-bits
  * WORD0:   Compr Flag          D31                     1
