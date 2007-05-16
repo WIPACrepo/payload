@@ -51,10 +51,9 @@ public final class PayloadRegistry {
     public static final int PAYLOAD_ID_MUX_ENGFORMAT_HIT     = 14;  //-hit created from dom-hub muxed data in eng format.
     public static final int PAYLOAD_ID_BEACON                = 15;  // yea, becons
     public static final int PAYLOAD_ID_SN                    = 16;  //-SuperNovaPayload
-    public static final int PAYLOAD_ID_COMPRESSED_HIT        = 17;  // delta and SLC hits
+    public static final int PAYLOAD_ID_DELTA_HIT             = 17; // DomHitDeltaCompressedFormatPayload
     public static final int PAYLOAD_ID_COMPRESSED_HIT_DATA   = 18;  // delta and SLC hits including the compressed waveform data
-    public static final int PAYLOAD_ID_DELTA_HIT             = 19; // DomHitDeltaCompressedFormatPayload
-    public static final int PAYLOAD_ID_LASTVALID             = PAYLOAD_ID_DELTA_HIT;
+    public static final int PAYLOAD_ID_LASTVALID             = PAYLOAD_ID_COMPRESSED_HIT_DATA;
 
     //-dbw: if this value is non-null then it will be installed into all
     //      the managed PayloadFactory's and subsiquently all the Payload's which
@@ -158,9 +157,6 @@ public final class PayloadRegistry {
             case PAYLOAD_ID_SN :
                 iPayloadInterfaceType = PayloadInterfaceRegistry.I_SUPER_NOVA_PAYLOAD;
                 break;
-            case PAYLOAD_ID_COMPRESSED_HIT :
-                iPayloadInterfaceType = PayloadInterfaceRegistry.I_HIT_PAYLOAD;
-                break;
             case PAYLOAD_ID_COMPRESSED_HIT_DATA :
                 //-dbw: This new payload implements the IHitDataPayload interface
                 //      Note: will have to make sure that the factory which creates
@@ -202,8 +198,8 @@ public final class PayloadRegistry {
         mt_PayloadFactories.setElementAt( new  EventPayloadFactory()                        , PAYLOAD_ID_EVENT                  );
         mt_PayloadFactories.setElementAt( new  EventPayload_v2Factory()                     , PAYLOAD_ID_EVENT_V2               );
         mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                       , PAYLOAD_ID_BEACON                 );
-        mt_PayloadFactories.setElementAt( new  DeltaCompressedFormatHitDataPayloadFactory() , PAYLOAD_ID_COMPRESSED_HIT_DATA    );
         mt_PayloadFactories.setElementAt( new  DomHitDeltaCompressedFormatPayloadFactory() , PAYLOAD_ID_DELTA_HIT    );
+        mt_PayloadFactories.setElementAt( new  DeltaCompressedFormatHitDataPayloadFactory() , PAYLOAD_ID_COMPRESSED_HIT_DATA    );
         //-Install the recycler if present
         if (mtByteBufferCache != null) {
             for (int ii=0; ii < mt_PayloadFactories.size(); ii++) {
