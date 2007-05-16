@@ -328,11 +328,25 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
         return iLength;
     }
 
+    /**
+     * Get the numeric DOM ID.
+     */
     public long getDomId() {
         return mlDomId;
     }
 
+    /**
+     * Get the numeric UTC timestamp.
+     */
     public long getTimestamp() {
         return mlUTime;
+    }
+
+    /**
+     * Get the data record
+     */
+    public DomHitDeltaCompressedFormatRecord getRecord()
+    {
+        return mtDomHitDeltaCompressedRecord;
     }
 }

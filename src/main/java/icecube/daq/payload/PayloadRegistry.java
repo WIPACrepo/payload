@@ -14,7 +14,6 @@ import icecube.daq.trigger.impl.HitPayloadFactory;
 import icecube.daq.trigger.impl.ReadoutRequestPayloadFactory;
 import icecube.daq.trigger.impl.TriggerRequestPayloadFactory;
 import icecube.daq.trigger.impl.BeaconPayloadFactory;
-import icecube.daq.trigger.impl.DeltaCompressedFormatHitPayloadFactory;
 import icecube.daq.trigger.impl.DeltaCompressedFormatHitDataPayloadFactory;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayloadFactory;
 import icecube.daq.payload.impl.DomHitDeltaCompressedFormatPayloadFactory;
@@ -203,7 +202,6 @@ public final class PayloadRegistry {
         mt_PayloadFactories.setElementAt( new  EventPayloadFactory()                        , PAYLOAD_ID_EVENT                  );
         mt_PayloadFactories.setElementAt( new  EventPayload_v2Factory()                     , PAYLOAD_ID_EVENT_V2               );
         mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                       , PAYLOAD_ID_BEACON                 );
-        mt_PayloadFactories.setElementAt( new  DeltaCompressedFormatHitPayloadFactory()     , PAYLOAD_ID_COMPRESSED_HIT         );
         mt_PayloadFactories.setElementAt( new  DeltaCompressedFormatHitDataPayloadFactory() , PAYLOAD_ID_COMPRESSED_HIT_DATA    );
         mt_PayloadFactories.setElementAt( new  DomHitDeltaCompressedFormatPayloadFactory() , PAYLOAD_ID_DELTA_HIT    );
         //-Install the recycler if present

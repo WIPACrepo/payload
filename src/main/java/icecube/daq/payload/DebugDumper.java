@@ -516,6 +516,56 @@ class DumpHitEngFmt
     }
 }
 
+class DumpHitDeltaFmt
+    extends DumpHitSimple
+    implements IHitDataPayload
+{
+    private DumpHitDataRecord dataRec;
+
+    DumpHitDeltaFmt(ByteBuffer buf, int offset, int len, int index,
+                    long elemTime)
+        throws DumpPayloadException
+    {
+        super();
+
+        if (len - offset < 36) {
+            throw new DumpPayloadException("DeltaFmtHitData#" + index +
+                                           " payload too short (" +
+                                           (len - offset) + " of " + len +
+                                           " bytes)");
+        }
+
+        final int trigType = buf.getInt(offset + 0);
+        final int cfgId = buf.getInt(offset + 4);
+        final int srcId = buf.getInt(offset + 8);
+        final long domId = buf.getLong(offset + 12);
+
+        final long domClk = buf.getLong(offset + 20);
+        final int word0 = buf.getInt(offset + 28);
+        final int word2 = buf.getInt(offset + 32);
+
+        initialize(elemTime, srcId, domId);
+    }
+
+    DumpHitDeltaFmt(long time, int srcId, long domId)
+    {
+        initialize(time, srcId, domId);
+    }
+
+    void initialize(long time, int srcId, long domId)
+    {        
+        super.initialize(time, srcId, domId);
+
+        dataRec = null;
+    }
+
+    public IHitDataRecord getHitRecord()
+        throws IOException
+    {
+        return dataRec;
+    }
+}
+
 abstract class DumpPayload
 {
     static ArrayList extractComposite(ByteBuffer buf, int offset)
@@ -576,6 +626,17 @@ abstract class DumpPayload
                 {
                     try {
                         elems.add(new DumpReadoutData(buf, elemOff + 16,
+                                                      elemOff + elemLen, i,
+                                                      elemTime));
+                    } catch (DumpPayloadException dpe) {
+                        dpe.printStackTrace();
+                    }
+                }
+                break;
+            case PayloadRegistry.PAYLOAD_ID_DELTA_HIT:
+                {
+                    try {
+                        elems.add(new DumpHitDeltaFmt(buf, elemOff + 16,
                                                       elemOff + elemLen, i,
                                                       elemTime));
                     } catch (DumpPayloadException dpe) {

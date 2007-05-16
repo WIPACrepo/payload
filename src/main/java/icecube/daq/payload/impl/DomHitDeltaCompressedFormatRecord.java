@@ -22,25 +22,37 @@ import org.apache.commons.logging.LogFactory;
 /**
  * DomHitDeltaCompressedFormatRecord
  *
- * This record is meant to house the Delta Compressed data from a DOM.
- * And to provide access to all of the internal formatting of a compressed
- * format. This does not house the variable length information
- * at this time, however. This could be added later.
+ * This record is meant to house the Delta Compressed data from a DOM
+ * and to provide access to all of the internal formatting of a compressed
+ * format.
  *
  * This object is a container for the DomHit Delta Compressed Format Data which
  * is enveloped inside a Payload. This format is detailed in the document
  * by Josh Sopher and Dawn Williams: Version 1.0 Dec 12, 2005
  * 
- * NOTE: The DomClock is spread between 2 fields for compression
- * purposes. However, the MSB 16 bits will be included in the
- * first part of the record (in addition to the fields defined
- * below) so that it may be kept for reference. Typically the
- * UTCTime of the hit will be kept in the PayloadEnvelope.
- * Record Header:
- * 
- * + 8 bytes DOMID (dom mainboard id) this is crucial for
- * sorting time streams from individual doms. (at least it used
- * to be)
+ * -------------------------------------------------------------------
+ * Quick overview of the format
+ * -------------------------------------------------------------------
+ * rec len  4 bytes
+ * hit type 4 bytes
+ * domid    8 bytes
+ * filler   8 bytes
+ * utctime  8 bytes
+ * domclock 8 bytes
+ * word0 -  4 bytes record header
+ *       -  2 Bytes of Trigger Information
+ *          -  1 bit  - compression
+ *          - 13 bits - Trigger Flags (raw)
+ *          -  2 bits - Local Coincidence Flags
+ *       -  2 Bytes of Waveform Flags
+ *          -  1 bit  - fADC available (yes/no)
+ *          -  1 bit  - ATWD Available (yes/no)
+ *          -  2 bits - ATWD Size 0(0), 01(1), 012(2), 0123(3)
+ *          -  1 bit  - ATWD_AB
+ *          - 11 bits - Hit Size
+ * word2 - Peak word as defined above
+ * word3 - compressed data start wordn - last of the compressed
+ * data
  * 
  * COMPRESSION HEADER:
  * FORMAT:                      bit-position            num-bits
@@ -138,75 +150,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * NOTE: According to the pDAQ_trunk/StringHub/src/main/java/icecube/dat/domap/
  *       DataCollector.java code (revision 666) I am reverse engineering the code.
- * Prior to this code: (assuming BIG_ENDIAN?)
- * 
- *	private void dataProcess(ByteBuffer in) throws IOException 
- *  {
- *      // TODO - I created a number of less-than-elegant hacks to
- *      // keep performance at acceptable level such as minimal
- *      // decoding of hit records.  This should be cleaned up.
- *
- *      int buffer_limit = in.limit();
- *
- *      // create records from aggregrate message data returned from DOMApp
- *      while (in.remaining() > 0) 
- *      {
- *          int pos = in.position();
- *          short len = in.getShort();
- *          short fmt = in.getShort();
- *          if (hitsSink != null) 
- *          {
- *              long domClock;
- *              switch (fmt)
- *      ...removed indent for clarity..
- *		case 144: // Delta compressed data
- *             // It gets weird here - FPGA data written LITTLE_ENDIAN
- *             // Also must handle unpacking and applying clock context
- *             // to delta hits compressed in data block starting here. 
- *             in.order(ByteOrder.LITTLE_ENDIAN);
- *             int clkMSB = in.getShort();
- *             logger.debug("clkMSB: " + clkMSB);
- *             in.getShort();
- *             while (in.remaining() > 0)
- *             {
- *                 in.mark();
- *                 int hitSize = in.getInt() & 0x7ff;
- *                 int clkLSB = in.getInt();
- *                 logger.debug("hitsize: " + hitSize + " clkLSB: " + clkLSB);
- *                 domClock = (((long) clkMSB) << 32) | (((long) clkLSB) & 0xffffffffL);
- *                 in.reset();
- *                 in.limit(in.position() + hitSize);
- *                 numHits++;
- *                 genericDataDispatch(hitSize, 3, domClock, in, hitsSink);
- *                 in.limit(buffer_limit);
- *             }
- *             in.order(ByteOrder.BIG_ENDIAN);
- *             break;
- *
  ************************************************************************************
- * The code above was authored by 'krokodil' (unsure who that is)
- ************************************************************************************
- * 
- * -------------------------------------------------------------------
- * Quick overview of the format
- * -------------------------------------------------------------------
- * domid    8 bytes
- * msbclock 2 bytes
- * word0 -  4 bytes record header
- *       -  2 Bytes of Trigger Information
- *          -  1 bit  - compression
- *          - 13 bits - Trigger Flags (raw)
- *          -  2 bits - Local Coincidence Flags
- *       -  2 Bytes of Waveform Flags
- *          -  1 bit  - fADC available (yes/no)
- *          -  1 bit  - ATWD Available (yes/no)
- *          -  2 bits - ATWD Size 0(0), 01(1), 012(2), 0123(3)
- *          -  1 bit  - ATWD_AB
- *          - 11 bits - Hit Size
- * word1 - LSB of domclock
- * word2 - Peak word as defined above
- * word3 - compressed data start wordn - last of the compressed
- * data
  * 
  * @author dwharton
  */
@@ -223,7 +167,6 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     public static final int SIZE_WORD2                   = 4;  //-peak word
 
     public static final int SIZE_DELTA_RECORD_HDR        = SIZE_DOMCLOCK + SIZE_WORD0 + SIZE_WORD2;  //-when converted to a payload, both headers are included
-    public static final int SIZE_TOTAL                   = SIZE_DELTA_RECORD_HDR;
     //-----------------------------------------
     // FORMAT of Record can be derived from
     // these constants.
@@ -232,6 +175,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     public static final int OFFSET_DOMCLOCK                = 0;
     public static final int OFFSET_WORD0                   = OFFSET_DOMCLOCK + SIZE_DOMCLOCK;  //-offset of WORD0 as defined above
     public static final int OFFSET_WORD2                   = OFFSET_WORD0 + SIZE_WORD0;           //-offset of WORD2 as defined above
+    public static final int OFFSET_DATA                    = OFFSET_WORD2 + SIZE_WORD2;           //-offset of WORD2 as defined above
 
     //-Useful offsets
     public static final int OFFSET_TRIGGER_INFO            = OFFSET_WORD0;
@@ -261,6 +205,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     public static final String TRIGGER_INFO            = "TRIGGER_INFO";
     public static final String WAVEFORM_FLAGS_HIT_SIZE = "WAVEFORM_FLAGS_HIT_SIZE";
     public static final String PEAK_WORD               = "PEAK_WORD";
+    public static final String COMPRESSED_DATA               = "COMPRESSED_DATA";
 
     /**
      * boolean indicating if data has been successfully loaded into this 'container'
@@ -273,6 +218,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     public short msi_TRIGGER_INFO;              //- WORD0(0,1) 2 bytes: 2 bytes of trigger information (see doc's)
     public short msi_WAVEFORM_FLAGS_HIT_SIZE;   //- WORD0(2,3) next 2 bytes fADC avail, ATWD avail, ATWD size, ATWD_AB, HIT_SIZE
     public int   mi_PEAKINFO_FIELD;             //- WORD2 4 bytes Peak information
+    public byte[] compressedData;               //- compressed data
 
     /**
      *
@@ -369,8 +315,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     /**
      * loadData() loads the fixed format information from the delta
      * compressed record into the class variables so that it may be
-     * quickly accessed. This will not load any variable length
-     * information and will *not* load/decompress waveform data.
+     * quickly accessed.
      * 
      * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
      * @param tBuffer ...ByteBuffer from wich to construct the record.
@@ -390,7 +335,6 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
             int iWORD2 = tBuffer.getInt(iRecordOffset + OFFSET_WORD2 );
 
             //-load the trigger information
-            // msi_TRIGGER_INFO = tBuffer.getShort(iRecordOffset + OFFSET_TRIGGER_INFO);
             msi_TRIGGER_INFO = (short) (((iWORD0 & 0xFFFF0000) >> 16) & 0x0000FFFF);
             //-load combined waveform and hit size information
             // msi_WAVEFORM_FLAGS_HIT_SIZE = (short) tBuffer.getShort(iRecordOffset + OFFSET_WAVEFORM_FLAGS_HIT_SIZE);
@@ -414,6 +358,11 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
 
             //-pull out the information about the fADC & ATWD
             msi_fADC_ATWD_flags = (short) (msi_WAVEFORM_FLAGS_HIT_SIZE & ~MASK_HIT_SIZE_SHORT);
+
+            //-load compressed data
+            final int dataPos = iRecordOffset + OFFSET_DATA;
+            compressedData = new byte[msi_HitSize];
+            tBuffer.get(compressedData, dataPos, msi_HitSize);
 
             //-don't load if un-needed.
             mbLoaded = true;
@@ -479,13 +428,21 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
         //-write the raw information about he peaks
         tDestination.writeInt(PEAK_WORD, mi_PEAKINFO_FIELD);
         // iBytesWritten+=4;
-        iBytesWritten = SIZE_TOTAL;
+        iBytesWritten = SIZE_DELTA_RECORD_HDR;
+
+        //-write out the sequence of compressed data
+        if (tDestination.doLabel()) tDestination.label("[DeltaCompressedData] {").indent();
+        tDestination.write(COMPRESSED_DATA, compressedData);
+        if (tDestination.doLabel()) tDestination.undent().label("} [DeltaCompressedData]");
+
+
         //-create a label for output if needed (end of record)
         if (tDestination.doLabel()) tDestination.undent().label("} [DomHitDeltaCompressedFormatRecord]");
         //-return the number of bytes written to the stream
         return iBytesWritten;
     }
 
+    
     /**
      * Method to write this record to the payload destination.
      * @param iOffset ....the offset at which to start writing the object.
@@ -622,9 +579,20 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
         return tCopy;
     }
 
+    /**
+     * Get the trigger mode.
+     */
     public int getTriggerMode()
     {
         return getTriggerMode(msiTriggerFlags);
+    }
+
+    /**
+     * Get the record length.
+     */
+    public int getRecordLength()
+    {
+        return SIZE_DELTA_RECORD_HDR + msi_HitSize;
     }
 }
 
