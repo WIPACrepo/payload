@@ -278,13 +278,17 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
         sourceId.initialize(tSourceID.getSourceID());
         mt_sourceId = sourceId;
 
+        DOMID8B domID =  (DOMID8B) DOMID8B.getFromPool();
+        domID.initialize(tPayload.getDomId());
+        mt_domID = domID;
+
         mi_TriggerConfigID = iTriggerConfigID;
         mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
         mt_DeltaFormatRecord = tPayload.getRecord();
         UTCTime8B tTime = (UTCTime8B) UTCTime8B.getFromPool();
         tTime.initialize( tPayload.getPayloadTimeUTC().getUTCTimeAsLong() );
         mttime = (IUTCTime) tTime;
-        milength = PayloadEnvelope.SIZE_ENVELOPE + mt_DeltaFormatRecord.getRecordLength();
+        milength = SIZE_DELTA_HIT_PAYLOAD_TOTAL + mt_DeltaFormatRecord.getRecordLength();
         //-Fill in the envelope data
         mt_PayloadEnvelope.initialize(
             this.getPayloadType(),
@@ -339,6 +343,48 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
         //-label the output as needed (close the formatted section)
         if (tDestination.doLabel()) tDestination.undent().label("} [DeltaCompressedFormatHitPayload]");
         //-return the number of bytes written out by this formatted data.
+        return iBytesWritten;
+    }
+
+    /**
+     * This method writes this payload to the destination ByteBuffer
+     * at the specified offset and returns the length of bytes written to the destination.
+     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     *                                     false to write data normally (depending on backing)
+     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
+     *
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     *
+     * @throws IOException if an error occurs during the process
+     */
+    public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
+        int iBytesWritten = 0;
+        //-Check to make sure if this is a payload that has been loaded with backing
+        if (super.mtbuffer != null && bWriteLoaded == false) {
+            iBytesWritten =  super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
+        } else {
+            if (super.mtbuffer != null) {
+                try {
+                    loadPayload();
+                } catch ( DataFormatException tException) {
+                    throw new IOException("DataFormatException Caught during load");
+                }
+            }
+            //-create the new payload from both the envelope and the hit payload
+            //-Write out the PayloadEnvelope
+            // NOTE: the initialize method has already filled in the appropriate lengths
+            //       and the time (utc) has already been initialized.
+            mt_PayloadEnvelope.writeData(iDestOffset, tDestBuffer);
+            tDestBuffer.putInt(   iDestOffset + OFFSET_TRIGGER_TYPE , mi_TriggerType        );
+            tDestBuffer.putInt(   iDestOffset + OFFSET_TRIGGER_CONFIG_ID , mi_TriggerConfigID        );
+            tDestBuffer.putInt(   iDestOffset + OFFSET_SOURCE_ID         , mt_sourceId.getSourceID() );
+            tDestBuffer.putLong(  iDestOffset + OFFSET_DOM_ID         , mt_domID.getDomIDAsLong() );
+            //-Write out the 'subpayload'
+            mt_DeltaFormatRecord.writeData(
+                        (iDestOffset + OFFSET_DOMHIT_DELTACOMPRESSED_RECORD), tDestBuffer);
+            iBytesWritten = mt_PayloadEnvelope.miPayloadLen;
+        }
         return iBytesWritten;
     }
 
