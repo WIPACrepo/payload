@@ -159,30 +159,31 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     }
 
     /**
-     * Get's the Payload length from a Backing buffer (ByteBuffer)
-     * if possible, otherwise return -1.
-     * @param iOffset .....int which holds the position in the ByteBuffer
-     *                     to check for the Payload length.
-     * @param tBuffer .....ByteBuffer from which to extract the lenght of the payload
-     * @return int ........the lenght of the payload if it can be extracted, otherwise -1
+     * writes out the header portion which contains the TESTDAQ header.
      *
-     * @exception IOException ...........is thrown if there is trouble reading the Payload length
-     * @exception DataFormatException ...is thrown if there is something wrong with the payload and the
-     *                                   length cannot be read.
+     * @param tDestination PayloadDestination
      */
-    public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
-        int iRecLength = -1;
-        //-NOTE: This pulls out the length from the TestDAQ header and not from the HIT -- this will
-        //       have to change as we move to multiplexed DomHub data, that can contain multiple hits!!
-        //       This means that this payload will ONLY represent a single hit and will have to pull
-        //       the length of a single record from the record itself.......developing dbw 11/08/04
-        //-Check to make sure that enough data exists to read the lenght...
-        int iOffsetNeeded = iOffset + OFFSET_RECLEN + SIZE_RECLEN;
-        if (iOffsetNeeded >= tBuffer.limit()) {
-            //-If enough data to read length, then read the length and return it.
-            iRecLength = tBuffer.getInt(iOffset + OFFSET_RECLEN);
-        }
-        return iRecLength;
+    private int writeTestDaqHdr(PayloadDestination tDestination) throws IOException {
+        //-read from the current position the data necessary to construct the spliceable.
+        //--This might not be necessary
+        //synchronized (mtbuffer) {
+        //}
+        //-load the header data, (and anything else necessary for implementation
+        // of Spliceable ie - needed for compareTo() ).
+        // miRecLen = super.milength = mtbuffer.getInt(mioffset + OFFSET_RECLEN);
+        tDestination.writeInt("RECLEN", miRecLen);
+
+        //miRecId = mtbuffer.getInt(mioffset + OFFSET_RECID);
+        tDestination.writeInt("RECID", miRecId);
+
+        //mlDomId = mtbuffer.getLong(mioffset + OFFSET_DOMID);
+        tDestination.writeLong("DOMID", mlDomId);
+
+        tDestination.writeLong("FILLER", 0L);
+        //-TODO: Adjust the time based on the TimeCalibration will eventually have to be done!
+        // mlUTime = mtbuffer.getLong(mioffset + OFFSET_UTIME);
+        tDestination.writeLong("UTIME", mlUTime);
+        return SIZE_HDR;
     }
 
     /**
@@ -266,8 +267,8 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
 			mtDomHitDeltaCompressedRecord.recycle();
 			mtDomHitDeltaCompressedRecord = null;
 		}
-		//-CALLTHIS LAST!!!!!  Payload takes care of eventually calling dispose() once it reaches the base class
-		// (in other words: .dispose() is only call ONCE by Payload.recycle() after it has finnished its work!
+		//-CALL THIS LAST!!!!!  Payload takes care of eventually calling recycle() once it reaches the base class
+		// (in other words: .recycle() is only call ONCE by Payload.recycle() after it has finished its work!
 		super.recycle();
     }
 
@@ -318,8 +319,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
             } catch (DataFormatException tException) {
                 throw new IOException("DataFormatException thrown during load");
             }
-            mt_PayloadEnvelope.writeData(tDestination);
-            iLength += PayloadEnvelope.SIZE_ENVELOPE;
+            iLength += writeTestDaqHdr(tDestination);
             iLength += mtDomHitDeltaCompressedRecord.writeData(tDestination);
         } else {
             iLength = super.writePayload(false, tDestination);

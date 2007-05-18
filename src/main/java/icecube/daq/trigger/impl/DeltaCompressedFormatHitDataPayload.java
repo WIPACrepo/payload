@@ -50,12 +50,11 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
     public static final int SIZE_DOM_ID            = 8;
     public static final int SIZE_DELTA_RECORD_HDR  = DomHitDeltaCompressedFormatRecord.SIZE_DELTA_RECORD_HDR;
 
-    public static final int SIZE_DELTA_HIT_PAYLOAD_TOTAL =  PayloadEnvelope.SIZE_ENVELOPE +
-                                                            SIZE_TRIGGER_TYPE             +
-                                                            SIZE_TRIGGER_CONFIG_ID        +
-                                                            SIZE_SOURCE_ID                +
-                                                            SIZE_DOM_ID                   +
-                                                            SIZE_DELTA_RECORD_HDR;
+    public static final int SIZE_WITHOUT_RECORD    =  PayloadEnvelope.SIZE_ENVELOPE +
+                                                      SIZE_TRIGGER_TYPE             +
+                                                      SIZE_TRIGGER_CONFIG_ID        +
+                                                      SIZE_SOURCE_ID                +
+                                                      SIZE_DOM_ID;
 
     /**
      * Names of the fields
@@ -105,6 +104,17 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
         super.mipayloadinterfacetype = PayloadInterfaceRegistry.I_HIT_DATA_PAYLOAD;
     }
 
+    /**
+     * This method allows an object to be reinitialized to a new backing buffer
+     * and position within that buffer.
+     * @param iOffset ...int representing the initial position of the object
+     *                   within the ByteBuffer backing.
+     * @param tBackingBuffer ...ByteBuffer the backing buffer for this object.
+     */
+    public void initialize(int iOffset, ByteBuffer tBackingBuffer) throws IOException, DataFormatException {
+        super.mioffset = iOffset;
+        super.mtbuffer = tBackingBuffer;
+    }
 
     /**
      * Get's access to the underlying data for a delta compressed hit.
@@ -288,7 +298,7 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
         UTCTime8B tTime = (UTCTime8B) UTCTime8B.getFromPool();
         tTime.initialize( tPayload.getPayloadTimeUTC().getUTCTimeAsLong() );
         mttime = (IUTCTime) tTime;
-        milength = SIZE_DELTA_HIT_PAYLOAD_TOTAL + mt_DeltaFormatRecord.getRecordLength();
+        milength = SIZE_WITHOUT_RECORD + mt_DeltaFormatRecord.getRecordLength();
         //-Fill in the envelope data
         mt_PayloadEnvelope.initialize(
             this.getPayloadType(),
@@ -313,7 +323,7 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
         int iBytesWritten = 0;
         //-label the output as needed (open the formatted section)
         if (tDestination.doLabel()) tDestination.label("[DeltaCompressedFormatHitPayload] {").indent();
-        if (!bWriteLoaded) {
+        if (!bWriteLoaded && mtbuffer != null) {
             //-write out the bytebuffer based data without loading it
             iBytesWritten = super.writePayload(bWriteLoaded, tDestination);
         } else {
@@ -427,40 +437,9 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
             mb_DeltaPayloadLoaded = true;
         }
     }
-    /**
-     * Initialize the hit information from a DeltaCompressedFormatHitDataPayload object.
-     * @param DeltaCompressedFormatHitDataPayload .... the Reference Payload (carrying data) to use
-     *        to create this light-weight version without the waveform but preserving the essential
-     *        information.
-     */
-/*
-    public void initialize(DeltaCompressedFormatHitDataPayload tPayload) {
-        //-copy the ISourceID
-        mt_sourceId = (SourceID4B) tPayload.getSourceID().deepCopy();
-        //-This has the same parameters as the parent
-        mi_TriggerType = tPayload.getTriggerType();
-        mi_TriggerConfigID = tPayload.getTriggerConfigID();
-
-        //-initialize the payload's time to that of the reference payload
-        ((UTCTime8B) mttime).initialize(tPayload.getPayloadTimeUTC().getUTCTimeAsLong());
-        //-the length for this type is fixed
-        super.milength = SIZE_DELTA_HIT_PAYLOAD_TOTAL;
-        //-there is not buffer backing for this payload yet.
-        super.mtbuffer = null;
-        //-initialize the PayloadEnvelope with the information gleaned from the reference
-        mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
-        mt_PayloadEnvelope.initialize( mipayloadtype, milength, mttime.getUTCTimeAsLong() );
-        mb_IsEnvelopeLoaded = true;
-
-        //-create and initialize the DomHitDeltaCompressedRecord from the reference.
-        mt_domID = (IDOMID) DOMID8B.getFromPool();
-        ((DOMID8B)mt_domID).initialize( tPayload.getDOMID().getDomIDAsLong() );
-        mb_DeltaPayloadLoaded = true;
-    }
-*/
 
     /**
-     * Get's access to the underlying data for an engineering hit
+     * Get's access to the underlying data for a delta compressed hit
      */
     public IHitDataRecord getHitRecord() throws IOException, DataFormatException {
         return (IHitDataRecord) mt_DeltaFormatRecord;

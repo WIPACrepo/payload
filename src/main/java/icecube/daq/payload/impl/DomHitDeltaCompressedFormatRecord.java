@@ -218,7 +218,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     public static final String TRIGGER_INFO            = "TRIGGER_INFO";
     public static final String WAVEFORM_FLAGS_HIT_SIZE = "WAVEFORM_FLAGS_HIT_SIZE";
     public static final String PEAK_WORD               = "PEAK_WORD";
-    public static final String COMPRESSED_DATA               = "COMPRESSED_DATA";
+    public static final String COMPRESSED_DATA         = "COMPRESSED_DATA";
 
     /**
      * boolean indicating if data has been successfully loaded into this 'container'
@@ -385,10 +385,13 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
             //-pull out the information about the fADC & ATWD
             msi_fADC_ATWD_flags = (short) (msi_WAVEFORM_FLAGS_HIT_SIZE & ~MASK_HIT_SIZE_SHORT);
 
+            // size of WORD0-WORD2
+            final int sizeCompressedHeader = 12;
+
             //-load compressed data
             final int origPos = tBuffer.position();
             tBuffer.position(iRecordOffset + OFFSET_DATA);
-            compressedData = new byte[msi_HitSize - SIZE_DELTA_RECORD_HDR];
+            compressedData = new byte[msi_HitSize - sizeCompressedHeader];
             tBuffer.get(compressedData);
             tBuffer.position(origPos);
 
@@ -462,13 +465,13 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
         //-write the raw information about he peaks
         tDestination.writeInt(PEAK_WORD, mi_PEAKINFO_FIELD);
         // iBytesWritten+=4;
-        iBytesWritten = SIZE_DELTA_RECORD_HDR;
 
         //-write out the sequence of compressed data
         if (tDestination.doLabel()) tDestination.label("[DeltaCompressedData] {").indent();
         tDestination.write(COMPRESSED_DATA, compressedData);
         if (tDestination.doLabel()) tDestination.undent().label("} [DeltaCompressedData]");
 
+        iBytesWritten = SIZE_DELTA_RECORD_HDR + compressedData.length;
 
         //-create a label for output if needed (end of record)
         if (tDestination.doLabel()) tDestination.undent().label("} [DomHitDeltaCompressedFormatRecord]");
@@ -629,7 +632,15 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
             throw new Error("Record has not been loaded");
         }
 
-        return msi_HitSize;
+        return SIZE_DELTA_RECORD_HDR + compressedData.length;
+    }
+
+    /**
+     * Get words 3-N of the compressed data bytes.
+     */
+    public byte[] getCompressedData()
+    {
+        return compressedData;
     }
 }
 
