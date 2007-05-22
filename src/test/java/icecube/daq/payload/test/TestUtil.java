@@ -528,6 +528,22 @@ public abstract class TestUtil
         return buf;
     }
 
+    /**
+     * Extract an engineering format trigger mode from a set of
+     * delta compression trigger flags
+     */
+    public static int getEngFmtTriggerMode(int dcTrigFlags)
+    {
+        int mode = 0;
+        if ((dcTrigFlags & 0x3) != 0) {
+            mode |= 0x2;
+        }
+        if ((dcTrigFlags & 0x4) != 0) {
+            mode |= 0x1;
+        }
+        return mode;
+    }
+
     private static void putPayloadEnvelope(ByteBuffer buf, int len, int type,
                                            long utcTime)
     {
