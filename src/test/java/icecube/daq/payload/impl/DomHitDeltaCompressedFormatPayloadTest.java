@@ -50,7 +50,7 @@ public class DomHitDeltaCompressedFormatPayloadTest
         final short pedestal = 31;
         final long domClock = 103254L;
         final boolean isCompressed = true;
-        final int trigFlags = 7;
+        final int trigFlags = 4;
         final int lcFlags = 2;
         final boolean hasFADC = false;
         final boolean hasATWD = true;
@@ -77,7 +77,16 @@ public class DomHitDeltaCompressedFormatPayloadTest
         DomHitDeltaCompressedFormatPayload hit =
             new DomHitDeltaCompressedFormatPayload();
         hit.initialize(0, buf);
+
+        assertEquals("Bad unloaded triggerMode",
+                     TestUtil.getEngFmtTriggerMode(trigFlags),
+                     hit.getTriggerMode());
+
         hit.loadPayload();
+
+        assertEquals("Bad loaded triggerMode",
+                     TestUtil.getEngFmtTriggerMode(trigFlags),
+                     hit.getTriggerMode());
 
         assertEquals("Bad DOM ID", domId, hit.getDOMID().getDomIDAsLong());
         assertEquals("Bad DOM ID value", domId, hit.getDomId());
@@ -86,6 +95,10 @@ public class DomHitDeltaCompressedFormatPayloadTest
         assertEquals("Bad timestamp", utcTime, hit.getTimestamp());
 
         DomHitDeltaCompressedFormatRecord hitRec = hit.getRecord();
+
+        assertEquals("Bad record triggerMode",
+                     TestUtil.getEngFmtTriggerMode(trigFlags),
+                     hitRec.getTriggerMode());
 
         byte[] compressedData = hitRec.getCompressedData();
         assertNotNull("Compressed data array is null", compressedData);

@@ -42,6 +42,40 @@ public class DomHitDeltaCompressedFormatRecordTest
                      RecordTypeRegistry.RECORD_TYPE_DELTA_COMPRESSED_HIT);
     }
 
+    public void testTriggerMode()
+        throws Exception
+    {
+        for (int i = 0; i < 16; i++) {
+            final int expMode = TestUtil.getEngFmtTriggerMode(i);
+
+            final int mode =
+                DomHitDeltaCompressedFormatRecord.getTriggerMode((short) i);
+
+            assertEquals("Bad trigger mode #" + i, expMode, mode);
+        }
+    }
+
+    public void testTriggerModeInByteBuffer()
+        throws Exception
+    {
+        final int offset =
+            DomHitDeltaCompressedFormatRecord.OFFSET_WORD0;
+
+        ByteBuffer buf = ByteBuffer.allocate(offset + 4);
+        buf.putShort(DomHitDeltaCompressedFormatRecord.OFFSET_ORDERCHECK,
+                     (short) 1);
+
+        for (int i = 0; i < 16; i++) {
+            final int expMode = TestUtil.getEngFmtTriggerMode(i);
+
+            buf.putInt(offset, (i << 18));
+            final int mode =
+                DomHitDeltaCompressedFormatRecord.getTriggerMode(0, buf);
+
+            assertEquals("Bad trigger mode #" + i, expMode, mode);
+        }
+    }
+
     public void testCreate()
         throws Exception
     {
@@ -94,6 +128,10 @@ public class DomHitDeltaCompressedFormatRecordTest
             assertEquals("Bad data byte #" + i,
                          dataBytes[i], compressedData[i]);
         }
+
+        assertEquals("Bad triggerMode",
+                     TestUtil.getEngFmtTriggerMode(trigFlags),
+                     DomHitDeltaCompressedFormatRecord.getTriggerMode(0, buf));
 
         hitRec.recycle();
         assertFalse("Data should NOT be loaded", hitRec.isDataLoaded());
@@ -151,6 +189,10 @@ public class DomHitDeltaCompressedFormatRecordTest
             assertEquals("Bad data byte #" + i,
                          dataBytes[i], compressedData[i]);
         }
+
+        assertEquals("Bad triggerMode",
+                     TestUtil.getEngFmtTriggerMode(trigFlags),
+                     hitRec.getTriggerMode());
 
         hitRec.recycle();
         assertFalse("Data should NOT be loaded", hitRec.isDataLoaded());

@@ -187,10 +187,6 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     public static final int OFFSET_WORD2                   = OFFSET_WORD0 + SIZE_WORD0;           //-offset of WORD2 as defined above
     public static final int OFFSET_DATA                    = OFFSET_WORD2 + SIZE_WORD2;           //-offset of WORD2 as defined above
 
-    //-Useful offsets
-    public static final int OFFSET_TRIGGER_INFO            = OFFSET_WORD0;
-    public static final int OFFSET_WAVEFORM_HITSIZE        = OFFSET_WORD0 + 2;
-
     //-Useful masks
     public static final short MASK_HIT_SIZE_SHORT = (short) 0x07FF;
     public static final short MASK_RAW_TRIGGER    = (short) 0x7FFF;
@@ -501,12 +497,11 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
         //-write the dom-clock
         tBuffer.putLong(iOffset + OFFSET_DOMCLOCK, ml_DOMCLOCK);
         // iBytesWritten+=8;
+        int word0 = ((((int) msi_TRIGGER_INFO) << 16) |
+                     (int) msi_WAVEFORM_FLAGS_HIT_SIZE);
         //-write the trigger information
-        tBuffer.putShort(iOffset + OFFSET_TRIGGER_INFO, msi_TRIGGER_INFO);
-        // iBytesWritten+=2;
-        //-write combined waveform and hit size information
-        tBuffer.putShort(iOffset + OFFSET_WAVEFORM_HITSIZE, msi_WAVEFORM_FLAGS_HIT_SIZE);
-        // iBytesWritten+=2;
+        tBuffer.putInt(iOffset + OFFSET_WORD0, word0);
+        // iBytesWritten+=4;
         //-write the raw information about he peaks
         tBuffer.putInt(iOffset + OFFSET_WORD2, mi_PEAKINFO_FIELD);
         // iBytesWritten+=4;
@@ -532,26 +527,44 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
      * @param tBuffer ...ByteBuffer from wich to construct the record.
      * 
-     * @return short containing the flags indicating the trigger
-     *         conditions as defined in the DOM Raw Trigger format
-     *         (lower 11 bits)
+     * @return the Beacon and SPE/MPE bits mapped to their appropriate places
+     *         in the Engineering trigger mode
      *
      * @exception IOException if errors are detected reading the record
      */
     public static short getTriggerMode(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
-            return getTriggerMode(tBuffer.getShort(iRecordOffset + OFFSET_TRIGGER_INFO));
+        ByteOrder tOrder = tBuffer.order();
+        short chk = tBuffer.getShort(iRecordOffset + OFFSET_ORDERCHECK);
+        if (chk != 1) {
+            ByteOrder tReadOrder = (tOrder == ByteOrder.LITTLE_ENDIAN ?
+                                    ByteOrder.BIG_ENDIAN :
+                                    ByteOrder.LITTLE_ENDIAN);
+            tBuffer.order(tReadOrder);
+            chk = tBuffer.getShort(iRecordOffset + OFFSET_ORDERCHECK);
+            if (chk != 1) {
+                throw new IOException("Not a delta compressed record");
+            }
+        }
+        int word0 = tBuffer.getInt(iRecordOffset + OFFSET_WORD0);
+
+        //-restore order
+        tBuffer.order(tOrder);
+
+        int trigInfo = (word0 >> 16) & 0xffff;
+        short trigFlags = (short) ((trigInfo >> 2) & TRIGGER_WORD_SHIFTED_MASK);
+        return getTriggerMode(trigFlags);
     }
     /**
      * Pulls out the Trigger Mode from the trigger flags.
      * 
-     * @param msiTriggerFlags ...short 
+     * @param trigFlags delta compressed trigger flags
      * 
-     * @return short containing the flags indicating the trigger
-     *         conditions as defined in the DOM Raw Trigger format
-     *         (lower 11 bits)
+     * @return the Beacon and SPE/MPE bits mapped to their appropriate places
+     *         in the Engineering trigger mode
      */
-    public static short getTriggerMode(short msiTriggerFlags) {
-            return (short) ((msiTriggerFlags >> 2) & TRIGGER_WORD_SHIFTED_MASK);
+    public static short getTriggerMode(short trigFlags) {
+            return (short) (((trigFlags & 0x4) == 0 ? 0 : 1) +
+                            ((trigFlags & 0x3) == 0 ? 0 : 2));
     }
 
     /**
