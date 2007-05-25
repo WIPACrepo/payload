@@ -498,7 +498,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
         tBuffer.putLong(iOffset + OFFSET_DOMCLOCK, ml_DOMCLOCK);
         // iBytesWritten+=8;
         int word0 = ((((int) msi_TRIGGER_INFO) << 16) |
-                     (int) msi_WAVEFORM_FLAGS_HIT_SIZE);
+                     ((int) msi_WAVEFORM_FLAGS_HIT_SIZE & 0xffff));
         //-write the trigger information
         tBuffer.putInt(iOffset + OFFSET_WORD0, word0);
         // iBytesWritten+=4;
