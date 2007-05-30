@@ -61,14 +61,20 @@ public class CompositePayloadFactory extends PayloadFactory {
             } else {
                 for (int ii=0; ii < tPayloads.size(); ii++) {
                     bDeepCopyOK = false;
-                    Object tObject = tPayloads.get(ii);
-                    if (tObject != null) {
-                        Object tCopy = ((Payload) tObject).deepCopy();
-                        if (tCopy != null) {
-                            tPayloadsCopy.add(tCopy);
-                       } else {
+                    ILoadablePayload tPay =
+                        (ILoadablePayload) tPayloads.get(ii);
+                    if (tPay != null) {
+                        Object tCopy = tPay.deepCopy();
+                        if (tCopy == null) {
+                            mtLog.error("Cannot deep-copy composite payload " +
+                                        ii + " of " + tPayloads.size() +
+                                        " (type " + tPay.getPayloadType() +
+                                        ", length " + tPay.getPayloadLength() +
+                                        ")");
+                            tCopy = null;
                             break;
                         }
+                        tPayloadsCopy.add(tCopy);
                     }
                     bDeepCopyOK = true;
                 }
