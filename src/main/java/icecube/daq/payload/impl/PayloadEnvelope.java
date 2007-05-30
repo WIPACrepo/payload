@@ -83,6 +83,14 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
      */
     public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
         mb_IsLoaded = false;
+        if (tBuffer.limit() < iRecordOffset + OFFSET_UTIME + SIZE_UTIME) {
+            throw new DataFormatException("Cannot read payload envelope;" +
+                                          " need " +
+                                          (iRecordOffset +OFFSET_UTIME +
+                                           SIZE_UTIME) + " bytes, but only " +
+                                          tBuffer.limit() + " are available");
+        }
+
         ByteOrder tSaveOrder = tBuffer.order();
         tBuffer.order(ByteOrder.BIG_ENDIAN);
         //-read the payload length
@@ -177,11 +185,23 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
      *                                   length cannot be read.
      */
     public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+        if (tBuffer.limit() < iOffset + OFFSET_PAYLOADLEN + SIZE_PAYLOADLEN) {
+            throw new DataFormatException("Cannot read payload length;" +
+                                          " need " +
+                                          (iOffset + OFFSET_PAYLOADLEN +
+                                           SIZE_PAYLOADLEN) +
+                                          " bytes, but only " +
+                                          tBuffer.limit() + " are available");
+        }
         int iRecLength = -1;
         ByteOrder tSaveOrder = tBuffer.order();
         //-The Payload Envelope has been defined to always be BIG_ENDIAN
+        tBuffer.order(ByteOrder.BIG_ENDIAN);
         iRecLength = tBuffer.getInt(iOffset + OFFSET_PAYLOADLEN);
-        tBuffer.order(tSaveOrder);
+        //-restore endianess to the buffer
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
         return iRecLength;
     }
 }
