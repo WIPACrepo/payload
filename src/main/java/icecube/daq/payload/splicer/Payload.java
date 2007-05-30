@@ -482,13 +482,11 @@ public abstract class Payload extends Poolable
             }
 
         } catch ( DataFormatException tException ) {
-            String sMsg = "DataFormatException has been thrown during deep copy";
-            mtLog.error(sMsg);
-            bCopyOk = true;
+            mtLog.error("Couldn't make deep copy", tException);
+            bCopyOk = false;
         } catch ( IOException tException ) {
-            String sMsg = "IOException has been thrown during deep copy";
-            mtLog.error(sMsg);
-            bCopyOk = true;
+            mtLog.error("Couldn't make deep copy", tException);
+            bCopyOk = false;
         } finally {
             if (!bCopyOk) {
                 //-If an error occurs return the new ByteBuffer to the cache if needed.
