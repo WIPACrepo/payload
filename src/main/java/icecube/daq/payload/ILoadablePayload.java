@@ -17,6 +17,14 @@ public interface ILoadablePayload
         throws IOException, DataFormatException;
 
     /**
+     * Make a 'deep-copy' of the Payload so that all internally referenced
+     * objects are completely new.
+     * 
+     * @return Payload which is a deep copy of this Payload
+     */
+    Object deepCopy();
+
+    /**
      * Object knows how to recycle itself
      */
     void recycle();
