@@ -1,10 +1,12 @@
 package icecube.daq.payload.test;
 
 import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.payload.RecordTypeRegistry;
 
 import icecube.daq.trigger.IHitPayload;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
+import icecube.daq.trigger.ITriggerRequestPayload;
 
 import java.lang.reflect.Array;
 
@@ -340,6 +342,71 @@ public abstract class TestUtil
         return buf;
     }
 
+    public static ByteBuffer createEvent(int uid, int srcId, long firstTime,
+                                         long lastTime, int type, int cfgId,
+                                         int runNum,
+                                         ITriggerRequestPayload trigReq,
+                                         List hitList)
+    {
+        ByteBuffer recBuf = createEventRecord(uid, srcId, firstTime, lastTime,
+                                              type, cfgId, runNum);
+
+        ByteBuffer trBuf = createTriggerRequest(trigReq);
+
+        ByteBuffer rdBuf =
+            createReadoutDataPayload(uid, 1, true, srcId, firstTime, lastTime,
+                                     hitList);
+
+        final int bufListBytes = trBuf.limit() + rdBuf.limit();
+        final int compLen = 8 + bufListBytes;
+        final int bufLen = 16 + recBuf.limit() + compLen;
+
+        ByteBuffer buf = ByteBuffer.allocate(bufLen);
+        putPayloadEnvelope(buf, bufLen, PayloadRegistry.PAYLOAD_ID_EVENT_V2,
+                           firstTime);
+        buf.put(recBuf);
+
+        putCompositeEnvelope(buf, bufListBytes,
+                             PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT, 2);
+        buf.put(trBuf);
+        buf.put(rdBuf);
+
+        buf.flip();
+
+        if (buf.limit() != buf.capacity()) {
+            throw new Error("Expected payload length is " + buf.capacity() +
+                            ", actual length is " + buf.limit());
+        }
+
+        return buf;
+    }
+
+    public static ByteBuffer createEventRecord(int uid, int srcId,
+                                               long firstTime, long lastTime,
+                                               int type, int cfgId, int runNum)
+    {
+        final int bufLen = 38;
+
+        ByteBuffer buf = ByteBuffer.allocate(bufLen);
+        buf.putShort((short) RecordTypeRegistry.RECORD_TYPE_EVENT_V2);
+        buf.putInt(uid);
+        buf.putInt(srcId);
+        buf.putLong(firstTime);
+        buf.putLong(lastTime);
+        buf.putInt(type);
+        buf.putInt(cfgId);
+        buf.putInt(runNum);
+
+        buf.flip();
+
+        if (buf.limit() != buf.capacity()) {
+            throw new Error("Expected payload length is " + buf.capacity() +
+                            ", actual length is " + buf.limit());
+        }
+
+        return buf;
+    }
+
     public static ByteBuffer createReadoutDataPayload(int uid, int payNum,
                                                       boolean isLast,
                                                       int srcId,
@@ -347,6 +414,9 @@ public abstract class TestUtil
                                                       long lastTime,
                                                       List hitList)
     {
+        ByteBuffer recBuf = createReadoutDataRecord(uid, payNum, isLast, srcId,
+                                                    firstTime, lastTime);
+
         int bufListBytes = 0;
 
         ArrayList<ByteBuffer> bufList = new ArrayList<ByteBuffer>();
@@ -368,11 +438,39 @@ public abstract class TestUtil
         }
 
         final int compLen = 8 + bufListBytes;
-        final int bufLen = 46 + compLen;
+        final int bufLen = 16 + recBuf.limit() + compLen;
 
         ByteBuffer buf = ByteBuffer.allocate(bufLen);
         putPayloadEnvelope(buf, bufLen, PayloadRegistry.PAYLOAD_ID_READOUT_DATA,
                            firstTime);
+        buf.put(recBuf);
+
+        putCompositeEnvelope(buf, bufListBytes,
+                             PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT,
+                             bufList.size());
+        for (ByteBuffer hitBuf : bufList) {
+            buf.put(hitBuf);
+        }
+
+        buf.flip();
+
+        if (buf.limit() != buf.capacity()) {
+            throw new Error("Expected payload length is " + buf.capacity() +
+                            ", actual length is " + buf.limit());
+        }
+
+        return buf;
+    }
+
+    public static ByteBuffer createReadoutDataRecord(int uid, int payNum,
+                                                     boolean isLast,
+                                                     int srcId,
+                                                     long firstTime,
+                                                     long lastTime)
+    {
+        final int bufLen = 30;
+
+        ByteBuffer buf = ByteBuffer.allocate(bufLen);
         buf.putShort((short) 0xff);
         buf.putInt(uid);
         buf.putShort((short) payNum);
@@ -380,13 +478,6 @@ public abstract class TestUtil
         buf.putInt(srcId);
         buf.putLong(firstTime);
         buf.putLong(lastTime);
-
-        buf.putInt(bufListBytes);
-        buf.putShort((short) PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT);
-        buf.putShort((short) bufList.size());
-        for (ByteBuffer hitBuf : bufList) {
-            buf.put(hitBuf);
-        }
 
         buf.flip();
 
@@ -412,24 +503,54 @@ public abstract class TestUtil
         buf.putInt(srcId);
         buf.putInt(elemList.size());
         for (Object obj : elemList) {
-            IReadoutRequestElement elem = (IReadoutRequestElement) obj;
-
-            buf.putInt(elem.getReadoutType());
-            if (elem.getSourceID() == null) {
-                buf.putInt(-1);
-            } else {
-                buf.putInt(elem.getSourceID().getSourceID());
-            }
-            buf.putLong(elem.getFirstTimeUTC().getUTCTimeAsLong());
-            buf.putLong(elem.getLastTimeUTC().getUTCTimeAsLong());
-            if (elem.getDomID() == null) {
-                buf.putLong(-1);
-            } else {
-                buf.putLong(elem.getDomID().getDomIDAsLong());
-            }
+            putReadoutRequestElement(buf, (IReadoutRequestElement) obj);
         }
 
         buf.flip();
+
+        if (buf.limit() != buf.capacity()) {
+            throw new Error("Expected payload length is " + buf.capacity() +
+                            ", actual length is " + buf.limit());
+        }
+
+        return buf;
+    }
+
+    public static ByteBuffer createReadoutRequestElementRecord(int type,
+                                                               int srcId,
+                                                               long firstTime,
+                                                               long lastTime,
+                                                               long domId)
+    {
+        return createReadoutRequestElementRecord(type, srcId, firstTime,
+                                                 lastTime, domId,
+                                                 ByteOrder.BIG_ENDIAN);
+    }
+
+    public static ByteBuffer createReadoutRequestElementRecord(int type,
+                                                               int srcId,
+                                                               long firstTime,
+                                                               long lastTime,
+                                                               long domId,
+                                                               ByteOrder order)
+    {
+        final int bufLen = 32;
+
+        ByteBuffer buf = ByteBuffer.allocate(bufLen);
+
+        final ByteOrder origOrder = buf.order();
+
+        buf.order(order);
+
+        buf.putInt(type);
+        buf.putInt(srcId);
+        buf.putLong(firstTime);
+        buf.putLong(lastTime);
+        buf.putLong(domId);
+
+        buf.flip();
+
+        buf.order(origOrder);
 
         if (buf.limit() != buf.capacity()) {
             throw new Error("Expected payload length is " + buf.capacity() +
@@ -443,7 +564,7 @@ public abstract class TestUtil
                                              int cfgId, int srcId, long domId,
                                              int trigMode)
     {
-        final int bufLen = 40;
+        final int bufLen = 38;
 
         ByteBuffer buf = ByteBuffer.allocate(bufLen);
         putPayloadEnvelope(buf, bufLen, PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT,
@@ -452,7 +573,56 @@ public abstract class TestUtil
         buf.putInt(cfgId);
         buf.putInt(srcId);
         buf.putLong(domId);
-        buf.putInt(trigMode);
+        buf.putShort((short) trigMode);
+
+        buf.flip();
+
+        if (buf.limit() != buf.capacity()) {
+            throw new Error("Expected payload length is " + buf.capacity() +
+                            ", actual length is " + buf.limit());
+        }
+
+        return buf;
+    }
+
+    public static ByteBuffer createTriggerRequest(ITriggerRequestPayload req)
+    {
+        final long firstTime = req.getFirstTimeUTC().getUTCTimeAsLong();
+
+        return createTriggerRequest(firstTime, req.getUID(),
+                                    req.getTriggerType(),
+                                    req.getTriggerConfigID(),
+                                    req.getSourceID().getSourceID(),
+                                    firstTime,
+                                    req.getLastTimeUTC().getUTCTimeAsLong(),
+                                    req.getHitList(),
+                                    req.getReadoutRequest());
+    }
+
+    public static ByteBuffer createTriggerRequestRecord(long utcTime, int uid,
+                                                        int trigType,
+                                                        int cfgId, int srcId,
+                                                        long firstTime,
+                                                        long lastTime,
+                                                        IReadoutRequest rReq)
+    {
+        ByteBuffer rrBuf =
+            createReadoutRequest(utcTime, rReq.getUID(),
+                                 rReq.getSourceID().getSourceID(),
+                                 rReq.getReadoutRequestElements());
+
+        final int bufLen = 50 + (rrBuf.getInt(0) - 16);
+
+        ByteBuffer buf = ByteBuffer.allocate(bufLen);
+        buf.putShort((short) RecordTypeRegistry.RECORD_TYPE_TRIGGER_REQUEST);
+        buf.putInt(uid);
+        buf.putInt(trigType);
+        buf.putInt(cfgId);
+        buf.putInt(srcId);
+        buf.putLong(firstTime);
+        buf.putLong(lastTime);
+
+        buf.put(rrBuf.array(), 16, rrBuf.limit() - 16);
 
         buf.flip();
 
@@ -511,9 +681,9 @@ public abstract class TestUtil
 
         buf.put(rrBuf.array(), 16, rrBuf.limit() - 16);
 
-        buf.putInt(bufListBytes);
-        buf.putShort((short) PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT);
-        buf.putShort((short) bufList.size());
+        putCompositeEnvelope(buf, bufListBytes,
+                             PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT,
+                             bufList.size());
         for (ByteBuffer hitBuf : bufList) {
             buf.put(hitBuf);
         }
@@ -544,12 +714,75 @@ public abstract class TestUtil
         return mode;
     }
 
+    private static void putCompositeEnvelope(ByteBuffer buf, int len, int type,
+                                             int numRecs)
+    {
+        buf.putInt(len);
+        buf.putShort((short) type);
+        buf.putShort((short) numRecs);
+    }
+
+    public static void putDomClock(ByteBuffer bb, int offset, long domClock)
+    {
+        int shift = 40;
+        for (int i = 0; i < 6; i++) {
+            bb.put(offset + i, (byte) ((int) (domClock >> shift) & 0xff));
+            shift -= 8;
+        }
+    }
+
     private static void putPayloadEnvelope(ByteBuffer buf, int len, int type,
                                            long utcTime)
     {
         buf.putInt(len);
         buf.putInt(type);
         buf.putLong(utcTime);
+    }
+
+    private static void putReadoutRequestElement(ByteBuffer buf,
+                                                 IReadoutRequestElement elem)
+    {
+        int srcId;
+        if (elem.getSourceID() == null) {
+            srcId = -1;
+        } else {
+            srcId = elem.getSourceID().getSourceID();
+        }
+
+        long firstTime;
+        if (elem.getFirstTimeUTC() == null) {
+            firstTime = -1L;
+        } else {
+            firstTime = elem.getFirstTimeUTC().getUTCTimeAsLong();
+        }
+
+        long lastTime;
+        if (elem.getLastTimeUTC() == null) {
+            lastTime = -1L;
+        } else {
+            lastTime = elem.getLastTimeUTC().getUTCTimeAsLong();
+        }
+
+        long domId;
+        if (elem.getDomID() == null) {
+            domId = -1;
+        } else {
+            domId = elem.getDomID().getDomIDAsLong();
+        }
+
+        putReadoutRequestElement(buf, elem.getReadoutType(), srcId, firstTime,
+                                 lastTime, domId);
+    }
+
+    private static void putReadoutRequestElement(ByteBuffer buf, int type,
+                                                 int srcId, long firstTime,
+                                                 long lastTime, long domId)
+    {
+        buf.putInt(type);
+        buf.putInt(srcId);
+        buf.putLong(firstTime);
+        buf.putLong(lastTime);
+        buf.putLong(domId);
     }
 
     public static String toHexString(ByteBuffer bb)
@@ -573,14 +806,5 @@ public abstract class TestUtil
         }
 
         return buf.toString();
-    }
-
-    public static void putDomClock(ByteBuffer bb, int offset, long domClock)
-    {
-        int shift = 40;
-        for (int i = 0; i < 6; i++) {
-            bb.put(offset + i, (byte) ((int) (domClock >> shift) & 0xff));
-            shift -= 8;
-        }
     }
 }
