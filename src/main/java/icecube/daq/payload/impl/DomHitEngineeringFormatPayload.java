@@ -221,7 +221,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
         //       the length of a single record from the record itself.......developing dbw 11/08/04
         //-Check to make sure that enough data exists to read the lenght...
         int iOffsetNeeded = iOffset + OFFSET_RECLEN + SIZE_RECLEN;
-        if (iOffsetNeeded >= tBuffer.limit()) {
+        if (iOffsetNeeded < tBuffer.limit()) {
             //-If enough data to read length, then read the length and return it.
             iRecLength = tBuffer.getInt(iOffset + OFFSET_RECLEN);
         }
