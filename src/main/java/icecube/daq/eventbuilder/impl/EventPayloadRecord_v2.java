@@ -65,8 +65,6 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
     public static final int OFFSET_EVENT_TYPE                 = OFFSET_LAST_UTCTIME      + SIZE_LAST_UTCTIME;
     public static final int OFFSET_EVENT_CONFIGID             = OFFSET_EVENT_TYPE        + SIZE_EVENT_TYPE;
     public static final int OFFSET_RUN_NUMBER                 = OFFSET_EVENT_CONFIGID    + SIZE_EVENT_CONFIGID;
-    //-This is the start of the variable lenght portion of the Payload
-    public static final int OFFSET_READOUT_REQUEST_RECORD     = OFFSET_RUN_NUMBER        + SIZE_RUN_NUMBER;
 
     public static final String RECORD_TYPE    = "RECORD_TYPE";
     public static final String UID            = "UID";

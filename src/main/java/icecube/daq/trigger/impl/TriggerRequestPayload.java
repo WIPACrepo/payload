@@ -246,18 +246,6 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
 		//-THIS MUST BE CALLED LAST!!
         super.recycle();
     }
-    /**
-     * Method to return the TriggerRequestPayload to the pool
-     * once it has been used.
-     * @param tPayload ... Object the TriggerRequestPayload object which will be recycled.
-     *                     (note: this is an Object instead of the regular class for later
-     *                      genreal implementation.)
-     */
-	/*
-    public static void recycle(Poolable tPayload) {
-        ((TriggerRequestPayload) tPayload).dispose();
-    }
-	*/
 
     //
     //--Section for accessing/loading data
@@ -279,10 +267,6 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
             mt_triggerRequestRecord = (TriggerRequestRecord) TriggerRequestRecord.getFromPool();
             mt_triggerRequestRecord.loadData(mioffset + OFFSET_TRIGGER_REQUEST_RECORD, mtbuffer);
             mi_CompositeEnvelopeOffset = OFFSET_TRIGGER_REQUEST_RECORD + mt_triggerRequestRecord.getTotalRecordSize();
-            /*
-            super.mt_firstTime = mt_triggerRequestRecord.mt_firstTime;
-            super.mt_lastTime  = mt_triggerRequestRecord.mt_lastTime;
-            */
         }
     }
     /**
@@ -402,15 +386,4 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
         if (tDestination.doLabel()) tDestination.undent().label("<=[TriggerRequestPayload]");
         return iBytesWritten;
     }
-
-
-    /**
-     * compare Timestamps of two payloads
-     */
-    /*
-    public int compareTo(Object object) {
-        return getFirstTimeUTC().compareTo(((ITriggerRequestPayload) object).getFirstTimeUTC());
-    }
-    */
-
 }

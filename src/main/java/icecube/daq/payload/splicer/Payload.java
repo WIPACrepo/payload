@@ -300,17 +300,7 @@ public abstract class Payload extends Poolable
         if (mtbuffer != null) {
             // synchronized (mtbuffer) {
             // }
-            int iSrcPoition = mioffset;
             tDestination.write(mioffset, mtbuffer, milength);
-            /*
-            if (mtbuffer.hasArray()) {
-                tDestination.write(mtbuffer.array(), mioffset, milength);
-            } else {
-                for (int ii = 0; ii < milength; ii++) {
-                    tDestination.writeByte((int)(mtbuffer.get(iSrcPoition++)));
-                }
-            }
-            */
             iLength = milength;
         }
         if (tDestination.doLabel()) tDestination.undent().label("<=[Payload] bytes="+iLength);
