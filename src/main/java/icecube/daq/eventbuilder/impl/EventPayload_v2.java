@@ -17,6 +17,7 @@ import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.util.Poolable;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.impl.CompositePayloadEnvelope;
+import icecube.daq.payload.ILoadablePayload;
 
 /**
  * EventPayload_v2
@@ -54,7 +55,6 @@ public class EventPayload_v2 extends AbstractCompositePayload implements IEventP
     public static final int OFFSET_COMPOSITE_START = OFFSET_EVENT_RECORD + EventPayloadRecord_v2.SIZE_TOTAL;
 
     protected EventPayloadRecord_v2  mt_eventRecord           = null;
-    protected ITriggerRequestPayload mt_triggerRequestPayload = null;
 
 
     /**
@@ -131,8 +131,14 @@ public class EventPayload_v2 extends AbstractCompositePayload implements IEventP
      * `returns ID of trigger
      */
     public int getTriggerConfigID() {
-        if (mt_triggerRequestPayload != null) {
-            return mt_triggerRequestPayload.getTriggerConfigID();
+        ITriggerRequestPayload trigReq = getTriggerRequestPayload();
+        if (trigReq != null) {
+            try {
+                ((ILoadablePayload) trigReq).loadPayload();
+            } catch (Exception ex) {
+                // ignore exceptions
+            }
+            return trigReq.getTriggerConfigID();
         } else {
             return -1;
         }
@@ -141,8 +147,14 @@ public class EventPayload_v2 extends AbstractCompositePayload implements IEventP
      * returns type of trigger based on the trigger mode in the underlying hit
      */
     public int getTriggerType() {
-        if (mt_triggerRequestPayload != null) {
-            return mt_triggerRequestPayload.getTriggerType();
+        ITriggerRequestPayload trigReq = getTriggerRequestPayload();
+        if (trigReq != null) {
+            try {
+                ((ILoadablePayload) trigReq).loadPayload();
+            } catch (Exception ex) {
+                // ignore exceptions
+            }
+            return trigReq.getTriggerType();
         } else {
             return -1;
         }
