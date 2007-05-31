@@ -255,6 +255,10 @@ public class EventPayload_v2 extends AbstractCompositePayload implements IEventP
      * @return ITriggerRequestPayload ... the payload representing the trigger context.
      */
     public ITriggerRequestPayload getTriggerRequestPayload() {
+        if (mt_Payloads == null) {
+            return null;
+        }
+
         return (ITriggerRequestPayload) mt_Payloads.get(0);
     }
 
