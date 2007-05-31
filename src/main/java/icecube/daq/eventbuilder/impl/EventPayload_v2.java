@@ -50,12 +50,11 @@ import icecube.daq.trigger.impl.CompositePayloadEnvelope;
 public class EventPayload_v2 extends AbstractCompositePayload implements IEventPayload {
     //-TriggerRequestRecord starts right after PayloadEnvelope
     public static final int OFFSET_EVENT_RECORD = OFFSET_PAYLOAD_DATA;
+    //-CompositePayloadEnvelope starts right after the end of the EventPayloadRecord.
     public static final int OFFSET_COMPOSITE_START = OFFSET_EVENT_RECORD + EventPayloadRecord_v2.SIZE_TOTAL;
 
-    //-CompositePayloadEnvelope starts right after the end of the EventPayloadRecord.
     protected EventPayloadRecord_v2  mt_eventRecord           = null;
     protected ITriggerRequestPayload mt_triggerRequestPayload = null;
-    protected Vector                 mt_readoutDataPayloads   = null;
 
 
     /**
