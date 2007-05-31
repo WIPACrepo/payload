@@ -11,11 +11,16 @@ import java.nio.ByteBuffer;
  */
 public interface IWriteablePayloadRecord extends IPayloadRecord {
     /**
+     * Method to de-initialize this object in preparation for reuse.
+     */
+    void dispose();
+
+    /**
      * Method to write this record to the payload destination.
      * @param tDestination ....PayloadDestination to which to write this record.
      * @return int the number of bytes written to this destination.
      */
-    public int writeData(PayloadDestination tDestination) throws IOException;
+    int writeData(PayloadDestination tDestination) throws IOException;
 
     /**
      * Method to write this record to the payload destination.
@@ -23,7 +28,5 @@ public interface IWriteablePayloadRecord extends IPayloadRecord {
      * @param tBuffer ....the ByteBuffer into which to write this payload-record.
      * @return int the number of bytes written to this destination.
      */
-    public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException;
-
-
+    int writeData(int iOffset, ByteBuffer tBuffer) throws IOException;
 }
