@@ -267,6 +267,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
             mt_triggerRequestRecord = (TriggerRequestRecord) TriggerRequestRecord.getFromPool();
             mt_triggerRequestRecord.loadData(mioffset + OFFSET_TRIGGER_REQUEST_RECORD, mtbuffer);
             mi_CompositeEnvelopeOffset = OFFSET_TRIGGER_REQUEST_RECORD + mt_triggerRequestRecord.getTotalRecordSize();
+            mi_sizeTriggerRequestRecord = mt_triggerRequestRecord.getTotalRecordSize();
         }
     }
     /**
