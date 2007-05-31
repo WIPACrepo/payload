@@ -10,6 +10,7 @@ import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IDomHit;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.PayloadInterfaceRegistry;
@@ -36,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author divya, dwharton
  */
-public class HitPayload  extends AbstractTriggerPayload implements IHitPayload {
+public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, IWriteablePayload {
 
     //-Specific log for this class
     private static Log mtLog = LogFactory.getLog(HitPayload.class);

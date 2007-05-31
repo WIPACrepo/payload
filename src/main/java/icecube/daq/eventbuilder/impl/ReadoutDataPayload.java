@@ -11,6 +11,7 @@ import icecube.daq.eventbuilder.impl.ReadoutDataRecord;
 import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
@@ -28,7 +29,7 @@ import icecube.util.Poolable;
  *
  * @author dwharton
  */
-public class ReadoutDataPayload extends AbstractCompositePayload implements IReadoutDataPayload {
+public class ReadoutDataPayload extends AbstractCompositePayload implements IReadoutDataPayload, IWriteablePayload {
 
     public static final int OFFSET_READOUT_DATA_RECORD = OFFSET_PAYLOAD_ENVELOPE + PayloadEnvelope.SIZE_ENVELOPE;
 

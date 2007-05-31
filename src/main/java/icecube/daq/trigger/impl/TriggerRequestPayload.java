@@ -7,6 +7,7 @@ import java.util.zip.DataFormatException;
 
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
@@ -37,7 +38,7 @@ import icecube.util.Poolable;
  *
  * @author dwharton,ptoale
  */
-public class TriggerRequestPayload extends AbstractCompositePayload implements ITriggerRequestPayload {
+public class TriggerRequestPayload extends AbstractCompositePayload implements ITriggerRequestPayload, IWriteablePayload {
     //-TriggerRequestRecord starts right after PayloadEnvelope
     public static final int OFFSET_TRIGGER_REQUEST_RECORD = OFFSET_PAYLOAD_DATA;
     //-CompositePayloadEnvelope starts right after the end of the TriggerRequestRecord.
