@@ -124,7 +124,7 @@ public class MasterPayloadFactory extends PayloadFactory {
         PayloadEnvelope tEnvelope = readPayloadEnvelope(iOffset, tPayloadBuffer);
         PayloadFactory tFactory = mtPayloadRegistry.getPayloadFactory(tEnvelope.miPayloadType);
         if (tFactory == null) {
-            throw new DataFormatException("Factory associated with binary payload not found");
+            throw new DataFormatException("Factory associated with payload #" + tEnvelope.miPayloadType + " not found");
             //return null;
         }
 
