@@ -20,87 +20,6 @@ public abstract class TestUtil
 
     private static final int[] ATWD_SAMPLE_LENGTH = { 32, 64, 16, 128 };
 
-    public static ByteBuffer createDeltaHitRecord(short version, short pedestal,
-                                                  long domClock,
-                                                  boolean isCompressed,
-                                                  int trigFlags, int lcFlags,
-                                                  boolean hasFADC,
-                                                  boolean hasATWD, int atwdSize,
-                                                  boolean isATWD_B,
-                                                  boolean isPeakUpper,
-                                                  int peakSample,
-                                                  int prePeakCnt, int peakCnt,
-                                                  int postPeakCnt,
-                                                  byte[] dataBytes,
-                                                  ByteOrder order)
-    {
-        final int compressedHdrBytes = 12;
-
-        if (trigFlags < 0 || trigFlags > 0x1fff) {
-            throw new Error("Bad trigger flag value " + trigFlags);
-        }
-        if (lcFlags < 1 || lcFlags > 3) {
-            throw new Error("Bad LC flag value " + lcFlags);
-        }
-        if (atwdSize < 0 || atwdSize > 3) {
-            throw new Error("Bad ATWD size " + atwdSize);
-        }
-        if (dataBytes.length > (2047 - compressedHdrBytes)) {
-            throw new Error("Too many data bytes");
-        }
-        if (peakSample < 0 || peakSample > 15) {
-            throw new Error("Bad peak sample number " + peakSample);
-        }
-        if (prePeakCnt < 0 || prePeakCnt > 511) {
-            throw new Error("Bad pre-peak count " + prePeakCnt);
-        }
-        if (peakCnt < 0 || peakCnt > 511) {
-            throw new Error("Bad peak count " + peakCnt);
-        }
-        if (postPeakCnt < 0 || postPeakCnt > 511) {
-            throw new Error("Bad post-peak count " + postPeakCnt);
-        }
-
-        final int word0upper = (isCompressed ? 0x8000 : 0) | (trigFlags << 2) |
-            lcFlags;
-        final int word0lower = (hasFADC ? 0x8000 : 0) | (hasATWD ? 0x4000 : 0) |
-            (atwdSize << 12) | (isATWD_B ? 0x800 : 0) |
-            (dataBytes.length + compressedHdrBytes);
-        final int word0 = (word0upper << 16) | word0lower;
-
-        final int word2 = (isPeakUpper ? 0x80000000 : 0) | (peakSample << 27) |
-            (prePeakCnt << 18) | (peakCnt << 9) | postPeakCnt;
-
-        final int hdrBytes = 22;
-
-        final int bufLen = hdrBytes + dataBytes.length;
-
-        ByteBuffer buf = ByteBuffer.allocate(bufLen);
-
-        final ByteOrder origOrder = buf.order();
-
-        buf.order(order);
-
-        buf.putShort((short) 1);
-        buf.putShort(version);
-        buf.putShort(pedestal);
-        buf.putLong(domClock);
-        buf.putInt(word0);
-        buf.putInt(word2);
-        buf.put(dataBytes);
-
-        buf.flip();
-
-        buf.order(origOrder);
-
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
-
-        return buf;
-    }
-
     public static ByteBuffer createDeltaHit(long domId, long utcTime,
                                             short version, short pedestal,
                                             long domClock, boolean isCompressed,
@@ -177,6 +96,87 @@ public abstract class TestUtil
         buf.put(recBuf);
 
         buf.flip();
+
+        if (buf.limit() != buf.capacity()) {
+            throw new Error("Expected payload length is " + buf.capacity() +
+                            ", actual length is " + buf.limit());
+        }
+
+        return buf;
+    }
+
+    public static ByteBuffer createDeltaHitRecord(short version, short pedestal,
+                                                  long domClock,
+                                                  boolean isCompressed,
+                                                  int trigFlags, int lcFlags,
+                                                  boolean hasFADC,
+                                                  boolean hasATWD, int atwdSize,
+                                                  boolean isATWD_B,
+                                                  boolean isPeakUpper,
+                                                  int peakSample,
+                                                  int prePeakCnt, int peakCnt,
+                                                  int postPeakCnt,
+                                                  byte[] dataBytes,
+                                                  ByteOrder order)
+    {
+        final int compressedHdrBytes = 12;
+
+        if (trigFlags < 0 || trigFlags > 0x1fff) {
+            throw new Error("Bad trigger flag value " + trigFlags);
+        }
+        if (lcFlags < 1 || lcFlags > 3) {
+            throw new Error("Bad LC flag value " + lcFlags);
+        }
+        if (atwdSize < 0 || atwdSize > 3) {
+            throw new Error("Bad ATWD size " + atwdSize);
+        }
+        if (dataBytes.length > (2047 - compressedHdrBytes)) {
+            throw new Error("Too many data bytes");
+        }
+        if (peakSample < 0 || peakSample > 15) {
+            throw new Error("Bad peak sample number " + peakSample);
+        }
+        if (prePeakCnt < 0 || prePeakCnt > 511) {
+            throw new Error("Bad pre-peak count " + prePeakCnt);
+        }
+        if (peakCnt < 0 || peakCnt > 511) {
+            throw new Error("Bad peak count " + peakCnt);
+        }
+        if (postPeakCnt < 0 || postPeakCnt > 511) {
+            throw new Error("Bad post-peak count " + postPeakCnt);
+        }
+
+        final int word0upper = (isCompressed ? 0x8000 : 0) | (trigFlags << 2) |
+            lcFlags;
+        final int word0lower = (hasFADC ? 0x8000 : 0) | (hasATWD ? 0x4000 : 0) |
+            (atwdSize << 12) | (isATWD_B ? 0x800 : 0) |
+            (dataBytes.length + compressedHdrBytes);
+        final int word0 = (word0upper << 16) | word0lower;
+
+        final int word2 = (isPeakUpper ? 0x80000000 : 0) | (peakSample << 27) |
+            (prePeakCnt << 18) | (peakCnt << 9) | postPeakCnt;
+
+        final int hdrBytes = 22;
+
+        final int bufLen = hdrBytes + dataBytes.length;
+
+        ByteBuffer buf = ByteBuffer.allocate(bufLen);
+
+        final ByteOrder origOrder = buf.order();
+
+        buf.order(order);
+
+        buf.putShort((short) 1);
+        buf.putShort(version);
+        buf.putShort(pedestal);
+        buf.putLong(domClock);
+        buf.putInt(word0);
+        buf.putInt(word2);
+        buf.put(dataBytes);
+
+        buf.flip();
+
+        buf.order(origOrder);
 
         if (buf.limit() != buf.capacity()) {
             throw new Error("Expected payload length is " + buf.capacity() +
