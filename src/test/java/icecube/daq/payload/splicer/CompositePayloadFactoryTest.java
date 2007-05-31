@@ -1,9 +1,9 @@
-package icecube.daq.payload.impl;
+package icecube.daq.payload.splicer;
 
 import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IUTCTime;
 
-import icecube.daq.payload.splicer.CompositePayloadFactory;
+import icecube.daq.payload.test.MockAppender;
 
 import java.io.IOException;
 
@@ -17,6 +17,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
+
+import org.apache.log4j.BasicConfigurator;
 
 class MockPayload
     implements ILoadablePayload
@@ -119,6 +121,12 @@ public class CompositePayloadFactoryTest
         super(name);
     }
 
+    protected void setUp()
+    {
+        BasicConfigurator.resetConfiguration();
+        BasicConfigurator.configure(new MockAppender());
+    }
+
     public static Test suite()
     {
         return new TestSuite(CompositePayloadFactoryTest.class);
@@ -163,13 +171,7 @@ public class CompositePayloadFactoryTest
         CompositePayloadFactory factory = new CompositePayloadFactory();
 
         Vector newV = factory.deepCopyPayloadVector(v);
-        assertNotNull("Returned copy is null", newV);
-        assertEquals("Returned copy has bad length", 2, newV.size());
-
-        for (Iterator it = newV.iterator(); it.hasNext(); ) {
-            MockPayload pay = (MockPayload) it.next();
-            assertTrue("Payload was not copied", pay.isCopy());
-        }
+        assertNull("Returned copy is not null", newV);
     }
 
     public void testDeepCopy()
