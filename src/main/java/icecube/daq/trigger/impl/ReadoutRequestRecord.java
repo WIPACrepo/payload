@@ -243,9 +243,7 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
             mb_IsLoaded = false;
             //-recycle the loaded request elements
             for ( int ii=0; ii < mt_RequestElementVector.size(); ii++ ) {
-                recycleReadoutRequestElementRecord(
-                        (ReadoutRequestElementRecord) mt_RequestElementVector.get(ii)
-                        );
+                ((IWriteablePayloadRecord) mt_RequestElementVector.get(ii)).dispose();
             }
             mt_RequestElementVector = null;
             mi_TriggerUID = -1;
@@ -296,14 +294,6 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
     public static ReadoutRequestElementRecord getUseableReadoutRequestElementRecord() {
         //-TODO: implement pooling
         return new ReadoutRequestElementRecord();
-    }
-    /**
-     * Method to recycle ReadoutRequestElementRecord's.
-     * This is to allow pooling of this element.
-     * @param tRecord ...ReadoutRequestElementRecord which is to be recycled.
-     */
-    public static void recycleReadoutRequestElementRecord(ReadoutRequestElementRecord tRecord) {
-        tRecord.dispose();
     }
 
     /**

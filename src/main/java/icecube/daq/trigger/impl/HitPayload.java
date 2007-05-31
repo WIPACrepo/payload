@@ -387,11 +387,11 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     public void recycle() {
 		//-all recycling is done here
 		if (mt_domID != null) {
-			((DOMID8B)mt_domID).recycle();
+			((Poolable)mt_domID).recycle();
 			mt_domID = null;
 		}
 		if (mt_sourceId != null) {
-			((SourceID4B)mt_sourceId).recycle();
+			((Poolable)mt_sourceId).recycle();
 			mt_sourceId = null;
 		}
 		//-this must be called LAST!! - dipsose() is eventually called by the based class Payload

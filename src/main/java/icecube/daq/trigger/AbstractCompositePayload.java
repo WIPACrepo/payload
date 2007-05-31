@@ -11,6 +11,8 @@ import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.ILoadablePayload;
+import icecube.daq.payload.IPayload;
+import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.splicer.Payload;
 import icecube.util.Poolable;
 
@@ -110,7 +112,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
         int iLength = 0;
         if (mt_Payloads != null) {
             for (int ii=0; ii < mt_Payloads.size(); ii++) {
-                iLength += ((Payload) mt_Payloads.get(ii)).getPayloadLength();
+                iLength += ((IPayload) mt_Payloads.get(ii)).getPayloadLength();
             }
         }
         return iLength;
@@ -137,8 +139,9 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
         int iCurrentOffset = iOffset + CompositePayloadEnvelope.SIZE_COMPOSITE_ENVELOPE;
         //-write out each of the individual payloads
         for (int ii=0; ii < mt_Payloads.size(); ii++) {
-            Payload tPayload = (Payload) mt_Payloads.get(ii);
-                tPayload.writePayload(bWriteLoaded, iCurrentOffset, tBuffer);
+            IWriteablePayload tPayload =
+                (IWriteablePayload) mt_Payloads.get(ii);
+            tPayload.writePayload(bWriteLoaded, iCurrentOffset, tBuffer);
             iCurrentOffset += tPayload.getPayloadLength();
         }
         iBytesWritten = iCurrentOffset - iOffset;
