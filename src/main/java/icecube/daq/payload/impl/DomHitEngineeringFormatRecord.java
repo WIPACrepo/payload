@@ -50,7 +50,7 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     public static final String SKIP0          = "SKIP0";        //-byte which is skipped before reading dom clock.
     public static final String DOMCLOCK       = "DOMCLOCK";     //-offset of the SIZE_DOMCLOCK field (6 bytes)
     public static final String FADCSAMPLES    = "FADCSAMPLES";
-    public static final String ATWD_          = "ATDW";
+    public static final String ATWD_          = "ATWD";
     //-Variable length offsets start after this point in the record.
 
     /**
