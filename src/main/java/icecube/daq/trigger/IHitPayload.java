@@ -13,7 +13,6 @@ package icecube.daq.trigger;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IDOMID;
 import icecube.daq.trigger.ITriggerPayload;
-import icecube.daq.payload.IWriteablePayload;
 
 /**
  * Interface of a payload describing a single hit
@@ -21,7 +20,7 @@ import icecube.daq.payload.IWriteablePayload;
  * @version $Id: IHitPayload.java,v 1.1 2004/11/12 04:25:30 dwharton Exp $
  * @author hellwig, dwharton
  */
-public interface IHitPayload extends ITriggerPayload, IWriteablePayload {
+public interface IHitPayload extends ITriggerPayload {
     /**
      * Get Hit Time (leading edge)
      */

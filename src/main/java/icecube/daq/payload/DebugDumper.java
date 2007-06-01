@@ -3,8 +3,6 @@ package icecube.daq.payload;
 import icecube.daq.eventbuilder.IEventPayload;
 import icecube.daq.eventbuilder.IReadoutDataPayload;
 
-import icecube.daq.payload.PayloadDestination;
-
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
 //import icecube.daq.payload.impl.MonitorPayload;
@@ -357,11 +355,6 @@ class DumpHitSimple
         throw new Error("Unimplemented");
     }
 
-    public void dispose()
-    {
-        throw new Error("Unimplemented");
-    }
-
     public IDOMID getDOMID()
     {
         if (domObj == null) {
@@ -433,23 +426,6 @@ class DumpHitSimple
         this.time = time;
         this.srcId = srcId;
         this.domId = domId;
-    }
-
-    public void recycle()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
-        throws IOException
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
-        throws IOException
-    {
-        throw new Error("Unimplemented");
     }
 }
 
@@ -526,11 +502,6 @@ class DumpHitEngFmt
         initialize(time, srcId, domId, recId);
     }
 
-    public void dispose()
-    {
-        throw new Error("Unimplemented");
-    }
-
     void initialize(long time, int srcId, long domId, int recId)
     {        
         super.initialize(time, srcId, domId);
@@ -542,23 +513,6 @@ class DumpHitEngFmt
         throws IOException
     {
         return dataRec;
-    }
-
-    public void recycle()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
-        throws IOException
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
-        throws IOException
-    {
-        throw new Error("Unimplemented");
     }
 }
 
@@ -598,11 +552,6 @@ class DumpHitDeltaFmt
         initialize(time, srcId, domId);
     }
 
-    public void dispose()
-    {
-        throw new Error("Unimplemented");
-    }
-
     void initialize(long time, int srcId, long domId)
     {        
         super.initialize(time, srcId, domId);
@@ -614,23 +563,6 @@ class DumpHitDeltaFmt
         throws IOException
     {
         return dataRec;
-    }
-
-    public void recycle()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
-        throws IOException
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
-        throws IOException
-    {
-        throw new Error("Unimplemented");
     }
 }
 

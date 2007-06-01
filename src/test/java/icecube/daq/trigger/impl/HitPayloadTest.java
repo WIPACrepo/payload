@@ -3,7 +3,6 @@ package icecube.daq.trigger.impl;
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadDestination;
 
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
@@ -49,11 +48,6 @@ class MockHitData
     }
 
     public Object deepCopy()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public void dispose()
     {
         throw new Error("Unimplemented");
     }
@@ -112,23 +106,6 @@ class MockHitData
     public int getTriggerType()
     {
         return trigType;
-    }
-
-    public void recycle()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
-        throws IOException
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
-        throws IOException
-    {
-        throw new Error("Unimplemented");
     }
 }
 
