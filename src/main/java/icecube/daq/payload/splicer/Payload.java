@@ -16,6 +16,7 @@ import java.util.zip.DataFormatException;
 import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IPayload;
+import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.impl.PayloadEnvelope;
@@ -39,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
  *   to the source for reuse. See below for criterion for 'ownership'.
  */
 public abstract class Payload extends Poolable
-    implements ILoadablePayload, Spliceable
+    implements ILoadablePayload, IWriteablePayload, Spliceable
 {
     /**
      * Log object for this class
