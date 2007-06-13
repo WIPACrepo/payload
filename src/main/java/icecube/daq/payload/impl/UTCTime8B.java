@@ -21,12 +21,13 @@ import icecube.util.Poolable;
  */
 public class UTCTime8B extends Poolable implements IUTCTime {
 
-    private long mlutctime = -1;
+    private long mlutctime;
 
     /**
      * Create an instance of this class.
      */
     public UTCTime8B() {
+        mlutctime = -1;
     }
 
     /**
@@ -119,15 +120,11 @@ public class UTCTime8B extends Poolable implements IUTCTime {
      *                     time difference.
      */
     public IUTCTime getOffsetUTCTime(double dNanoSec) {
-        long loffsetTime = (long) (dNanoSec * 10.0);
-        UTCTime8B tTime = new UTCTime8B();
-        tTime.initialize(this.mlutctime + loffsetTime);
-        return (IUTCTime) tTime;
+        final long loffsetTime = (long) (dNanoSec * 10.0);
+        return new UTCTime8B(this.mlutctime + loffsetTime);
     }
     /**
      * @see Comparable
-     * TODO: dbw-watch out for Class cast exception's if other IUTCTime's
-     *       are passed in....
      */
     public int compareTo(Object object)
     {
@@ -135,9 +132,17 @@ public class UTCTime8B extends Poolable implements IUTCTime {
         final int EQUAL = 0;
         final int AFTER = 1;
 
-        final UTCTime8B that = (UTCTime8B) object;
-        if (this.mlutctime == that.mlutctime) return EQUAL;
-        if (this.mlutctime < that.mlutctime) return BEFORE;
+        if (object == null) {
+            return AFTER;
+        }
+
+        if (!(object instanceof IUTCTime)) {
+            return getClass().getName().compareTo(object.getClass().getName());
+        }
+
+        final long val = ((IUTCTime) object).getUTCTimeAsLong();
+        if (this.mlutctime == val) return EQUAL;
+        if (this.mlutctime < val) return BEFORE;
         return AFTER;
     }
     /**
@@ -148,5 +153,4 @@ public class UTCTime8B extends Poolable implements IUTCTime {
     public void dispose() {
         mlutctime = -1;
     }
-
 }
