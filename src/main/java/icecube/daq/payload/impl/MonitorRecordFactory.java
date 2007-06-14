@@ -2,9 +2,12 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IPayloadRecordFactory;
 import icecube.daq.payload.IPayloadRecord;
+import icecube.daq.payload.impl.MonitorRecord;
+import icecube.daq.payload.impl.ASCIIMonitorRecord;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 /**
  *
@@ -16,9 +19,9 @@ import java.util.zip.DataFormatException;
  * TODO: IMplement and install record pooling.
  * @author dwharton
  */
-public final class MonitorRecordFactory implements IPayloadRecordFactory {
+public class MonitorRecordFactory implements IPayloadRecordFactory {
 
-    private static MonitorRecordFactory mt_singleton;
+    private static MonitorRecordFactory mt_singleton = null;
     /**
      * Private Constructor for use as singleton.
      */
@@ -27,7 +30,7 @@ public final class MonitorRecordFactory implements IPayloadRecordFactory {
 
     /**
      * Instance Method to get the factory class.
-     * @return the singleton instance of this factory.
+     * @return MonitorRecordFactory ...the singleton instance of this factory.
      */
     public static MonitorRecordFactory getFromPool() {
         if (mt_singleton == null) {
@@ -40,8 +43,8 @@ public final class MonitorRecordFactory implements IPayloadRecordFactory {
      * Creates IPayloadRecord from the given ByteBuffer starting
      * at the given offset.
      *
-     * @param iRecordOffset the offset from which to start loading the data fro the engin.
-     * @param tBuffer ByteBuffer from which to construct the record.
+     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
+     * @param tBuffer ...ByteBuffer from wich to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -55,7 +58,7 @@ public final class MonitorRecordFactory implements IPayloadRecordFactory {
     /**
      * This record returns the payload record to the record source (or pool)
      * so it can be reused.
-     * @param tRecord the record to be reused, or disposed.
+     * @param tRecord ....IPayloadRecord the record to be reused, or disposed.
      */
     public void returnPayloadRecord(IPayloadRecord tRecord) {
         //-do nothing so far
@@ -64,7 +67,7 @@ public final class MonitorRecordFactory implements IPayloadRecordFactory {
     /**
      * private method to either construct or retieve from a pool the monitor record
      * of the type indicated.
-     * @param iRecordType the type of monitor record to construct.
+     * @param iRecordType ....the type of monitor record to construct.
      * @exception DataFormatException is thrown if the type is not supported.
      * TODO: Implement Object Pooling
      */

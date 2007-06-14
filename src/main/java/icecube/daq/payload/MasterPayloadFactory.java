@@ -4,7 +4,12 @@ import icecube.daq.payload.impl.PayloadEnvelope;
 import icecube.daq.splicer.Spliceable;
 import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.payload.splicer.Payload;
+import icecube.daq.payload.IPayload;
+import icecube.daq.payload.IByteBufferCache;
+import icecube.daq.payload.splicer.CompositePayloadFactory;
 
+import java.util.Iterator;
+import java.util.List;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 import java.io.IOException;
@@ -19,37 +24,37 @@ import java.io.IOException;
  * @author dwharton
  */
 public class MasterPayloadFactory extends PayloadFactory {
-    private boolean mbCreateSeperateBuffers;
+    private boolean mbCreateSeperateBuffers = false;
 
-    private PayloadRegistry mtPayloadRegistry;
+	private PayloadRegistry mtPayloadRegistry = null;
 
     /**
      * Standard constructor.
      */
     public MasterPayloadFactory() {
-        mtPayloadRegistry = new PayloadRegistry();
+		mtPayloadRegistry = new PayloadRegistry();
     }
 
-    /**
-     * Constructor which uses an installable IByteBufferCache
-     * @param tBufferCache IByteBufferCache which will serve as the recycling destination
-     *                            for the ByteBuffer's which are used as the basis of the Payloads
-     *                            which are created by the individual PayloadFactories managed by this
-     *                            factory.
-     */
-    public MasterPayloadFactory(IByteBufferCache tBufferCache) {
-        mtBufferCache =  tBufferCache;
-        mtPayloadRegistry = new PayloadRegistry(tBufferCache, this);
-    }
+	/**
+	 * Constructor which uses an installable IByteBufferCache
+	 * @param tByteBufferCache IByteBufferCache which will serve as the recycling destination
+	 *                            for the ByteBuffer's which are used as the basis of the Payloads
+	 *                            which are created by the individual PayloadFactories managed by this
+	 *                            factory.
+	 */
+	public MasterPayloadFactory(IByteBufferCache tByteBufferCache) {
+		super.mtByteBufferCache =  tByteBufferCache;
+		mtPayloadRegistry = new PayloadRegistry(tByteBufferCache, this);
+	}
 
     /**
-     *  Get a PayloadFactory from the installed registry of the following types.
+     *  Get's a PayloadFactory from the installed registry of the following types.
      *  PayloadRegistry.
-     *
+     * 
      * @see icecube.daq.payload.PayloadRegistry
      */
     public PayloadFactory getPayloadFactory(int iType) {
-        if (mtPayloadRegistry != null)
+        if (mtPayloadRegistry != null) 
             return mtPayloadRegistry.getPayloadFactory(iType);
         else
             return null;
@@ -61,7 +66,7 @@ public class MasterPayloadFactory extends PayloadFactory {
      *       payload. This is helpfull (but wasteful) for debugging the results of
      *       buffered payload handling and comparing the results when using Seperate
      *       and combined buffers.
-     * @return the previous value
+     * @return boolean ... the previous value
      */
     public boolean setCreateSeperateBuffers(boolean bOn) {
         boolean bBefore = mbCreateSeperateBuffers;
@@ -78,19 +83,19 @@ public class MasterPayloadFactory extends PayloadFactory {
      *
      * @return A new object representing the current place.
      */
-    public Spliceable createCurrentPlaceSpliceable() {
+    public Spliceable createCurrentPlaceSplicaeable() {
         //-Since this is a placeholder, just create an empty spliceable of
         // the default type.
-        return mtPayloadRegistry.createCurrentPlaceSpliceable();
+        return mtPayloadRegistry.createCurrentPlaceSplicaeable();
     }
 
     /**
      *  This method must be implemented by the non-abstract class
      *  to create the specific payload.
-     *  @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable
-     *  @param tPayloadBuffer ByteBuffer from which to construct the Payload
+     *  @param iOffset ..........The offset in the ByteBuffer from which to create the payload/spliceable
+     *  @param tPayloadBuffer ...ByteBuffer form which to construct the Payload
      *                           which implements BOTH IPayload and Spliceable
-     *  @return the Payload object specific to this class which is
+     *  @return IPayload ...the Payload object specific to this class which is
      *                     specific to the class which is derived from PayloadFactory.
      */
     public Payload createPayload(int iOffset, ByteBuffer tPayloadBuffer) throws IOException,DataFormatException {
@@ -100,47 +105,44 @@ public class MasterPayloadFactory extends PayloadFactory {
     /**
      *  This method must be implemented by the non-abstract class
      *  to create the specific payload.
-     *  @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable
-     *  @param tPayloadBuffer ByteBuffer from which to construct the Payload
+     *  @param iOffset ..........The offset in the ByteBuffer from which to create the payload/spliceable
+     *  @param tPayloadBuffer ...ByteBuffer form which to construct the Payload
      *                           which implements BOTH IPayload and Spliceable
-     * @param bCreateSeperateBuffers boolean indicating the a new ByteBuffer will be
+     * @param bCreateSeperateBuffers ... boolean indicating the a new ByteBuffer will be
      *                                   allocated and used for Payload creation.
      *      1) If there is an IByteBufferCache installed this will be used to create
      *         a new ByteBuffer.
      *      2) If there is no IByteBufferCache installed then a ByteBuffer will be
      *         allocated normally outside of any caching system.
-     *
-     *  @return the Payload object specific to this class which is
+     * 
+     *  @return IPayload ...the Payload object specific to this class which is
      *                     specific to the class which is derived from PayloadFactory.
      */
     public Payload createPayload(int iOffset, ByteBuffer tPayloadBuffer, boolean bCreateSeperateBuffers) throws IOException,DataFormatException {
         Payload tPayload = null;
-        int pType =
-            PayloadEnvelope.readPayloadType(iOffset, tPayloadBuffer);
-        PayloadFactory tFactory = mtPayloadRegistry.getPayloadFactory(pType);
+        //-TODO: put in convenience method to read type only... reduce object creation
+        PayloadEnvelope tEnvelope = readPayloadEnvelope(iOffset, tPayloadBuffer);
+        PayloadFactory tFactory = mtPayloadRegistry.getPayloadFactory(tEnvelope.miPayloadType);
         if (tFactory == null) {
-            throw new DataFormatException("Factory associated with payload #" +
-                                          pType + " not found");
+            throw new DataFormatException("Factory associated with payload #" + tEnvelope.miPayloadType + " not found");
+            //return null;
         }
-
-        int pLen =
-            PayloadEnvelope.readPayloadLength(iOffset, tPayloadBuffer);
 
         //-This section is needed to make buffering distinct from PayloadCreation.
         // This allows the system to be tested distinctly from buffering.
         if (bCreateSeperateBuffers) {
             ByteBuffer tNewPayloadBuffer = null;
-            if (mtBufferCache != null) {
-                //-create the new ByteBuffer from the installed buffer cache
+            if (super.mtByteBufferCache != null) {
+                //-create the new ByteBuffer from the installed ByteBufferCache
                 // and copy the contents into the new ByteBuffer before creation
-                tNewPayloadBuffer = mtBufferCache.acquireBuffer(pLen);
+                tNewPayloadBuffer = super.mtByteBufferCache.acquireBuffer(tEnvelope.miPayloadLen);
                 int iOldLimit = tPayloadBuffer.limit();
                 int iOldPos   = tPayloadBuffer.position();
                 tPayloadBuffer.position(iOffset);
-                tPayloadBuffer.limit(iOffset + pLen);
+                tPayloadBuffer.limit(iOffset + tEnvelope.miPayloadLen);
                 //-setup position and limit for copy
                 tNewPayloadBuffer.position(0);
-                tNewPayloadBuffer.limit(pLen);
+                tNewPayloadBuffer.limit(tEnvelope.miPayloadLen);
                 tNewPayloadBuffer.put(tPayloadBuffer);
                 //-reset the position and limit
                 tNewPayloadBuffer.position(0);
@@ -148,11 +150,11 @@ public class MasterPayloadFactory extends PayloadFactory {
                 tPayloadBuffer.limit(iOldLimit);
             } else {
                 //-allocate the seperate buffer
-                byte[] tNewPayloadBufferBytes = new byte[pLen];
+                byte[] tNewPayloadBufferBytes = new byte[tEnvelope.miPayloadLen];
                 //-copy the data from the old buffer to the njew one.
                 int iOldPosition = tPayloadBuffer.position();
                 tPayloadBuffer.position(iOffset);
-                tPayloadBuffer.get(tNewPayloadBufferBytes, 0, pLen);
+                tPayloadBuffer.get(tNewPayloadBufferBytes, 0, tEnvelope.miPayloadLen);
                 tNewPayloadBuffer = ByteBuffer.wrap( tNewPayloadBufferBytes );
                 tPayloadBuffer.position(iOldPosition);
             }
@@ -162,21 +164,25 @@ public class MasterPayloadFactory extends PayloadFactory {
             //-create the payload using the input ByteBuffer
             tPayload = tFactory.createPayload(iOffset, tPayloadBuffer);
         }
+        tEnvelope.recycle();
         return tPayload;
     }
     /**
      * This method must be implemented specific to the format of the
      * the input stream to determine when a complete data element is available.
-     * @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable
-     * @param tBuffer ByteBuffer from which to detect a spliceable.
+     * @param iOffset ............ The offset in the ByteBuffer from which to create the payload/spliceable
+     * @param tBuffer ............ ByteBuffer from which to detect a spliceable.
      *
-     * @return the length of this spliceable
+     * @return int ............... the length of this spliceable
      *
-     * @exception IOException if there is an error reading the ByteBuffer
+     * @exception IOException ........... this is thrown if there is an error reading the ByteBuffer
      *                                    to pull out the length of the spliceable.
-     * @exception DataFormatException if there is an error in the format of the payload
+     * @exception DataFormatException ... if there is an error in the format of the payload
      */
     public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws IOException,DataFormatException {
-        return PayloadEnvelope.readPayloadLength(iOffset, tBuffer);
+        PayloadEnvelope tEnvelope = readPayloadEnvelope(iOffset, tBuffer);
+		int iLength = tEnvelope.miPayloadLen;
+        tEnvelope.recycle();
+		return iLength;
     }
 }

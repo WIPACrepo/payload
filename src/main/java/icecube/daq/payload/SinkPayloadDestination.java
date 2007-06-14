@@ -1,6 +1,9 @@
 package icecube.daq.payload;
-
 import java.io.IOException;
+
+import icecube.daq.payload.splicer.Payload;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This object is a PayloadDestination that does nothing. It does know how
@@ -11,8 +14,13 @@ import java.io.IOException;
 public class SinkPayloadDestination extends ByteBufferPayloadDestination   {
 
     /**
+     * Logger for this class.
+     */
+    private static final Log log = LogFactory.getLog(SinkPayloadDestination.class);
+
+    /**
      * Constructor.
-     * @param tReceiver IByteBufferReceiver the object which will receive the ByteBuffer
+     * @param tReceiver IByteBufferReceiver the object which will recieve the ByteBuffer
      *  which has been created by subsiquent calls to the PayloadDestination.
      *
      */
@@ -23,25 +31,25 @@ public class SinkPayloadDestination extends ByteBufferPayloadDestination   {
     /**
      * This method does nothing.
      *
-     * @param tPayload Payload to which to write to this destination
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @param tPayload ...... Payload to which to write to this destination
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(IWriteablePayload tPayload) throws IOException {
+    public int writePayload(Payload tPayload) throws IOException {
         return writePayload(false,tPayload);
     }
 
     /**
      * This method does nothing.
      *
-     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tPayload Payload to which to write to this destination
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded ...... boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tPayload ...... Payload to which to write to this destination
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload) throws IOException {
+    public int writePayload(boolean bWriteLoaded, Payload tPayload) throws IOException {
         return 0;
     }
 
@@ -63,8 +71,8 @@ public class SinkPayloadDestination extends ByteBufferPayloadDestination   {
      * @throws  IOException  If an I/O error occurs
      */
     public void close() throws IOException {
-        mtByteBufferReceiver.destinationClosed();
-        mtByteBufferReceiver = null;
+        mtByteBufferReciever.destinationClosed();
+        mtByteBufferReciever = null;
     }
 
 }

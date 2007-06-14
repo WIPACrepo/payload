@@ -32,8 +32,6 @@ public class MockHit
     private IDOMID domObj;
     private int trigMode;
 
-    private boolean failDeepCopy;
-
     public MockHit(long utcTime, int trigType, int cfgId, int srcId,
                    long domId, int trigMode)
     {
@@ -47,11 +45,7 @@ public class MockHit
 
     public Object deepCopy()
     {
-        if (failDeepCopy) {
-            return null;
-        }
-
-        return new MockHit(utcTime, trigType, cfgId, srcId, domId, trigMode);
+        throw new Error("Unimplemented");
     }
 
     /**
@@ -108,7 +102,7 @@ public class MockHit
     }
 
     /**
-     * Get an object from the pool in a non-static context.
+     * Gets an object form the pool in a non-static context.
      *
      * @return object of this type from the object pool.
      */
@@ -151,16 +145,6 @@ public class MockHit
     public void recycle()
     {
         // do nothing
-    }
-
-    /**
-     * Set deepCopy() failure mode.
-     *
-     * @param fail <tt>true</tt> if deepCopy() should fail
-     */
-    public void setDeepCopyFail(boolean fail)
-    {
-        failDeepCopy = fail;
     }
 
     public int writePayload(boolean b0, PayloadDestination x1)

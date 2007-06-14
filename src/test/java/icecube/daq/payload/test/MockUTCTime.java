@@ -15,22 +15,9 @@ public class MockUTCTime
         this.time = time;
     }
 
-    public int compareTo(Object obj)
+    public int compareTo(Object x0)
     {
-        if (obj == null) {
-            return 1;
-        } else if (!(obj instanceof IUTCTime)) {
-            return getClass().getName().compareTo(obj.getClass().getName());
-        }
-
-        final long val = ((IUTCTime) obj).getUTCTimeAsLong();
-        if (time < val) {
-            return -1;
-        } else if (time > val) {
-            return 1;
-        }
-
-        return 0;
+        throw new Error("Unimplemented");
     }
 
     public Object deepCopy()
@@ -48,18 +35,13 @@ public class MockUTCTime
         // do nothing
     }
 
-    public boolean equals(Object obj)
-    {
-        return compareTo(obj) == 0;
-    }
-
     public IUTCTime getOffsetUTCTime(double x0)
     {
         throw new Error("Unimplemented");
     }
 
     /**
-     * Get an object from the pool in a non-static context.
+     * Gets an object form the pool in a non-static context.
      *
      * @return object of this type from the object pool.
      */

@@ -1,7 +1,5 @@
 package icecube.daq.payload.test;
 
-import java.util.ArrayList;
-
 import org.apache.log4j.Appender;
 import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
@@ -20,8 +18,6 @@ public class MockAppender
     /** minimum level of log messages which will be print. */
     private Level minLevel;
 
-    private ArrayList<LoggingEvent> eventList;
-
     /**
      * Create a MockAppender which ignores everything below the WARN level.
      */
@@ -39,7 +35,6 @@ public class MockAppender
     public MockAppender(Level minLevel)
     {
         this.minLevel = minLevel;
-        eventList = new ArrayList<LoggingEvent>();
     }
 
     /**
@@ -50,14 +45,6 @@ public class MockAppender
     public void addFilter(Filter x0)
     {
         throw new Error("Unimplemented");
-    }
-
-    /**
-     * Clear the cached logging events.
-     */
-    public void clear()
-    {
-        eventList.clear();
     }
 
     /**
@@ -84,7 +71,15 @@ public class MockAppender
     public void doAppend(LoggingEvent evt)
     {
         if (evt.getLevel().toInt() >= minLevel.toInt()) {
-            eventList.add(evt);
+            LocationInfo loc = evt.getLocationInformation();
+
+            System.out.println(evt.getLoggerName() + " " + evt.getLevel() +
+                               " [" + loc.fullInfo + "] " + evt.getMessage());
+
+            String[] stack = evt.getThrowableStrRep();
+            for (int i = 0; stack != null && i < stack.length; i++) {
+                System.out.println("> " + stack[i]);
+            }
         }
     }
 
@@ -96,15 +91,6 @@ public class MockAppender
     public ErrorHandler getErrorHandler()
     {
         throw new Error("Unimplemented");
-    }
-
-    private LoggingEvent getEvent(int idx)
-    {
-        if (idx < 0 || idx > eventList.size()) {
-            throw new IllegalArgumentException("Bad index " + idx);
-        }
-
-        return eventList.get(idx);
     }
 
     /**
@@ -127,11 +113,6 @@ public class MockAppender
         throw new Error("Unimplemented");
     }
 
-    public Object getMessage(int idx)
-    {
-        return getEvent(idx).getMessage();
-    }
-
     /**
      * Unimplemented.
      *
@@ -140,11 +121,6 @@ public class MockAppender
     public String getName()
     {
         throw new Error("Unimplemented");
-    }
-
-    public int getNumberOfMessages()
-    {
-        return eventList.size();
     }
 
     /**

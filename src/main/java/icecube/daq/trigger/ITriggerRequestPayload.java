@@ -10,6 +10,12 @@
 
 package icecube.daq.trigger;
 
+import java.util.Vector;
+import icecube.daq.payload.IUTCTime;
+import icecube.daq.trigger.ITriggerPayload;
+import icecube.daq.trigger.ICompositePayload;
+import icecube.daq.trigger.IReadoutRequest;
+
 /**
  * This object is an ICompositePayload that represents the fact
  * that a trigger has been produced (as a composite) which has
@@ -20,15 +26,15 @@ package icecube.daq.trigger;
 public interface ITriggerRequestPayload extends ICompositePayload  {
     /**
      * Returns the unique id assigned to this ITriggerRequestPayload
-     * @return the unique id for this event.
+     * @return int ... the unique id for this event.
      */
-    int getUID();
+    public int getUID();
 
     /**
      *  Returns the IReadoutRequest which has been associated
      *  with this ITriggerRequestPayload.
-     *  @return the request.
+     *  @return IReadoutRequest ....the request.
      */
-    IReadoutRequest getReadoutRequest();
+    public IReadoutRequest getReadoutRequest();
 }
 

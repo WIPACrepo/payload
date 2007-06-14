@@ -1,17 +1,21 @@
 package icecube.daq.payload.splicer;
 
+import java.io.IOException;
 import java.util.Vector;
+import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import icecube.daq.payload.ILoadablePayload;
 
+import icecube.daq.payload.splicer.PayloadFactory;
+
 /**
  * This Object extends PayloadFactory to the extent that
  * it contains the MasterPayloadFactory which is used for
  * instantiating the sub-payloads.
- *
+ * 
  * @author dwharton
  */
 public class CompositePayloadFactory extends PayloadFactory {
@@ -23,7 +27,7 @@ public class CompositePayloadFactory extends PayloadFactory {
      * which are created so that they have the appropriate MasterPayloadFactory
      * with which to create
      */
-    protected PayloadFactory mtMasterCompositePayloadFactory;
+    protected PayloadFactory mtMasterCompositePayloadFactory = null;
 
     /**
      * This method gets the internal PayloadFactory which is used to construct
@@ -52,24 +56,27 @@ public class CompositePayloadFactory extends PayloadFactory {
         Vector tPayloadsCopy = null;
         if (tPayloads != null) {
             tPayloadsCopy = new Vector();
-            bDeepCopyOK = true;
-            if (tPayloads.size() > 0) {
+            if (tPayloads.size() == 0) {
+                bDeepCopyOK = true;
+            } else {
                 for (int ii=0; ii < tPayloads.size(); ii++) {
+                    bDeepCopyOK = false;
                     ILoadablePayload tPay =
                         (ILoadablePayload) tPayloads.get(ii);
                     if (tPay != null) {
                         Object tCopy = tPay.deepCopy();
                         if (tCopy == null) {
                             mtLog.error("Cannot deep-copy composite payload " +
-                                        (ii + 1) + " of " + tPayloads.size() +
+                                        ii + " of " + tPayloads.size() +
                                         " (type " + tPay.getPayloadType() +
                                         ", length " + tPay.getPayloadLength() +
                                         ")");
-                            bDeepCopyOK = false;
+                            tCopy = null;
                             break;
                         }
                         tPayloadsCopy.add(tCopy);
                     }
+                    bDeepCopyOK = true;
                 }
             }
         }

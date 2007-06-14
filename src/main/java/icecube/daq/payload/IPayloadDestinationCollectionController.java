@@ -1,7 +1,7 @@
 /*
  * interface: IPayloadDestinationCollectionController
  *
- * Version $Id: IPayloadDestinationCollectionController.java 2125 2007-10-12 18:27:05Z ksb $
+ * Version $Id: IPayloadDestinationCollectionController.java,v 1.2 2005/11/18 18:25:42 toale Exp $
  *
  * Date: October 19 2005
  *
@@ -14,14 +14,14 @@ package icecube.daq.payload;
  * This interface defines an object the will create and control a
  *  PayloadDestinationCollection.
  *
- * @version $Id: IPayloadDestinationCollectionController.java 2125 2007-10-12 18:27:05Z ksb $
+ * @version $Id: IPayloadDestinationCollectionController.java,v 1.2 2005/11/18 18:25:42 toale Exp $
  * @author pat
  */
 public interface IPayloadDestinationCollectionController
 {
 
-    int BYTE_BUFFER_PAYLOAD_DESTINATION = 0;
-    int SINK_PAYLOAD_DESTINATION        = 1;
+    public static final int BYTE_BUFFER_PAYLOAD_DESTINATION = 0;
+    public static final int SINK_PAYLOAD_DESTINATION    = 1;
 
     /**
      * Get the PayloadDestinationCollection.

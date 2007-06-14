@@ -3,7 +3,6 @@ import java.util.Vector;
 
 import icecube.daq.eventbuilder.impl.EventPayloadFactory;
 import icecube.daq.eventbuilder.impl.EventPayload_v2Factory;
-import icecube.daq.eventbuilder.impl.EventPayload_v3Factory;
 import icecube.daq.eventbuilder.impl.ReadoutDataPayloadFactory;
 import icecube.daq.payload.splicer.CompositePayloadFactory;
 import icecube.daq.payload.splicer.PayloadFactory;
@@ -54,21 +53,20 @@ public final class PayloadRegistry {
     public static final int PAYLOAD_ID_SN                    = 16;  //-SuperNovaPayload
     public static final int PAYLOAD_ID_DELTA_HIT             = 17; // DomHitDeltaCompressedFormatPayload
     public static final int PAYLOAD_ID_COMPRESSED_HIT_DATA   = 18;  // delta and SLC hits including the compressed waveform data
-    public static final int PAYLOAD_ID_EVENT_V3              = 19;
-    public static final int PAYLOAD_ID_LASTVALID             = PAYLOAD_ID_EVENT_V3;
+    public static final int PAYLOAD_ID_LASTVALID             = PAYLOAD_ID_COMPRESSED_HIT_DATA;
 
     //-dbw: if this value is non-null then it will be installed into all
     //      the managed PayloadFactory's and subsiquently all the Payload's which
     //      they produce. In this way a consistent management of the ByteBuffer's which
     //      form the optional support of the of the Payload.
-    private IByteBufferCache mtBufferCache;
+    private IByteBufferCache mtByteBufferCache = null;
 
     //-dbw: This factory is used by all implementations of AbstractCompositePayload so that
     //      a consistenty parent-factory/IByteBufferCache system can be maintained for all.
     //private CompositePayloadFactory mtMasterCompositePayloadFactory = null;
-    private PayloadFactory mtMasterCompositePayloadFactory;
+    private PayloadFactory mtMasterCompositePayloadFactory = null;
 
-    private Vector mt_PayloadFactories;
+    private Vector mt_PayloadFactories = null;
 
     /**
      * Standard Constructor
@@ -80,12 +78,12 @@ public final class PayloadRegistry {
     /**
      * Constructor which Specifies the byte-buffer cache and the PayloadFactory for
      * all CompositePayload's to use for generating their sub-payloads.
-     * @param  tBufferCache IByteBufferCache
+     * @param  tByteBufferCache IByteBufferCache
      * @param  tMasterCompositePayloadFactory CompositePayloadFactory used for generating sub-payloads of composite
      *         payloads.
      */
-    public PayloadRegistry(IByteBufferCache tBufferCache, PayloadFactory tMasterCompositePayloadFactory) {
-        mtBufferCache = tBufferCache;
+    public PayloadRegistry(IByteBufferCache tByteBufferCache, PayloadFactory tMasterCompositePayloadFactory) {
+        mtByteBufferCache = tByteBufferCache;
         mtMasterCompositePayloadFactory = tMasterCompositePayloadFactory;
         initializeDefaultPayloadFactoryBindings();
     }
@@ -97,8 +95,8 @@ public final class PayloadRegistry {
      *       the interface type which is returned by the MasterPayloadFactory
      *       when it is dynamically binding the PayloadFactory by payload-type
      *       to create payloads.
-     * @param tPayload the payload to be identified
-     * @return the Payload's interface type as defined: above
+     * @param tPayload ... IPayload the payload to be identified
+     * @return int ... the Payload's interface type as defined: above
      */
     public static int getPayloadInterfaceType(IPayload tPayload) {
         return getPayloadInterfaceType(tPayload.getPayloadType());
@@ -112,9 +110,9 @@ public final class PayloadRegistry {
      *       when it is dynamically binding the PayloadFactory by payload-type
      *       to create payloads.
      *
-     * @param iPayloadID the payload-type as returned from
+     * @param iPayloadID ... int the payload-type as returned from
      *                       IPayload.getPayloadType()
-     * @return the Payload's interface type as defined:
+     * @return int ... the Payload's interface type as defined:
      * @see icecube.daq.payload.PayloadInterfaceRegistry
      */
     public static int getPayloadInterfaceType(int iPayloadID) {
@@ -151,7 +149,6 @@ public final class PayloadRegistry {
                 break;
             case PAYLOAD_ID_EVENT :
             case PAYLOAD_ID_EVENT_V2 :
-            case PAYLOAD_ID_EVENT_V3 :
                 iPayloadInterfaceType = PayloadInterfaceRegistry.I_EVENT_PAYLOAD;
                 break;
             case PAYLOAD_ID_BEACON :
@@ -203,14 +200,12 @@ public final class PayloadRegistry {
         mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                       , PAYLOAD_ID_BEACON                 );
         mt_PayloadFactories.setElementAt( new  DomHitDeltaCompressedFormatPayloadFactory() , PAYLOAD_ID_DELTA_HIT    );
         mt_PayloadFactories.setElementAt( new  DeltaCompressedFormatHitDataPayloadFactory() , PAYLOAD_ID_COMPRESSED_HIT_DATA    );
-        mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                       , PAYLOAD_ID_BEACON                 );
-        mt_PayloadFactories.setElementAt( new  EventPayload_v3Factory()                     , PAYLOAD_ID_EVENT_V3               );
         //-Install the recycler if present
-        if (mtBufferCache != null) {
+        if (mtByteBufferCache != null) {
             for (int ii=0; ii < mt_PayloadFactories.size(); ii++) {
                 PayloadFactory tFactory = (PayloadFactory) mt_PayloadFactories.elementAt(ii);
                 if (tFactory != null) {
-                    tFactory.setByteBufferCache(mtBufferCache);
+                    tFactory.setByteBufferCache(mtByteBufferCache);
                     //-If a master composite payload factory has been set to non-null
                     // then make sure these are set in any factories which are derived
                     // from AbstractCompositePayload.
@@ -227,10 +222,10 @@ public final class PayloadRegistry {
     /**
      * This method binds the PayloadType to the factory designed to interpret
      * the payload.
-     * @param iPayloadType the type of payload which indicates the factory associated with it.
-     * @return the factory that is appropriate for this type of payload.
+     * @param iPayloadType ... the type of payload which indicates the factory associated with it.
+     * @return PayloadFactory ... the factory that is appropriate for this type of payload.
      */
-    public PayloadFactory getPayloadFactory(int iPayloadType) {
+    public final PayloadFactory getPayloadFactory(int iPayloadType) {
         Object tFactory = mt_PayloadFactories.get(iPayloadType);
         return (PayloadFactory) tFactory;
     }
@@ -242,7 +237,8 @@ public final class PayloadRegistry {
      *
      * @return A new object representing the current place.
      */
-    public Spliceable createCurrentPlaceSpliceable() {
-        return (Spliceable) ((PayloadFactory) mt_PayloadFactories.get(PAYLOAD_ID_ENGFORMAT_TRIGGER)).createCurrentPlaceSpliceable();
+    // public static Spliceable createCurrentPlaceSplicaeable() {
+    public Spliceable createCurrentPlaceSplicaeable() {
+        return (Spliceable) ((PayloadFactory) mt_PayloadFactories.get(PAYLOAD_ID_ENGFORMAT_TRIGGER)).createCurrentPlaceSplicaeable();
     }
 }

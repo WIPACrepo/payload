@@ -1,11 +1,18 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.splicer.Spliceable;
+
+import java.util.Iterator;
+
 import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.payload.splicer.Payload;
+import icecube.daq.payload.IPayload;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.impl.TimeCalibrationPayload;
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IByteBufferCache;
 
+import java.util.List;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 import java.io.IOException;
@@ -32,15 +39,15 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
         setPoolablePayloadFactory(tPayload);
     }
     /**
-     * Get the Payload length from a Backing buffer (ByteBuffer)
+     * Get's the Payload length from a Backing buffer (ByteBuffer)
      * if possible, otherwise return -1.
-     * @param iOffset int which holds the position in the ByteBuffer
+     * @param iOffset .....int which holds the position in the ByteBuffer
      *                     to check for the Payload length.
-     * @param tBuffer ByteBuffer from which to extract the length of the payload
-     * @return the length of the payload if it can be extracted, otherwise -1
+     * @param tBuffer .....ByteBuffer from which to extract the lenght of the payload
+     * @return int ........the lenght of the payload if it can be extracted, otherwise -1
      *
-     * @exception IOException if there is trouble reading the Payload length
-     * @exception DataFormatException if there is something wrong with the payload and the
+     * @exception IOException ...........is thrown if there is trouble reading the Payload length
+     * @exception DataFormatException ...is thrown if there is something wrong with the payload and the
      *                                   length cannot be read.
      */
     public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
@@ -52,7 +59,7 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
      * Creates a TimeCalibrationPayload from a reference domhub-timecalibration record. This creates
      * a NEW ByteBuffer backed payload.
      * @param tDomId - IDOMID used to identify the new payload (not in the specific domhub rec)
-     * @param iDomHubRecOffset - int, the position in the domhub buffer of the domhub-tcal-record
+     * @param iDomHubRecOffset - int, the position in the domhub buffer of the domhub-tcal-record 
      *                           including the syncgps record which is stored at the end.
      * @param tDomHubRecBuffer - ByteBuffer, which holds the domhub-tcal-record used as the basis
      *                           of creating the new Payload/ByteBuffer. This data is deepCopied to
@@ -64,21 +71,21 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
      * NOTE: This uses the internal IByteBufferCache to create the new ByteBuffer to back the payload.
      *
      */
-    public Payload createPayload(IDOMID tDomId, int iDomHubRecOffset, ByteBuffer tDomHubRecBuffer, IUTCTime tTime)
-        throws IOException {
+    public Payload createPayload(IDOMID tDomId, int iDomHubRecOffset, ByteBuffer tDomHubRecBuffer, IUTCTime tTime) 
+		throws IOException {
         ByteBuffer tNewPayloadBuffer = null;
         Payload tNewPayload = null;
         //-get the cache for use in creating the new buffer
-        IByteBufferCache tCache = getByteBufferCache();
+        IByteBufferCache tCache = getByteBufferCache(); 
         if (tCache == null) {
-            mtLog.error("createPayload() no IByteBufferCache has been installed. Can't create Payload");
+            mtLog.error("createPayload() no IByteBufferCache has been installed. Can't create Payload"); 
             return null;
         }
         //-if the new buffer was created successfully, then use the factory method to create a payload from it.
         try {
             //-create a new buffer that is formatted as a new payload
-            tNewPayloadBuffer = createFormattedBufferFromDomHubRecord(tCache, tDomId, iDomHubRecOffset,
-                                                                      tDomHubRecBuffer, tTime);
+            tNewPayloadBuffer = createFormattedBufferFromDomHubRecord(tCache, tDomId, iDomHubRecOffset, 
+																	  tDomHubRecBuffer, tTime);
             if ( tNewPayloadBuffer != null ) {
                 tNewPayload = createPayload(0, tNewPayloadBuffer);
             }
@@ -103,20 +110,20 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
      * @param   tReferenceBuffer - ByteBuffer which contains the reference code
      * @return ByteBuffer a new buffer created by the IByteBufferCache
      */
-    public static ByteBuffer createFormattedBufferFromDomHubRecord(IByteBufferCache tCache,
-                                                                   IDOMID tDomId, int iOffset,
-                                                                   ByteBuffer tReferenceBuffer,
-                                                                   IUTCTime tTime)
-        throws IOException {
+    public static ByteBuffer createFormattedBufferFromDomHubRecord(IByteBufferCache tCache, 
+																   IDOMID tDomId, int iOffset, 
+																   ByteBuffer tReferenceBuffer,
+																   IUTCTime tTime) 
+		throws IOException {
 
         long lutctime = 0L;
 
-        // feb-03-2007 kael-dylan-hanson: don't use GPS times - they are not necessarily
-        // representative of the wall clock time of the TCAL event
-        lutctime = tTime.getUTCTimeAsLong();
-        if (lutctime <= 0L) {
-            mtLog.error("TCAL: failed-tcal domid="+tDomId.getDomIDAsString()+" domclock="+lutctime);
-        }
+		// feb-03-2007 kael-dylan-hanson: don't use GPS times - they are not necessarily
+		// representative of the wall clock time of the TCAL event
+		lutctime = tTime.getUTCTimeAsLong();
+		if (lutctime <= 0L) {
+			mtLog.error("TCAL: failed-tcal domid="+tDomId.getDomIDAsString()+" domclock="+lutctime);
+		}
 
         //-allocate the new Payload buffer for the new Payload
         ByteBuffer tNewBuffer = tCache.acquireBuffer(TimeCalibrationPayload.SIZE_TOTAL);
@@ -129,7 +136,7 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
             //-copy the domhub-data to the new buffer
             //...
 
-            //-position the refrence buffer to the beginning of the domhub-timecalibration-record.
+            //-position the refrence buffer to the begining of the domhub-timecalibration-record.
             tReferenceBuffer.position(iOffset);
             tReferenceBuffer.limit(iOffset + TimeCalibrationPayload.SIZE_DOMHUB_TCAL_RECORD_TOTAL);
 
@@ -142,7 +149,7 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
             //-make the actual copy
             tNewBuffer.put(tReferenceBuffer);
 
-            //-restore the position
+            //-restore the position 
             tNewBuffer.position(0);
 
             //-install the domid and UTC time in the correct place in the new buffer.

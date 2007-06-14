@@ -1,8 +1,8 @@
 /*************************************************  120 columns wide   ************************************************
 
- Class:      TimeCalibRecord
+ Class:  	TimeCalibRecord
 
- @author     Jim Braun, Dan Wharton
+ @author 	Jim Braun, Dan Wharton
  @author     jbraun@amanda.wisc.edu, dwharton@icecube.wisc.edu
 
  ICECUBE Project
@@ -23,51 +23,51 @@ public interface TimeCalibRecord {
     /**
      * @return the transmit DOM timestamp
      */
-    long getDomTXTime();
+    public long getDomTXTime();
 
     /**
-     * @return the receive DOM timestamp
+     * @return the recieve DOM timestamp
      */
-    long getDomRXTime();
+    public long getDomRXTime();
 
     /**
      * @return the transmit DOR timestamp
      */
-    long getDorTXTime();
+    public long getDorTXTime();
 
     /**
      * @return the receive DOR timestamp
      */
-    long getDorRXTime();
+    public long getDorRXTime();
 
     /**
      * @return the waveform as measured by the DOM
      */
-    int[] getDomWaveform();
+    public int[] getDomWaveform();
 
     /**
      * @return the waveform as measured by the DOR card
      */
-    int[] getDorWaveform();
+    public int[] getDorWaveform();
 
     /**
      * @return DOM id
      */
-    String getDomId();
+    public String getDomId();
 
     /**
      * @return  the count of seconds represented by the GPS UTC string
      */
-    int getGpsSeconds();
+    public int getGpsSeconds();
 
     /**
      * @return byte indicating the quality of the 1 PPS signal from GPS
      */
-    byte getGpsQualityByte();
+    public byte getGpsQualityByte();
 
     /**
      * @return the Dor count at the PGS time string - 1 count = 50 ns
      */
-    long getDorGpsSyncTime();
+    public long getDorGpsSyncTime();
 
 }

@@ -3,8 +3,10 @@ package icecube.daq.payload;
 import java.nio.ByteBuffer;
 
 /**
- * This buffer cache simply allocates buffers directly from the heap.
- * It does not cache the buffers in any way.
+ * This is class which emulates the ByteBufferCache by
+ * simply going back to the heap and asking for buffers
+ * directly from the VM.  It does not cache the buffers
+ * in any way.
  * @author kael
  *
  */
@@ -14,18 +16,11 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
     private long acquiredBytes;
     private int returnedBuffers;
     private int totalBufferCount;
-    private long maxAcquiredBytes;
-
+    
     public VitreousBufferCache()
     {
-        this(Long.MIN_VALUE);
     }
-
-    public VitreousBufferCache(long maxAcquiredBytes)
-    {
-        this.maxAcquiredBytes = maxAcquiredBytes;
-    }
-
+    
     public synchronized ByteBuffer acquireBuffer(int iLength)
     {
         acquiredBufferCount++;
@@ -71,8 +66,8 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
         return acquiredBufferCount == 0;
     }
 
-    public synchronized void returnBuffer(ByteBuffer tByteBuffer)
-    {
+    public synchronized void returnBuffer(ByteBuffer tByteBuffer) 
+    { 
         acquiredBufferCount--;
         acquiredBytes -= tByteBuffer.capacity();
         returnedBuffers++;
@@ -80,9 +75,9 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
 
     public void destinationClosed() { }
 
-    public void receiveByteBuffer(ByteBuffer tBuffer)
-    {
-
+    public void receiveByteBuffer(ByteBuffer tBuffer) 
+    { 
+        
     }
 
     public synchronized int getReturnBufferCount()
@@ -100,13 +95,4 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
         return 0;
     }
 
-    public boolean getIsCacheBounded()
-    {
-        return (maxAcquiredBytes > 0);
-    }
-
-    public long getMaxAquiredBytes()
-    {
-        return maxAcquiredBytes;
-    }
 }

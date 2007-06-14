@@ -1,7 +1,7 @@
 /*
  * class: IHitPayload
  *
- * Version $Id: IBeaconPayload.java 2125 2007-10-12 18:27:05Z ksb $
+ * Version $Id: IBeaconPayload.java,v 1.1 2005/12/29 17:37:17 toale Exp $
  *
  * Date: September 18 2004
  *
@@ -18,22 +18,22 @@ import icecube.daq.payload.ISourceID;
 /**
  * Interface of a beacon payload
  *
- * @version $Id: IBeaconPayload.java 2125 2007-10-12 18:27:05Z ksb $
+ * @version $Id: IBeaconPayload.java,v 1.1 2005/12/29 17:37:17 toale Exp $
  * @author hellwig, dwharton
  */
 public interface IBeaconPayload extends IPayload {
     /**
      * Get time of beacon
      */
-    IUTCTime getBeaconTimeUTC();
+    public IUTCTime getBeaconTimeUTC();
 
     /**
      * returns ID of process that is responsible for this payload
      */
     ISourceID getSourceID();
-
+    
     /**
      * Get DOM ID
      */
-    IDOMID getDOMID();
+    public IDOMID getDOMID();
 }

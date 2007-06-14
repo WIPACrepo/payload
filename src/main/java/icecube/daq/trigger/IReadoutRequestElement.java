@@ -9,10 +9,11 @@ package icecube.daq.trigger;
  * (c) 2004 IceCube Collaboration
  */
 
+
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IDOMID;
-
+import icecube.daq.payload.IPayload;
 /**
  * This interface describes a single readout element.
  * It can be either a single Module, a whole String
@@ -27,13 +28,13 @@ public interface IReadoutRequestElement {
     /**
      * Definition of Readout Types
      */
-    int READOUT_TYPE_GLOBAL = 0; // Readout of both all InIce and all IceTop
-    int READOUT_TYPE_IT_GLOBAL = READOUT_TYPE_GLOBAL + 1; //Readout of all IceTop
-    int READOUT_TYPE_II_GLOBAL = READOUT_TYPE_IT_GLOBAL + 1;             // Readout of InIce
+    public static final int READOUT_TYPE_GLOBAL = 0; // Readout of both all InIce and all IceTop
+    public static final int READOUT_TYPE_IT_GLOBAL = READOUT_TYPE_GLOBAL + 1; //Readout of all IceTop
+    public static final int READOUT_TYPE_II_GLOBAL = READOUT_TYPE_IT_GLOBAL + 1;             // Readout of InIce
     // -- NOTE: if StringProcessor gets a GLOBAL request it will read out the whole string as if if where a string request
-    int READOUT_TYPE_II_STRING = READOUT_TYPE_II_GLOBAL + 1; // Readout of complete String
-    int READOUT_TYPE_II_MODULE = READOUT_TYPE_II_STRING + 1; // Readout of a single Module for InIce
-    int READOUT_TYPE_IT_MODULE = READOUT_TYPE_II_MODULE + 1; // Readout of a single Module for IceTop
+    public static final int READOUT_TYPE_II_STRING = READOUT_TYPE_II_GLOBAL + 1; // Readout of complete String
+    public static final int READOUT_TYPE_II_MODULE = READOUT_TYPE_II_STRING + 1; // Readout of a single Module for InIce
+    public static final int READOUT_TYPE_IT_MODULE = READOUT_TYPE_II_MODULE + 1; // Readout of a single Module for IceTop
 
 
 
@@ -41,29 +42,30 @@ public interface IReadoutRequestElement {
      * getReadoutType()
      * @return int Type of Readout
      */
-    int getReadoutType();
+    public int getReadoutType();
 
     /**
      * getDomID()
-     * @return IDOMID object if request is for single DOM
+     * @return IDOMID ...identifies module to readout.
+     *                   IDOMID object if request is for single DOM
      *                   null if request is not specific to a single DOM.
      */
-    IDOMID getDomID();
+    public IDOMID getDomID();
 
     /**
      * getSourceID()
-     * @return the component from which to get data (typically a StringProcessor)
+     * @return ISourceID ....the component from which to get data (typically a StringProcessor)
      */
-    ISourceID getSourceID();
+    public ISourceID getSourceID();
 
     /**
      * returns start time of interval
      */
-    IUTCTime getFirstTimeUTC();
+    public IUTCTime getFirstTimeUTC();
 
     /**
      * returns end time of interval
      */
-    IUTCTime getLastTimeUTC();
+    public IUTCTime getLastTimeUTC();
 
 }

@@ -41,10 +41,10 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
 
     public static final int SIZE_BEACON_PAYLOAD = PayloadEnvelope.SIZE_ENVELOPE + SIZE_SOURCE_ID + SIZE_DOM_ID;
 
-    protected boolean mb_IsPayloadLoaded;
+    protected boolean mb_IsPayloadLoaded = false;
 
-    protected ISourceID mt_sourceId;
-    protected IDOMID mt_domID;
+    protected ISourceID mt_sourceId = null;
+    protected IDOMID mt_domID = null;
 
     /**
       * Standard Constructor, enabling pooling
@@ -77,7 +77,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
 
     /**
      * Initialize the hit information from a test-daq payload.
-     * @param tPayload the Reference Payload (carrying data) to use
+     * @param tPayload .... the Reference Payload (carrying data) to use
      *                      to create this light-weight version without
      *                      the waveform or other engineering data.
      */
@@ -98,9 +98,9 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
 
     /**
      * Initialize the hit information from a test-daq payload.
-     *  @param   tSourceID source ID of this hit
-     *  @param   tHitTime UTC time of this Hit
-     *  @param   tDomID the domid of this Hit.
+     *  @param   tSourceID .......... ISourceID ,  of this hit
+     *  @param   tHitTime ........... IUTCTime ,  UTC time of this Hit
+     *  @param   tDomID ............. tDomID the domid of this Hit.
      */
     public void initialize(ISourceID tSourceID, IUTCTime tHitTime, IDOMID tDomID) {
         mt_sourceId = tSourceID;
@@ -119,10 +119,10 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param iOffset the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tBuffer the destination ByteBuffer to write the payload to.
+     * @param iOffset .......int the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tBuffer .......ByteBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -133,8 +133,8 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @param tDestination ......PayloadDestination to which to write the payload
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -145,18 +145,18 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param bWriteLoaded boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
-     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer the destination ByteBuffer to write the payload to.
+     * @param bWriteLoaded ...... boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
+     * @param iDestOffset .......int the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer .......ByteBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         int iBytesWritten = 0;
         //-Check to make sure if this is a payload that has been loaded with backing
-        if ( super.mtbuffer != null && !bWriteLoaded) {
+        if ( super.mtbuffer != null && bWriteLoaded == false) {
             iBytesWritten =  super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
             if (super.mtbuffer != null) {
@@ -167,9 +167,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
                 }
             }
             ByteOrder tSaveOrder = tDestBuffer.order();
-            if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-                tDestBuffer.order(ByteOrder.BIG_ENDIAN);
-            }
+            tDestBuffer.order(ByteOrder.BIG_ENDIAN);
             //-create the new payload from both the envelope and the hit payload
             //-Write out the PayloadEnvelope
             // NOTE: the initialize method has already filled in the appropriate lengths
@@ -180,9 +178,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
             tDestBuffer.putLong(  iDestOffset + OFFSET_DOM_ID            , mt_domID.getDomIDAsLong() );
             iBytesWritten = mt_PayloadEnvelope.miPayloadLen;
             //-restore the order
-            if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-                tDestBuffer.order(tSaveOrder);
-            }
+            tDestBuffer.order(tSaveOrder);
         }
         return iBytesWritten;
     }
@@ -190,9 +186,9 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded ...... boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
+     * @param tDestination ......PayloadDestination to which to write the payload
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -200,7 +196,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[BeaconPayload]=>").indent();
         //-Check to make sure if this is a payload that has been loaded with backing
-        if ( super.mtbuffer != null && !bWriteLoaded) {
+        if ( super.mtbuffer != null && bWriteLoaded == false) {
             iBytesWritten =  super.writePayload(bWriteLoaded, tDestination);
         } else {
             if (super.mtbuffer != null) {
@@ -233,9 +229,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
             if ( super.mtbuffer != null ) {
                 //-extract the order, so can switch to BIG_ENDIAN for reading the payload
                 ByteOrder tSaveOrder = mtbuffer.order();
-                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-                    mtbuffer.order(ByteOrder.BIG_ENDIAN);
-                }
+                mtbuffer.order(ByteOrder.BIG_ENDIAN);
 
                 mt_sourceId = (ISourceID) SourceID4B.getFromPool();
                 ((SourceID4B) mt_sourceId).initialize( mtbuffer.getInt(  mioffset + OFFSET_SOURCE_ID) );
@@ -243,9 +237,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
                 ((DOMID8B)mt_domID).initialize( mtbuffer.getLong( mioffset + OFFSET_DOM_ID)    );
                 mb_IsPayloadLoaded = true;
                 //-restore order
-                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-                    mtbuffer.order(tSaveOrder);
-                }
+                mtbuffer.order(tSaveOrder);
             }
         }
     }
@@ -259,11 +251,19 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     }
 
     /**
+     * shift offset of object inside buffer (called by PayloadFactory)
+     * NOTE: This is overriden from Payload to accomodate the subpayload
+     */
+    public void shiftOffset(int shift) {
+        super.shiftOffset(shift);
+    }
+
+    /**
      * returns ID of process that is responsible for this payload
      * This is undefined at this point.
      */
     public ISourceID getSourceID() {
-        if ( !mb_IsPayloadLoaded ) {
+        if ( mb_IsPayloadLoaded == false ) {
             try {
                 //-Load the engineering payload so it can be accessed
                 loadHitPayload();
@@ -281,7 +281,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     }
 
     public IDOMID getDOMID() {
-        if ( !mb_IsPayloadLoaded ) {
+        if ( mb_IsPayloadLoaded == false ) {
             try {
                 //-Load the engineering payload so it can be accessed
                 loadHitPayload();
@@ -303,11 +303,12 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     }
 
     /**
-     * Get an object from the pool in a non-static context.
-     * @return object of this type from the object pool.
+     * Get's an object form the pool in a non-static context.
+     * @return IPoolable ... object of this type from the object pool.
      */
     public Poolable getPoolable() {
-        Payload tPayload = (Payload) getFromPool();
+        //-for new just create a new EventPayload
+		Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
@@ -321,17 +322,17 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
      * recycled, ie returned to the pool.
      */
     public void recycle() {
-        //-all recycling is done here
-        if (mt_domID != null) {
-            ((DOMID8B)mt_domID).recycle();
-            mt_domID = null;
-        }
-        if (mt_sourceId != null) {
-            ((SourceID4B)mt_sourceId).recycle();
-            mt_sourceId = null;
-        }
-        //-this must be called LAST!! - dipsose() is eventually called by the based class Payload
-        super.recycle();
+		//-all recycling is done here
+		if (mt_domID != null) {
+			((DOMID8B)mt_domID).recycle();
+			mt_domID = null;
+		}
+		if (mt_sourceId != null) {
+			((SourceID4B)mt_sourceId).recycle();
+			mt_sourceId = null;
+		}
+		//-this must be called LAST!! - dipsose() is eventually called by the based class Payload
+		super.recycle();
     }
 
     /**
@@ -340,15 +341,15 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     public void dispose() {
         //-envelope is handled by AbstractTriggerPayload
         mb_IsPayloadLoaded = false;
-        if (mt_domID != null) {
-            ((DOMID8B)mt_domID).dispose();
-            mt_domID = null;
-        }
-        if (mt_sourceId != null) {
-            ((SourceID4B)mt_sourceId).dispose();
-            mt_sourceId = null;
-        }
-        //-this must be called LAST!!
+		if (mt_domID != null) {
+			((DOMID8B)mt_domID).dispose();
+			mt_domID = null;
+		}
+		if (mt_sourceId != null) {
+			((SourceID4B)mt_sourceId).dispose();
+			mt_sourceId = null;
+		}
+		//-this must be called LAST!! 
         super.dispose();
     }
 

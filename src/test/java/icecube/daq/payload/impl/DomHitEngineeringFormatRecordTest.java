@@ -5,7 +5,6 @@ import icecube.daq.payload.VitreousBufferCache;
 
 import icecube.daq.payload.impl.SourceID4B;
 
-import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.TestUtil;
 
@@ -17,12 +16,13 @@ import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
 
 public class DomHitEngineeringFormatRecordTest
-    extends LoggingCase
+    extends TestCase
 {
     /**
      * Constructs an instance of this test.

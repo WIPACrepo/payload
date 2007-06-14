@@ -1,7 +1,7 @@
 /*
  * class: PayloadDestinationCollection
  *
- * Version $Id: PayloadDestinationCollection.java 2125 2007-10-12 18:27:05Z ksb $
+ * Version $Id: PayloadDestinationCollection.java,v 1.5 2005/12/09 00:09:41 artur Exp $
  *
  * Date: October 19 2005
  *
@@ -17,19 +17,20 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 import java.io.IOException;
 
 /**
  * This class is a simple implementation of the IPayloadDestinationCollection interface.
  *
- * @version $Id: PayloadDestinationCollection.java 2125 2007-10-12 18:27:05Z ksb $
+ * @version $Id: PayloadDestinationCollection.java,v 1.5 2005/12/09 00:09:41 artur Exp $
  * @author pat
  */
 public class PayloadDestinationCollection implements IPayloadDestinationCollection
 {
 
     Map destinationMap = new HashMap();
-    IPayloadDestinationCollectionController controller;
+    IPayloadDestinationCollectionController controller = null;
 
     /**
      * Default constructor.
@@ -98,7 +99,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @return number of bytes written
      * @throws IOException if there is a write error from the underlying PayloadDestination
      */
-    public int writePayload(ISourceID sourceId, IWriteablePayload payload) throws IOException {
+    public int writePayload(ISourceID sourceId, Payload payload) throws IOException {
         if (!destinationMap.containsKey(sourceId)) {
             final String errMsg = "No destination for source ID " +
                 sourceId.getSourceID();
@@ -114,7 +115,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @return total number of bytes written
      * @throws IOException if there is a write error from the underlying PayloadDestination
      */
-    public int writePayload(IWriteablePayload payload) throws IOException {
+    public int writePayload(Payload payload) throws IOException {
         int nWrite = 0;
         Iterator destinationIter = destinationMap.keySet().iterator();
         while (destinationIter.hasNext()) {

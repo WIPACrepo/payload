@@ -1,7 +1,7 @@
 /*
  * class: SourceIdRegistry
  *
- * Version $Id: SourceIdRegistry.java 2125 2007-10-12 18:27:05Z ksb $
+ * Version $Id: SourceIdRegistry.java,v 1.7 2005/12/20 03:03:08 dglo Exp $
  *
  * Date: January 13 2005
  *
@@ -14,10 +14,10 @@ import icecube.daq.common.DAQCmdInterface;
 import icecube.daq.payload.impl.SourceID4B;
 
 /**
- * Source ID registry and associated methods.
+ * This class ...does what?
  *
  * @author pat
- * @version $Id: SourceIdRegistry.java 2125 2007-10-12 18:27:05Z ksb $
+ * @version $Id: SourceIdRegistry.java,v 1.7 2005/12/20 03:03:08 dglo Exp $
  */
 public final class SourceIdRegistry {
 

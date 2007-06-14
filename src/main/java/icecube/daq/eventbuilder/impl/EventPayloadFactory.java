@@ -2,6 +2,9 @@ package icecube.daq.eventbuilder.impl;
 
 import java.util.Vector;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.splicer.CompositePayloadFactory;
@@ -16,6 +19,11 @@ import icecube.daq.trigger.impl.TriggerRequestPayload;
  */
 public class EventPayloadFactory  extends CompositePayloadFactory {
     /**
+     * Log object for this class
+     */
+    private static final Log mtLog = LogFactory.getLog(EventPayloadFactory.class);
+
+    /**
      * Standard Constructor.
      */
     public EventPayloadFactory() {
@@ -27,14 +35,14 @@ public class EventPayloadFactory  extends CompositePayloadFactory {
     /**
      *  This method is used to create the ITriggerRequestPayload from constituent pieces, instead
      *  of reading it from a ByteBuffer.
-     *  @param iUID the unique id (event id) for this event
-     *  @param tSourceID the ISourceID of the source which is constructing this event.
-     *  @param tFirstTimeUTC IUTCTime of the start of this time window
-     *  @param tLastTimeUTC IUTCTime of the end of this time window
-     *  @param tTriggerRequest ITriggerRequestPayload which is the trigger causing the collection of this event.
-     *  @param tDataPayloads Vector of IReadoutDataPayload's which constitute this event.
+     *  @param iUID              ... the unique id (event id) for this event
+     *  @param tSourceID         ... the ISourceID of the source which is constructing this event.
+     *  @param tFirstTimeUTC     ... IUTCTime of the start of this time window
+     *  @param tLastTimeUTC      ... IUTCTime of the end of this time window
+     *  @param tTriggerRequest   ... ITriggerRequestPayload which is the trigger causing the collection of this event.
+     *  @param tDataPayloads     ... Vector of IReadoutDataPayload's which constitute this event.
      *
-     *  @return the Payload object specific to this class which is
+     *  @return Payload ...the Payload object specific to this class which is
      *                     specific to the class which is derived from PayloadFactory.
      */
     public Payload createPayload(
@@ -49,7 +57,7 @@ public class EventPayloadFactory  extends CompositePayloadFactory {
         // successful.
         boolean bDeepCopyOk = false;
         //-sub-payloads which to copy
-        Vector tDataPayloadsCopy =  null;
+        Vector tDataPayloadsCopy =  null; 
         TriggerRequestPayload tTriggerRequestCopy = null;
         //-the final output
         EventPayload tPayload = null;
@@ -77,11 +85,11 @@ public class EventPayloadFactory  extends CompositePayloadFactory {
         if (bDeepCopyOk) {
             //tPayload = (EventPayload) EventPayload.getFromPool();
             tPayload = (EventPayload) mt_PoolablePayloadFactory.getPoolable();
-            tPayload.initialize(iUID,
-                                (ISourceID) tSourceID.deepCopy(),
-                                (IUTCTime) tFirstTimeUTC.deepCopy(),
+            tPayload.initialize(iUID, 
+                                (ISourceID) tSourceID.deepCopy(), 
+                                (IUTCTime) tFirstTimeUTC.deepCopy(), 
                                 (IUTCTime) tLastTimeUTC.deepCopy(),
-                                tTriggerRequestCopy,
+                                tTriggerRequestCopy, 
                                 tDataPayloadsCopy);
             //-set the MasterPayloadFactory (as a composite)
             tPayload.setMasterPayloadFactory(getMasterCompositePayloadFactory());

@@ -2,23 +2,29 @@ package icecube.daq.payload.impl;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IDomHit;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.payload.splicer.Payload;
+import icecube.daq.splicer.Spliceable;
 import icecube.daq.trigger.impl.DOMID8B;
 import icecube.util.Poolable;
 
 /**
  * This object represents a Delta Compressed Hit from a DOM and includes
- * the waveform data. It carries both the header information and the data
- * from the dom and is constructed after the data comes to the surface in the hub.
- * The mux header is included in the header of each payload because they are
- * seperated by time and not by dom-id after reaching the surface and being
+ * the waveform data. It carries both the header information and the data 
+ * from the dom and is constructed after the data comes to the surface in the hub. 
+ * The mux header is included in the header of each payload because they are 
+ * seperated by time and not by dom-id after reaching the surface and being 
  * concentrated and sorted.
  *
  * FORMAT
@@ -50,7 +56,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      * nature of this object. False if waiting to laod only the
      * spliceable information.
      */
-    public boolean mbSpliceablePayloadLoaded;
+    public boolean mbSpliceablePayloadLoaded = false;
 
     //-Field size info
     public static final int SIZE_RECLEN = 4;  //-int
@@ -92,9 +98,9 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     /**
      * This method allows an object to be reinitialized to a new backing buffer
      * and position within that buffer.
-     * @param iOffset int representing the initial position of the object
+     * @param iOffset ...int representing the initial position of the object
      *                   within the ByteBuffer backing.
-     * @param tBackingBuffer the backing buffer for this object.
+     * @param tBackingBuffer ...ByteBuffer the backing buffer for this object.
      */
     public void initialize(int iOffset, ByteBuffer tBackingBuffer) throws IOException, DataFormatException {
         super.mioffset = iOffset;
@@ -143,12 +149,11 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
         //}
         //-load the header data, (and anything else necessary for implementation
         // of Spliceable ie - needed for compareTo() ).
-        miRecLen = mtbuffer.getInt(mioffset + OFFSET_RECLEN);
+        miRecLen = super.milength = mtbuffer.getInt(mioffset + OFFSET_RECLEN);
         miRecId = mtbuffer.getInt(mioffset + OFFSET_RECID);
         mlDomId = mtbuffer.getLong(mioffset + OFFSET_DOMID);
         //-TODO: Adjust the time based on the TimeCalibration will eventually have to be done!
         mlUTime = mtbuffer.getLong(mioffset + OFFSET_UTIME);
-        super.milength = miRecLen;
         super.mttime = new UTCTime8B(mlUTime);
         mbSpliceablePayloadLoaded = true;
     }
@@ -182,7 +187,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     }
 
     /**
-     * Get the TriggerMode from the Engineering Format Payload
+     * Get's the TriggerMode from the Engineering Format Payload
      * Test pattern trigger     0x0
      * CPU requested trigger    0x1
      * SPE discriminator trigger    0x2
@@ -232,22 +237,22 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
         }
         mbSpliceablePayloadLoaded = false;
         mbDeltaPayloadLoaded = false;
-        //-CALL THIS LAST!
+		//-CALL THIS LAST!
         super.dispose();
     }
 
     /**
-     * Get an object from the pool
-     * @return object of this type from the object pool.
+     * Get's an object form the pool
+     * @return IPoolable ... object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        Payload tPayload = (Payload) new DomHitDeltaCompressedFormatPayload();
+		Payload tPayload = (Payload) new DomHitDeltaCompressedFormatPayload(); 
         return (Poolable) tPayload;
     }
 
     /**
      * Method to create instance from the object pool.
-     * @return an object which is ready for reuse.
+     * @return Object .... this is an object which is ready for reuse.
      */
     public Poolable getPoolable() {
         return (Poolable) getFromPool();
@@ -255,25 +260,26 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
+     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-        if (mtDomHitDeltaCompressedRecord != null) {
-            mtDomHitDeltaCompressedRecord.recycle();
-            mtDomHitDeltaCompressedRecord = null;
-        }
-        //-CALL THIS LAST!!!!!  Payload takes care of eventually calling recycle() once it reaches the base class
-        // (in other words: .recycle() is only call ONCE by Payload.recycle() after it has finished its work!
-        super.recycle();
+		if (mtDomHitDeltaCompressedRecord != null) {
+			mtDomHitDeltaCompressedRecord.recycle();
+			mtDomHitDeltaCompressedRecord = null;
+		}
+		//-CALL THIS LAST!!!!!  Payload takes care of eventually calling recycle() once it reaches the base class
+		// (in other words: .recycle() is only call ONCE by Payload.recycle() after it has finished its work!
+		super.recycle();
     }
 
 
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -283,8 +289,8 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @param tDestination ......PayloadDestination to which to write the payload
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -298,9 +304,9 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      * for making use of specialized PayloadDestinations which can document
      * the output if necessary.
      *
-     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded ...... boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tDestination ......PayloadDestination to which to write the payload
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */

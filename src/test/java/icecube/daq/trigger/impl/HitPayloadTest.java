@@ -3,13 +3,11 @@ package icecube.daq.trigger.impl;
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadDestination;
 
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
 import icecube.daq.payload.impl.SourceID4B;
 
-import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDOMID;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockSourceID;
@@ -26,6 +24,7 @@ import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
@@ -49,11 +48,6 @@ class MockHitData
     }
 
     public Object deepCopy()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public void dispose()
     {
         throw new Error("Unimplemented");
     }
@@ -113,36 +107,10 @@ class MockHitData
     {
         return trigType;
     }
-
-    /**
-     * Initializes Payload from backing so it can be used as an IPayload.
-     */
-    public void loadPayload()
-        throws IOException, DataFormatException
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public void recycle()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
-        throws IOException
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
-        throws IOException
-    {
-        throw new Error("Unimplemented");
-    }
 }
 
 public class HitPayloadTest
-    extends LoggingCase
+    extends TestCase
 {
     /**
      * Constructs an instance of this test.

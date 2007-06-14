@@ -5,10 +5,17 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.payload.impl.TimeCalibrationRecord;
+import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.payload.splicer.Payload;
+import icecube.daq.splicer.Spliceable;
 import icecube.daq.trigger.impl.DOMID8B;
 import icecube.util.Poolable;
 
@@ -31,13 +38,16 @@ public class MonitorPayload extends Payload {
     public static int OFFSET_MONITOR_RECORD = OFFSET_DOMID + SIZE_DOMID;
     public static int SIZE_FIXED_LENGTH_DATA = PayloadEnvelope.SIZE_ENVELOPE + SIZE_DOMID;
 
+    // set up logging channel for this component
+    private static Log mtLog = LogFactory.getLog(MonitorPayload.class);
+
     /**
      * Internal format for actual Monitor Record if the payload
      * is completely loaded. Depending on the type of Monitor Record
      * this can be one of several types.
      */
-    private MonitorRecord mtMonitorRecord;
-    IDOMID mtDomId;
+    private MonitorRecord mtMonitorRecord = null;
+    IDOMID mtDomId = null;
 
     //
     // Constructor
@@ -55,14 +65,10 @@ public class MonitorPayload extends Payload {
         if (super.mtbuffer != null) {
             if (mtDomId == null) {
                 ByteOrder tSaveOrder = mtbuffer.order();
-                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-                    mtbuffer.order(ByteOrder.BIG_ENDIAN);
-                }
+                mtbuffer.order(ByteOrder.BIG_ENDIAN);
                 long ldomid = mtbuffer.getLong(mioffset + OFFSET_DOMID);
                 mtDomId = new DOMID8B(ldomid);
-                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-                    mtbuffer.order(tSaveOrder);
-                }
+                mtbuffer.order(tSaveOrder);
             }
             //-create the internal monitor record from the binary record.
             if (mtMonitorRecord == null ) {
@@ -87,7 +93,7 @@ public class MonitorPayload extends Payload {
      * @return MonitorRecord the contained monitor record.
      *         If this returns null then the sub-record type
      *         is not yet supported.
-     *
+     * 
      */
     public MonitorRecord getMonitorRecord() {
         return mtMonitorRecord;
@@ -95,8 +101,8 @@ public class MonitorPayload extends Payload {
 
 
     /**
-     * Get an object from the pool
-     * @return object of this type from the object pool.
+     * Get's an object form the pool
+     * @return IPoolable ... object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return (Poolable) new MonitorPayload();
@@ -104,7 +110,7 @@ public class MonitorPayload extends Payload {
 
     /**
      * Method to create instance from the object pool.
-     * @return an object which is ready for reuse.
+     * @return Object .... this is an object which is ready for reuse.
      */
     public Poolable getPoolable() {
         return (Poolable) getFromPool();
@@ -112,14 +118,15 @@ public class MonitorPayload extends Payload {
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
+     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
         if (mtMonitorRecord != null) {
             mtMonitorRecord.recycle();
             mtMonitorRecord = null;
         }
-        //-this must be LAST!!
-        super.recycle();
+		//-this must be LAST!!
+		super.recycle();
     }
     /**
      * This method de-initializes this object in preparation for reuse.
@@ -130,7 +137,7 @@ public class MonitorPayload extends Payload {
             mtMonitorRecord.dispose();
             mtMonitorRecord = null;
         }
-        //-call this LAST!!!
+		//-call this LAST!!!
         super.dispose();
     }
     // (end)
@@ -138,10 +145,10 @@ public class MonitorPayload extends Payload {
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -151,8 +158,8 @@ public class MonitorPayload extends Payload {
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @param tDestination ......PayloadDestination to which to write the payload
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -162,10 +169,10 @@ public class MonitorPayload extends Payload {
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the destination.
+     * @param tDestination ...... PayloadDestination to which to write the payload
+     * @return int .............. the length in bytes which was written to the destination.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -207,21 +214,19 @@ public class MonitorPayload extends Payload {
     }
     /**
      * Writes out the PayloadEnvelope which is filled with the DOMID and IUTCTIME in the correct
-     * position in the ByteBuffer. This method is used for constructing a MonitorPayload
+     * position in the ByteBuffer. This method is used for constructing a TimeCalibrationPayload
      * invivo when only part of the ByteBuffer has been filled in with information from a muxed
-     * format MonitorRecord
+     * format TimeCalibrationRecord and GpsRecord.
      *
      * @param tDomId        - IDOMID specific domid associated for this
      * @param lUTCTime      - long, representing the utctime that has been computed to be appropriate for this Payload.
      * @param iPayloadStartOffset - int, the offset in the passed ByteBuffer of the beginning of the Payload.
      * @param tPayloadBuffer - ByteBuffer, the buffer into which the values are to be written.
-     *
+     * 
      */
     public static void writePayloadEnvelopeAndID(int iPayloadLength, IDOMID tDomId, long lUTCTime, int iPayloadStartOffset, ByteBuffer tPayloadBuffer)  throws IOException {
         ByteOrder tSaveOrder = tPayloadBuffer.order();
-        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-            tPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
-        }
+        tPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
         //-get and envelope from the pool
         PayloadEnvelope tEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
         //-initiliaze it with the passed in parameters
@@ -230,8 +235,6 @@ public class MonitorPayload extends Payload {
         tEnvelope.writeData(iPayloadStartOffset, tPayloadBuffer);
         //-write the domid to the correct position (BIG_ENDIAN)
         tPayloadBuffer.putLong( (iPayloadStartOffset + OFFSET_DOMID), tDomId.getDomIDAsLong() );
-        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-            tPayloadBuffer.order(tSaveOrder);
-        }
+        tPayloadBuffer.order(tSaveOrder);
     }
 }

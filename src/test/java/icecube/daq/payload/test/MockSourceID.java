@@ -22,7 +22,7 @@ public class MockSourceID
 
     public Object deepCopy()
     {
-        return new MockSourceID(id);
+        throw new Error("Unimplemented");
     }
 
     /**
@@ -36,7 +36,7 @@ public class MockSourceID
     }
 
     /**
-     * Get an object from the pool in a non-static context.
+     * Gets an object form the pool in a non-static context.
      *
      * @return object of this type from the object pool.
      */

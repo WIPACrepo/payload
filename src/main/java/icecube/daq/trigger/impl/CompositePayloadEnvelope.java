@@ -36,7 +36,7 @@ public class CompositePayloadEnvelope extends Poolable implements IWriteablePayl
     /**
      * boolean to mark if data has been loaded/initiialized.
      */
-    private boolean mb_IsLoaded;
+    private boolean mb_IsLoaded = false;
     /**
      * envelope data
      */
@@ -74,9 +74,9 @@ public class CompositePayloadEnvelope extends Poolable implements IWriteablePayl
     /**
      * initialize for the data content of this envelope
      * outside of reading from a buffer.
-     * @param iCompositeType type code should fit in 1st byte of a short for endian detection
-     * @param iNumPayloads number of payloads in this composite
-     * @param iTotalSizeOfPayloads total size in bytes of payload's excluding composite envelope
+     * @param iCompositeType ......... type code should fit in 1st byte of a short for endian detection
+     * @param iNumPayloads ........... number of payloads in this composite
+     * @param iTotalSizeOfPayloads ... total size in bytes of payload's excluding composite envelope
      */
     public void initialize(int iCompositeType, int iNumPayloads, int iTotalSizeOfPayloads ) {
         mi_compositePayloadBytes = SIZE_COMPOSITE_ENVELOPE + iTotalSizeOfPayloads;
@@ -86,16 +86,16 @@ public class CompositePayloadEnvelope extends Poolable implements IWriteablePayl
     }
 
     /**
-     * Get an object from the pool
-     * @return object of this type from the object pool.
+     * Get's an object form the pool
+     * @return IPoolable ... object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return new CompositePayloadEnvelope();
     }
 
     /**
-     * Get an object from the pool in a non-static context.
-     * @return object of this type from the object pool.
+     * Get's an object form the pool in a non-static context.
+     * @return IPoolable ... object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -104,9 +104,10 @@ public class CompositePayloadEnvelope extends Poolable implements IWriteablePayl
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
+     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-        dispose();
+		dispose();
     }
 
     /**
@@ -123,8 +124,8 @@ public class CompositePayloadEnvelope extends Poolable implements IWriteablePayl
     //--[IWriteablePayloadRecord]----
     /**
      * Method to write this record to the payload destination.
-     * @param tDestination PayloadDestination to which to write this record.
-     * @return the number of bytes written.
+     * @param tDestination ....PayloadDestination to which to write this record.
+     * @return int the nubmer of bytes written.
      */
     public int writeData(PayloadDestination tDestination) throws IOException {
         if (tDestination.doLabel()) tDestination.label("[CompositePayloadEnvelope]=>").indent();
@@ -137,9 +138,9 @@ public class CompositePayloadEnvelope extends Poolable implements IWriteablePayl
 
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset the offset at which to start writing the object.
-     * @param tBuffer the ByteBuffer into which to write this payload-record.
-     * @return the number of bytes written.
+     * @param iOffset ....the offset at which to start writing the object.
+     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
+     * @return int the nubmer of bytes written.
      */
     public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
         tBuffer.putInt(iOffset + OFFSET_COMPOSITE_PAYLOAD_BYTES, mi_compositePayloadBytes);
@@ -151,7 +152,7 @@ public class CompositePayloadEnvelope extends Poolable implements IWriteablePayl
     //--[IWriteablePayloadRecord]----
     /**
      * Determines if this record is loaded with valid data.
-     * @return true if data is loaded, false otherwise.
+     * @return boolean ...true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mb_IsLoaded;
@@ -159,8 +160,8 @@ public class CompositePayloadEnvelope extends Poolable implements IWriteablePayl
 
     /**
      * Loads the data from the buffer into the container record.
-     * @param iRecordOffset the offset from which to start loading the data fro the engin.
-     * @param tBuffer ByteBuffer from which to construct the record.
+     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
+     * @param tBuffer ...ByteBuffer from wich to construct the record.
      *
      * NOTE: DBW- changed so that the envelope is ALWAYS BIG_ENDIAN
      *
@@ -169,9 +170,7 @@ public class CompositePayloadEnvelope extends Poolable implements IWriteablePayl
      */
     public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
         ByteOrder tSaveOrder = tBuffer.order();
-        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-            tBuffer.order(ByteOrder.BIG_ENDIAN);
-        }
+        tBuffer.order(ByteOrder.BIG_ENDIAN);
         // OFFSET_COMPOSITE_PAYLOAD_BYTES
         mi_compositePayloadBytes = tBuffer.getInt(iRecordOffset + OFFSET_COMPOSITE_PAYLOAD_BYTES);
         // OFFSET_COMPOSITE_TYPE
@@ -181,9 +180,7 @@ public class CompositePayloadEnvelope extends Poolable implements IWriteablePayl
         //-ok, env loaded
         mb_IsLoaded = true;
 
-        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-            tBuffer.order(tSaveOrder);
-        }
+        tBuffer.order(tSaveOrder);
     }
 
 }

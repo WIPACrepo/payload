@@ -1,6 +1,5 @@
 package icecube.daq.eventbuilder.impl;
 
-import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockUTCTime;
@@ -9,12 +8,13 @@ import icecube.daq.payload.test.TestUtil;
 import java.nio.ByteBuffer;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
 
 public class EventPayloadRecord_v2Test
-    extends LoggingCase
+    extends TestCase
 {
     /**
      * Constructs an instance of this test.
@@ -50,9 +50,9 @@ public class EventPayloadRecord_v2Test
         final int cfgId = 666;
         final int runNum = 777;
 
-        ByteBuffer buf = TestUtil.createEventRecordv2(uid, srcId, firstTime,
-                                                      lastTime, type, cfgId,
-                                                      runNum);
+        ByteBuffer buf = TestUtil.createEventRecord(uid, srcId, firstTime,
+                                                    lastTime, type, cfgId,
+                                                    runNum);
 
         EventPayloadRecord_v2 evtRec =
             new EventPayloadRecord_v2();
@@ -127,9 +127,9 @@ public class EventPayloadRecord_v2Test
         final int cfgId = 666;
         final int runNum = 777;
 
-        ByteBuffer buf = TestUtil.createEventRecordv2(uid, srcId, firstTime,
-                                                      lastTime, type, cfgId,
-                                                      runNum);
+        ByteBuffer buf = TestUtil.createEventRecord(uid, srcId, firstTime,
+                                                    lastTime, type, cfgId,
+                                                    runNum);
 
         EventPayloadRecord_v2 evtRec =
             new EventPayloadRecord_v2();
@@ -159,9 +159,9 @@ public class EventPayloadRecord_v2Test
         final int cfgId = 666;
         final int runNum = 777;
 
-        ByteBuffer buf = TestUtil.createEventRecordv2(uid, srcId, firstTime,
-                                                      lastTime, type, cfgId,
-                                                      runNum);
+        ByteBuffer buf = TestUtil.createEventRecord(uid, srcId, firstTime,
+                                                    lastTime, type, cfgId,
+                                                    runNum);
 
         EventPayloadRecord_v2 evtRec =
             new EventPayloadRecord_v2();

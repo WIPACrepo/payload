@@ -2,9 +2,12 @@ package icecube.daq.payload.impl;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 
+import icecube.daq.payload.IPayloadRecord;
 import icecube.daq.payload.PayloadDestination;
+import icecube.daq.payload.impl.MonitorRecord;
 import icecube.util.Poolable;
 
 /**
@@ -62,7 +65,7 @@ import icecube.util.Poolable;
      /**
       * Container Data Variables.
       */
-     public boolean mbConfigMonitorRecordLoaded;
+     public boolean mbConfigMonitorRecordLoaded = false;
 
      /**
       *  The following fields reflect the order and sizes of the
@@ -99,8 +102,8 @@ import icecube.util.Poolable;
      }
 
      /**
-      * Get an object from the pool
-      * @return object of this type from the object pool.
+      * Get's an object form the pool
+      * @return IPoolable ... object of this type from the object pool.
       */
      public static Poolable getFromPool() {
          return (Poolable) new ConfigMonitorRecord();
@@ -108,8 +111,8 @@ import icecube.util.Poolable;
 
      /**
       * This method is designed to be overridden by derived classes whic load more than just header data.
-      * @param iRecordOffset the offset from which to start loading the data fro the engin.
-      * @param tBuffer from which to construct the record.
+      * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
+      * @param tBuffer ...ByteBuffer from wich to construct the record.
       *
       * @exception IOException if errors are detected reading the record
       * @exception DataFormatException if the record is not of the correct format.
@@ -145,15 +148,15 @@ import icecube.util.Poolable;
       */
      public void dispose() {
          mbConfigMonitorRecordLoaded = false;
-         //-CALL THIS LAST!!!
+		 //-CALL THIS LAST!!!
          super.dispose();
      }
      /**
       * This method writes this IPayloadRecord to the PayloadDestination.
       *
-      * @param tDestination PayloadDestination to which to write the payload
-      * @return the length in bytes which was writtern.
-      *
+      * @param tDestination ......PayloadDestination to which to write the payload
+      * @return int ..............the length in bytes which was writtern.
+      * 
       * NOTE: Since IPayloadRecords do not have a ByteBuffer backing they have no choice
       *       but to write from their internal values.  This is generally only used for
       *       StringFilePayloadDesitinations and the like for documentation purposes because
@@ -184,7 +187,7 @@ import icecube.util.Poolable;
          iBytes += 1; tDestination.writeByte(LABEL_DATA_ACCESS_MINOR_VERSION        , mby_Data_Access_minor_version);
          iBytes += 1; tDestination.writeByte(LABEL_DAQCONFIGURATIONSECTIONLENGTH    , msi_DAQconfigurationSectionLength);
          iBytes += 4; tDestination.writeInt(LABEL_TRIGGER_CONFIG_INFO               , mi_Trigger_config_info);
-         iBytes += 4; tDestination.writeInt(LABEL_ATWD_READOUT_INFO                 , mi_ATWD_readout_info);
+         iBytes += 4; tDestination.writeInt(LABEL_ATWD_READOUT_INFO                 , mi_ATWD_readout_info);                       
          if (tDestination.doLabel()) tDestination.undent().label("} [ConfigMonitorRecord]");
          return iBytes;
      }

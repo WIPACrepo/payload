@@ -16,11 +16,15 @@ import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.util.Poolable;
 import icecube.daq.payload.impl.PayloadEnvelope;
+import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.splicer.Payload;
+import icecube.daq.splicer.Spliceable;
+import icecube.daq.trigger.ITriggerPayload;
 import icecube.daq.trigger.IHitPayload;
 import icecube.daq.trigger.IHitDataPayload;
 import icecube.daq.trigger.AbstractTriggerPayload;
+import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 
 
 import org.apache.commons.logging.Log;
@@ -59,13 +63,13 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     public static final int SIZE_HIT_PAYLOAD = PayloadEnvelope.SIZE_ENVELOPE + SIZE_TRIGGER_TYPE +
                                                SIZE_TRIGGER_CONFIG_ID + SIZE_SOURCE_ID + SIZE_DOM_ID + SIZE_TRIGGER_MODE;
 
-    protected boolean mb_IsHitPayloadLoaded;
+    protected boolean mb_IsHitPayloadLoaded = false;
 
     protected int mi_TriggerConfigID = -1;
     protected int mi_TriggerType     = -1;
 
-    protected ISourceID mt_sourceId;
-    protected IDOMID mt_domID;
+    protected ISourceID mt_sourceId = null;
+    protected IDOMID mt_domID = null;
     protected short msi_TriggerMode = -1;   //-from the Engineering Record
     /**
       * Standard Constructor, enabling pooling
@@ -102,7 +106,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
 
     /**
      * Initialize the hit information from a test-daq payload.
-     * @param IHitDataPayload the Reference Payload (carrying data) to use
+     * @param IHitDataPayload .... the Reference Payload (carrying data) to use
      *                             to create this light-weight version without
      *                             the waveform or other engineering data.
      */
@@ -126,12 +130,12 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
 
     /**
      * Initialize the hit information from a test-daq payload.
-     *  @param   tSourceID source ID of this hit
-     *  @param   iTriggerType type of trigger
-     *  @param   iTriggerConfigID unique config for this type of trigger
-     *  @param   tHitTime UTC time of this Hit
-     *  @param   iTriggerMode from the EngineeringFormat (lower-order 2 bytes represent the trigger in the Eng record).
-     *  @param   tDomID the domid of this Hit.
+     *  @param   tSourceID .......... ISourceID ,  of this hit
+     *  @param   iTriggerType ....... int ,  type of trigger
+     *  @param   iTriggerConfigID ... int ,  unique config for this type of trigger
+     *  @param   tHitTime ........... IUTCTime ,  UTC time of this Hit
+     *  @param   iTriggerMode ....... int , from the EngineeringFormat (lower-order 2 bytes represent the trigger in the Eng record).
+     *  @param   IDOMID ............. tDomID the domid of this Hit.
      */
     public void initialize(ISourceID tSourceID, int iTriggerType, int iTriggerConfigID, IUTCTime tHitTime, int iTriggerMode, IDOMID tDomID) {
         mt_sourceId = tSourceID;
@@ -153,18 +157,18 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param bWriteLoaded boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
-     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer the destination ByteBuffer to write the payload to.
+     * @param bWriteLoaded ...... boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
+     * @param iDestOffset .......int the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer .......ByteBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         int iBytesWritten = 0;
         //-Check to make sure if this is a payload that has been loaded with backing
-        if ( super.mtbuffer != null && !bWriteLoaded) {
+        if ( super.mtbuffer != null && bWriteLoaded == false) {
             iBytesWritten =  super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
             if (super.mtbuffer != null) {
@@ -175,9 +179,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
                 }
             }
             ByteOrder tSaveOrder = tDestBuffer.order();
-            if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-                tDestBuffer.order(ByteOrder.BIG_ENDIAN);
-            }
+            tDestBuffer.order(ByteOrder.BIG_ENDIAN);
             //-create the new payload from both the envelope and the hit payload
             //-Write out the PayloadEnvelope
             // NOTE: the initialize method has already filled in the appropriate lengths
@@ -191,9 +193,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
             tDestBuffer.putShort( iDestOffset + OFFSET_TRIGGER_MODE      , msi_TriggerMode           );
             iBytesWritten = mt_PayloadEnvelope.miPayloadLen;
             //-restore the order
-            if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-                tDestBuffer.order(tSaveOrder);
-            }
+            tDestBuffer.order(tSaveOrder);
         }
         return iBytesWritten;
     }
@@ -201,9 +201,9 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded ...... boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
+     * @param tDestination ......PayloadDestination to which to write the payload
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -211,7 +211,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[HitPayload]=>").indent();
         //-Check to make sure if this is a payload that has been loaded with backing
-        if ( super.mtbuffer != null && !bWriteLoaded) {
+        if ( super.mtbuffer != null && bWriteLoaded == false) {
             iBytesWritten =  super.writePayload(bWriteLoaded, tDestination);
         } else {
             if (super.mtbuffer != null) {
@@ -247,9 +247,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
             if ( super.mtbuffer != null ) {
                 //-extract the order, so can switch to BIG_ENDIAN for reading the payload
                 ByteOrder tSaveOrder = mtbuffer.order();
-                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-                    mtbuffer.order(ByteOrder.BIG_ENDIAN);
-                }
+                mtbuffer.order(ByteOrder.BIG_ENDIAN);
                 mi_TriggerType     = mtbuffer.getInt( mioffset + OFFSET_TRIGGER_TYPE      );
                 mi_TriggerConfigID = mtbuffer.getInt( mioffset + OFFSET_TRIGGER_CONFIG_ID );
 
@@ -260,9 +258,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
                 msi_TriggerMode = mtbuffer.getShort( mioffset + OFFSET_TRIGGER_MODE );
                 mb_IsHitPayloadLoaded = true;
                 //-restore order
-                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-                    mtbuffer.order(tSaveOrder);
-                }
+                mtbuffer.order(tSaveOrder);
             }
         }
     }
@@ -276,10 +272,18 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     }
 
     /**
+     * shift offset of object inside buffer (called by PayloadFactory)
+     * NOTE: This is overriden from Payload to accomodate the subpayload
+     */
+    public void shiftOffset(int shift) {
+        super.shiftOffset(shift);
+    }
+
+    /**
      * `returns ID of trigger
      */
     public int getTriggerConfigID() {
-        if ( !mb_IsHitPayloadLoaded ) {
+        if ( mb_IsHitPayloadLoaded == false ) {
             try {
                 //-Load the engineering payload so it can be accessed
                 loadHitPayload();
@@ -297,7 +301,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      * returns type of trigger based on the trigger mode in the underlying hit
      */
     public int getTriggerType() {
-        if ( !mb_IsHitPayloadLoaded ) {
+        if ( mb_IsHitPayloadLoaded == false ) {
             try {
                 //-Load the engineering payload so it can be accessed
                 loadHitPayload();
@@ -318,7 +322,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      * This is undefined at this point.
      */
     public ISourceID getSourceID() {
-        if ( !mb_IsHitPayloadLoaded ) {
+        if ( mb_IsHitPayloadLoaded == false ) {
             try {
                 //-Load the engineering payload so it can be accessed
                 loadHitPayload();
@@ -337,7 +341,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      * Get DOM ID
      */
     public IDOMID getDOMID() {
-        if ( !mb_IsHitPayloadLoaded ) {
+        if ( mb_IsHitPayloadLoaded == false ) {
             try {
                 //-Load the engineering payload so it can be accessed
                 loadHitPayload();
@@ -362,11 +366,12 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     }
 
     /**
-     * Get an object from the pool in a non-static context.
-     * @return object of this type from the object pool.
+     * Get's an object form the pool in a non-static context.
+     * @return IPoolable ... object of this type from the object pool.
      */
     public Poolable getPoolable() {
-        Payload tPayload = (Payload) getFromPool();
+        //-for new just create a new EventPayload
+		Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
@@ -380,17 +385,17 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      * recycled, ie returned to the pool.
      */
     public void recycle() {
-        //-all recycling is done here
-        if (mt_domID != null) {
-            ((Poolable)mt_domID).recycle();
-            mt_domID = null;
-        }
-        if (mt_sourceId != null) {
-            ((Poolable)mt_sourceId).recycle();
-            mt_sourceId = null;
-        }
-        //-this must be called LAST!! - dipsose() is eventually called by the based class Payload
-        super.recycle();
+		//-all recycling is done here
+		if (mt_domID != null) {
+			((Poolable)mt_domID).recycle();
+			mt_domID = null;
+		}
+		if (mt_sourceId != null) {
+			((Poolable)mt_sourceId).recycle();
+			mt_sourceId = null;
+		}
+		//-this must be called LAST!! - dipsose() is eventually called by the based class Payload
+		super.recycle();
     }
 
     /**
@@ -400,23 +405,16 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
         //-envelope is handled by AbstractTriggerPayload
         mb_IsHitPayloadLoaded = false;
         msi_TriggerMode = -1;
-        if (mt_domID != null) {
-            ((DOMID8B)mt_domID).dispose();
-            mt_domID = null;
-        }
-        if (mt_sourceId != null) {
-            ((SourceID4B)mt_sourceId).dispose();
-            mt_sourceId = null;
-        }
-        //-this must be called LAST!!
+		if (mt_domID != null) {
+			((DOMID8B)mt_domID).dispose();
+			mt_domID = null;
+		}
+		if (mt_sourceId != null) {
+			((SourceID4B)mt_sourceId).dispose();
+			mt_sourceId = null;
+		}
+		//-this must be called LAST!! 
         super.dispose();
     }
 
-
-    public String toString()
-    {
-        return "HitPayload@" + mttime + "[type " + mi_TriggerType +
-            " cfgId " + mi_TriggerConfigID + " src " + mt_sourceId +
-            " dom " + mt_domID + " mode " + msi_TriggerMode + "]";
-    }
 }

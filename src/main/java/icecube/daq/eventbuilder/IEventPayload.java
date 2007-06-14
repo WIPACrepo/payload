@@ -1,9 +1,14 @@
 package icecube.daq.eventbuilder;
 
+import java.util.zip.DataFormatException;
+import java.io.IOException;
 import java.util.Vector;
 
+import icecube.daq.payload.IUTCTime;
 import icecube.daq.trigger.ITriggerRequestPayload;
 import icecube.daq.trigger.ICompositePayload;
+import icecube.daq.eventbuilder.IReadoutDataPayload;
+import icecube.daq.trigger.IHitDataPayload;
 
 /**
  * Objects which implement this interface provide information
@@ -23,62 +28,56 @@ import icecube.daq.trigger.ICompositePayload;
  * @author dwharton
  * NOTE: This interface reflects changes which are implemented in the
  *       EventPayload_v2 class. The EventPayload class will implement
- *       this interface but will return uninitialized values for
+ *       this interface but will return uninitialized values for 
  *       getEventType(), getEventConfigID(), and getRunNumber()
  *       DBW 3/15/05
  */
 public interface IEventPayload extends ICompositePayload {
 
     /**
-     * Get the event type indicating the configuration type which
+     * Get's the event type indicating the configuration type which
      * produced this event.
-     * @return the event-type
+     * @return int the event-type 
      *  NOTE:a value of -1 indicates that this is not implemented by this object
      */
-    int getEventType();
+    public int getEventType();
 
     /**
-     * Get the event config id for this event type which acts as
+     * Get's the event config id for this event type which acts as
      * a primary key for looking up the parameters/settings which are specific
      * to this specific event-type.
-     * @return the event configuration id for this event.
+     * @return int the event configuration id for this event.
      *  NOTE:a value of -1 indicates that this is not implemented by this object
      */
-    int getEventConfigID();
+    public int getEventConfigID();
 
     /**
-     * Get the run number for this event which provides a key to the instrumentation
+     * Get's the run number for this event which provides a key to the instrumentation
      * configuration at the time that this event was produced.
-     * @return the run number
+     * @return int .... the run number
      *  NOTE:a value of -1 indicates that this is not implemented by this object
      */
-    int getRunNumber();
+    public int getRunNumber();
 
     /**
      * Returns the unique id assigned to this event by the GlobalTrigger.
      *
-     * @return the unique id for this event.
+     * @return int ... the unique id for this event.
      */
-    int getEventUID();
+    public int getEventUID();
 
     /**
      * Returns the ITriggerRequestPayload which provides the
      * context for the data of this event.
-     * @return the payload representing the trigger context.
+     * @return ITriggerRequestPayload ... the payload representing the trigger context.
      */
-    ITriggerRequestPayload getTriggerRequestPayload();
+    public ITriggerRequestPayload getTriggerRequestPayload();
 
     /**
      * Returns the IReadoutDataPayload's which represent the actual data associated
      * with the event.
-     * @return Vector of IReadoutDataPayload's which can be queried for IHitDataPayload's
+     * @return Vector .... of IReadoutDataPayload's which can be queried for IHitDataPayload's
      */
-    Vector getReadoutDataPayloads();
+    public Vector getReadoutDataPayloads();
 
-    /**
-     * Get the number of the active subrun for this event.
-     * @return the subrun number
-     *  NOTE:a value of 0 indicates that no subrun is active
-     */
-    int getSubrunNumber();
 }

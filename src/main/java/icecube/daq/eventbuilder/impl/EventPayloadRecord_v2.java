@@ -25,10 +25,10 @@ import java.io.IOException;
  * @author dwharton
  *
  * NOTE: This is now RecordType v2 and includes the following fields
- * EVENT_TYPE the TriggerType for an Event
- * EVENT_CONFIGID the event-config-id corresponding to the configuration for this
+ * EVENT_TYPE ........ int which corresponds to the TriggerType for an Event
+ * EVENT_CONFIGID .... int the event-config-id corresponding to the configuration for this
  *                     type of event. (ie a type code for for instance Monolith Events... etc)
- * EVENT_RUN_NUMBER the run number in which this event was produced.
+ * EVENT_RUN_NUMBER .. int the run number in which this event was produced.
  *
  *
  * NOTE: This record will support backward compatible for RECORD_TYPE_EVENT which does not
@@ -37,7 +37,7 @@ import java.io.IOException;
  */
 public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayloadRecord {
     public static final int REC_TYPE               = RecordTypeRegistry.RECORD_TYPE_EVENT_V2;
-    protected boolean mb_IsDataLoaded;
+    protected boolean mb_IsDataLoaded = false;
 
     public static final int SIZE_REC_TYPE          = 2;
     public static final int SIZE_UID               = 4;
@@ -76,14 +76,14 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
     public static final String RUN_NUMBER     = "RUN_NUMBER";
 
 
-    public short           msi_RecType      = (short) REC_TYPE;
-    public int             mi_UID           = -1; //-unique id for this event.
-    public ISourceID       mt_sourceid;           //-the source of this request.
-    public IUTCTime        mt_firstTime;          //-start of the time window
-    public IUTCTime        mt_lastTime;           //-end of the time window
-    public int             mi_eventType     = -1; //-config type which produced event
-    public int             mi_eventConfigID = -1; //-primary key to parameters to this config type
-    public int             mi_runNumber     = -1; //-run number for this event
+    public short           msi_RecType        = (short) REC_TYPE;
+    public int             mi_UID             = -1;    //-unique id for this event.
+    public ISourceID       mt_sourceid        = null;  //-the source of this request.
+    public IUTCTime        mt_firstTime       = null;  //-start of the time window
+    public IUTCTime        mt_lastTime        = null;  //-end of the time window
+    public int             mi_eventType       = -1;    //-config type which produced event
+    public int             mi_eventConfigID   = -1;    //-primary key to parameters to this config type
+    public int             mi_runNumber       = -1;    //-run number for this event
 
     /**
      * Standard Constructor.
@@ -94,13 +94,13 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
     /**
      * create's the data portion of this record form
      * the contained data.
-     * @param iUID the unique id for this event
-     * @param tSourceID the source id (ie event-builder source-id) which is producing this event-data
-     * @param tFirstTimeUTC the first time in this event-data window
-     * @param tLastTimeUTC the last time in this event-data window
-     * @param iEventType the type of config that produced this event.
-     * @param iEventConfigID the primary key leading to the specific parameters associated with events of this type.
-     * @param iRunNumber the run-number in which this event occured.
+     * @param iUID ............ int the unique id for this event
+     * @param tSourceID ....... ISourceID the source id (ie event-builder source-id) which is producing this event-data
+     * @param tFirstTimeUTC ... IUTCTime the first time in this event-data window
+     * @param tLastTimeUTC .... IUTCTime the last time in this event-data window
+     * @param iEventType ..... int the type of config that produced this event.
+     * @param iEventConfigID . int the primary key leading to the specific parameters associated with events of this type.
+     * @param iRunNumber ..... int the run-number in which this event occured.
      */
     public void initialize(
             int             iUID,
@@ -123,15 +123,15 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
     /**
      * Pool method to get an object from the pool
      * for reuse.
-     * @return a EventPayloadRecord_v2 object for reuse.
+     * @return Object ... a EventDataPayloadRecord object for reuse.
      */
     public static Poolable getFromPool() {
         return (Poolable) new EventPayloadRecord_v2();
     }
 
     /**
-     * Get an object from the pool in a non-static context.
-     * @return object of this type from the object pool.
+     * Get's an object form the pool in a non-static context.
+     * @return IPoolable ... object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -144,23 +144,23 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
     public void recycle() {
         //-todo: keep the low level obejcts around in an uninitialized state so
         //       just have to pool the upper level object.
-        if (mt_sourceid != null) {
-            ((Poolable) mt_sourceid).recycle();
-            mt_sourceid        = null;
-        }
-        if (mt_firstTime != null) {
-            ((Poolable) mt_firstTime).recycle();
-            mt_firstTime       = null;
-        }
-        if (mt_lastTime != null) {
-            ((Poolable) mt_lastTime).recycle();
-            mt_lastTime        = null;
-        }
-        dispose();
+		if (mt_sourceid != null) {
+			((Poolable) mt_sourceid).recycle();
+			mt_sourceid        = null;
+		}
+		if (mt_firstTime != null) {
+			((Poolable) mt_firstTime).recycle();
+			mt_firstTime       = null;
+		}
+		if (mt_lastTime != null) {
+			((Poolable) mt_lastTime).recycle();
+			mt_lastTime        = null;
+		}
+		dispose();
     }
     /**
      * Determines if this record is loaded with valid data.
-     * @return true if data is loaded, false otherwise.
+     * @return boolean ...true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mb_IsDataLoaded;
@@ -170,19 +170,17 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
 
     /**
      * Loads the data from the buffer into the container record.
-     * @param iRecordOffset the offset from which to start loading the data fro the engin.
-     * @param tBuffer ByteBuffer from which to construct the record.
+     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
+     * @param tBuffer ...ByteBuffer from wich to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
     public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
-        mb_IsDataLoaded = false;
         ByteOrder tSaveOrder = tBuffer.order();
+        mb_IsDataLoaded = false;
         //-read record-type
-        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-            tBuffer.order(ByteOrder.BIG_ENDIAN);
-        }
+        tBuffer.order(ByteOrder.BIG_ENDIAN);
         // OFFSET_REC_TYPE
         msi_RecType = tBuffer.getShort(iRecordOffset + OFFSET_REC_TYPE);
 
@@ -212,15 +210,13 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
         mi_runNumber = tBuffer.getInt(iRecordOffset + OFFSET_RUN_NUMBER);
 
         //-restore order
-        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-            tBuffer.order(tSaveOrder);
-        }
+        tBuffer.order(tSaveOrder);
         mb_IsDataLoaded = true;
     }
 
     /**
      * Method to write this record to the payload destination.
-     * @param tDestination PayloadDestination to which to write this record.
+     * @param tDestination ....PayloadDestination to which to write this record.
      */
     public int writeData(PayloadDestination tDestination) throws IOException {
         //-eventually will switch to new format
@@ -243,15 +239,13 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
     }
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset the offset at which to start writing the object.
-     * @param tBuffer the ByteBuffer into which to write this payload-record.
+     * @param iOffset ....the offset at which to start writing the object.
+     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
      */
     public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
         ByteOrder tSaveOrder = tBuffer.order();
         //-switch to BIG_ENDIAN
-        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-            tBuffer.order(ByteOrder.BIG_ENDIAN);
-        }
+        tBuffer.order(ByteOrder.BIG_ENDIAN);
         tBuffer.putShort(  iOffset + OFFSET_REC_TYPE,               msi_RecType                     );
         tBuffer.putInt(    iOffset + OFFSET_UID,                    mi_UID                          );
         tBuffer.putInt(    iOffset + OFFSET_SOURCE_ID,              mt_sourceid.getSourceID()       );
@@ -261,9 +255,7 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
         tBuffer.putInt(    iOffset + OFFSET_EVENT_CONFIGID,         mi_eventConfigID                );
         tBuffer.putInt(    iOffset + OFFSET_RUN_NUMBER,             mi_runNumber                    );
         //-restore order
-        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
-            tBuffer.order(tSaveOrder);
-        }
+        tBuffer.order(tSaveOrder);
         return SIZE_TOTAL;
     }
 
@@ -275,18 +267,18 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
     public void dispose() {
         //-todo: keep the low level obejcts around in an uninitialized state so
         //       just have to pool the upper level object.
-        if (mt_sourceid != null) {
-            ((Poolable) mt_sourceid).dispose();
-            mt_sourceid        = null;
-        }
-        if (mt_firstTime != null) {
-            ((Poolable) mt_firstTime).dispose();
-            mt_firstTime       = null;
-        }
-        if (mt_lastTime != null) {
-            ((Poolable) mt_lastTime).dispose();
-            mt_lastTime        = null;
-        }
+		if (mt_sourceid != null) {
+			((Poolable) mt_sourceid).dispose();
+			mt_sourceid        = null;
+		}
+		if (mt_firstTime != null) {
+			((Poolable) mt_firstTime).dispose();
+			mt_firstTime       = null;
+		}
+		if (mt_lastTime != null) {
+			((Poolable) mt_lastTime).dispose();
+			mt_lastTime        = null;
+		}
         mb_IsDataLoaded    = false;
         mi_eventType       = -1;
         mi_eventConfigID   = -1;

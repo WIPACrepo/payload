@@ -2,15 +2,24 @@ package icecube.daq.trigger.impl;
 
 import java.io.IOException;
 import java.util.zip.DataFormatException;
+import java.nio.ByteBuffer;
 
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
+import icecube.daq.payload.impl.PayloadEnvelope;
+import icecube.daq.payload.impl.UTCTime8B;
+import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.splicer.Payload;
+import icecube.daq.splicer.Spliceable;
 import icecube.daq.trigger.IHitPayload;
 import icecube.daq.payload.IDOMID;
+import icecube.daq.trigger.impl.DOMID8B;
+import icecube.daq.trigger.impl.DOMID8B;
+import icecube.daq.trigger.impl.EngineeringFormatTriggerPayload;
+import icecube.daq.trigger.ITriggerPayload;
 import icecube.util.Poolable;
 
 /**
@@ -20,7 +29,7 @@ import icecube.util.Poolable;
  * @author dwharton
  */
 public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload implements IHitPayload {
-    protected DOMID8B mt_DomID;
+    protected DOMID8B mt_DomID = null;
     /**
      * Standard Constructor, enabling pooling
      */
@@ -32,19 +41,20 @@ public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload
     }
 
     /**
-     * Get an object from the pool
-     * @return object of this type from the object pool.
+     * Get's an object form the pool
+     * @return IPoolable ... object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return (Poolable) new EngineeringFormatHitPayload();
     }
 
     /**
-     * Get an object from the pool in a non-static context.
-     * @return object of this type from the object pool.
+     * Get's an object form the pool in a non-static context.
+     * @return IPoolable ... object of this type from the object pool.
      */
     public Poolable getPoolable() {
-        Payload tPayload = (Payload) getFromPool();
+        //-for new just create a new EventPayload
+		Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
@@ -127,16 +137,16 @@ public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload
             mt_DomID.dispose();
             mt_DomID = null;
         }
-        //-CALL THIS LAST!!
+		//-CALL THIS LAST!!
         super.dispose();
     }
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the destination.
+     * @param tDestination ...... PayloadDestination to which to write the payload
+     * @return int .............. the length in bytes which was written to the destination.
      *
      * @throws IOException if an error occurs during the process
      */

@@ -75,7 +75,7 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
     /**
      * boolean indicating if data has been successfully loaded into this 'container'
      */
-    public boolean mbLoaded;
+    public boolean mbLoaded = false;
 
     /**
      * Standard Constructor.
@@ -88,7 +88,7 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
 
     /**
      * Determines if this record is loaded with valid data.
-     * @return true if data is loaded, false otherwise.
+     * @return boolean ...true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mbLoaded;
@@ -112,8 +112,8 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
 
     /**
      * Reads the Monitor record information from the ByteBuffer containing the MonitorRecord.
-     * @param iRecordOffset the offset from which to start loading the data fro the engin.
-     * @param tBuffer ByteBuffer from which to construct the record.
+     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
+     * @param tBuffer ...ByteBuffer from wich to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -145,6 +145,7 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
      * @exception DataFormatException if the record is not of the correct format.
      */
     public void loadTypeAndByteOrder(int iRecordOffset, ByteBuffer tBuffer, ByteOrder tSaveOrder) throws IOException, DataFormatException {
+        ByteOrder tRecordOrder = tSaveOrder;
         short iReadRecType = getRecordType(iRecordOffset, tBuffer);
         msiRecType = correctRecordType(iReadRecType);
         mtRecordOrder = detectByteOrder(iReadRecType, msiRecType, tSaveOrder);
@@ -167,9 +168,9 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
     /**
      * This method allows all MonitorRecord's to be parsed for type as input
      * to a MonitorRecordFactory.
-     * @param iRecordOffset the start of the record in the ByteBuffer
-     * @param tBuffer ByteBuffer containing the MonitorRecord.
-     * @return the NON-ENDIAN-CORRECTED type.
+     * @param iRecordOffset ...int the start of the record in the ByteBuffer
+     * @param tBuffer .........ByteBuffer containing the MonitorRecord.
+     * @return short ..........the NON-ENDIAN-CORRECTED type.
      */
     public static short getRecordType(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
         return tBuffer.getShort(iRecordOffset + OFFSET_RECTYPE);
@@ -178,8 +179,8 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
     /**
      * Reads the Monitor record information from the ByteBuffer containing the MonitorRecord and
      * returns the length.
-     * @param iRecordOffset the offset from which to start loading the data fro the engin.
-     * @param tBuffer ByteBuffer from which to construct the record.
+     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
+     * @param tBuffer ...ByteBuffer from wich to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -204,8 +205,8 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
 
     /**
      * This routine is used to load the header data common to all types of monitor records.
-     * @param iRecordOffset the start of the record in the ByteBuffer
-     * @param tBuffer ByteBuffer containing the MonitorRecord.
+     * @param iRecordOffset ...int the start of the record in the ByteBuffer
+     * @param tBuffer .........ByteBuffer containing the MonitorRecord.
      */
     public void loadHeaderData( int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
 
@@ -219,8 +220,8 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
 
     /**
      * Static method to pull out the DOM Clock from this monitor record.
-     * @param iRecordOffset the offset from which to start loading the data fro the engin.
-     * @param tBuffer ByteBuffer from which to construct the record.
+     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
+     * @param tBuffer .........ByteBuffer from wich to construct the record.
      *
      * NOTE: This is usefull when constructing spliceables which depend on time ordering.
      *
@@ -238,8 +239,8 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
 
     /**
      * This method is designed to be overridden by derived classes whic load more than just header data.
-     * @param iRecordOffset the offset from which to start loading the data fro the engin.
-     * @param tBuffer ByteBuffer from which to construct the record.
+     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
+     * @param tBuffer .........ByteBuffer from wich to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -256,9 +257,9 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
      *       based on type. Also, the type and ByteOrder are added as members of the
      *       actual records.
      *
-     * @param iReadRecType the record type as read from the ByteBuffer
-     * @param iCorrectedRecType the corrected record type.
-     * @return the detected ByteOrder.
+     * @param iReadRecType ........short the record type as read from the ByteBuffer
+     * @param iCorrectedRecType ...short the corrected record type.
+     * @return ByteOrder ..........the detected ByteOrder.
      */
     public static ByteOrder detectByteOrder(short iReadRecType, short iCorrectedRecType, ByteOrder tOrder) {
         ByteOrder tRecOrder = tOrder;
@@ -272,8 +273,8 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
 
     /**
      * Returns the ByteOrder corrected record-type.
-     * @param iRecordType original record type
-     * @return the corrected record type. If endianess is ok then this will be the same
+     * @param short iRecordType
+     * @param short ...the corrected record type. If endianess is ok then this will be the same
      *                 otherwise this is the corrected value
      */
     public static short correctRecordType(short iRecordType) {
@@ -288,8 +289,8 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
      * NOTE: This method is used strictly for the factory. There is probably an extra step envolved here
      *       but this is can be addressed later as needed.
      *
-     * @param iRecordOffset the offset from which to start loading the data fro the engin.
-     * @param tBuffer ByteBuffer from which to construct the record.
+     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
+     * @param tBuffer .........ByteBuffer from wich to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -300,16 +301,16 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
         return iRecType;
     }
     /**
-     * Get an object from the pool
-     * @return object of this type from the object pool.
+     * Get's an object form the pool
+     * @return IPoolable ... object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return (Poolable) new MonitorRecord();
     }
 
     /**
-     * Get an object from the pool in a non-static context.
-     * @return object of this type from the object pool.
+     * Get's an object form the pool in a non-static context.
+     * @return IPoolable ... object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -318,16 +319,17 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
+     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-        dispose();
+		dispose();
     }
     /**
      * This method writes this IPayloadRecord to the PayloadDestination.
      *
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was writtern.
-     *
+     * @param tDestination ......PayloadDestination to which to write the payload
+     * @return int ..............the length in bytes which was writtern.
+     * 
      * NOTE: Since IPayloadRecords do not have a ByteBuffer backing they have no choice
      *       but to write from their internal values.  This is generally only used for
      *       StringFilePayloadDesitinations and the like for documentation purposes because

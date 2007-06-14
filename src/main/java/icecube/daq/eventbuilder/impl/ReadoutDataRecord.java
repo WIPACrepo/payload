@@ -4,13 +4,18 @@ import java.nio.ByteOrder;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 import java.io.IOException;
+import java.util.Vector;
 
 import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.trigger.ITriggerPayload;
+import icecube.daq.trigger.ICompositePayload;
+import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.payload.IWriteablePayloadRecord;
 import icecube.daq.payload.PayloadDestination;
+import icecube.daq.trigger.impl.ReadoutRequestPayload;
 import icecube.util.Poolable;
 /**
  * This class represents the data associated with
@@ -26,7 +31,7 @@ import icecube.util.Poolable;
  */
 public class ReadoutDataRecord extends Poolable implements IWriteablePayloadRecord {
 
-    protected boolean mb_IsDataLoaded;
+    protected boolean mb_IsDataLoaded = false;
 
     public static final int DEFAULT_REC_TYPE = 1;
     /**
@@ -61,16 +66,16 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
     public static final String FIRST_UTCTIME = "FIRST_UTCTIME";
     public static final String LAST_UTCTIME  = "LAST_UTCTIME";
 
-    //-This is the start of the variable length portion of the Payload
+    //-This is the start of the variable lenght portion of the Payload
     public static final int OFFSET_READOUT_COMPOSITE_ENVELOPE = OFFSET_LAST_UTCTIME      + SIZE_LAST_UTCTIME;
 
     public short           msi_RecType        = DEFAULT_REC_TYPE;//this is used for endian too.
     public int             mi_UID             = -1;    //-unique id for this request
     public int             mi_payloadNum      = -1;    //-(byte) the number of this payload within the uid
     public boolean         mb_payloadLast     = true;  //-(byte) true if this the last payload for this uid
-    public ISourceID       mt_sourceid;  //-the source of this request.
-    public IUTCTime        mt_firstTime;  //-start of the time window
-    public IUTCTime        mt_lastTime;  //-end of the time window
+    public ISourceID       mt_sourceid        = null;  //-the source of this request.
+    public IUTCTime        mt_firstTime       = null;  //-start of the time window
+    public IUTCTime        mt_lastTime        = null;  //-end of the time window
 
     protected int mi_recordSize = SIZE_RECORD;
 
@@ -104,7 +109,7 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
     /**
      * returns the size in bytes of this record as it would
      * be written to a buffer.
-     * @return number of bytes contained in this record, and as written.
+     * @return int ... number of bytes contained in this record, and as written.
      */
     public int getTotalRecordSize() {
         return mi_recordSize;
@@ -112,15 +117,15 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
     /**
      * Pool method to get an object from the pool
      * for reuse.
-     * @return a TriggerRequestRecord object for reuse.
+     * @return Object ... a TriggerRequestRecord object for reuse.
      */
     public static Poolable getFromPool() {
         return (Poolable) new ReadoutDataRecord();
     }
 
     /**
-     * Get an object from the pool in a non-static context.
-     * @return object of this type from the object pool.
+     * Get's an object form the pool in a non-static context.
+     * @return IPoolable ... object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -129,27 +134,28 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
+     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-        if (mt_sourceid != null) {
-            ((Poolable) mt_sourceid).recycle();
-            mt_sourceid     = null;
-        }
-        if (mt_firstTime != null) {
-            ((Poolable) mt_firstTime).recycle();
-            mt_firstTime    = null;
-        }
-        if (mt_lastTime != null) {
-            ((Poolable) mt_lastTime).recycle();
-            mt_lastTime     = null;
-        }
-        //-this is a terminus of inheritance, thus this can be called here
-        // this presumes that super.recycle() is always call LAST along the inheritance chain!
-        dispose();
+		if (mt_sourceid != null) {
+			((Poolable) mt_sourceid).recycle();
+			mt_sourceid     = null;
+		}
+		if (mt_firstTime != null) {
+			((Poolable) mt_firstTime).recycle();
+			mt_firstTime    = null;
+		}
+		if (mt_lastTime != null) {
+			((Poolable) mt_lastTime).recycle();
+			mt_lastTime     = null;
+		}
+		//-this is a terminus of inheritance, thus this can be called here
+		// this presumes that super.recycle() is always call LAST along the inheritance chain!
+		dispose();
     }
     /**
      * Determines if this record is loaded with valid data.
-     * @return true if data is loaded, false otherwise.
+     * @return boolean ...true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mb_IsDataLoaded;
@@ -157,8 +163,8 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
 
     /**
      * Loads the data from the buffer into the container record.
-     * @param iRecordOffset the offset from which to start loading the data fro the engin.
-     * @param tBuffer ByteBuffer from which to construct the record.
+     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
+     * @param tBuffer ...ByteBuffer from wich to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -209,8 +215,8 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
 
     /**
      * Method to write this record to the payload destination.
-     * @param tDestination PayloadDestination to which to write this record.
-     * @return the number of bytes written.
+     * @param tDestination ....PayloadDestination to which to write this record.
+     * @return int the nubmer of bytes written.
      */
     public int writeData(PayloadDestination tDestination) throws IOException {
         if (tDestination.doLabel()) tDestination.label("[ReadoutDataRecord]=>").indent();
@@ -226,9 +232,9 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
     }
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset the offset at which to start writing the object.
-     * @param tBuffer the ByteBuffer into which to write this payload-record.
-     * @return the number of bytes written.
+     * @param iOffset ....the offset at which to start writing the object.
+     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
+     * @return int the nubmer of bytes written.
      */
     public int  writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
         tBuffer.putShort( iOffset + OFFSET_REC_TYPE,      msi_RecType                     );
@@ -252,17 +258,17 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
         mi_payloadNum   = -1;
         mb_payloadLast  = true;
 
-        if (mt_sourceid != null) {
-            ((Poolable) mt_sourceid).dispose();
-            mt_sourceid     = null;
-        }
-        if (mt_firstTime != null) {
-            ((Poolable) mt_firstTime).dispose();
-            mt_firstTime    = null;
-        }
-        if (mt_lastTime != null) {
-            ((Poolable) mt_lastTime).dispose();
-            mt_lastTime     = null;
-        }
+		if (mt_sourceid != null) {
+			((Poolable) mt_sourceid).dispose();
+			mt_sourceid     = null;
+		}
+		if (mt_firstTime != null) {
+			((Poolable) mt_firstTime).dispose();
+			mt_firstTime    = null;
+		}
+		if (mt_lastTime != null) {
+			((Poolable) mt_lastTime).dispose();
+			mt_lastTime     = null;
+		}
     }
 }

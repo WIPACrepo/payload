@@ -2,15 +2,14 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IUTCTime;
 
-import icecube.daq.payload.test.LoggingCase;
-
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
 
 public class UTCTime8BTest
-    extends LoggingCase
+    extends TestCase
 {
     /**
      * Constructs an instance of this test.

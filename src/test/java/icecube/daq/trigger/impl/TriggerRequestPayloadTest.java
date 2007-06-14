@@ -2,7 +2,6 @@ package icecube.daq.trigger.impl;
 
 import icecube.daq.payload.PayloadRegistry;
 
-import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDOMID;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockHit;
@@ -24,12 +23,13 @@ import java.util.List;
 import java.util.Vector;
 
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
 
 public class TriggerRequestPayloadTest
-    extends LoggingCase
+    extends TestCase
 {
     /**
      * Constructs an instance of this test.
@@ -214,7 +214,7 @@ public class TriggerRequestPayloadTest
         final int hitSrcId = 36;
         final long hitDomId = 333L;
         final int hitMode = 39;
-
+        
         MockReadoutRequest mockReq = new MockReadoutRequest(uid, srcId);
         mockReq.addElement(makeElement(rrType, rrFirstTime, rrLastTime,
                                        rrDomId, rrSrcId));
@@ -321,7 +321,7 @@ public class TriggerRequestPayloadTest
         final int hitSrcId = 36;
         final long hitDomId = 333L;
         final int hitMode = 39;
-
+        
         MockReadoutRequest mockReq = new MockReadoutRequest(uid, srcId);
         mockReq.addElement(makeElement(rrType, rrFirstTime, rrLastTime,
                                        rrDomId, rrSrcId));

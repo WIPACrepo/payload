@@ -2,8 +2,10 @@ package icecube.daq.payload.impl;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 
+import icecube.daq.payload.IPayloadRecord;
 import icecube.daq.payload.PayloadDestination;
 import icecube.util.Poolable;
 
@@ -17,10 +19,10 @@ import icecube.util.Poolable;
     public static final int SIZE_MAX_ASCII_BYTES = 502;
     public static final String LABEL_ASCII_TEXT =  "ASCII";
 
-    public boolean mbASCIIRecLoaded;
-    public int miASCIIDataLength;
+    public boolean mbASCIIRecLoaded = false;
+    public int miASCIIDataLength = 0;
     public byte[] mabASCIIBytes = new byte[SIZE_MAX_ASCII_BYTES];
-    public String msASCIIString;
+    public String msASCIIString = null;
     public static final String ASCII_CHAR_SET_NAME = "US-ASCII";
 
 
@@ -33,16 +35,16 @@ import icecube.util.Poolable;
     }
 
     /**
-     * Get an object from the pool
-     * @return object of this type from the object pool.
+     * Get's an object form the pool
+     * @return IPoolable ... object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return (Poolable) new ASCIIMonitorRecord();
     }
     /**
      * This method is designed to be overridden by derived classes whic load more than just header data.
-     * @param iRecordOffset the offset from which to start loading the data fro the engin.
-     * @param tBuffer ByteBuffer from which to construct the record.
+     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
+     * @param tBuffer ...ByteBuffer from wich to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -53,8 +55,8 @@ import icecube.util.Poolable;
     }
     /**
      * Reads the ASCIIData portion of the ASCIIMonitorRecord.
-     * @param iRecordOffset the offset from which to start loading the data fro the engin.
-     * @param tBuffer ByteBuffer from which to construct the record.
+     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
+     * @param tBuffer .........ByteBuffer from wich to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -79,15 +81,15 @@ import icecube.util.Poolable;
         miASCIIDataLength = 0;
         mbASCIIRecLoaded = false;
         msASCIIString = null;
-        //-make this last
+		//-make this last
         super.dispose();
     }
     /**
      * This method writes this IPayloadRecord to the PayloadDestination.
      *
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was writtern.
-     *
+     * @param tDestination ......PayloadDestination to which to write the payload
+     * @return int ..............the length in bytes which was writtern.
+     * 
      * NOTE: Since IPayloadRecords do not have a ByteBuffer backing they have no choice
      *       but to write from their internal values.  This is generally only used for
      *       StringFilePayloadDesitinations and the like for documentation purposes because

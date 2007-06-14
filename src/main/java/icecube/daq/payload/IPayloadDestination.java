@@ -19,11 +19,11 @@ import java.nio.ByteBuffer;
 public interface IPayloadDestination extends DataOutput {
 
     /**
-     * Tells whether or not this channel is open.
+     * Tells whether or not this channel is open.  </p>
      *
      * @return <tt>true</tt> if, and only if, this channel is open
      */
-    boolean isOpen();
+    public boolean isOpen();
 
     /**
      * Closes this channel.
@@ -42,7 +42,7 @@ public interface IPayloadDestination extends DataOutput {
      *
      * @throws  IOException  If an I/O error occurs
      */
-    void close()
+    public void close()
             throws IOException;
 
     /**
@@ -51,12 +51,12 @@ public interface IPayloadDestination extends DataOutput {
      * be invoke the write method itself, or to pass the payload by refernce
      * to the target.
      *
-     * @param tPayload Payload to which to write to this destination
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @param tPayload ...... Payload to which to write to this destination
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
-    int writePayload(IWriteablePayload tPayload)
+    public int writePayload(Payload tPayload)
             throws IOException;
 
     /**
@@ -65,13 +65,13 @@ public interface IPayloadDestination extends DataOutput {
      * be invoke the write method itself, or to pass the payload by refernce
      * to the target.
      *
-     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tPayload Payload to which to write to this destination
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded ...... boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tPayload ...... Payload to which to write to this destination
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
-    int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload)
+    public int writePayload(boolean bWriteLoaded, Payload tPayload)
             throws IOException;
 
     /**
@@ -80,15 +80,15 @@ public interface IPayloadDestination extends DataOutput {
      * be invoke the write method itself, or to pass the payload by refernce
      * to the target.
      *
-     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tPayload Payload to which to write to this destination
-     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer the destination ByteBuffer to write the payload to.
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded ....... boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tPayload ........... Payload to which to write to this destination
+     * @param iDestOffset ........ int the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer ........ ByteBuffer the destination ByteBuffer to write the payload to.
+     * @return int ............... the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
-    int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload, int iDestOffset, ByteBuffer tDestBuffer)
+    public int writePayload(boolean bWriteLoaded, Payload tPayload, int iDestOffset, ByteBuffer tDestBuffer)
             throws IOException;
 
 

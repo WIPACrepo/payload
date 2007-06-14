@@ -1,14 +1,18 @@
 package icecube.daq.payload;
 
 import java.util.zip.DataFormatException;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.File;
+import java.io.EOFException;
 
 import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
 
 import icecube.daq.payload.impl.PayloadEnvelope;
+import icecube.daq.payload.MasterPayloadFactory;
 import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.payload.splicer.Payload;
 
@@ -22,7 +26,7 @@ public class PayloadReader {
     protected DataInputStream mtDataStream;
     protected File mtFile;
     protected FileInputStream mtFileInStream;
-    protected boolean mbIsOpen;
+    protected boolean mbIsOpen = false;
 
     public PayloadReader(String sFileName) {
         msFileName = ""+sFileName;
@@ -31,8 +35,8 @@ public class PayloadReader {
     /**
      * Constructor which specifies the PayloadFactory to use for
      * creating payloads.
-     * @param sFileName the name of the file to create payloads from.
-     * @param tFactory PayloadFactory to use to create payloads.
+     * @param sFileName ... String the name of the file to create payloads from.
+     * @param tFactory .... PayloadFactory to use to create payloads.
      */
     public PayloadReader(String sFileName, PayloadFactory tFactory) {
         msFileName = ""+sFileName;
@@ -41,7 +45,7 @@ public class PayloadReader {
 
     /**
      * Returns the filename for this PayloadReader.
-     * @return the filename.
+     * @return String .... the filename.
      */
     public String getFileName() {
         return msFileName;
@@ -76,17 +80,17 @@ public class PayloadReader {
 
     /**
      * Reads the next record into the current position into the ByteBuffer.
-     * @param iOffset the offset from which to start this read.
-     * @param tBuffer ByteBuffer into which the raw record is read.
-     * @return the length of the record read into the buffer.
-     *         -1 if not enough room is left in the ByteBuffer.
+     * @param iOffset ... int the offset from which to start this read.
+     * @param tBuffer ...ByteBuffer into which the raw record is read.
+     * @return int ...the length of the record read into the buffer.
+     *                -1 if not enough room is left in the ByteBuffer.
      * NTOE: This method positions the ByteBuffer to the next position
      *       past the payload that was read (ie startPosition + return value)
      *       if it is successful. Otherwise buffer position is unchanged.
      * @throws IOException if an error reading the data has occured
      *         EOFException if an attempt is made to read past end of stream.
      */
-    public int readNextPayload(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public int readNextPayload(int iOffset, ByteBuffer tBuffer) throws IOException, EOFException, DataFormatException {
         PayloadEnvelope tEnvelope = new PayloadEnvelope();
         int iStartPosition = iOffset;
         int iLimit = tBuffer.limit();
@@ -116,8 +120,8 @@ public class PayloadReader {
     }
     /**
      * Reads the next record into the current position into the ByteBuffer.
-     * @param tBuffer ByteBuffer into which the raw record is read.
-     * @return the length of the record read into the buffer.
+     * @param tBuffer ...ByteBuffer into which the raw record is read.
+     * @return int ...the length of the record read into the buffer.
      *                -1 if not enough room is left in the ByteBuffer.
      * NTOE: This method positions the ByteBuffer to the next position
      *       past the payload that was read (ie startPosition + return value)
@@ -125,7 +129,7 @@ public class PayloadReader {
      * @throws IOException if an error reading the data has occured
      *         EOFException if an attempt is made to read past end of stream.
      */
-    public int readNextPayload(ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public int readNextPayload(ByteBuffer tBuffer) throws IOException, EOFException, DataFormatException {
         int iStartPosition = tBuffer.position();
 
         int iBytes = readNextPayload(iStartPosition, tBuffer);
@@ -135,23 +139,23 @@ public class PayloadReader {
     }
     /**
      * Create's the next payload from the input stream source.
-     * @param iOffset the offset into which to read and create the payload.
-     * @param tBuffer ByteBuffer into which the next payload is to be read at the given offset.
+     * @param iOffset .... int the offset into which to read and create the payload.
+     * @param tBuffer .... ByteBuffer into which the next payload is to be read at the given offset.
      *
-     * @return  Payload created by PayloadFactory after payload has been read
-     *                     into the buffer starting at the given offset.
+     * @return Payload ... created by PayloadFactory after payload has been read into
+     *                     the buffer starting at the given offset.
      *                     returns null if there is not enough room in the ByteBuffer to read
      *                     the payload.
      * NOTE: The length can be determined by position of buffer after read
      *       or from the Payload.getPayloadLength() attribute.
      * @exception EOFException is thrown to indicate that there are no more payloads in this source
      *                         and should be handled as a normal condition.
-     * @exception IOException if there is an error condition.
-     * @exception DataFormatException if there is an error condition.
+     * @exception IOException, DataFormatException ... are thrown when there is an error condition.
      */
-    public Payload createNextPayload(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException  {
-        readNextPayload(iOffset, tBuffer);
-        return mtPayloadFactory.createPayload(iOffset, tBuffer);
+    public Payload createNextPayload(int iOffset, ByteBuffer tBuffer) throws IOException, EOFException, DataFormatException  {
+        int iBytes = readNextPayload(iOffset, tBuffer);
+        Payload tPayload = mtPayloadFactory.createPayload(iOffset, tBuffer);
+        return tPayload;
     }
 
 }

@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Vector;
 
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.trigger.ITriggerPayload;
 import java.util.zip.DataFormatException;
 
 /**

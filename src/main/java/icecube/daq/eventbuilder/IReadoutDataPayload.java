@@ -2,6 +2,7 @@ package icecube.daq.eventbuilder;
 
 import icecube.daq.payload.ISourceID;
 import java.util.Vector;
+import icecube.daq.payload.IPayload;
 import icecube.daq.trigger.ICompositePayload;
 
 /**
@@ -23,14 +24,14 @@ public interface IReadoutDataPayload extends ICompositePayload {
 
     /**
      * This is the number that associates all read's for a givent EB event together
-     * @return the unique id for this data requests
+     * @return int ... the unique id for this data requests
      */
     int getRequestUID();
 
     /**
      * A Vector of the IHitDataPayload's which correspond
      * to the hit-data that has been requested.
-     * @return a vector of IHitDataPayload's which contain the desired data.
+     * @return Vector .... a vector of IHitDataPayload's which contain the desired data.
      */
     Vector getDataPayloads();
     /**
@@ -41,13 +42,13 @@ public interface IReadoutDataPayload extends ICompositePayload {
      * the number (of a sub-sequence of payloads which are
      * grouped together for this IReadoutDataPayload - in reply to a single IReadoutRequest)
      * ---
-     * @return the number of this payload relative to this group by uid.
+     * @return int .... the number of this payload relative to this group by uid.
      */
     int getReadoutDataPayloadNumber();
     /**
      * Boolean which indicates if this is the final
      * data payload for this group.
-     * @return true if this is the last payload, false if not.
+     * @return boolean ... true if this is the last payload, false if not.
      * ---
      * true if this is the last payload to expect, note: there should be
      * a monotonically increasing number of payload numbers up to this point with no gaps in the sequence

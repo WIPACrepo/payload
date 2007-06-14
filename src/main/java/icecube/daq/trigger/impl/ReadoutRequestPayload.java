@@ -11,6 +11,7 @@ import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.impl.UTCTime8B;
+import icecube.daq.trigger.impl.ReadoutRequestRecord;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.payload.splicer.Payload;
 import icecube.util.Poolable;
@@ -28,13 +29,13 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      * the payload source into the container variables. False
      * if the payload has not been filled.
      */
-    public boolean mb_RequestPayloadLoaded;
+    public boolean mb_RequestPayloadLoaded = false;
 
     /**
      * Internal format for actual Engineering Record if the payload
      * is completely loaded.
      */
-    private ReadoutRequestRecord mt_ReadoutRequestRecord;
+    private ReadoutRequestRecord mt_ReadoutRequestRecord = null;
 
     /**
      * true if the spliceable information has been loaded into
@@ -42,7 +43,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      * nature of this object. False if waiting to laod only the
      * spliceable information.
      */
-    public boolean mb_SpliceablePayloadLoaded;
+    public boolean mb_SpliceablePayloadLoaded = false;
 
     /**
      * Standard Constructor, empty to accomodate 'pooling'.
@@ -56,18 +57,19 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      * Standard way of getting object from
      * the pool. Use this instead of the constructor
      * if you wish pooling.
-     * @return ReadoutRequestPayload cast as Object.
+     * @return Object ... ReadoutRequestPayload cast as Object.
      */
     public static Poolable getFromPool() {
         return (Poolable) new ReadoutRequestPayload();
     }
 
     /**
-     * Get an object from the pool in a non-static context.
-     * @return object of this type from the object pool.
+     * Get's an object form the pool in a non-static context.
+     * @return IPoolable ... object of this type from the object pool.
      */
     public Poolable getPoolable() {
-        Payload tPayload = (Payload) getFromPool();
+        //-for new just create a new EventPayload
+		Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
@@ -80,15 +82,15 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
             mt_ReadoutRequestRecord.recycle();
             mt_ReadoutRequestRecord = null;
         }
-        //-this must be called LAST!!
+		//-this must be called LAST!!
         super.recycle();
     }
 
 
     /**
      * intialization outside of constructor.
-     * @param tRequestTime the start time of this request.
-     * @param tRequest the readout request to be transmitted.
+     * @param tRequestTime .... IUTCTime the start time of this request.
+     * @param tRequest ........ IReadoutRequest the readout request to be transmitted.
      */
     public void initialize(IUTCTime tRequestTime, IReadoutRequest tRequest) {
         UTCTime8B tTime = (UTCTime8B) UTCTime8B.getFromPool();
@@ -134,10 +136,10 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBufferf the destination ByteBuffer to write the payload to.
+     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -147,8 +149,8 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @param tDestination ......PayloadDestination to which to write the payload
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -159,17 +161,17 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param bWriteLoaded boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
-     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer the destination ByteBuffer to write the payload to.
+     * @param bWriteLoaded ...... boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
+     * @param iDestOffset .......int the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer .......ByteBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         int iLength = 0;
-        if (mtbuffer != null && !bWriteLoaded ) {
+        if (mtbuffer != null && bWriteLoaded == false ) {
             iLength = super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
             if (super.mtbuffer != null) {
@@ -189,16 +191,16 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded ...... boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
+     * @param tDestination ......PayloadDestination to which to write the payload
+     * @return int ..............the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
     public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
         if (tDestination.doLabel()) tDestination.label("[ReadoutRequestPayload]=>").indent();
         int iLength = 0;
-        if (mtbuffer != null && !bWriteLoaded ) {
+        if (mtbuffer != null && bWriteLoaded == false ) {
             iLength = super.writePayload(bWriteLoaded, tDestination);
         } else {
             if (super.mtbuffer != null) {
@@ -224,7 +226,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
             mt_ReadoutRequestRecord.dispose();
             mt_ReadoutRequestRecord = null;
         }
-        //-THIS MUST BE CALLED LAST!!
+		//-THIS MUST BE CALLED LAST!!
         super.dispose();
     }
     /**
@@ -259,7 +261,8 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      *  The locations of the individual sources which are to
      *  be requested for data are contained in the request-elements
      *  themselves.
-     *  @return the ISourceID of the Trigger which generated this request.
+     *  @return ISourceID ...the ISourceID of the Trigger which generated
+     *                       this request.
      */
     public ISourceID getSourceID() {
         ISourceID tID = null;
