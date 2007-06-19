@@ -22,7 +22,7 @@ public class MockSourceID
 
     public Object deepCopy()
     {
-        throw new Error("Unimplemented");
+        return new MockSourceID(id);
     }
 
     /**

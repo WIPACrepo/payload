@@ -9,12 +9,14 @@ import icecube.daq.trigger.ITriggerRequestPayload;
 
 import java.io.IOException;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import java.util.zip.DataFormatException;
 
-class MockTriggerRequest
+public class MockTriggerRequest
     implements ILoadablePayload, ITriggerRequestPayload
 {
     private long utcTime;
@@ -26,6 +28,8 @@ class MockTriggerRequest
     private long lastTime;
     private List hitList;
     private IReadoutRequest rReq;
+
+    private boolean failDeepCopy;
 
     public MockTriggerRequest(int type, int cfgId)
     {
@@ -49,7 +53,30 @@ class MockTriggerRequest
 
     public Object deepCopy()
     {
-        throw new Error("Unimplemented");
+        if (failDeepCopy) {
+            return null;
+        }
+
+        ArrayList newList;
+        if (hitList == null) {
+            newList = null;
+        } else {
+            newList = new ArrayList(hitList.size());
+
+            for (Iterator iter = hitList.iterator(); iter.hasNext(); ) {
+                newList.add(((ILoadablePayload) iter.next()).deepCopy());
+            }
+        }
+
+        IReadoutRequest newReq;
+        if (rReq == null) {
+            newReq = null;
+        } else {
+            newReq = (IReadoutRequest) ((ILoadablePayload) rReq).deepCopy();
+        }
+
+        return new MockTriggerRequest(utcTime, uid, type, cfgId, srcId,
+                                      firstTime, lastTime, newList, newReq);
     }
 
     public IUTCTime getFirstTimeUTC()
@@ -160,5 +187,15 @@ class MockTriggerRequest
     public void recycle()
     {
         // do nothing
+    }
+
+    /**
+     * Set deepCopy() failure mode.
+     *
+     * @param fail <tt>true</tt> if deepCopy() should fail
+     */
+    public void setDeepCopyFail(boolean fail)
+    {
+        failDeepCopy = fail;
     }
 }
