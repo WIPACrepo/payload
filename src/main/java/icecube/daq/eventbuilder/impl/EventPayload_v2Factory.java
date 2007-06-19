@@ -14,6 +14,7 @@ import icecube.daq.eventbuilder.IEventPayload;
 import icecube.daq.eventbuilder.IReadoutDataPayload;
 import icecube.daq.eventbuilder.impl.EventPayload_v2;
 import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
@@ -51,7 +52,7 @@ public class EventPayload_v2Factory  extends PayloadFactory {
     }
 
     /**
-     *  This method is used to create the ITriggerRequestPayload from constituent pieces, instead
+     *  This method is used to create an EventPayload_v2 from constituent pieces, instead
      *  of reading it from a ByteBuffer.
      *  @param iUID              ... the unique id (event id) for this event
      *  @param tSourceID         ... the ISourceID of the source which is constructing this event.
@@ -78,43 +79,31 @@ public class EventPayload_v2Factory  extends PayloadFactory {
             ITriggerRequestPayload tTriggerRequest,
             Vector          tDataPayloads
     ) {
-        //-variable to check if the deep copy has been
-        // successful.
-        boolean bDeepCopyOk = true;
-        //-sub-payloads which to copy
-        Vector tDataPayloadsCopy =  null; 
-        TriggerRequestPayload tTriggerRequestCopy = null;
-        //-the final output
-        EventPayload_v2 tPayload = null;
-        //-make deep copy of input Payloads
-        //--THIS REPLACES THE ABOVE
-        bDeepCopyOk = false;
         //-create the deepCopy of the payloads as part of the composite.
-        tDataPayloadsCopy = CompositePayloadFactory.deepCopyPayloadVector(tDataPayloads);
-        if (tDataPayloadsCopy != null) {
-            // tTriggerRequestCopy = (TriggerRequestPayload) ((Payload) tTriggerRequest).deepCopy();
+        Vector tDataPayloadsCopy =
+            CompositePayloadFactory.deepCopyPayloadVector(tDataPayloads);
+
+        //-if list copy succeeded, move onto request
+        ITriggerRequestPayload tTriggerRequestCopy;
+        if (tDataPayloadsCopy == null) {
+            tTriggerRequestCopy = null;
+        } else {
             //-the deepCopy() comes from ICopyable
-            tTriggerRequestCopy = (TriggerRequestPayload) tTriggerRequest.deepCopy();
-            if (tTriggerRequestCopy != null) {
-                bDeepCopyOk = true;
-            }
+            tTriggerRequestCopy = (ITriggerRequestPayload) tTriggerRequest.deepCopy();
         }
 
+        //-the final output
+        EventPayload_v2 tPayload;
         //-if deep-copy failed, then recycle the individual payloads that did succeed
-        if (!bDeepCopyOk) {
+        if (tTriggerRequestCopy == null) {
             //-recycle the possible incomplete vector of copies
             if (tDataPayloadsCopy != null) {
                 CompositePayloadFactory.recyclePayloads(tDataPayloadsCopy);
                 tDataPayloadsCopy = null;
             }
-            //-recycle the trigger-request if it has been copied.
-            if (tTriggerRequestCopy != null) {
-                tTriggerRequestCopy.recycle();
-                tTriggerRequestCopy = null;
-            }
-        }
-        //-create the EventPayload_v2 if all is well
-        if (bDeepCopyOk) {
+
+            tPayload = null;
+        } else {
             tPayload = (EventPayload_v2) EventPayload_v2.getFromPool();
             tPayload.initialize(iUID, 
                                 (ISourceID) tSourceID.deepCopy(), 
