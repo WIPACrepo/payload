@@ -76,6 +76,24 @@ public class MasterPayloadFactory extends PayloadFactory {
 
 
     /**
+     * This method must be implemented specific to the format of the
+     * the input stream to determine when a complete data element is available.
+     * @param iOffset ............The offset in the ByteBuffer from which to create the payload/spliceable
+     * @param tBuffer ............ByteBuffer from which to detect a spliceable.
+     *
+     * @return PayloadEnvelope ............... the PayloadEnvelope for this payload
+     *
+     * @exception IOException ........... this is thrown if there is an error reading the ByteBuffer
+     *                                    to pull out the length of the spliceable.
+     * @exception DataFormatException ... if there is an error in the format of the payload
+     */
+    private static PayloadEnvelope readPayloadEnvelope(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+        PayloadEnvelope tEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
+        tEnvelope.loadData(iOffset, tBuffer);
+        return tEnvelope;
+    }
+
+    /**
      * Returns an empty Spliceable object representing the current place in the
      * order of Spliceable objects.
      *  Abstract function which must be implemented by the specific
