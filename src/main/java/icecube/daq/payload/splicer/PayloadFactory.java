@@ -112,7 +112,7 @@ public abstract class PayloadFactory
      * @return A new object representing the current place.
      */
     public Spliceable createCurrentPlaceSplicaeable() {
-        // return (Spliceable) mt_PoolablePayloadFactory.getFromPool();
+        // XXX this doesn't seem to be used anywhere
         return (Spliceable) mt_PoolablePayloadFactory.getPoolable();
     }
 
@@ -137,15 +137,17 @@ public abstract class PayloadFactory
             return null;
         }
 
-        Spliceable tSpliceable = null;
+        Spliceable tSpliceable;
         try {
             // Create a new Payload from the position before the skip.
             tSpliceable =  (Spliceable) createPayload(iCurrentSpliceableOffset, tBuffer);
 
         } catch ( IOException tIOException) {
             LOG.error("Couldn't create a spliceable", tIOException);
+            tSpliceable = null;
         } catch ( DataFormatException tDataFormatException) {
             LOG.error("Couldn't create a spliceable", tDataFormatException);
+            tSpliceable = null;
         }
         return tSpliceable;
     }
@@ -162,16 +164,7 @@ public abstract class PayloadFactory
      *       of objects used by the factory (if the implementation does this
      */
     public void invalidateSplicables(List splicables) {
-        /* ...dbw....this must be re-activated after bug in Splicer is fixed...
-        if (splicables != null) {
-            Iterator tIterator = splicables.iterator();
-            //-loop through the invalid objects and return them to the pool as appropriate.
-            while (tIterator.hasNext()) {
-                Poolable tPoolable = (Poolable) tIterator.next();
-                tPoolable.recycle();
-            }
-        }
-        */
+        // XXX this is never used
     }
 
     /**
@@ -184,19 +177,15 @@ public abstract class PayloadFactory
      */
     public boolean skipSpliceable(ByteBuffer tBuffer)
     {
-        boolean bSkipped = false;
         final int iBegin = tBuffer.position();
-        int iSpliceableLength = -1;
+        //-Check that the length of the next spliceable can be read
+        int iAvailable = tBuffer.limit() - iBegin;
+        //-if no room for length...
+        if (iAvailable < PayloadEnvelope.SIZE_PAYLOADLEN) return false;
+        int iSpliceableLength;
         try {
-            // ...now with length element first, and always BIG_ENDIAN don't have to load envelope endlessly...
-            //-Check that the length of the next spliceable can be read
-            int iAvailable = tBuffer.limit() - iBegin;
-            //-if don't have whole envelope contained...
-            // if (iAvailable < PayloadEnvelope.SIZE_ENVELOPE) return false;
-            if (iAvailable < PayloadEnvelope.SIZE_PAYLOADLEN) return false;
             //-Read the length of the spliceable/payload
             iSpliceableLength = readSpliceableLength(iBegin, tBuffer);
-
         } catch ( IOException tIOException) {
             //-log the error here
             LOG.error("Couldn't get spliceable length", tIOException);
@@ -214,8 +203,8 @@ public abstract class PayloadFactory
         // Check that the Splicable is fully contained.
         final int iNextSpliceableBegin = iBegin + iSpliceableLength;
         if (iNextSpliceableBegin > tBuffer.limit()) {
-            LOG.error("Next spliceable position " + iNextSpliceableBegin +
-                      " is past buffer limit " + tBuffer.limit());
+            LOG.info("Next spliceable position " + iNextSpliceableBegin +
+                     " is past buffer limit " + tBuffer.limit());
             return false;
         }
         tBuffer.position(iNextSpliceableBegin);
@@ -235,12 +224,15 @@ public abstract class PayloadFactory
      * @exception DataFormatException ... if there is an error in the format of the payload
      */
     public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
-        int iLength = -1;
-        ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
-        iLength = tBuffer.getInt(iOffset);
-        //-Must use envelope here so that endianess can be accounted for
-        tBuffer.order(tSaveOrder);
+        int iLength;
+        if (iOffset + 4 > tBuffer.limit()) {
+            iLength = -1;
+        } else {
+            ByteOrder tSaveOrder = tBuffer.order();
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+            iLength = tBuffer.getInt(iOffset);
+            tBuffer.order(tSaveOrder);
+        }
         return iLength;
     }
 
