@@ -143,17 +143,20 @@ public abstract class Payload extends Poolable
      * Loads the PayloadEnvelope if not already loaded
      */
     protected void loadEnvelope() throws IOException, DataFormatException {
-        if (!mb_IsEnvelopeLoaded) {
-            //-If this has been created via a eng-format payload
-            if (mtbuffer != null) {
-                //-Load envelope
-                mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
-                mt_PayloadEnvelope.loadData(mioffset + OFFSET_PAYLOAD_ENVELOPE, mtbuffer);
-                mttime = (IUTCTime) UTCTime8B.getFromPool();
-                ((UTCTime8B)mttime).initialize(mt_PayloadEnvelope.mlUTime);
-                milength = mt_PayloadEnvelope.miPayloadLen;
-                mb_IsEnvelopeLoaded = true;
+        if (!mb_IsEnvelopeLoaded && mtbuffer != null) {
+            //-Load envelope
+            mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
+            mt_PayloadEnvelope.loadData(mioffset + OFFSET_PAYLOAD_ENVELOPE, mtbuffer);
+            if (mipayloadtype != mt_PayloadEnvelope.miPayloadType) {
+                throw new DataFormatException("Loaded envelope has type #" +
+                                              mt_PayloadEnvelope.miPayloadType +
+                                              ", not expected type #" +
+                                              mipayloadtype);
             }
+            mttime = (IUTCTime) UTCTime8B.getFromPool();
+            ((UTCTime8B)mttime).initialize(mt_PayloadEnvelope.mlUTime);
+            milength = mt_PayloadEnvelope.miPayloadLen;
+            mb_IsEnvelopeLoaded = true;
         }
     }
 
@@ -167,7 +170,6 @@ public abstract class Payload extends Poolable
      * @exception DataFormatException...is thrown if the format of the data is incorrect.
      */
     public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
-        //-this is a static method of AbstractTriggerPayload
         return readPayloadLength(iOffset, tBuffer);
     }
     /**
@@ -229,8 +231,12 @@ public abstract class Payload extends Poolable
      * compare Timestamps of two payloads
      */
     public int compareTo(Object object) {
+        if (object == null) {
+            return 1;
+        }
+
         if (!(object instanceof IPayload)) {
-            return object.getClass().getName().compareTo(getClass().getName());
+            return getClass().getName().compareTo(object.getClass().getName());
         }
 
         return mttime.compareTo(((IPayload) object).getPayloadTimeUTC());
@@ -240,6 +246,18 @@ public abstract class Payload extends Poolable
      * shift offset of object inside buffer (called by PayloadFactory)
      */
     public void shiftOffset(int shift) {
+        if (mb_IsEnvelopeLoaded) {
+            int tmpOff = mioffset;
+            ByteBuffer tmpBuf = mtbuffer;
+
+            mtbuffer = null;
+
+            recycle();
+
+            mioffset = tmpOff;
+            mtbuffer = tmpBuf;
+        }
+
         mioffset -= shift;
     }
 
@@ -249,6 +267,7 @@ public abstract class Payload extends Poolable
      * @param tPayloadBuffer ...the backing buffer for this payload.
      */
     public void setPayloadBuffer(int iOffset, ByteBuffer tPayloadBuffer) throws IOException, DataFormatException {
+        if (mb_IsEnvelopeLoaded) recycle();
         mioffset = iOffset;
         mtbuffer = tPayloadBuffer;
     }
@@ -268,18 +287,19 @@ public abstract class Payload extends Poolable
      * @throws IOException if an error occurs during the process
      */
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
-        if (mtbuffer != null) {
-            synchronized (mtbuffer) {
-                int iSrcPosition = mioffset;
-                int iDestPosition = iDestOffset;
-                for (int ii = 0; ii < milength; ii++) {
-                    tDestBuffer.put(iDestPosition++, mtbuffer.get(iSrcPosition++));
-                }
-            }
-            return milength;
-        } else {
+        if (mtbuffer == null) {
             return 0;
         }
+
+        synchronized (mtbuffer) {
+            int iSrcPosition = mioffset;
+            int iDestPosition = iDestOffset;
+            for (int ii = 0; ii < milength; ii++) {
+                tDestBuffer.put(iDestPosition++, mtbuffer.get(iSrcPosition++));
+            }
+        }
+
+        return milength;
     }
 
     /**
@@ -346,9 +366,9 @@ public abstract class Payload extends Poolable
 			mt_PayloadEnvelope.dispose();
 			mt_PayloadEnvelope = null;
 		}
-        if (mttime != null) {
+        if (mttime != null && !mttime.equals(mt_NULLTIME)) {
             ((Poolable)mttime).dispose();
-            mttime = null;
+            mttime = mt_NULLTIME;
         }
 		if (mtbuffer != null) {
             mtbuffer = null;
@@ -420,19 +440,21 @@ public abstract class Payload extends Poolable
      */
     // public Payload deepCopy() throws DataFormatException, IOException {
     public Object deepCopy() {
-        boolean bCopyOk = false;
-        Payload tPayloadCopy = null;
-        ByteBuffer tNewCopyBuffer = null;
-        //System.out.println(">deepCopy("+getClass().getName()+")");
         IByteBufferCache tBBCache = (mtParentPayloadFactory != null ? mtParentPayloadFactory.getByteBufferCache() : null);
         //-get the length for copy to ByteBuffer
         int iLength = getPayloadLength();
+        if (iLength == 0) {
+            mtLog.error("Not copying 0-length payload (type " +
+                        getPayloadType() + ")");
+            return null;
+        }
 
         //
         //--------------------------------------------------------------------------
         //- Get the New Buffer for the deep copy
         //--------------------------------------------------------------------------
         //
+        ByteBuffer tNewCopyBuffer;
         if ( tBBCache != null ) {
             //-check the parent payload factory to see if can get
             // an IByteBufferCache.
@@ -451,9 +473,11 @@ public abstract class Payload extends Poolable
         //- Render this Payload to the new ByteBuffer, and create a Payload From it.
         //--------------------------------------------------------------------------
         //
-        try {
-            //-If we haven't been able to allocate a ByteBuffer from a cache, then allocate one directly.
-            if (tNewCopyBuffer != null) {
+        Payload tPayloadCopy = null;
+        //-If we haven't been able to allocate a ByteBuffer from a cache, then allocate one directly.
+        if (tNewCopyBuffer != null) {
+            boolean bCopyOk = false;
+            try {
                 //-Render the current payload to the new ByteBuffer
                 writePayload(0, tNewCopyBuffer);
                 //-make the copy of the Payload in the new
@@ -464,30 +488,27 @@ public abstract class Payload extends Poolable
                     //-This is kind of a hack and has been copied from PayloadFactory.
                     // NOTE: When the setting of mtParentPayloadFactory is enforced throughout
                     //       then this code path is not needed.
-                    //tPayloadCopy = (Payload) ((Poolable) this).getFromPool();
                     tPayloadCopy = (Payload) getPoolable();
                     tPayloadCopy.initialize(0, tNewCopyBuffer, mtParentPayloadFactory);
                     tPayloadCopy.loadSpliceablePayload();
                 }
                 bCopyOk = true;
-            }
-
-        } catch ( DataFormatException tException ) {
-            mtLog.error("Couldn't make deep copy", tException);
-            bCopyOk = false;
-        } catch ( IOException tException ) {
-            mtLog.error("Couldn't make deep copy", tException);
-            bCopyOk = false;
-        } finally {
-            if (!bCopyOk) {
-                //-If an error occurs return the new ByteBuffer to the cache if needed.
-                if (tBBCache != null && tNewCopyBuffer != null) {
-                    tBBCache.returnBuffer(tNewCopyBuffer);
+            } catch ( DataFormatException tException ) {
+                mtLog.error("Couldn't make deep copy", tException);
+                bCopyOk = false;
+            } catch ( IOException tException ) {
+                mtLog.error("Couldn't make deep copy", tException);
+                bCopyOk = false;
+            } finally {
+                if (!bCopyOk) {
+                    //-If an error occurs return the new ByteBuffer to the cache if needed.
+                    if (tBBCache != null) {
+                        tBBCache.returnBuffer(tNewCopyBuffer);
+                    }
+                    tPayloadCopy = null;
                 }
-                tPayloadCopy = null;
             }
         }
-        //System.out.println("<deepCopy("+getClass().getName()+")");
         return tPayloadCopy;
     }
 
@@ -496,9 +517,9 @@ public abstract class Payload extends Poolable
      * @return IPoolable ... object of this type from the object pool.
      */
     public Poolable getPoolable() {
-        //-for new just create a new EventPayload
-		Payload tPayload = (Payload) getFromPool();
+        //-create a new Payload
+        Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
-        return (Poolable) tPayload;
+        return tPayload;
     }
 }
