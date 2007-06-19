@@ -15,9 +15,22 @@ public class MockUTCTime
         this.time = time;
     }
 
-    public int compareTo(Object x0)
+    public int compareTo(Object obj)
     {
-        throw new Error("Unimplemented");
+        if (obj == null) {
+            return 1;
+        } else if (!(obj instanceof IUTCTime)) {
+            return getClass().getName().compareTo(obj.getClass().getName());
+        }
+
+        final long val = ((IUTCTime) obj).getUTCTimeAsLong();
+        if (time < val) {
+            return -1;
+        } else if (time > val) {
+            return 1;
+        }
+
+        return 0;
     }
 
     public Object deepCopy()
