@@ -56,11 +56,9 @@ public class CompositePayloadFactory extends PayloadFactory {
         Vector tPayloadsCopy = null;
         if (tPayloads != null) {
             tPayloadsCopy = new Vector();
-            if (tPayloads.size() == 0) {
-                bDeepCopyOK = true;
-            } else {
+            bDeepCopyOK = true;
+            if (tPayloads.size() > 0) {
                 for (int ii=0; ii < tPayloads.size(); ii++) {
-                    bDeepCopyOK = false;
                     ILoadablePayload tPay =
                         (ILoadablePayload) tPayloads.get(ii);
                     if (tPay != null) {
@@ -71,12 +69,11 @@ public class CompositePayloadFactory extends PayloadFactory {
                                         " (type " + tPay.getPayloadType() +
                                         ", length " + tPay.getPayloadLength() +
                                         ")");
-                            tCopy = null;
+                            bDeepCopyOK = false;
                             break;
                         }
                         tPayloadsCopy.add(tCopy);
                     }
-                    bDeepCopyOK = true;
                 }
             }
         }
