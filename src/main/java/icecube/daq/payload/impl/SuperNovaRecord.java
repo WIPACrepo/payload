@@ -234,14 +234,15 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
         iBytes += 2; tDestination.writeShort(LABEL_BLOCK_LEN,(short) this.miBlockLen);
         iBytes += 2; tDestination.writeShort(LABEL_FORMAT_ID,(short) this.miFormatId);
         //-domclock only lower order 6 bytes are used
-        iBytes += SIZE_DOMCLOCK;
         for (int ii=0; ii < SIZE_DOMCLOCK; ii++) {
             mabDomClock[ii] = (byte) ((mlDomClock & ((long) 0xFF << ((SIZE_DOMCLOCK - ii - 1 ) * 8))) >> ((SIZE_DOMCLOCK - ii-1) *8));
             // mabDomClock[ii] = (byte) ii;
         }
         //tDestination.write(LABEL_DOMCLOCK+"("+mlDomClock+")",mabDomClock);
+        iBytes += mabDomClock.length;
         tDestination.write(LABEL_DOMCLOCK, ""+mlDomClock, mabDomClock);
         //-write out SuperNovaScalars
+        iBytes += mabScalarData.length;
         tDestination.write(LABEL_SCALAR_DATA,mabScalarData);
         //-undent and label the end of the record.
         if (tDestination.doLabel()) tDestination.undent().label("} [SuperNovaRecord]");
