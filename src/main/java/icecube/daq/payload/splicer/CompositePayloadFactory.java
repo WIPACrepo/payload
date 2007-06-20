@@ -65,7 +65,7 @@ public class CompositePayloadFactory extends PayloadFactory {
                         Object tCopy = tPay.deepCopy();
                         if (tCopy == null) {
                             mtLog.error("Cannot deep-copy composite payload " +
-                                        ii + " of " + tPayloads.size() +
+                                        (ii + 1) + " of " + tPayloads.size() +
                                         " (type " + tPay.getPayloadType() +
                                         ", length " + tPay.getPayloadLength() +
                                         ")");
