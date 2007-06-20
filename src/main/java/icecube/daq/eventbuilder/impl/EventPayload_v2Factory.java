@@ -102,6 +102,13 @@ public class EventPayload_v2Factory  extends PayloadFactory {
                 tDataPayloadsCopy = null;
             }
 
+            if (mtLog.isErrorEnabled()) {
+                mtLog.error("Couldn't create event uid " + iUID +
+                            " from source " +
+                            (tSourceID == null ? "NULL" :
+                             tSourceID.getSourceID()));
+            }
+
             tPayload = null;
         } else {
             tPayload = (EventPayload_v2) EventPayload_v2.getFromPool();
