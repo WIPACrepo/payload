@@ -56,7 +56,7 @@ public class ReadoutDataPayloadFactory extends CompositePayloadFactory {
      * @param tLastTimeUTC       ... IUTCTime of the end of this time window
      * @param tPayloads          ... Vector of IPayload's which have contributed to this composite.
      */
-    public Payload createPayload(
+    public IPayload createPayload(
         int             iUID,
         int             iPayloadNum,
         boolean         bPayloadLast,
