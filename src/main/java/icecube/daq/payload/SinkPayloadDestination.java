@@ -2,8 +2,6 @@ package icecube.daq.payload;
 import java.io.IOException;
 
 import icecube.daq.payload.splicer.Payload;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This object is a PayloadDestination that does nothing. It does know how
@@ -14,13 +12,8 @@ import org.apache.commons.logging.LogFactory;
 public class SinkPayloadDestination extends ByteBufferPayloadDestination   {
 
     /**
-     * Logger for this class.
-     */
-    private static final Log log = LogFactory.getLog(SinkPayloadDestination.class);
-
-    /**
      * Constructor.
-     * @param tReceiver IByteBufferReceiver the object which will recieve the ByteBuffer
+     * @param tReceiver IByteBufferReceiver the object which will receive the ByteBuffer
      *  which has been created by subsiquent calls to the PayloadDestination.
      *
      */
@@ -71,8 +64,8 @@ public class SinkPayloadDestination extends ByteBufferPayloadDestination   {
      * @throws  IOException  If an I/O error occurs
      */
     public void close() throws IOException {
-        mtByteBufferReciever.destinationClosed();
-        mtByteBufferReciever = null;
+        mtByteBufferReceiver.destinationClosed();
+        mtByteBufferReceiver = null;
     }
 
 }

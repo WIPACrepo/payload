@@ -11,7 +11,6 @@ import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.impl.UTCTime8B;
-import icecube.daq.trigger.impl.ReadoutRequestRecord;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.payload.splicer.Payload;
 import icecube.util.Poolable;
@@ -29,13 +28,13 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      * the payload source into the container variables. False
      * if the payload has not been filled.
      */
-    public boolean mb_RequestPayloadLoaded = false;
+    public boolean mb_RequestPayloadLoaded;
 
     /**
      * Internal format for actual Engineering Record if the payload
      * is completely loaded.
      */
-    private ReadoutRequestRecord mt_ReadoutRequestRecord = null;
+    private ReadoutRequestRecord mt_ReadoutRequestRecord;
 
     /**
      * true if the spliceable information has been loaded into
@@ -43,7 +42,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      * nature of this object. False if waiting to laod only the
      * spliceable information.
      */
-    public boolean mb_SpliceablePayloadLoaded = false;
+    public boolean mb_SpliceablePayloadLoaded;
 
     /**
      * Standard Constructor, empty to accomodate 'pooling'.
@@ -69,7 +68,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      */
     public Poolable getPoolable() {
         //-for new just create a new EventPayload
-		Payload tPayload = (Payload) getFromPool();
+        Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
@@ -82,7 +81,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
             mt_ReadoutRequestRecord.recycle();
             mt_ReadoutRequestRecord = null;
         }
-		//-this must be called LAST!!
+        //-this must be called LAST!!
         super.recycle();
     }
 
@@ -171,7 +170,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      */
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         int iLength = 0;
-        if (mtbuffer != null && bWriteLoaded == false ) {
+        if (mtbuffer != null && !bWriteLoaded ) {
             iLength = super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
             if (super.mtbuffer != null) {
@@ -200,7 +199,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
     public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
         if (tDestination.doLabel()) tDestination.label("[ReadoutRequestPayload]=>").indent();
         int iLength = 0;
-        if (mtbuffer != null && bWriteLoaded == false ) {
+        if (mtbuffer != null && !bWriteLoaded ) {
             iLength = super.writePayload(bWriteLoaded, tDestination);
         } else {
             if (super.mtbuffer != null) {
@@ -226,7 +225,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
             mt_ReadoutRequestRecord.dispose();
             mt_ReadoutRequestRecord = null;
         }
-		//-THIS MUST BE CALLED LAST!!
+        //-THIS MUST BE CALLED LAST!!
         super.dispose();
     }
     /**

@@ -1,29 +1,10 @@
 package icecube.daq.payload.impl;
 
-/*
-import icecube.daq.payload.RecordTypeRegistry;
-
-import icecube.daq.payload.test.MockDOMID;
-*/
 import icecube.daq.payload.test.MockDestination;
-/*
-import icecube.daq.payload.test.MockReadoutRequest;
-import icecube.daq.payload.test.MockSourceID;
-import icecube.daq.payload.test.MockUTCTime;
-*/
 import icecube.daq.payload.test.TestUtil;
-
-/*
-import icecube.daq.trigger.IReadoutRequest;
-import icecube.daq.trigger.IReadoutRequestElement;
-*/
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-/*
-import java.util.List;
-*/
 
 import junit.framework.Test;
 import junit.framework.TestCase;

@@ -22,47 +22,47 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
     private static Log mtLog = LogFactory.getLog(ByteBufferCache.class);
     public static final int DEFAULT_GRANULARITY = 128;
     public static final long DEFAULT_MAX_BYTES = (256L * 1024L); //-256K by default
-	public static final long DEFAULT_HISTOGRAM_LOG_TIME_INTERVAL =  1000L * 60L; //- once every 60 seconds
+    public static final long DEFAULT_HISTOGRAM_LOG_TIME_INTERVAL =  1000L * 60L; //- once every 60 seconds
 
-    protected long mlMAX_CACHE_BYTES = 0L;
-    protected long mlMAX_ACQUIRE_BYTES = 0L;
-    protected boolean mbCACHE_BOUNDED = false;
-    protected boolean mbAQUIRE_BOUNDED = false;
-    private boolean mbOutputWarningOfMaxCachedBytesOnceFlag = false;
+    protected long mlMAX_CACHE_BYTES;
+    protected long mlMAX_ACQUIRE_BYTES;
+    protected boolean mbCACHE_BOUNDED;
+    protected boolean mbAQUIRE_BOUNDED;
+    private boolean mbOutputWarningOfMaxCachedBytesOnceFlag;
     private static final int DENIED_ACQUIRE_REPORTING_MODULO = 100;
     private static final int NUM_DENIED_ACQUIRES_BEFORE_MODULO = 20;
-    private int miNumAcquireDenied = 0;
-	private boolean mbLogHistogram = true;
-	private long mlTimeOfLastHistogramLog = System.currentTimeMillis();
-	private long mlHistogramLogTimeInterval = DEFAULT_HISTOGRAM_LOG_TIME_INTERVAL;
+    private int miNumAcquireDenied;
+    private boolean mbLogHistogram = true;
+    private long mlTimeOfLastHistogramLog = System.currentTimeMillis();
+    private long mlHistogramLogTimeInterval = DEFAULT_HISTOGRAM_LOG_TIME_INTERVAL;
 
     protected Object mtStatisticsLock = new Object();
     /**
      * The total number of buffers created by the cache
      */
-    protected int miTotalBuffersCreated = 0;
+    protected int miTotalBuffersCreated;
     /**
      * The total bytes currently cached.
      */
-    protected long mlTotalBytesInCache = 0L;
+    protected long mlTotalBytesInCache;
     /**
      * The total number of buffers that have been acquired.
      */
-    protected int miTotalBuffersAcquired = 0;
+    protected int miTotalBuffersAcquired;
     /**
      * The total number of buffers returned to the cache.
      */
-    protected int miTotalBuffersReturned = 0;
+    protected int miTotalBuffersReturned;
     /**
      * The number of buffers which have been acquired
      * but have not yet been returned.
      */
-    protected int miCurrentAquiredBuffers = 0;
+    protected int miCurrentAquiredBuffers;
     /**
      * The current number of bytes which are contained in the buffers
      * which have not yet been returned.
      */
-    protected long mlCurrentAquiredBytes = 0L;
+    protected long mlCurrentAquiredBytes;
 
     /**
      * The main table of elements for the cache in the cache.
@@ -72,11 +72,11 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
      */
     protected Hashtable mtGranularBufferTables = new Hashtable();
 
-	/**
+    /**
      * The histogram that holds the information about each of the
      * elements in the cache.
      */
-	private CacheHistogram mtCacheHistogram = new CacheHistogram();
+    private CacheHistogram mtCacheHistogram = new CacheHistogram();
     /**
      * The basic unit of size for computing sizes of cached ByteBuffers.
      * all ByteBuffers which are produced by this cache have capacities which
@@ -84,10 +84,10 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
      */
     protected int miGranularity = DEFAULT_GRANULARITY;
 
-	/**
+    /**
      * Set's the name of this particular ByteBufferCache
      */
-	protected String msCacheName = "";
+    protected String msCacheName = "";
 
     // returnBuffer() debugging counters
     private int returnEntry;
@@ -110,8 +110,8 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
     public ByteBufferCache(int iGranularity,
                            long lMaxNumCachedBytes,
                            long lMaxNumAcquiredBytes) {
-		this(iGranularity, lMaxNumCachedBytes, lMaxNumAcquiredBytes, "");
-	}
+        this(iGranularity, lMaxNumCachedBytes, lMaxNumAcquiredBytes, "");
+    }
     /**
      * Constructor.
      *
@@ -127,15 +127,15 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
      * @param sCacheName           The name of this cache so it can
      *                             be properly identified in the
      *                             log.
-     * 
+     *
      */
     public ByteBufferCache(int iGranularity,
                            long lMaxNumCachedBytes,
                            long lMaxNumAcquiredBytes,
-						   String sCacheName) {
-		if (sCacheName != null) {
-			setCacheName(sCacheName);
-		}
+                           String sCacheName) {
+        if (sCacheName != null) {
+            setCacheName(sCacheName);
+        }
         if (iGranularity >= DEFAULT_GRANULARITY) {
             miGranularity = iGranularity;
         }
@@ -207,26 +207,26 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
      *                     which is statically defined above.
      */
     public ByteBufferCache(int iGranularity, String sCacheName) {
-		this(iGranularity);
-		if (sCacheName != null) {
-			setCacheName(sCacheName);
-		}
+        this(iGranularity);
+        if (sCacheName != null) {
+            setCacheName(sCacheName);
+        }
     }
 
-	/**
+    /**
      * Set's the name of the cache to identifiy it.
-	 * @param sName
-	 */
-	public void setCacheName(String sName) {
-		msCacheName = sName;
-	}
-	/**
+     * @param sName
+     */
+    public void setCacheName(String sName) {
+        msCacheName = sName;
+    }
+    /**
      * Set's the name of the cache to identifiy it.
-	 * @param sName
-	 */
-	public String getCacheName() {
-		return msCacheName;
-	}
+     * @param sName
+     */
+    public String getCacheName() {
+        return msCacheName;
+    }
 
     /**
      * Simple method to summarize the statistics of the ByteBufferCache.
@@ -247,8 +247,8 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
         sbSummary.append("getTotalBytesInCache()=" + getTotalBytesInCache() + ", \n");
         sbSummary.append("getTotalBuffersAcquired()=" + getTotalBuffersAcquired() + ", \n");
         sbSummary.append("getTotalBuffersReturned()=" + getTotalBuffersReturned() + "  \n");
-		sbSummary.append("CacheHistogram (start)\n"+mtCacheHistogram.getHistogramSnapshot());
-		sbSummary.append("CacheHistogram (end)\n"+mtCacheHistogram.getHistogramSnapshot());
+        sbSummary.append("CacheHistogram (start)\n"+mtCacheHistogram.getHistogramSnapshot());
+        sbSummary.append("CacheHistogram (end)\n"+mtCacheHistogram.getHistogramSnapshot());
         sbSummary.append("ByteBufferCache "+getCacheName()+"- Summary end -\n");
         return sbSummary.toString();
     }
@@ -341,7 +341,7 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
     /**
      * Records the stats for a buffer that has been
      * successfully acquired by a user of the cache.
-     * 
+     *
      * @param iBufferCapcacity int capacity of the buffer that is being aquired.
      *
      */
@@ -354,7 +354,7 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
     /**
      * Records the stats for a buffer that has been
      * successfully returned by a user of the cache.
-     * 
+     *
      * @param iBufferCapcacity int capacity of the buffer that is being aquired.
      *
      */
@@ -367,7 +367,7 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
     /**
      * Records the stats for a buffer that has been
      * successfully returned by a user of the cache.
-     * 
+     *
      * @param iBufferCapcacity int capacity of the buffer that is being aquired.
      *
      */
@@ -397,8 +397,8 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
     public synchronized ByteBuffer acquireBuffer(int iLength) {
         boolean bDoAcquire = true;
         ByteBuffer tBuffer = null;
-		//-Check to see if logging is needed.
-		logHistogramIfNeeded();
+        //-Check to see if logging is needed.
+        logHistogramIfNeeded();
 
         //
         //-compute the granular length of the requested buffer
@@ -423,9 +423,9 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
             // in the cache.
             //-update internal statistics
             recordAquiredBuffer(tBuffer.capacity());
-			//-update the CacheElementStatsTable to reflect
-			// the new buffer being loaned out
-			mtCacheHistogram.acquire(new Integer(iNewGranularLength));
+            //-update the CacheElementStatsTable to reflect
+            // the new buffer being loaned out
+            mtCacheHistogram.acquire(new Integer(iNewGranularLength));
         } else {
             //
             //- If we don't have an existing buffer in the cache
@@ -434,7 +434,7 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
             //-check to see if havn't exceeded acquire limit.
             if (mbAQUIRE_BOUNDED && mlMAX_ACQUIRE_BYTES < (mlCurrentAquiredBytes + (long) iNewGranularLength)) {
                 //
-                //-If we are outside the boundaries of what we are able to acquire then 
+                //-If we are outside the boundaries of what we are able to acquire then
                 // don't allow the allocation of a new buffer to occur.
                 //
                 bDoAcquire = false;
@@ -451,9 +451,9 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
                 if (tBuffer != null) {
                     //-record the stats for the acquired buffer
                     recordAquiredBuffer(tBuffer.capacity());
-					//-update the CacheElementStatsTable to reflect
-					// the new buffer being loaned out
-					mtCacheHistogram.created(new Integer(iNewGranularLength));
+                    //-update the CacheElementStatsTable to reflect
+                    // the new buffer being loaned out
+                    mtCacheHistogram.created(new Integer(iNewGranularLength));
                 } else {
                     mtLog.error("ByteBuffer.allocate(" + iNewGranularLength + ") failed!");
                 }
@@ -465,7 +465,7 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
                 miNumAcquireDenied++;
                 if ((miNumAcquireDenied < NUM_DENIED_ACQUIRES_BEFORE_MODULO) ||
                     (
-                       (miNumAcquireDenied >= NUM_DENIED_ACQUIRES_BEFORE_MODULO) && 
+                       (miNumAcquireDenied >= NUM_DENIED_ACQUIRES_BEFORE_MODULO) &&
                        ((miNumAcquireDenied % DENIED_ACQUIRE_REPORTING_MODULO) == 0)
                     )
                 )
@@ -497,16 +497,16 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
     public void destinationClosed() {
         // do nothing
     }
-	/**
+    /**
      * Returns the String which contains the snapshot of the
      * histogram for this Cache.
-	 * 
+     *
      * @return String the string representation of the histogram of
      *         the cache at the time this is called.
-	 */
-	public String getHistogramSnapshot() {
-		return mtCacheHistogram.getHistogramSnapshot();
-	}
+     */
+    public String getHistogramSnapshot() {
+        return mtCacheHistogram.getHistogramSnapshot();
+    }
 
     /**
      * This will log the histogram to the info() log if needed.
@@ -516,10 +516,10 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
     //private void logHistogramIfNeeded() {
     //long lNow = System.currentTimeMillis();
     //long lTimeSinceLastLog = lNow - mlTimeOfLastHistogramLog;
-	//
-	//-Log the histogram summary if enough time has elapsed
-	//
-	//if (lTimeSinceLastLog >= mlHistogramLogTimeInterval) {
+    //
+    //-Log the histogram summary if enough time has elapsed
+    //
+    //if (lTimeSinceLastLog >= mlHistogramLogTimeInterval) {
     //  mtLog.info("ByteBufferCache("+getCacheName()+") Histogram:\n" + mtCacheHistogram.getHistogramSnapshot());
     //    mlTimeOfLastHistogramLog = lNow;
     //   }
@@ -545,8 +545,8 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
      */
     public synchronized void returnBufferInternal(ByteBuffer tByteBuffer) {
         boolean bBufferCached = false;
-		//-Check to see if logging is needed.
-		//logHistogramIfNeeded();
+        //-Check to see if logging is needed.
+        //logHistogramIfNeeded();
 
         if (tByteBuffer == null) {
             return;
@@ -635,7 +635,7 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
         //-Update the stats if the returned buffer has been cached in the table.
         //
         if (bBufferCached) {
-			//-create a key for looking up the cache element as needed.
+            //-create a key for looking up the cache element as needed.
             Integer tCap = new Integer(tByteBuffer.capacity());
             //
             //- Record stats for a buffer that is returned to the cache
@@ -742,29 +742,29 @@ class CacheElementStats implements Comparable {
      * Number of elements of this type currently in the cache, which
      * are ready to be loaned out.
      */
-    private int     miNumElementsInCache = 0;
+    private int     miNumElementsInCache;
     /**
      * Number of elements of this type that have been loaned-out, in use by the
      * cache.
      */
-    private int     miNumElementsAcquired   = 0;
+    private int     miNumElementsAcquired;
     /**
      * Number of times this element has been cached.
      */
-    private long    mlTimesCached        = 0L;
+    private long    mlTimesCached;
     /**
      * Number of times this element time has been used
      */
-    private long    mlTimesAcquired      = 0L;
+    private long    mlTimesAcquired;
     /**
      * Number of times this element type has been cleared.
      */
-    private int     miTimesCleared       = 0;
+    private int     miTimesCleared;
 
-	/**
+    /**
      * Number of Unique elements created.
      */
-	private int miNumElementsCreated = 0;
+    private int miNumElementsCreated;
 
 
     /**
@@ -793,14 +793,14 @@ class CacheElementStats implements Comparable {
         return sbEntry.toString();
     }
 
-	/**
+    /**
      * Returns the number of unique elements created.
-	 * 
+     *
      * @return int the number of elements created.
-	 */
-	public int getElementsCreated() {
-		return miNumElementsCreated;
-	}
+     */
+    public int getElementsCreated() {
+        return miNumElementsCreated;
+    }
     /**
      * Gets the size in bytes of the cache element.
      *
@@ -813,7 +813,7 @@ class CacheElementStats implements Comparable {
     /**
      * Gets the number of elements of this type
      * which are currently cached.
-     * 
+     *
      * @return int - number currently in the cache.
      */
     public int getNumElementsInCache() {
@@ -836,11 +836,11 @@ class CacheElementStats implements Comparable {
     }
     /**
      * Accounts for the creation of a new element.
-     * 
+     *
      */
-	public void created() {
-		miNumElementsCreated++;
-	}
+    public void created() {
+        miNumElementsCreated++;
+    }
     /**
      * Accounts for the case of a single unit of this element
      * being 'cached' in the cache.
@@ -871,7 +871,7 @@ class CacheElementStats implements Comparable {
     public void clear() {
         miNumElementsInCache=0;
         miNumElementsAcquired=0;
-		miNumElementsCreated=0;
+        miNumElementsCreated=0;
         miTimesCleared++;
     }
     /**
@@ -890,7 +890,7 @@ class CacheElementStats implements Comparable {
         // defines the order (magnitude) of this element.
         // return mtElementUnitSize.compareTo( ( Comparable) tObject);
         //Integer tIntegerObject = (Integer) tObject;
-		CacheElementStats tStats = (CacheElementStats) tObject;
+        CacheElementStats tStats = (CacheElementStats) tObject;
         return mtElementUnitSize.compareTo( tStats.mtElementUnitSize );
     }
 }
@@ -921,7 +921,7 @@ class CacheHistogram {
     public String getElementHistogramEntry(Integer tElementUnitSize) {
         String sHistEntry = "error:element-size="+tElementUnitSize.intValue();
         CacheElementStats tStats = (CacheElementStats) mtCacheElementStatsTable.get(tElementUnitSize);
-        if (tStats != null)  
+        if (tStats != null)
             sHistEntry = tStats.getElementHistogramEntry();
         return sHistEntry;
     }
@@ -936,7 +936,7 @@ class CacheHistogram {
      */
     public int getElementUnitSize(Integer tElementUnitSize) {
         CacheElementStats tStats = (CacheElementStats) mtCacheElementStatsTable.get(tElementUnitSize);
-        if (tStats != null)  
+        if (tStats != null)
             return tStats.getElementUnitSize();
         else
             return -1;
@@ -945,14 +945,14 @@ class CacheHistogram {
     /**
      * Gets the number of elements of this type
      * which are currently cached.
-     * 
+     *
      * @param tElementUnitSize Integer which hashes to the appropriate element being tracked.
      *
      * @return int - number currently in the cache.
      */
     public int getNumElementsInCache(Integer tElementUnitSize) {
         CacheElementStats tStats = (CacheElementStats) mtCacheElementStatsTable.get(tElementUnitSize);
-        if (tStats != null)  
+        if (tStats != null)
             return tStats.getNumElementsInCache();
         else
             return -1;
@@ -966,9 +966,9 @@ class CacheHistogram {
         CacheElementStats tStats = (CacheElementStats) mtCacheElementStatsTable.get(tElementUnitSize);
         if (tStats != null)  {
             return tStats.getNumElementsAcquired();
-		} else {
+        } else {
             return -1;
-		}
+        }
     }
     /**
      * Computes and returns number of cached Bytes for this element type.
@@ -979,7 +979,7 @@ class CacheHistogram {
      */
     public long getCachedBytes(Integer tElementUnitSize) {
         CacheElementStats tStats = (CacheElementStats) mtCacheElementStatsTable.get(tElementUnitSize);
-        if (tStats != null)  
+        if (tStats != null)
             return tStats.getCachedBytes();
         else
             return (long) -1;
@@ -992,12 +992,12 @@ class CacheHistogram {
      */
     public void cache(Integer tElementUnitSize) {
         CacheElementStats tStats = (CacheElementStats) mtCacheElementStatsTable.get(tElementUnitSize);
-		if (tStats == null) {
-			tStats = new CacheElementStats(tElementUnitSize);
-			mtCacheElementStatsTable.put(tElementUnitSize, tStats);
-			//System.out.println("ByteBufferCache.cache("+tElementUnitSize.intValue()+")");
-		}
-		tStats.cache();
+        if (tStats == null) {
+            tStats = new CacheElementStats(tElementUnitSize);
+            mtCacheElementStatsTable.put(tElementUnitSize, tStats);
+            //System.out.println("ByteBufferCache.cache("+tElementUnitSize.intValue()+")");
+        }
+        tStats.cache();
     }
     /**
      * Accounts for the case of a single unit of this element
@@ -1007,11 +1007,11 @@ class CacheHistogram {
      */
     public void acquire(Integer tElementUnitSize) {
         CacheElementStats tStats = (CacheElementStats) mtCacheElementStatsTable.get(tElementUnitSize);
-		if (tStats == null) {
-			tStats = new CacheElementStats(tElementUnitSize);
-			mtCacheElementStatsTable.put(tElementUnitSize, tStats);
-			//System.out.println("ByteBufferCache.acquire("+tElementUnitSize.intValue()+")");
-		}
+        if (tStats == null) {
+            tStats = new CacheElementStats(tElementUnitSize);
+            mtCacheElementStatsTable.put(tElementUnitSize, tStats);
+            //System.out.println("ByteBufferCache.acquire("+tElementUnitSize.intValue()+")");
+        }
         tStats.acquire();
     }
     /**
@@ -1021,11 +1021,11 @@ class CacheHistogram {
      */
     public void remove(Integer tElementUnitSize) {
         CacheElementStats tStats = (CacheElementStats) mtCacheElementStatsTable.get(tElementUnitSize);
-		if (tStats == null) {
-			tStats = new CacheElementStats(tElementUnitSize);
-			mtCacheElementStatsTable.put(tElementUnitSize, tStats);
-			//System.out.println("ByteBufferCache.remove("+tElementUnitSize.intValue()+")");
-		}
+        if (tStats == null) {
+            tStats = new CacheElementStats(tElementUnitSize);
+            mtCacheElementStatsTable.put(tElementUnitSize, tStats);
+            //System.out.println("ByteBufferCache.remove("+tElementUnitSize.intValue()+")");
+        }
         tStats.remove();
     }
 
@@ -1036,11 +1036,11 @@ class CacheHistogram {
      */
     public void clear(Integer tElementUnitSize) {
         CacheElementStats tStats = (CacheElementStats) mtCacheElementStatsTable.get(tElementUnitSize);
-		if (tStats == null) {
-			tStats = new CacheElementStats(tElementUnitSize);
-			mtCacheElementStatsTable.put(tElementUnitSize, tStats);
-			//System.out.println("ByteBufferCache.clear("+tElementUnitSize.intValue()+")");
-		}
+        if (tStats == null) {
+            tStats = new CacheElementStats(tElementUnitSize);
+            mtCacheElementStatsTable.put(tElementUnitSize, tStats);
+            //System.out.println("ByteBufferCache.clear("+tElementUnitSize.intValue()+")");
+        }
         tStats.clear();
     }
     /**
@@ -1051,11 +1051,11 @@ class CacheHistogram {
      */
     public void created(Integer tElementUnitSize) {
         CacheElementStats tStats = (CacheElementStats) mtCacheElementStatsTable.get(tElementUnitSize);
-		if (tStats == null) {
-			tStats = new CacheElementStats(tElementUnitSize);
-			mtCacheElementStatsTable.put(tElementUnitSize, tStats);
-			//System.out.println("ByteBufferCache.clear("+tElementUnitSize.intValue()+")");
-		}
+        if (tStats == null) {
+            tStats = new CacheElementStats(tElementUnitSize);
+            mtCacheElementStatsTable.put(tElementUnitSize, tStats);
+            //System.out.println("ByteBufferCache.clear("+tElementUnitSize.intValue()+")");
+        }
         tStats.created();
     }
 

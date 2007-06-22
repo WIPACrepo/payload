@@ -220,7 +220,7 @@ public class hex {
 
     static public String toHex(short i)
         {
-        byte b[] = new byte[2];
+        byte[] b = new byte[2];
         b[0] = (byte)((i & 0xff00) >>>  8);
         b[1] = (byte)((i & 0x00ff)       );
 
@@ -229,7 +229,7 @@ public class hex {
 
     static public String toHex(int i)
         {
-        byte b[] = new byte[4];
+        byte[] b = new byte[4];
         b[0] = (byte)((i & 0xff000000) >>> 24);
         b[1] = (byte)((i & 0x00ff0000) >>> 16);
         b[2] = (byte)((i & 0x0000ff00) >>>  8);
@@ -239,7 +239,7 @@ public class hex {
         }
     static public String toHex(long l)
         {
-        byte b[] = new byte[8];
+        byte[] b = new byte[8];
         b[0] = (byte)((l & 0xff00000000000000L) >>> 56);
         b[1] = (byte)((l & 0x00ff000000000000L) >>> 48);
         b[2] = (byte)((l & 0x0000ff0000000000L) >>> 40);

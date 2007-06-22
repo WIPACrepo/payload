@@ -3,16 +3,6 @@ package icecube.daq.payload.impl;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.zip.DataFormatException;
-
-import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.trigger.IHitDataRecord;
-import icecube.daq.payload.RecordTypeRegistry;
-import icecube.daq.payload.PayloadDestination;
-import icecube.util.Poolable;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * DomHitDeltaCompressedFormatUtillity
@@ -36,17 +26,17 @@ import org.apache.commons.logging.LogFactory;
  *              { lower 13bits of the raw data Trigger Word }
  *
  *          LC                  D17..D16, D17=msb       2
- *              { 
+ *              {
  *                  D[17..16]=01 LC tag came from below
  *                  D[17..16]=10 LC tag came from above
  *                  D[17..16]=11 LC tag came from below *and* above
- *              } 
+ *              }
  *
  *          fADC Avail          D15                     1
  *
  *              { Used to calculate if 256 fADC words are recorded. If fADC data
  *                is not recorded, then ATWD data is also not recorded.
- *                1=true, 0=false. If false, ATWD Available will = 0 
+ *                1=true, 0=false. If false, ATWD Available will = 0
  *              }
  *
  *          ATWD Avail          D14                     1
@@ -55,13 +45,13 @@ import org.apache.commons.logging.LogFactory;
  *
  *          ATWD Size           D13..D12, D13=msb       2
  *
- *              { 
+ *              {
  *                  Used to calculate the number of 128 10-bit words recorded per channel.
  *                  D[13..12] = 00  ch0 only
  *                  D[13..12] = 01  ch0 and ch1
  *                  D[13..12] = 10  ch0, ch1, and ch2
  *                  D[13..12] = 11  ch0,ch1,ch2, and ch3
- *              } 
+ *              }
  *
  *          ATWD_AB             D11                     1
  *
@@ -111,15 +101,15 @@ import org.apache.commons.logging.LogFactory;
  *               Ch1
  *               Ch2
  *               Ch3
- *          
+ *
  * (note: here WORD0 is the first element in the DAQ record. This corresponds to WORD1 in the
  *        DOM record).
  *
  * NOTE: According to the pDAQ_trunk/StringHub/src/main/java/icecube/dat/domap/
  *       DataCollector.java code (revision 666) I am reverse engineering the code.
  * Prior to this code: (assuming BIG_ENDIAN?)
- * 
- *	private void dataProcess(ByteBuffer in) throws IOException 
+ *
+ *    private void dataProcess(ByteBuffer in) throws IOException
  *  {
  *      // TODO - I created a number of less-than-elegant hacks to
  *      // keep performance at acceptable level such as minimal
@@ -128,7 +118,7 @@ import org.apache.commons.logging.LogFactory;
  *      int buffer_limit = in.limit();
  *
  *      // create records from aggregrate message data returned from DOMApp
- *      while (in.remaining() > 0) 
+ *      while (in.remaining() > 0)
  *      {
  *          int pos = in.position();
  *          short len = in.getShort();
@@ -138,15 +128,15 @@ import org.apache.commons.logging.LogFactory;
  *       for these two fields.  This is all the documentation I have on this at this time
  *       along with the description of the format identifier data.
  ************************************************************************************
- *          if (hitsSink != null) 
+ *          if (hitsSink != null)
  *          {
  *              long domClock;
  *              switch (fmt)
  *      ...removed indent for clarity..
- *		case 144: // Delta compressed data
+ *        case 144: // Delta compressed data
  *             // It gets weird here - FPGA data written LITTLE_ENDIAN
  *             // Also must handle unpacking and applying clock context
- *             // to delta hits compressed in data block starting here. 
+ *             // to delta hits compressed in data block starting here.
  *             in.order(ByteOrder.LITTLE_ENDIAN);
  *             int clkMSB = in.getShort();
  *             logger.debug("clkMSB: " + clkMSB);
@@ -182,8 +172,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DomHitDeltaCompressedFormatUtility {
 
-    private static Log mtLog = LogFactory.getLog(DomHitDeltaCompressedFormatUtility.class);
-
     /**
      * extractDomClock_MSB16
      * Extracts the 16 most significant bits of the dom clock from the header of a muxed
@@ -209,14 +197,14 @@ public class DomHitDeltaCompressedFormatUtility {
      * extractTriggerAndLC_15bits
      * This function extracts the Trigger bits upper 13bits and the
      * LC bits (lower 2 bits)
-     * 
-     * 
+     *
+     *
      * @param iWORDOffset Offset of the word0 in the deltacompressed
      *                    record.
      * @param tBuffer
-     * 
+     *
      * @return int which is formated as followed
-     * 
+     *
      * WORD0:   Compr Flag          D31                     1
      *
      *              { 1 = compressed data, 0 = uncompressed data }
@@ -226,11 +214,11 @@ public class DomHitDeltaCompressedFormatUtility {
      *              { lower 13bits of the raw data Trigger Word }
      *
      *          LC                  D17..D16, D17=msb       2
-     *              { 
+     *              {
      *                  D[17..16]=01 LC tag came from below
      *                  D[17..16]=10 LC tag came from above
      *                  D[17..16]=11 LC tag came from below *and* above
-     *              } 
+     *              }
      *
      */
     public static final int extractTriggerAndLC_15bits(int iWORDOffset, ByteBuffer tBuffer) throws IOException {
@@ -240,7 +228,7 @@ public class DomHitDeltaCompressedFormatUtility {
     /**
      * Extracts the least significant 32 bits of the dom clock given the offset of
      * an individual delta compressed record.
-     * @param iWORD0Offset ...int offset in the Bytebuffer of WORD0 as recieved by
+     * @param iWORD0Offset ...int offset in the Bytebuffer of WORD0 as received by
      * @param tBuffer ...ByteBuffer from wich to construct the record.
      * @exception IOException if errors are detected reading the record
      *
@@ -252,6 +240,7 @@ public class DomHitDeltaCompressedFormatUtility {
         ByteOrder tSaveOrder = tBuffer.order();
         tBuffer.order(ByteOrder.BIG_ENDIAN);
         ldomClock = ( 0x00000000FFFFFFFFL & ((long) tBuffer.getInt(iWORD0Offset)));
+        tBuffer.order(tSaveOrder);
         return ldomClock;
     }
 }

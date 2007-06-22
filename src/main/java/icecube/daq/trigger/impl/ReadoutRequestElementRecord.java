@@ -7,14 +7,12 @@ import java.util.zip.DataFormatException;
 
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.IPayload;
 import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IWriteablePayloadRecord;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.trigger.IReadoutRequestElement;
-import icecube.daq.trigger.impl.DOMID8B;
 
 /**
  * ReadoutRequestElementRecord
@@ -48,15 +46,15 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
     public static final String LAST_TIME    = "LAST_TIME";
     public static final String DOMID        = "DOMID";
 
-    private boolean mb_IsLoaded = false;
+    private boolean mb_IsLoaded;
     /**
      * PayloadRecord data...
      */
     public int mi_readoutType = -1;
-    public ISourceID    mt_sourceId    = null;
-    public IUTCTime     mt_firstTime   = null;
-    public IUTCTime     mt_lastTime    = null;
-    public IDOMID       mt_domId       = null;
+    public ISourceID    mt_sourceId;
+    public IUTCTime     mt_firstTime;
+    public IUTCTime     mt_lastTime;
+    public IDOMID       mt_domId;
 
 
     //--[IWriteablePayloadRecord]----

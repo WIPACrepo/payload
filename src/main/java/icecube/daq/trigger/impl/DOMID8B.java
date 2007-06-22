@@ -13,10 +13,10 @@ import icecube.util.Poolable;
 public class DOMID8B extends Poolable implements IDOMID {
 
     private long ml_DomID;
-    private String ms_DomID = null;
+    private String ms_DomID;
     //-can probably get rid of the initial internal long since this is
     // sufficient to produce both the hash code and hold the long.
-    private Long mtDomID = null;
+    private Long mtDomID;
     /**
      * Simple constructor fo pooling.
      */
@@ -84,7 +84,7 @@ public class DOMID8B extends Poolable implements IDOMID {
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
     /**
      * Object is able to dispose of itself.

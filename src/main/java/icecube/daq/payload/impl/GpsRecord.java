@@ -20,42 +20,42 @@ import org.apache.commons.logging.LogFactory;
  *
  * GPS Record Data
  *************************************************
- * byte     meaning     comment 
+ * byte     meaning     comment
  *************************************************
- * 0      *  (SOH)     *  Start Of Header (ASCII control character) 
- * 1..3   *  DDD       *  Julian day 
- * 4      *  ?:?       *  delimiter 
- * 5..6   *  HH        *  hour 
- * 7      *  ?:?       *  delimiter 
- * 8..9   *  MM        *  minute 
- * 10     *  ?:?       *  delimiter 
- * 11..12 *  SS        *  second 
- * 13     *  Q         *  Quality indicator of the 1PPS accuracy, see table below 
+ * 0      *  (SOH)     *  Start Of Header (ASCII control character)
+ * 1..3   *  DDD       *  Julian day
+ * 4      *  ?:?       *  delimiter
+ * 5..6   *  HH        *  hour
+ * 7      *  ?:?       *  delimiter
+ * 8..9   *  MM        *  minute
+ * 10     *  ?:?       *  delimiter
+ * 11..12 *  SS        *  second
+ * 13     *  Q         *  Quality indicator of the 1PPS accuracy, see table below
  * 14..21 *  CCCCCCCC  *  Binary (!!!) timer[63..0] snapshot, multiples of 50ns (20MHz) (BIG_ENDIAN)
  *************************************************
  *
- * The 1PPS quality indicator  Q according to the GPS systems (ET6010 ExacTime GPS TC & FG) manual: 
+ * The 1PPS quality indicator  Q according to the GPS systems (ET6010 ExacTime GPS TC & FG) manual:
  *************************************************
- * ASCII Character  HEX     Equivalent Definition 
+ * ASCII Character  HEX     Equivalent Definition
  *************************************************
- * (space)        *  20    *  < 1 microsecond 
- * .              *  2E    *  < 10 microsecond 
- * *              *  2A    *  < 100 microsecond 
- * #              *  23    *  < 1 millisecond 
- * ?              *  3F    *  > 1 millisecond 
+ * (space)        *  20    *  < 1 microsecond
+ * .              *  2E    *  < 10 microsecond
+ * *              *  2A    *  < 100 microsecond
+ * #              *  23    *  < 1 millisecond
+ * ?              *  3F    *  > 1 millisecond
  *************************************************
  */
 public class GpsRecord {
 
     public static final int SIZE_GPS_RECORD       = 22;
     public static final int SIZE_TOTAL = SIZE_GPS_RECORD;
-	//-offsets into the gps data of desired fields.
+    //-offsets into the gps data of desired fields.
     public static final int OFFSET_SOH            = 0;  //-   <SOH>     1 byte  binary
     public static final int OFFSET_JULIAN_DAY_DDD = 1;  //-    DDD      3 bytes ascii
     public static final int OFFSET_DDD_COLON      = 4;  //-     :       1 byte  ascii
     public static final int OFFSET_HOUR_HH        = 5;  //-    HH       2 bytes ascii
     public static final int OFFSET_HH_COLON       = 7;  //-     :       1 byte  ascii
-    public static final int OFFSET_MINUTE_MM      = 8;  //-    MM       2 bytes ascii 
+    public static final int OFFSET_MINUTE_MM      = 8;  //-    MM       2 bytes ascii
     public static final int OFFSET_MM_COLON       = 10; //-     :       1 byte  ascii
     public static final int OFFSET_SECONDS_SS     = 11; //-    SS       2 bytes ascii
     public static final int OFFSET_QUALITY_Q      = 13; //-     Q       1 byte  ascii
@@ -74,12 +74,12 @@ public class GpsRecord {
 
     //protected byte[] mbaRecordArray = new byte[SIZE_GPS_RECORD];
     //protected ByteBuffer mtRecordBuffer = ByteBuffer.wrap(mbaRecordArray);
-    protected boolean mbValid = false;
-    protected boolean mbHasBeenValidated = false;
+    protected boolean mbValid;
+    protected boolean mbHasBeenValidated;
 
-	public int miGpsSeconds = -1;
-	public byte mbyGpsQualityByte = (byte) 0x00;
-	public long mlDorGpsSyncTime = -1;
+    public int miGpsSeconds = -1;
+    public byte mbyGpsQualityByte = (byte) 0x00;
+    public long mlDorGpsSyncTime = -1;
 
     // set up logging channel for this component
     private static Log mtLog = LogFactory.getLog(GpsRecord.class);
@@ -95,7 +95,7 @@ public class GpsRecord {
      * @param tBuffer - ByteBuffer, the input buffer from which to extract the gps record.
      */
     public GpsRecord(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
-        loadData(iOffset, tBuffer); 
+        loadData(iOffset, tBuffer);
     }
 
     /**
@@ -103,24 +103,24 @@ public class GpsRecord {
      * @return  the count of seconds represented by the GPS UTC string
      */
     public int getGpsSeconds() {
-		return miGpsSeconds;
-	}
+        return miGpsSeconds;
+    }
 
     /**
      *
      * @return byte indicating the quality of the 1 PPS signal from GPS
      */
     public byte getGpsQualityByte() {
-		return mbyGpsQualityByte;
-	}
+        return mbyGpsQualityByte;
+    }
 
     /**
      *
      * @return the Dor count at the PGS time string - 1 count = 50 ns
      */
     public long getDorGpsSyncTime() {
-		return mlDorGpsSyncTime;
-	}
+        return mlDorGpsSyncTime;
+    }
 
     /**
      * Loads the data from the gps portion of a time-calibration record
@@ -132,7 +132,7 @@ public class GpsRecord {
         mbValid = true;
         mbHasBeenValidated = true;
 
-        miGpsSeconds = (int) read_UTCTime_seconds(iOffset, tBuffer); 
+        miGpsSeconds = (int) read_UTCTime_seconds(iOffset, tBuffer);
         mbyGpsQualityByte = (byte) tBuffer.get(iOffset + OFFSET_QUALITY_Q );
         ByteOrder tSaveOrder = tBuffer.order();
         // tBuffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -144,12 +144,12 @@ public class GpsRecord {
     /**
      * Utility routine to read a series of digits which are encoded as ascii
      * into a long value.
-     * 
+     *
      * @param iNumDigits    - int number of encode digits (in ascii) which are embedded in the referenced byte-buffer
      * @param iOffset       - int offset into the byte buffer of the ascii characters to be read/translated.
      * @param tBuffer       - ByteBuffer containing the digits at the offset to be read.
      * @param sDataTypeName - String which describes the data type which is being converted, mainly for logging.
-     * 
+     *
      * @return long - the value which has been converted from ascii in the ByteBuffer into a long.
      */
     private static long read_long_digits(int iNumDigits, int iOffset, ByteBuffer tBuffer, String sDataTypeName ) throws DataFormatException {

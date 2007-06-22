@@ -214,7 +214,7 @@ public class TriggerRequestPayloadTest
         final int hitSrcId = 36;
         final long hitDomId = 333L;
         final int hitMode = 39;
-        
+
         MockReadoutRequest mockReq = new MockReadoutRequest(uid, srcId);
         mockReq.addElement(makeElement(rrType, rrFirstTime, rrLastTime,
                                        rrDomId, rrSrcId));
@@ -321,7 +321,7 @@ public class TriggerRequestPayloadTest
         final int hitSrcId = 36;
         final long hitDomId = 333L;
         final int hitMode = 39;
-        
+
         MockReadoutRequest mockReq = new MockReadoutRequest(uid, srcId);
         mockReq.addElement(makeElement(rrType, rrFirstTime, rrLastTime,
                                        rrDomId, rrSrcId));

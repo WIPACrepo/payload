@@ -7,8 +7,6 @@ import java.util.Vector;
 import java.util.zip.DataFormatException;
 
 import icecube.daq.eventbuilder.IReadoutDataPayload;
-import icecube.daq.eventbuilder.impl.ReadoutDataRecord;
-import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
@@ -16,7 +14,6 @@ import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.AbstractCompositePayload;
 import icecube.daq.trigger.impl.CompositePayloadEnvelope;
@@ -33,8 +30,8 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
 
     public static final int OFFSET_READOUT_DATA_RECORD = OFFSET_PAYLOAD_ENVELOPE + PayloadEnvelope.SIZE_ENVELOPE;
 
-    protected boolean mb_IsReadoutDataRecordLoaded = false;
-    protected ReadoutDataRecord mt_ReadoutDataRecord = null;
+    protected boolean mb_IsReadoutDataRecordLoaded;
+    protected ReadoutDataRecord mt_ReadoutDataRecord;
     /**
      * Standard Constructor.
      */
@@ -255,7 +252,7 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
      */
     public Poolable getPoolable() {
         //-for new just create a new EventPayload
-		Payload tPayload = (Payload) getFromPool();
+        Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
@@ -265,12 +262,12 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		if (mt_ReadoutDataRecord != null) {
-			mt_ReadoutDataRecord.recycle();
-			mt_ReadoutDataRecord = null;
-		}
-		//-CALL THIS LAST! The based class Payload.recycle() takes care of calling .dispose() after
-		// all the recycling has been done.
+        if (mt_ReadoutDataRecord != null) {
+            mt_ReadoutDataRecord.recycle();
+            mt_ReadoutDataRecord = null;
+        }
+        //-CALL THIS LAST! The based class Payload.recycle() takes care of calling .dispose() after
+        // all the recycling has been done.
         super.recycle();
     }
 
@@ -280,11 +277,11 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
      * which it came.
      */
     public void dispose() {
-		if (mt_ReadoutDataRecord != null) {
-			mt_ReadoutDataRecord.dispose();
-			mt_ReadoutDataRecord = null;
-		}
-		//-CALL THIS LAST!
+        if (mt_ReadoutDataRecord != null) {
+            mt_ReadoutDataRecord.dispose();
+            mt_ReadoutDataRecord = null;
+        }
+        //-CALL THIS LAST!
         super.dispose();
     }
 
@@ -303,7 +300,7 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         int iBytesWritten = 0;
         //-If backing then use it..
-        if (mtbuffer != null && bWriteLoaded == false) {
+        if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten =  super.writePayload( bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
@@ -345,7 +342,7 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
         if (tDestination.doLabel()) tDestination.label("[ReadoutDataPayload]=>").indent();
         int iBytesWritten = 0;
         //-If backing then use it..
-        if (mtbuffer != null && bWriteLoaded == false) {
+        if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten = super.writePayload(bWriteLoaded ,tDestination);
         } else {

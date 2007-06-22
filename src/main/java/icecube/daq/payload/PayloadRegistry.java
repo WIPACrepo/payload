@@ -59,14 +59,14 @@ public final class PayloadRegistry {
     //      the managed PayloadFactory's and subsiquently all the Payload's which
     //      they produce. In this way a consistent management of the ByteBuffer's which
     //      form the optional support of the of the Payload.
-    private IByteBufferCache mtByteBufferCache = null;
+    private IByteBufferCache mtByteBufferCache;
 
     //-dbw: This factory is used by all implementations of AbstractCompositePayload so that
     //      a consistenty parent-factory/IByteBufferCache system can be maintained for all.
     //private CompositePayloadFactory mtMasterCompositePayloadFactory = null;
-    private PayloadFactory mtMasterCompositePayloadFactory = null;
+    private PayloadFactory mtMasterCompositePayloadFactory;
 
-    private Vector mt_PayloadFactories = null;
+    private Vector mt_PayloadFactories;
 
     /**
      * Standard Constructor
@@ -225,7 +225,7 @@ public final class PayloadRegistry {
      * @param iPayloadType ... the type of payload which indicates the factory associated with it.
      * @return PayloadFactory ... the factory that is appropriate for this type of payload.
      */
-    public final PayloadFactory getPayloadFactory(int iPayloadType) {
+    public PayloadFactory getPayloadFactory(int iPayloadType) {
         Object tFactory = mt_PayloadFactories.get(iPayloadType);
         return (PayloadFactory) tFactory;
     }

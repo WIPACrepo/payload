@@ -54,7 +54,7 @@ public class EngFormatTriggerPayloadFactory extends PayloadFactory {
         EngineeringFormatTriggerPayload tNewPayload = (EngineeringFormatTriggerPayload) EngineeringFormatTriggerPayload.getFromPool();
         //-note: deepCopy() is not used on the DomHitEngineeringFormatPayload
         tNewPayload.initialize(
-                            (ISourceID) tSourceID.deepCopy(), 
+                            (ISourceID) tSourceID.deepCopy(),
                             iTriggerType, iTriggerConfigID, tPayload);
         return tNewPayload;
     }

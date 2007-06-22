@@ -2,12 +2,9 @@ package icecube.daq.payload.impl;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 
-import icecube.daq.payload.IPayloadRecord;
 import icecube.daq.payload.PayloadDestination;
-import icecube.daq.payload.impl.MonitorRecord;
 import icecube.util.Poolable;
 
 /**
@@ -65,7 +62,7 @@ import icecube.util.Poolable;
      /**
       * Container Data Variables.
       */
-     public boolean mbConfigMonitorRecordLoaded = false;
+     public boolean mbConfigMonitorRecordLoaded;
 
      /**
       *  The following fields reflect the order and sizes of the
@@ -148,7 +145,7 @@ import icecube.util.Poolable;
       */
      public void dispose() {
          mbConfigMonitorRecordLoaded = false;
-		 //-CALL THIS LAST!!!
+         //-CALL THIS LAST!!!
          super.dispose();
      }
      /**
@@ -156,7 +153,7 @@ import icecube.util.Poolable;
       *
       * @param tDestination ......PayloadDestination to which to write the payload
       * @return int ..............the length in bytes which was writtern.
-      * 
+      *
       * NOTE: Since IPayloadRecords do not have a ByteBuffer backing they have no choice
       *       but to write from their internal values.  This is generally only used for
       *       StringFilePayloadDesitinations and the like for documentation purposes because
@@ -187,7 +184,7 @@ import icecube.util.Poolable;
          iBytes += 1; tDestination.writeByte(LABEL_DATA_ACCESS_MINOR_VERSION        , mby_Data_Access_minor_version);
          iBytes += 1; tDestination.writeByte(LABEL_DAQCONFIGURATIONSECTIONLENGTH    , msi_DAQconfigurationSectionLength);
          iBytes += 4; tDestination.writeInt(LABEL_TRIGGER_CONFIG_INFO               , mi_Trigger_config_info);
-         iBytes += 4; tDestination.writeInt(LABEL_ATWD_READOUT_INFO                 , mi_ATWD_readout_info);                       
+         iBytes += 4; tDestination.writeInt(LABEL_ATWD_READOUT_INFO                 , mi_ATWD_readout_info);
          if (tDestination.doLabel()) tDestination.undent().label("} [ConfigMonitorRecord]");
          return iBytes;
      }

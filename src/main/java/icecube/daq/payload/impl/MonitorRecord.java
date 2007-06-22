@@ -75,7 +75,7 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
     /**
      * boolean indicating if data has been successfully loaded into this 'container'
      */
-    public boolean mbLoaded = false;
+    public boolean mbLoaded;
 
     /**
      * Standard Constructor.
@@ -145,7 +145,6 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
      * @exception DataFormatException if the record is not of the correct format.
      */
     public void loadTypeAndByteOrder(int iRecordOffset, ByteBuffer tBuffer, ByteOrder tSaveOrder) throws IOException, DataFormatException {
-        ByteOrder tRecordOrder = tSaveOrder;
         short iReadRecType = getRecordType(iRecordOffset, tBuffer);
         msiRecType = correctRecordType(iReadRecType);
         mtRecordOrder = detectByteOrder(iReadRecType, msiRecType, tSaveOrder);
@@ -322,14 +321,14 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
     /**
      * This method writes this IPayloadRecord to the PayloadDestination.
      *
      * @param tDestination ......PayloadDestination to which to write the payload
      * @return int ..............the length in bytes which was writtern.
-     * 
+     *
      * NOTE: Since IPayloadRecords do not have a ByteBuffer backing they have no choice
      *       but to write from their internal values.  This is generally only used for
      *       StringFilePayloadDesitinations and the like for documentation purposes because

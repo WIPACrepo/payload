@@ -69,7 +69,7 @@ public class DOMID4B extends Poolable implements IDOMID
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
     /**
      * get String number

@@ -27,7 +27,7 @@ public interface IUTCTime  extends ICopyable {
      * @param tTime IUTCTime to compare to.
      * @return long ...the difference in time in dor card units
      */
-    public long timeDiff(IUTCTime tTime);
+    long timeDiff(IUTCTime tTime);
 
     /**
      * Compares ThisTime - tDifferenceTime and computes time
@@ -35,12 +35,12 @@ public interface IUTCTime  extends ICopyable {
      * @param tTime IUTCTime to compare to.
      * @return long ...the difference in time in ns
      */
-    public double timeDiff_ns(IUTCTime tTime);
+    double timeDiff_ns(IUTCTime tTime);
 
     /**
      * Returns the UTCTime as long.
      */
-    public long getUTCTimeAsLong();
+    long getUTCTimeAsLong();
 
     /**
      * Generates IUTCTime based on offset in ns from this time.
@@ -48,10 +48,10 @@ public interface IUTCTime  extends ICopyable {
      *                     produce another IUTCTime which is representative of this
      *                     time difference.
      */
-    public IUTCTime getOffsetUTCTime(double dNanoSec);
+    IUTCTime getOffsetUTCTime(double dNanoSec);
 
     /**
      * Compare to needed for Splicer.
      */
-    public int compareTo(Object object);
+    int compareTo(Object object);
 }

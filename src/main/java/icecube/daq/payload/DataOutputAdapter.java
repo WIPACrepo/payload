@@ -54,7 +54,7 @@ public class DataOutputAdapter implements DataOutput {
      * @param      b   the data.
      * @exception  IOException  if an I/O error occurs.
      */
-    public void write(byte b[]) throws IOException {
+    public void write(byte[] b) throws IOException {
         errorUnimplementedMethod("write(byte b[]");
     }
     /**
@@ -98,7 +98,7 @@ public class DataOutputAdapter implements DataOutput {
      * @param      len   the number of bytes to write.
      * @exception  IOException  if an I/O error occurs.
      */
-    public void write(byte b[], int off, int len) throws IOException {
+    public void write(byte[] b, int off, int len) throws IOException {
         errorUnimplementedMethod("write(byte b[], int off, int len)");
     }
     /**

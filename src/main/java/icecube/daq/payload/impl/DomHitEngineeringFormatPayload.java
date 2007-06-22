@@ -6,13 +6,10 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.splicer.Spliceable;
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IDomHit;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadRegistry;
-import icecube.daq.payload.impl.UTCTime8B;
-import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
 import icecube.daq.trigger.impl.DOMID8B;
 import icecube.util.Poolable;
 import java.nio.ByteBuffer;
@@ -50,13 +47,13 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      * the payload source into the container variables. False
      * if the payload has not been filled.
      */
-    public boolean mbEngineeringPayloadLoaded = false;
+    public boolean mbEngineeringPayloadLoaded;
 
     /**
      * Internal format for actual Engineering Record if the payload
      * is completely loaded.
      */
-    private DomHitEngineeringFormatRecord mtDomHitEngineeringFormatRecord = null;
+    private DomHitEngineeringFormatRecord mtDomHitEngineeringFormatRecord;
 
     /**
      * true if the spliceable information has been loaded into
@@ -64,7 +61,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      * nature of this object. False if waiting to laod only the
      * spliceable information.
      */
-    public boolean mbSpliceablePayloadLoaded = false;
+    public boolean mbSpliceablePayloadLoaded;
 
     //-Field size info
     public static final int SIZE_RECLEN = 4;  //-int
@@ -163,13 +160,14 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
         //}
         //-load the header data, (and anything else necessary for implementation
         // of Spliceable ie - needed for compareTo() ).
-        miRecLen = super.milength = mtbuffer.getInt(mioffset + OFFSET_RECLEN);
+        miRecLen = mtbuffer.getInt(mioffset + OFFSET_RECLEN);
         miRecId = mtbuffer.getInt(mioffset + OFFSET_RECID);
         mlDomId = mtbuffer.getLong(mioffset + OFFSET_DOMID);
         //-TODO: Adjust the time based on the TimeCalibration will eventually have to be done!
         mlUTime = mtbuffer.getLong(mioffset + OFFSET_UTIME);
         //-NOTE: Payload automatically picks up this at the same time.
         //mtUTCTime.initialize(mlUTime);
+        super.milength = miRecLen;
         super.mttime = new UTCTime8B(mlUTime);
         mbSpliceablePayloadLoaded = true;
     }
@@ -231,13 +229,13 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
     /**
      * This method is a utility method for use when the time calibration of these payloads
      * is done externally (Even before they have been created, but are waiting to be constructed
-     * by the PayloadFactory.) 
+     * by the PayloadFactory.)
      *
      * NOTE: It writes this value as BIG_ENDIAN
      *
      * @param lUTCTime long: the utc-time which has been computed for this record and is to
      *          be placed at the correct positon within this payload.
-     * 
+     *
      * @param iTestDaqRecordOffset int: the offset in the ByteBuffer of the TestDAQ formatted
      *          record - ie like what is normally created by the data-collector. This is so
      *          a new calibrated time can be placed at the position which is normally filled
@@ -340,7 +338,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
         }
         mbSpliceablePayloadLoaded = false;
         mbEngineeringPayloadLoaded = false;
-		//-CALL THIS LAST!
+        //-CALL THIS LAST!
         super.dispose();
     }
     /**
@@ -348,7 +346,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      * @return IPoolable ... object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-		Payload tPayload = (Payload) new DomHitEngineeringFormatPayload(); 
+        Payload tPayload = (Payload) new DomHitEngineeringFormatPayload();
         return (Poolable) tPayload;
     }
 
@@ -365,13 +363,13 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		if (mtDomHitEngineeringFormatRecord != null) {
-			mtDomHitEngineeringFormatRecord.recycle();
-			mtDomHitEngineeringFormatRecord = null;
-		}
-		//-CALLTHIS LAST!!!!!  Payload takes care of eventually calling dispose() once it reaches the base class
-		// (in other words: .dispose() is only call ONCE by Payload.recycle() after it has finnished its work!
-		super.recycle();
+        if (mtDomHitEngineeringFormatRecord != null) {
+            mtDomHitEngineeringFormatRecord.recycle();
+            mtDomHitEngineeringFormatRecord = null;
+        }
+        //-CALLTHIS LAST!!!!!  Payload takes care of eventually calling dispose() once it reaches the base class
+        // (in other words: .dispose() is only call ONCE by Payload.recycle() after it has finnished its work!
+        super.recycle();
     }
 
     /**
@@ -379,8 +377,8 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      */
     protected void loadEnvelope() throws IOException, DataFormatException {
         //-This is handled by loadSpliceable
-		// in fact this must be here to prevent standard envelope loading because
-		// this Payload is non-standard.
+        // in fact this must be here to prevent standard envelope loading because
+        // this Payload is non-standard.
     }
 
     /**

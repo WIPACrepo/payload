@@ -5,17 +5,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
-import icecube.daq.payload.impl.TimeCalibrationRecord;
-import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.splicer.Spliceable;
 import icecube.daq.trigger.impl.DOMID8B;
 import icecube.util.Poolable;
 
@@ -38,16 +31,13 @@ public class MonitorPayload extends Payload {
     public static int OFFSET_MONITOR_RECORD = OFFSET_DOMID + SIZE_DOMID;
     public static int SIZE_FIXED_LENGTH_DATA = PayloadEnvelope.SIZE_ENVELOPE + SIZE_DOMID;
 
-    // set up logging channel for this component
-    private static Log mtLog = LogFactory.getLog(MonitorPayload.class);
-
     /**
      * Internal format for actual Monitor Record if the payload
      * is completely loaded. Depending on the type of Monitor Record
      * this can be one of several types.
      */
-    private MonitorRecord mtMonitorRecord = null;
-    IDOMID mtDomId = null;
+    private MonitorRecord mtMonitorRecord;
+    IDOMID mtDomId;
 
     //
     // Constructor
@@ -93,7 +83,7 @@ public class MonitorPayload extends Payload {
      * @return MonitorRecord the contained monitor record.
      *         If this returns null then the sub-record type
      *         is not yet supported.
-     * 
+     *
      */
     public MonitorRecord getMonitorRecord() {
         return mtMonitorRecord;
@@ -125,8 +115,8 @@ public class MonitorPayload extends Payload {
             mtMonitorRecord.recycle();
             mtMonitorRecord = null;
         }
-		//-this must be LAST!!
-		super.recycle();
+        //-this must be LAST!!
+        super.recycle();
     }
     /**
      * This method de-initializes this object in preparation for reuse.
@@ -137,7 +127,7 @@ public class MonitorPayload extends Payload {
             mtMonitorRecord.dispose();
             mtMonitorRecord = null;
         }
-		//-call this LAST!!!
+        //-call this LAST!!!
         super.dispose();
     }
     // (end)
@@ -214,15 +204,15 @@ public class MonitorPayload extends Payload {
     }
     /**
      * Writes out the PayloadEnvelope which is filled with the DOMID and IUTCTIME in the correct
-     * position in the ByteBuffer. This method is used for constructing a TimeCalibrationPayload
+     * position in the ByteBuffer. This method is used for constructing a MonitorPayload
      * invivo when only part of the ByteBuffer has been filled in with information from a muxed
-     * format TimeCalibrationRecord and GpsRecord.
+     * format MonitorRecord
      *
      * @param tDomId        - IDOMID specific domid associated for this
      * @param lUTCTime      - long, representing the utctime that has been computed to be appropriate for this Payload.
      * @param iPayloadStartOffset - int, the offset in the passed ByteBuffer of the beginning of the Payload.
      * @param tPayloadBuffer - ByteBuffer, the buffer into which the values are to be written.
-     * 
+     *
      */
     public static void writePayloadEnvelopeAndID(int iPayloadLength, IDOMID tDomId, long lUTCTime, int iPayloadStartOffset, ByteBuffer tPayloadBuffer)  throws IOException {
         ByteOrder tSaveOrder = tPayloadBuffer.order();

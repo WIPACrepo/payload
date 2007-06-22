@@ -25,15 +25,15 @@ public interface IBeaconPayload extends IPayload {
     /**
      * Get time of beacon
      */
-    public IUTCTime getBeaconTimeUTC();
+    IUTCTime getBeaconTimeUTC();
 
     /**
      * returns ID of process that is responsible for this payload
      */
     ISourceID getSourceID();
-    
+
     /**
      * Get DOM ID
      */
-    public IDOMID getDOMID();
+    IDOMID getDOMID();
 }

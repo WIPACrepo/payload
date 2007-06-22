@@ -22,12 +22,12 @@ public interface IDOMID extends ICopyable {
     /**
      * Get's the DOMID as a long
      */
-    public long getDomIDAsLong();
+    long getDomIDAsLong();
 
     /**
      * Convert the domId to hex string
      * @return 12-character hex string representing the DOM ID.
      */
-    public String getDomIDAsString();
+    String getDomIDAsString();
 
 }

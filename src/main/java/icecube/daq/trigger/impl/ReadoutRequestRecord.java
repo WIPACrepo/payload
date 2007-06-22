@@ -6,7 +6,6 @@ import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 import java.util.Vector;
 
-import icecube.daq.trigger.impl.ReadoutRequestElementRecord;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.IWriteablePayloadRecord;
@@ -54,13 +53,13 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
     //       (This may have to be changed in the future, but for now we assume that there is
     //       everything in the interface to be able to write the objecte uniquely for these low-level
     //       objects without resorting to versioning, etc)
-    public boolean   mb_IsLoaded             = false;
+    public boolean   mb_IsLoaded;
 
     public short     msi_RequestType         = DEFAULT_REC_TYPE; //this is used for endian detection too
     public int       mi_TriggerUID           = -1;
-    public ISourceID mt_SourceID             = null;
-    public int       mi_numRequestElements   = 0;
-    public Vector    mt_RequestElementVector = null;
+    public ISourceID mt_SourceID;
+    public int       mi_numRequestElements;
+    public Vector    mt_RequestElementVector;
 
 
     /**
@@ -318,7 +317,7 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
 
 }

@@ -4,11 +4,9 @@ import java.util.zip.DataFormatException;
 import java.io.IOException;
 import java.util.Vector;
 import java.nio.ByteBuffer;
-import java.lang.StringBuffer;
 
 import icecube.daq.trigger.ITriggerRequestPayload;
 import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.trigger.AbstractCompositePayload;
 import icecube.daq.payload.ISourceID;
@@ -18,14 +16,11 @@ import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.util.Poolable;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.eventbuilder.impl.EventPayloadRecord;
-import icecube.daq.eventbuilder.IEventPayload;
 import icecube.daq.trigger.impl.CompositePayloadEnvelope;
 
 /**
  * This payload object represents a Event which is produced by when
- * the EventBuilder recieves an ITriggerRequest from the GlobalTrigger.
+ * the EventBuilder receives an ITriggerRequest from the GlobalTrigger.
  * The EventBuilder then sends the appropriate IReadoutRequestPayload's
  * to the StringProcessors and IceTopDataHandlers to full the request
  * for data.  Then, in turn, the StringProcessor's and IceTopDataHandlers
@@ -46,9 +41,9 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
     public static final int OFFSET_EVENT_RECORD = OFFSET_PAYLOAD_DATA;
     public static final int OFFSET_COMPOSITE_START = OFFSET_EVENT_RECORD + EventPayloadRecord.SIZE_TOTAL;
     //-CompositePayloadEnvelope starts right after the end of the EventPayloadRecord.
-    protected EventPayloadRecord mt_eventRecord = null;
-    protected ITriggerRequestPayload mt_triggerRequestPayload = null;
-    protected Vector                 mt_readoutDataPayloads = null;
+    protected EventPayloadRecord mt_eventRecord;
+    protected ITriggerRequestPayload mt_triggerRequestPayload;
+    protected Vector mt_readoutDataPayloads;
 
     //-ADDED this section for additions to IEventPayload: Note this is for supporting
     // the binary format which is produced by this class.
@@ -56,7 +51,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
     /**
      * Get's the event type indicating the configuration type which
      * produced this event.
-     * @return int the event-type 
+     * @return int the event-type
      *  NOTE:a value of -1 indicates that this is not implemented by this object
      */
     public int getEventType() {
@@ -268,7 +263,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      */
     public Poolable getPoolable() {
         //-for new just create a new EventPayload
-		Payload tPayload = (Payload) getFromPool();
+        Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
@@ -280,9 +275,9 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
     public void recycle() {
         if (mt_eventRecord != null) {
             mt_eventRecord.recycle();
-			mt_eventRecord = null;
+            mt_eventRecord = null;
         }
-		//-THIS MUST BE CALLED LAST!!
+        //-THIS MUST BE CALLED LAST!!
         super.recycle();
     }
     //
@@ -324,9 +319,9 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
         // composite payloads.
         if (mt_eventRecord != null) {
             mt_eventRecord.dispose();
-			mt_eventRecord = null;
+            mt_eventRecord = null;
         }
-		//-always call super-class LAST
+        //-always call super-class LAST
         super.dispose();
     }
 
@@ -345,7 +340,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         int iBytesWritten = 0;
         //-If backing then use it..
-        if (mtbuffer != null && bWriteLoaded == false) {
+        if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten =  super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
@@ -386,7 +381,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
         if (tDestination.doLabel()) tDestination.label("[EventPayload]=>").indent();
         int iBytesWritten = 0;
         //-If backing then use it..
-        if (mtbuffer != null && bWriteLoaded == false) {
+        if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten = super.writePayload(bWriteLoaded,tDestination);
         } else {

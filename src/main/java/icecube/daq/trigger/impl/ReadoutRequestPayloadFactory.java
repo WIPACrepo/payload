@@ -1,21 +1,16 @@
 package icecube.daq.trigger.impl;
 
 import java.util.Vector;
-import java.util.List;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
-import java.util.Iterator;
 import java.io.IOException;
 
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.splicer.Spliceable;
-import icecube.daq.trigger.impl.ReadoutRequestPayload;
-import icecube.daq.trigger.impl.TriggerRequestPayloadFactory;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
 

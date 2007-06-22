@@ -27,7 +27,7 @@ import java.io.IOException;
  */
 public class EventPayloadRecord extends Poolable implements IWriteablePayloadRecord {
     public static final int REC_TYPE               = RecordTypeRegistry.RECORD_TYPE_EVENT;
-    protected boolean mb_IsDataLoaded = false;
+    protected boolean mb_IsDataLoaded;
 
     public static final int SIZE_REC_TYPE          = 2;
     public static final int SIZE_UID               = 4;
@@ -55,9 +55,9 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
 
     public short           msi_RecType        = (short) REC_TYPE;
     public int             mi_UID             = -1;    //-unique id for this event.
-    public ISourceID       mt_sourceid        = null;  //-the source of this request.
-    public IUTCTime        mt_firstTime       = null;  //-start of the time window
-    public IUTCTime        mt_lastTime        = null;  //-end of the time window
+    public ISourceID       mt_sourceid;  //-the source of this request.
+    public IUTCTime        mt_firstTime;  //-start of the time window
+    public IUTCTime        mt_lastTime;  //-end of the time window
 
     /**
      * Standard Constructor.
@@ -108,9 +108,9 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		//-this is ok to be called here because this is the terminal node of inherited calls
-		// to recycle().
-		dispose();
+        //-this is ok to be called here because this is the terminal node of inherited calls
+        // to recycle().
+        dispose();
     }
     /**
      * Determines if this record is loaded with valid data.

@@ -36,7 +36,7 @@ public class CompositePayloadEnvelope extends Poolable implements IWriteablePayl
     /**
      * boolean to mark if data has been loaded/initiialized.
      */
-    private boolean mb_IsLoaded = false;
+    private boolean mb_IsLoaded;
     /**
      * envelope data
      */
@@ -107,7 +107,7 @@ public class CompositePayloadEnvelope extends Poolable implements IWriteablePayl
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
 
     /**

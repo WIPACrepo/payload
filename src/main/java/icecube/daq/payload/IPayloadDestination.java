@@ -19,11 +19,11 @@ import java.nio.ByteBuffer;
 public interface IPayloadDestination extends DataOutput {
 
     /**
-     * Tells whether or not this channel is open.  </p>
+     * Tells whether or not this channel is open.
      *
      * @return <tt>true</tt> if, and only if, this channel is open
      */
-    public boolean isOpen();
+    boolean isOpen();
 
     /**
      * Closes this channel.
@@ -42,7 +42,7 @@ public interface IPayloadDestination extends DataOutput {
      *
      * @throws  IOException  If an I/O error occurs
      */
-    public void close()
+    void close()
             throws IOException;
 
     /**
@@ -56,7 +56,7 @@ public interface IPayloadDestination extends DataOutput {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(Payload tPayload)
+    int writePayload(Payload tPayload)
             throws IOException;
 
     /**
@@ -71,7 +71,7 @@ public interface IPayloadDestination extends DataOutput {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, Payload tPayload)
+    int writePayload(boolean bWriteLoaded, Payload tPayload)
             throws IOException;
 
     /**
@@ -88,7 +88,7 @@ public interface IPayloadDestination extends DataOutput {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, Payload tPayload, int iDestOffset, ByteBuffer tDestBuffer)
+    int writePayload(boolean bWriteLoaded, Payload tPayload, int iDestOffset, ByteBuffer tDestBuffer)
             throws IOException;
 
 

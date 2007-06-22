@@ -14,9 +14,6 @@ import icecube.daq.payload.PayloadDestination;
 import icecube.util.Poolable;
 import icecube.util.ICopyable;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * DomHitDeltaCompressedFormatRecord
  *
@@ -27,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
  * This object is a container for the DomHit Delta Compressed Format Data which
  * is enveloped inside a Payload. This format is detailed in the document
  * by Josh Sopher and Dawn Williams: Version 1.0 Dec 12, 2005
- * 
+ *
  * -------------------------------------------------------------------
  * Quick overview of the format
  * -------------------------------------------------------------------
@@ -70,17 +67,17 @@ import org.apache.commons.logging.LogFactory;
  *              { lower 13bits of the raw data Trigger Word }
  *
  *          LC                  D17..D16, D17=msb       2
- *              { 
+ *              {
  *                  D[17..16]=01 LC tag came from below
  *                  D[17..16]=10 LC tag came from above
  *                  D[17..16]=11 LC tag came from below *and* above
- *              } 
+ *              }
  *
  *          fADC Avail          D15                     1
  *
  *              { Used to calculate if 256 fADC words are recorded. If fADC data
  *                is not recorded, then ATWD data is also not recorded.
- *                1=true, 0=false. If false, ATWD Available will = 0 
+ *                1=true, 0=false. If false, ATWD Available will = 0
  *              }
  *
  *          ATWD Avail          D14                     1
@@ -89,13 +86,13 @@ import org.apache.commons.logging.LogFactory;
  *
  *          ATWD Size           D13..D12, D13=msb       2
  *
- *              { 
+ *              {
  *                  Used to calculate the number of 128 10-bit words recorded per channel.
  *                  D[13..12] = 00  ch0 only
  *                  D[13..12] = 01  ch0 and ch1
  *                  D[13..12] = 10  ch0, ch1, and ch2
  *                  D[13..12] = 11  ch0,ch1,ch2, and ch3
- *              } 
+ *              }
  *
  *          ATWD_AB             D11                     1
  *
@@ -108,7 +105,7 @@ import org.apache.commons.logging.LogFactory;
  *              for the DELTA FORMAT HEADER, and this includes
  *              the total bytes for WORD0, WORD1, WORD2 + 0 or
  *              more bytes of compressed data}
- * 
+ *
  * WORD1:   Time Stamp          D31..D0, D31=msb        32  (32 1.s. bits)
  *
  *              { lowest 32 bits of the 48 bit (full) Time stamp
@@ -149,20 +146,17 @@ import org.apache.commons.logging.LogFactory;
  *               Ch1
  *               Ch2
  *               Ch3
- *          
+ *
  * (note: here WORD0 is the first element in the DAQ record. This corresponds to WORD1 in the
  *        DOM record).
  *
  * NOTE: According to the pDAQ_trunk/StringHub/src/main/java/icecube/dat/domap/
  *       DataCollector.java code (revision 666) I am reverse engineering the code.
  ************************************************************************************
- * 
+ *
  * @author dwharton
  */
 public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopyable, IWriteablePayloadRecord, IHitDataRecord {
-
-    //-Specific log for this class
-    private static Log mtLog = LogFactory.getLog(DomHitDeltaCompressedFormatRecord.class);
 
     //-Mux Record Header
     public static final int SIZE_ORDERCHECK              = 2;
@@ -198,10 +192,10 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      * decompressor would start to read and decompress the waveform
      * data. (This is not a function of this record at the time of
      * this writing 2-2-2007)
-     * 
+     *
      * offset of WORD3...WORDN the actual compressed, variable
      * length data the end of this is goverend by hit-size
-     * 
+     *
      */
     //-Delta Compressed data offset
     public static final int OFFSET_DELTA_FMT_COMPRESSED_DATA = OFFSET_WORD2 + SIZE_WORD2;
@@ -219,7 +213,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     /**
      * boolean indicating if data has been successfully loaded into this 'container'
      */
-    public boolean mbLoaded = false;
+    public boolean mbLoaded;
     //-basic data
     //-Header
     public short msi_version;
@@ -264,7 +258,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      *
      *  { Used to calculate if 256 fADC words are recorded. If fADC data
      *    is not recorded, then ATWD data is also not recorded.
-     *    1=true, 0=false. If false, ATWD Available will = 0 
+     *    1=true, 0=false. If false, ATWD Available will = 0
      *  }
      */
     public static final short FADC_AVAILABLE_MASK  = (short) 0x8000;
@@ -327,7 +321,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      * loadData() loads the fixed format information from the delta
      * compressed record into the class variables so that it may be
      * quickly accessed.
-     * 
+     *
      * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
      * @param tBuffer ...ByteBuffer from wich to construct the record.
      *
@@ -365,7 +359,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
 
             //-load the raw information about the peaks
             mi_PEAKINFO_FIELD = iWORD2;
-            
+
             //---------------------------------
             //-CONSTRUCTED FIELDS
             //---------------------------------
@@ -412,7 +406,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     /**
      * Returns the particular version of this record type.
      * @return int ... the version of this record type.
-     * 
+     *
      * NOTE: This should probably be deprecated from the interface
      */
     public int getVersion() {
@@ -475,7 +469,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
         return iBytesWritten;
     }
 
-    
+
     /**
      * Method to write this record to the payload destination.
      * @param iOffset ....the offset at which to start writing the object.
@@ -523,10 +517,10 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     /**
      * Pulls out the Trigger Mode of the compressed record This
      * assumes the ByteBuffer has been set to BIG_ENDIAN.
-     * 
+     *
      * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
      * @param tBuffer ...ByteBuffer from wich to construct the record.
-     * 
+     *
      * @return the Beacon and SPE/MPE bits mapped to their appropriate places
      *         in the Engineering trigger mode
      *
@@ -556,9 +550,9 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     }
     /**
      * Pulls out the Trigger Mode from the trigger flags.
-     * 
+     *
      * @param trigFlags delta compressed trigger flags
-     * 
+     *
      * @return the Beacon and SPE/MPE bits mapped to their appropriate places
      *         in the Engineering trigger mode
      */
@@ -597,7 +591,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
 
     /**

@@ -1,19 +1,10 @@
 package icecube.daq.trigger.impl;
 
-import icecube.util.Poolable;
-import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.payload.IPayload;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
-import icecube.daq.trigger.impl.EngineeringFormatHitDataPayload;
-import icecube.daq.trigger.impl.EngineeringFormatHitPayload;
-import icecube.daq.splicer.Spliceable;
 import icecube.daq.payload.ISourceID;
 
-import java.util.List;
-import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
-import java.util.Iterator;
 import java.io.IOException;
 
 /**
@@ -60,7 +51,7 @@ public class EngineeringFormatHitDataPayloadFactory extends EngFormatHitPayloadF
     public Payload createPayload(ISourceID tSourceID, int iTriggerType, int iTriggerConfigID, DomHitEngineeringFormatPayload tPayload) throws IOException, DataFormatException  {
         //-note: DomHitEngineeringFormatPayload is not deepCopy'd but is contained
         EngineeringFormatHitDataPayload tNewPayload = (EngineeringFormatHitDataPayload) mt_PoolablePayloadFactory.getPoolable();
-        tNewPayload.initialize((ISourceID) tSourceID.deepCopy(), 
+        tNewPayload.initialize((ISourceID) tSourceID.deepCopy(),
                                iTriggerType, iTriggerConfigID, tPayload);
         return tNewPayload;
     }

@@ -33,9 +33,9 @@ import org.apache.commons.logging.LogFactory;
  *
  * @version $Id: Payload.java,v 1.16 2005/11/09 23:52:19 dwharton Exp $
  * @author hellwig,dwharton
- * 
+ *
  * 8/24/2005 dbw
- * 	-added ability to install and optionally use an IByteBufferCache so
+ *     -added ability to install and optionally use an IByteBufferCache so
  *   that Payload's who are the 'root-owner' of a ByteBuffer can return it
  *   to the source for reuse. See below for criterion for 'ownership'.
  */
@@ -47,33 +47,33 @@ public abstract class Payload extends Poolable
      */
     private static final Log mtLog = LogFactory.getLog(Payload.class);
 
-	//-Lock object for recycle() of Bytebuffer
-	private Object mtbuffer_lock = new Object();
+    //-Lock object for recycle() of Bytebuffer
+    private Object mtbuffer_lock = new Object();
 
     //-Reference to the PayloadFactory which created this
     // Payload. This is used for recycling, and for cloning.
     //-TODO: change this scope
-	public PayloadFactory mtParentPayloadFactory = null;
+    public PayloadFactory mtParentPayloadFactory;
 
-	//-this indicates an uninitialized IUTCTime
+    //-this indicates an uninitialized IUTCTime
     protected static IUTCTime mt_NULLTIME = new UTCTime8B(-1);
 
-	//-offset from the beginning of mioffset of the PayloadEnvelop
+    //-offset from the beginning of mioffset of the PayloadEnvelop
     public static final int OFFSET_PAYLOAD_ENVELOPE = 0;
     /**
      * Container for the payload envelop
      */
-    protected PayloadEnvelope mt_PayloadEnvelope = null;
+    protected PayloadEnvelope mt_PayloadEnvelope;
     /**
      * Boolean to indicate if payload envelope has been loaded.
      */
-    protected boolean mb_IsEnvelopeLoaded = false;
+    protected boolean mb_IsEnvelopeLoaded;
 
     /**
      * This indicates whether or not this payload
      * has been read/loaded from the byte buffer.
      */
-    protected boolean mbPayloadCreated = false;
+    protected boolean mbPayloadCreated;
 
     /**
      * Time with which the object is stamped
@@ -83,7 +83,7 @@ public abstract class Payload extends Poolable
     /**
      * ByteBuffer backing this object.
      */
-    protected ByteBuffer mtbuffer = null;
+    protected ByteBuffer mtbuffer;
 
     /**
      * Offset into the buffer of this objects payload.
@@ -93,17 +93,17 @@ public abstract class Payload extends Poolable
     /**
      * Length of the payload in the buffer.
      */
-    protected int milength = 0;
+    protected int milength;
 
     /**
      * Payload type
-	 * @see icecube.daq.payload.PayloadRegistry
+     * @see icecube.daq.payload.PayloadRegistry
      */
     protected int mipayloadtype = -1;
 
     /**
      * Interface type for this payload.
-	 * @see icecube.daq.payload.PayloadInterfaceRegistry
+     * @see icecube.daq.payload.PayloadInterfaceRegistry
      */
     protected int mipayloadinterfacetype = -1;
 
@@ -131,7 +131,7 @@ public abstract class Payload extends Poolable
      * @param iOffset ...int representing the initial position of the object
      *                   within the ByteBuffer backing.
      * @param tBackingBuffer ...ByteBuffer the backing buffer for this object.
-	 * @param tFactory ... PayloadFactory which was used to create this Payload
+     * @param tFactory ... PayloadFactory which was used to create this Payload
      */
     public void initialize(int iOffset, ByteBuffer tBackingBuffer, PayloadFactory tFactory) throws IOException, DataFormatException {
         //-set the parent factory for use with recycle/pooling
@@ -359,23 +359,23 @@ public abstract class Payload extends Poolable
      * This method de-initializes this object in preparation for reuse.
      */
     public void dispose() {
-		//-THIS IS THE TERMINUS OF DISPOSE() FOR ALL PAYLOAD'S
+        //-THIS IS THE TERMINUS OF DISPOSE() FOR ALL PAYLOAD'S
         mbPayloadCreated = false;
         mb_IsEnvelopeLoaded = false;
         if (mt_PayloadEnvelope != null)  {
-			mt_PayloadEnvelope.dispose();
-			mt_PayloadEnvelope = null;
-		}
+            mt_PayloadEnvelope.dispose();
+            mt_PayloadEnvelope = null;
+        }
         if (mttime != null && !mttime.equals(mt_NULLTIME)) {
             ((Poolable)mttime).dispose();
             mttime = mt_NULLTIME;
         }
-		if (mtbuffer != null) {
+        if (mtbuffer != null) {
             mtbuffer = null;
-		}
+        }
         mioffset = -1;
         milength = 0;
-		mtParentPayloadFactory = null;
+        mtParentPayloadFactory = null;
     }
 
     /**
@@ -385,56 +385,58 @@ public abstract class Payload extends Poolable
         loadEnvelope();
     }
 
-	/**
-	 * Implementation from Poolable...
-	 */
+    /**
+     * Implementation from Poolable...
+     */
     /**
      * Object know's how to recycle itself
      */
     public synchronized void recycle() {
-		//-recylce the backing if appropriate.
-		recycleByteBuffer();
-		//-this will null out the rest of the components
-		dispose();
-	}
+        //-recylce the backing if appropriate.
+        recycleByteBuffer();
+        //-this will null out the rest of the components
+        dispose();
+    }
 
-	/**
-	 * This method is specifically for recycling the ByteBuffer backing of the Payload
-	 * if it is appropriate. Namely, if there is an IByteBufferCache installed it
-	 * will use it to send the contained ByteBuffer to it's next (final) destination.
-	 * 
-	 * NOTE: the current logic for deciding whether or not recycle a byte buffer is:
-	 * 		1. There is a non-null mtbuffer
-	 * 		2. the offset of the Payload into the ByteBuffer is '0' meaning it owns it!
-	 *  	3. There is a non-null IByteBufferCache installed into this payload.	
-	 */
-	protected synchronized void recycleByteBuffer() {
-		//-check to see if there is a valid ByteBuffer backing,
-		// and if this Payload is the owner of this ByteBuffer, it's offset will be '0'
-		// otherwise it should not send it to the receiver.
-		// NOTE: this is kind-of a hack for the time being, but this should take care of the case
-		//       where the recycle() method is called for subcomponents of a CompositePayload for instance.
-		if (mtbuffer != null && mioffset == 0 && mtParentPayloadFactory != null) {
-			//-get the cache from the parent factory, and use if present.
-			IByteBufferCache tCache = mtParentPayloadFactory.getByteBufferCache();
-			if (tCache != null) {
-				//-TODO: (make a better way to check this other than a non-null mtByteBufferReceiver
-				//-double check to make sure that this Payload 'owns' this ByteBuffer
-				synchronized (mtbuffer_lock) {
-					tCache.returnBuffer(mtbuffer);
-					//-eventhough dispose() takes care of this, if the ByteBuffer is passed on
-					// then the reference to it must be removed.
-					mtbuffer = null;
-				}
-			}
-		}
-	}
+    /**
+     * This method is specifically for recycling the ByteBuffer backing of the Payload
+     * if it is appropriate. Namely, if there is an IByteBufferCache installed it
+     * will use it to send the contained ByteBuffer to it's next (final) destination.
+     *
+     * NOTE: the current logic for deciding whether or not recycle a byte buffer is:
+     *         1. There is a non-null mtbuffer
+     *         2. the offset of the Payload into the ByteBuffer is '0' meaning it owns it!
+     *      3. There is a non-null IByteBufferCache installed into this payload.
+     */
+    protected synchronized void recycleByteBuffer() {
+        //-check to see if there is a valid ByteBuffer backing,
+        // and if this Payload is the owner of this ByteBuffer, it's offset will be '0'
+        // otherwise it should not send it to the receiver.
+        // NOTE: this is kind-of a hack for the time being, but this should take care of the case
+        //       where the recycle() method is called for subcomponents of a CompositePayload for instance.
+        if (mtbuffer != null && mioffset == 0 && mtParentPayloadFactory != null) {
+            //-get the cache from the parent factory, and use if present.
+            IByteBufferCache tCache = mtParentPayloadFactory.getByteBufferCache();
+            if (tCache != null) {
+                //-TODO: (make a better way to check this other than a non-null mtByteBufferReceiver
+                //-double check to make sure that this Payload 'owns' this ByteBuffer
+                synchronized (mtbuffer_lock) {
+                    tCache.returnBuffer(mtbuffer);
+                    //-eventhough dispose() takes care of this, if the ByteBuffer is passed on
+                    // then the reference to it must be removed.
+                    mtbuffer = null;
+                }
+            }
+        } else {
+            mtbuffer = null;
+        }
+    }
 
     /**
      * This method is used for makeing a 'deep-copy' of the Payload
      * so that all internally referenced objects are completely new.
      * This is especially.
-     * 
+     *
      * @return Payload which is a deep copy of this Payload
      * @throws IOException if an error occurs during the copy.
      */

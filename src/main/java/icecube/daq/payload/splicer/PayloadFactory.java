@@ -20,10 +20,8 @@ import java.util.zip.DataFormatException;
 
 import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.payload.splicer.Payload;
 import icecube.daq.splicer.Spliceable;
 import icecube.daq.splicer.SpliceableFactory;
-import icecube.daq.splicer.Splicer;
 import icecube.util.Poolable;
 
 import org.apache.commons.logging.Log;
@@ -37,17 +35,11 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class PayloadFactory
     implements SpliceableFactory {
-    protected Poolable mt_PoolablePayloadFactory = null;
-	protected IByteBufferCache mtByteBufferCache = null;
+    protected Poolable mt_PoolablePayloadFactory;
+    protected IByteBufferCache mtByteBufferCache;
 
     /** logging object */
     private static final Log LOG = LogFactory.getLog(PayloadFactory.class);
-
-    /**
-     * Byte count of the Length data which is embedded in the backing buffer
-     * at the begining of the object.
-     */
-    private static final int LENGTH_BYTE_COUNT = 4;
 
     /**
      * This method allows setting of the Poolable which acts as the
@@ -60,25 +52,25 @@ public abstract class PayloadFactory
         mt_PoolablePayloadFactory = tFactory;
     }
 
-	/**
-	 * Set's the IByteBufferCache which is used for recycling Payload's
-	 * and for 'deep-copy' of Payloads during cloning.
-	 * @param tCache an IByteBufferCache to be used by this factory.
-	 */
-	public void setByteBufferCache(IByteBufferCache tCache) {
-		mtByteBufferCache = tCache;
-	}
+    /**
+     * Set's the IByteBufferCache which is used for recycling Payload's
+     * and for 'deep-copy' of Payloads during cloning.
+     * @param tCache an IByteBufferCache to be used by this factory.
+     */
+    public void setByteBufferCache(IByteBufferCache tCache) {
+        mtByteBufferCache = tCache;
+    }
 
-	/**
-	 * Returns the IByteBufferCache assigned to this factory
-	 * if there is one. This can be null and Payload's using this
-	 * should handle this case.
-	 * @return IByteBufferCache
-	 * 
-	 */
-	public IByteBufferCache getByteBufferCache() {
-		return mtByteBufferCache;
-	}
+    /**
+     * Returns the IByteBufferCache assigned to this factory
+     * if there is one. This can be null and Payload's using this
+     * should handle this case.
+     * @return IByteBufferCache
+     *
+     */
+    public IByteBufferCache getByteBufferCache() {
+        return mtByteBufferCache;
+    }
 
     /**
      * Modifies the specified objects when their backing ByteBuffer is being

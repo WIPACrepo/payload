@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
 import java.io.IOException;
 
 /**
@@ -30,7 +29,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
 {
 
     Map destinationMap = new HashMap();
-    IPayloadDestinationCollectionController controller = null;
+    IPayloadDestinationCollectionController controller;
 
     /**
      * Default constructor.

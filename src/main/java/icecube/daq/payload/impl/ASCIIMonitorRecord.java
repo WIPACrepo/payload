@@ -2,10 +2,8 @@ package icecube.daq.payload.impl;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 
-import icecube.daq.payload.IPayloadRecord;
 import icecube.daq.payload.PayloadDestination;
 import icecube.util.Poolable;
 
@@ -19,10 +17,10 @@ import icecube.util.Poolable;
     public static final int SIZE_MAX_ASCII_BYTES = 502;
     public static final String LABEL_ASCII_TEXT =  "ASCII";
 
-    public boolean mbASCIIRecLoaded = false;
-    public int miASCIIDataLength = 0;
+    public boolean mbASCIIRecLoaded;
+    public int miASCIIDataLength;
     public byte[] mabASCIIBytes = new byte[SIZE_MAX_ASCII_BYTES];
-    public String msASCIIString = null;
+    public String msASCIIString;
     public static final String ASCII_CHAR_SET_NAME = "US-ASCII";
 
 
@@ -81,7 +79,7 @@ import icecube.util.Poolable;
         miASCIIDataLength = 0;
         mbASCIIRecLoaded = false;
         msASCIIString = null;
-		//-make this last
+        //-make this last
         super.dispose();
     }
     /**
@@ -89,7 +87,7 @@ import icecube.util.Poolable;
      *
      * @param tDestination ......PayloadDestination to which to write the payload
      * @return int ..............the length in bytes which was writtern.
-     * 
+     *
      * NOTE: Since IPayloadRecords do not have a ByteBuffer backing they have no choice
      *       but to write from their internal values.  This is generally only used for
      *       StringFilePayloadDesitinations and the like for documentation purposes because

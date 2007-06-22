@@ -2,29 +2,23 @@ package icecube.daq.payload.impl;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IDomHit;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
-import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.splicer.Spliceable;
 import icecube.daq.trigger.impl.DOMID8B;
 import icecube.util.Poolable;
 
 /**
  * This object represents a Delta Compressed Hit from a DOM and includes
- * the waveform data. It carries both the header information and the data 
- * from the dom and is constructed after the data comes to the surface in the hub. 
- * The mux header is included in the header of each payload because they are 
- * seperated by time and not by dom-id after reaching the surface and being 
+ * the waveform data. It carries both the header information and the data
+ * from the dom and is constructed after the data comes to the surface in the hub.
+ * The mux header is included in the header of each payload because they are
+ * seperated by time and not by dom-id after reaching the surface and being
  * concentrated and sorted.
  *
  * FORMAT
@@ -56,7 +50,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      * nature of this object. False if waiting to laod only the
      * spliceable information.
      */
-    public boolean mbSpliceablePayloadLoaded = false;
+    public boolean mbSpliceablePayloadLoaded;
 
     //-Field size info
     public static final int SIZE_RECLEN = 4;  //-int
@@ -149,11 +143,12 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
         //}
         //-load the header data, (and anything else necessary for implementation
         // of Spliceable ie - needed for compareTo() ).
-        miRecLen = super.milength = mtbuffer.getInt(mioffset + OFFSET_RECLEN);
+        miRecLen = mtbuffer.getInt(mioffset + OFFSET_RECLEN);
         miRecId = mtbuffer.getInt(mioffset + OFFSET_RECID);
         mlDomId = mtbuffer.getLong(mioffset + OFFSET_DOMID);
         //-TODO: Adjust the time based on the TimeCalibration will eventually have to be done!
         mlUTime = mtbuffer.getLong(mioffset + OFFSET_UTIME);
+        super.milength = miRecLen;
         super.mttime = new UTCTime8B(mlUTime);
         mbSpliceablePayloadLoaded = true;
     }
@@ -237,7 +232,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
         }
         mbSpliceablePayloadLoaded = false;
         mbDeltaPayloadLoaded = false;
-		//-CALL THIS LAST!
+        //-CALL THIS LAST!
         super.dispose();
     }
 
@@ -246,7 +241,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      * @return IPoolable ... object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-		Payload tPayload = (Payload) new DomHitDeltaCompressedFormatPayload(); 
+        Payload tPayload = (Payload) new DomHitDeltaCompressedFormatPayload();
         return (Poolable) tPayload;
     }
 
@@ -263,13 +258,13 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		if (mtDomHitDeltaCompressedRecord != null) {
-			mtDomHitDeltaCompressedRecord.recycle();
-			mtDomHitDeltaCompressedRecord = null;
-		}
-		//-CALL THIS LAST!!!!!  Payload takes care of eventually calling recycle() once it reaches the base class
-		// (in other words: .recycle() is only call ONCE by Payload.recycle() after it has finished its work!
-		super.recycle();
+        if (mtDomHitDeltaCompressedRecord != null) {
+            mtDomHitDeltaCompressedRecord.recycle();
+            mtDomHitDeltaCompressedRecord = null;
+        }
+        //-CALL THIS LAST!!!!!  Payload takes care of eventually calling recycle() once it reaches the base class
+        // (in other words: .recycle() is only call ONCE by Payload.recycle() after it has finished its work!
+        super.recycle();
     }
 
 

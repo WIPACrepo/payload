@@ -20,8 +20,8 @@ package icecube.daq.payload;
 public interface IPayloadDestinationCollectionController
 {
 
-    public static final int BYTE_BUFFER_PAYLOAD_DESTINATION = 0;
-    public static final int SINK_PAYLOAD_DESTINATION    = 1;
+    int BYTE_BUFFER_PAYLOAD_DESTINATION = 0;
+    int SINK_PAYLOAD_DESTINATION        = 1;
 
     /**
      * Get the PayloadDestinationCollection.

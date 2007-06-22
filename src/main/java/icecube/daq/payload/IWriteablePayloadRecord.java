@@ -1,6 +1,5 @@
 package icecube.daq.payload;
 
-import icecube.daq.payload.PayloadDestination;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 

@@ -3,7 +3,7 @@ package icecube.daq.payload;
 import java.nio.ByteBuffer;
 
 /**
- * Generic DomHit interface
+ * Generic DomHit interface.
  */
 public interface IDomHit
     extends ILoadablePayload

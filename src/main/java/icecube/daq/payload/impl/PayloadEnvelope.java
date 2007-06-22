@@ -45,7 +45,7 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
     public static final String PAYLOADTYPE = "PAYLOADTYPE";
     public static final String UTIME       = "UTIME";
 
-    private boolean mb_IsLoaded = false;
+    private boolean mb_IsLoaded;
     public int miPayloadLen;    //-record length including the envelope
     public int miPayloadType;
     public long mlUTime;    //- Universal Time from TestDAQ
@@ -169,7 +169,7 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
 
     /**

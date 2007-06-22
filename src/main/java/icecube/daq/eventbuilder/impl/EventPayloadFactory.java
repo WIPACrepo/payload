@@ -2,9 +2,6 @@ package icecube.daq.eventbuilder.impl;
 
 import java.util.Vector;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.splicer.CompositePayloadFactory;
@@ -18,11 +15,6 @@ import icecube.daq.trigger.impl.TriggerRequestPayload;
  *  @author dwharton,mhellwig
  */
 public class EventPayloadFactory  extends CompositePayloadFactory {
-    /**
-     * Log object for this class
-     */
-    private static final Log mtLog = LogFactory.getLog(EventPayloadFactory.class);
-
     /**
      * Standard Constructor.
      */
@@ -57,7 +49,7 @@ public class EventPayloadFactory  extends CompositePayloadFactory {
         // successful.
         boolean bDeepCopyOk = false;
         //-sub-payloads which to copy
-        Vector tDataPayloadsCopy =  null; 
+        Vector tDataPayloadsCopy =  null;
         TriggerRequestPayload tTriggerRequestCopy = null;
         //-the final output
         EventPayload tPayload = null;
@@ -85,11 +77,11 @@ public class EventPayloadFactory  extends CompositePayloadFactory {
         if (bDeepCopyOk) {
             //tPayload = (EventPayload) EventPayload.getFromPool();
             tPayload = (EventPayload) mt_PoolablePayloadFactory.getPoolable();
-            tPayload.initialize(iUID, 
-                                (ISourceID) tSourceID.deepCopy(), 
-                                (IUTCTime) tFirstTimeUTC.deepCopy(), 
+            tPayload.initialize(iUID,
+                                (ISourceID) tSourceID.deepCopy(),
+                                (IUTCTime) tFirstTimeUTC.deepCopy(),
                                 (IUTCTime) tLastTimeUTC.deepCopy(),
-                                tTriggerRequestCopy, 
+                                tTriggerRequestCopy,
                                 tDataPayloadsCopy);
             //-set the MasterPayloadFactory (as a composite)
             tPayload.setMasterPayloadFactory(getMasterCompositePayloadFactory());

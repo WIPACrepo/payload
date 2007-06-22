@@ -4,13 +4,11 @@ import java.nio.ByteOrder;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 import java.io.IOException;
-import java.util.Vector;
 
 import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.trigger.ITriggerPayload;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.payload.IWriteablePayloadRecord;
 import icecube.daq.payload.PayloadDestination;
@@ -31,7 +29,7 @@ import icecube.daq.payload.RecordTypeRegistry;
  */
 public class TriggerRequestRecord extends Poolable implements IWriteablePayloadRecord {
 
-    protected boolean mb_IsDataLoaded = false;
+    protected boolean mb_IsDataLoaded;
 
     public static final int DEFAULT_REC_TYPE = RecordTypeRegistry.RECORD_TYPE_TRIGGER_REQUEST;
     /**
@@ -73,10 +71,10 @@ public class TriggerRequestRecord extends Poolable implements IWriteablePayloadR
     public int             mi_UID             = -1;    //-unique id for this request
     public int             mi_triggerType     = -1;    //-type of trigger
     public int             mi_triggerConfigID = -1;    //-config id which id's parameters associated for this specific trigger type and configuration.
-    public ISourceID       mt_sourceid        = null;  //-the source of this request.
-    public IUTCTime        mt_firstTime       = null;  //-start of the time window
-    public IUTCTime        mt_lastTime        = null;  //-end of the time window
-    public ReadoutRequestRecord  mt_readoutRequestRecord  = null; //-Payload which corresponds to the request for data for this trigger.
+    public ISourceID       mt_sourceid;  //-the source of this request.
+    public IUTCTime        mt_firstTime;  //-start of the time window
+    public IUTCTime        mt_lastTime;  //-end of the time window
+    public ReadoutRequestRecord  mt_readoutRequestRecord; //-Payload which corresponds to the request for data for this trigger.
 
     protected int mi_recordSize = -1;
 
@@ -142,7 +140,7 @@ public class TriggerRequestRecord extends Poolable implements IWriteablePayloadR
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
     /**
      * Determines if this record is loaded with valid data.

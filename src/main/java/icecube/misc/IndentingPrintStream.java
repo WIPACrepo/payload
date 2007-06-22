@@ -14,7 +14,7 @@ public class IndentingPrintStream extends PrintStream {
     protected Stack mt_Indents = new Stack();
     protected StringBuffer msb_CurrentIndent = new StringBuffer();
     protected Object mt_DefaultIndent = (Object) new String("  ");
-    private boolean mbIndent = false;
+    private boolean mbIndent;
     /**
      * constructor
      * @param tPrintStream ... print stream used for indenting
@@ -130,7 +130,7 @@ public class IndentingPrintStream extends PrintStream {
      * @param  off   Offset from which to start taking bytes
      * @param  len   Number of bytes to write
      */
-    public void write(byte buf[], int off, int len) {
+    public void write(byte[] buf, int off, int len) {
         indent();
         mt_PrintStream.write(buf, off, len);
     }
@@ -238,7 +238,7 @@ public class IndentingPrintStream extends PrintStream {
      *
      * @throws  NullPointerException  If <code>s</code> is <code>null</code>
      */
-    public void print(char s[]) {
+    public void print(char[] s) {
         indent();
         mt_PrintStream.print(s);
     }
@@ -358,7 +358,7 @@ public class IndentingPrintStream extends PrintStream {
      *
      * @param x  an array of chars to print.
      */
-    public void println(char x[]) {
+    public void println(char[] x) {
         indent();
         mt_PrintStream.println(x);
         mbIndent=true;
@@ -391,7 +391,7 @@ public class IndentingPrintStream extends PrintStream {
      * @exception  IOException  if an I/O error occurs.
      * @see        java.io.FilterOutputStream#write(byte[], int, int)
      */
-    public void write(byte b[]) throws IOException {
+    public void write(byte[] b) throws IOException {
         indent();
         mt_PrintStream.write(b);
     }

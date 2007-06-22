@@ -1,6 +1,5 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.impl.MonitorRecord;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 import java.io.IOException;
@@ -15,7 +14,7 @@ public class GenericMonitorRecord extends MonitorRecord {
     public static final int OFFSET_GENERIC_BYTES   = OFFSET_NONHEADER_DATA;
 
     public byte[] mabGenericBytes = new byte[SIZE_MAX_GENERIC_BYTES];
-    public int miGenericDataLength = 0;
+    public int miGenericDataLength;
 
     /**
      * General Constructor. Usable for Object Pooling
@@ -55,7 +54,7 @@ public class GenericMonitorRecord extends MonitorRecord {
      */
     public void dispose() {
         miGenericDataLength = 0;
-		//-CALL THIS LAST!!
+        //-CALL THIS LAST!!
         super.dispose();
     }
 }

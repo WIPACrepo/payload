@@ -5,17 +5,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
-import icecube.daq.payload.impl.SuperNovaRecord;
-import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.splicer.Spliceable;
 import icecube.daq.trigger.impl.DOMID8B;
 import icecube.util.Poolable;
 
@@ -37,16 +30,13 @@ public class SuperNovaPayload extends Payload {
     public static int    OFFSET_SUPERNOVA_RECORD = OFFSET_DOMID                    + SIZE_DOMID;
     public static int    SIZE_FIXED_LENGTH_DATA  = PayloadEnvelope.SIZE_ENVELOPE   + SIZE_DOMID;
 
-    // set up logging channel for this component
-    private static Log mtLog = LogFactory.getLog(SuperNovaPayload.class);
-
     /**
      * Internal format for actual super-nova Record if the payload
      * is completely loaded. Depending on the type of Monitor Record
      * this can be one of several types.
      */
-    private SuperNovaRecord mtSuperNovaRecord = null;
-    IDOMID mtDomId = null;
+    private SuperNovaRecord mtSuperNovaRecord;
+    IDOMID mtDomId;
 
     //
     // Constructor
@@ -92,7 +82,7 @@ public class SuperNovaPayload extends Payload {
      * @return MonitorRecord the contained monitor record.
      *         If this returns null then the sub-record type
      *         is not yet supported.
-     * 
+     *
      */
     public SuperNovaRecord getSuperNovaRecord() {
         return mtSuperNovaRecord;
@@ -124,8 +114,8 @@ public class SuperNovaPayload extends Payload {
             mtSuperNovaRecord.recycle();
             mtSuperNovaRecord = null;
         }
-		//-this must be LAST!!
-		super.recycle();
+        //-this must be LAST!!
+        super.recycle();
     }
     /**
      * This method de-initializes this object in preparation for reuse.
@@ -136,7 +126,7 @@ public class SuperNovaPayload extends Payload {
             mtSuperNovaRecord.dispose();
             mtSuperNovaRecord = null;
         }
-		//-call this LAST!!!
+        //-call this LAST!!!
         super.dispose();
     }
     // (end)
@@ -208,7 +198,7 @@ public class SuperNovaPayload extends Payload {
         } else {
             return 0;
         }
-    }                                                          
+    }
     /**
      * Writes out the PayloadEnvelope which is filled with the DOMID and IUTCTIME in the correct
      * position in the ByteBuffer. This method is used for constructing a SuperNovaPayload
@@ -219,7 +209,7 @@ public class SuperNovaPayload extends Payload {
      * @param lUTCTime      - long, representing the utctime that has been computed to be appropriate for this Payload.
      * @param iPayloadStartOffset - int, the offset in the passed ByteBuffer of the beginning of the Payload.
      * @param tPayloadBuffer - ByteBuffer, the buffer into which the values are to be written.
-     * 
+     *
      */
     public static void writePayloadEnvelopeAndID(int iPayloadLength, IDOMID tDomId, long lUTCTime, int iPayloadStartOffset, ByteBuffer tPayloadBuffer)  throws IOException {
         ByteOrder tSaveOrder = tPayloadBuffer.order();

@@ -9,9 +9,9 @@ import java.io.File;
  * an IPayloadDestination as a file.
  */
  public class FilePayloadDestination extends DataOutputStreamPayloadDestination {
-    private String msFilename = null;
-    private File mtFile = null;
-    private FileOutputStream mtFileOutputStream = null;
+    private String msFilename;
+    private File mtFile;
+    private FileOutputStream mtFileOutputStream;
 
     /**
      * Constructor.

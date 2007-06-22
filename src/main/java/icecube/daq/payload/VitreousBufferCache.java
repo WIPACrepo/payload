@@ -16,11 +16,11 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
     private long acquiredBytes;
     private int returnedBuffers;
     private int totalBufferCount;
-    
+
     public VitreousBufferCache()
     {
     }
-    
+
     public synchronized ByteBuffer acquireBuffer(int iLength)
     {
         acquiredBufferCount++;
@@ -66,8 +66,8 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
         return acquiredBufferCount == 0;
     }
 
-    public synchronized void returnBuffer(ByteBuffer tByteBuffer) 
-    { 
+    public synchronized void returnBuffer(ByteBuffer tByteBuffer)
+    {
         acquiredBufferCount--;
         acquiredBytes -= tByteBuffer.capacity();
         returnedBuffers++;
@@ -75,9 +75,9 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
 
     public void destinationClosed() { }
 
-    public void receiveByteBuffer(ByteBuffer tBuffer) 
-    { 
-        
+    public void receiveByteBuffer(ByteBuffer tBuffer)
+    {
+
     }
 
     public synchronized int getReturnBufferCount()

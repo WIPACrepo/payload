@@ -52,7 +52,7 @@ public class UTCTime8B extends Poolable implements IUTCTime {
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
     /**
      * Simple copy constructor to clone a time.

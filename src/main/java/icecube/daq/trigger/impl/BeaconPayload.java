@@ -41,10 +41,10 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
 
     public static final int SIZE_BEACON_PAYLOAD = PayloadEnvelope.SIZE_ENVELOPE + SIZE_SOURCE_ID + SIZE_DOM_ID;
 
-    protected boolean mb_IsPayloadLoaded = false;
+    protected boolean mb_IsPayloadLoaded;
 
-    protected ISourceID mt_sourceId = null;
-    protected IDOMID mt_domID = null;
+    protected ISourceID mt_sourceId;
+    protected IDOMID mt_domID;
 
     /**
       * Standard Constructor, enabling pooling
@@ -156,7 +156,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         int iBytesWritten = 0;
         //-Check to make sure if this is a payload that has been loaded with backing
-        if ( super.mtbuffer != null && bWriteLoaded == false) {
+        if ( super.mtbuffer != null && !bWriteLoaded) {
             iBytesWritten =  super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
             if (super.mtbuffer != null) {
@@ -196,7 +196,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[BeaconPayload]=>").indent();
         //-Check to make sure if this is a payload that has been loaded with backing
-        if ( super.mtbuffer != null && bWriteLoaded == false) {
+        if ( super.mtbuffer != null && !bWriteLoaded) {
             iBytesWritten =  super.writePayload(bWriteLoaded, tDestination);
         } else {
             if (super.mtbuffer != null) {
@@ -251,19 +251,11 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     }
 
     /**
-     * shift offset of object inside buffer (called by PayloadFactory)
-     * NOTE: This is overriden from Payload to accomodate the subpayload
-     */
-    public void shiftOffset(int shift) {
-        super.shiftOffset(shift);
-    }
-
-    /**
      * returns ID of process that is responsible for this payload
      * This is undefined at this point.
      */
     public ISourceID getSourceID() {
-        if ( mb_IsPayloadLoaded == false ) {
+        if ( !mb_IsPayloadLoaded ) {
             try {
                 //-Load the engineering payload so it can be accessed
                 loadHitPayload();
@@ -281,7 +273,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     }
 
     public IDOMID getDOMID() {
-        if ( mb_IsPayloadLoaded == false ) {
+        if ( !mb_IsPayloadLoaded ) {
             try {
                 //-Load the engineering payload so it can be accessed
                 loadHitPayload();
@@ -308,7 +300,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
      */
     public Poolable getPoolable() {
         //-for new just create a new EventPayload
-		Payload tPayload = (Payload) getFromPool();
+        Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
@@ -322,17 +314,17 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
      * recycled, ie returned to the pool.
      */
     public void recycle() {
-		//-all recycling is done here
-		if (mt_domID != null) {
-			((DOMID8B)mt_domID).recycle();
-			mt_domID = null;
-		}
-		if (mt_sourceId != null) {
-			((SourceID4B)mt_sourceId).recycle();
-			mt_sourceId = null;
-		}
-		//-this must be called LAST!! - dipsose() is eventually called by the based class Payload
-		super.recycle();
+        //-all recycling is done here
+        if (mt_domID != null) {
+            ((DOMID8B)mt_domID).recycle();
+            mt_domID = null;
+        }
+        if (mt_sourceId != null) {
+            ((SourceID4B)mt_sourceId).recycle();
+            mt_sourceId = null;
+        }
+        //-this must be called LAST!! - dipsose() is eventually called by the based class Payload
+        super.recycle();
     }
 
     /**
@@ -341,15 +333,15 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     public void dispose() {
         //-envelope is handled by AbstractTriggerPayload
         mb_IsPayloadLoaded = false;
-		if (mt_domID != null) {
-			((DOMID8B)mt_domID).dispose();
-			mt_domID = null;
-		}
-		if (mt_sourceId != null) {
-			((SourceID4B)mt_sourceId).dispose();
-			mt_sourceId = null;
-		}
-		//-this must be called LAST!! 
+        if (mt_domID != null) {
+            ((DOMID8B)mt_domID).dispose();
+            mt_domID = null;
+        }
+        if (mt_sourceId != null) {
+            ((SourceID4B)mt_sourceId).dispose();
+            mt_sourceId = null;
+        }
+        //-this must be called LAST!!
         super.dispose();
     }
 

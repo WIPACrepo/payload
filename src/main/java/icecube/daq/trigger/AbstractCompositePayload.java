@@ -23,15 +23,15 @@ import icecube.util.Poolable;
  * @author dwharton
  */
 public abstract class AbstractCompositePayload extends AbstractTriggerPayload implements ICompositePayload {
-    protected Vector mt_Payloads = null;    //-the payloads as part of the composite
+    protected Vector mt_Payloads;    //-the payloads as part of the composite
     //protected IUTCTime mt_firstTime = null;
     //protected IUTCTime mt_lastTime = null;
-    protected CompositePayloadEnvelope mt_CompositeEnvelope = null;
-    protected boolean mb_IsCompositeEnvelopeLoaded = false;
+    protected CompositePayloadEnvelope mt_CompositeEnvelope;
+    protected boolean mb_IsCompositeEnvelopeLoaded;
     protected int mi_CompositeEnvelopeOffset = -1;
     //protected PayloadFactory mt_MasterPayloadFactory = new MasterPayloadFactory();
     //-the above is too time consuming
-    protected PayloadFactory mt_MasterPayloadFactory = null;
+    protected PayloadFactory mt_MasterPayloadFactory;
     //-this is static so it does not have to be constantly instantiated
     // if this class is not used
     protected static PayloadFactory mt_DefaultMasterPayloadFactory = new MasterPayloadFactory();
@@ -96,7 +96,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
             int iCurrOffset = mioffset + mi_CompositeEnvelopeOffset + CompositePayloadEnvelope.SIZE_COMPOSITE_ENVELOPE;
             for (int ii=0; ii < mt_CompositeEnvelope.msi_numPayloads; ii++) {
                 //-this assumes that the process of createPayload() fills in the payload length..in loadSpliceablePayload()
-                if (mt_MasterPayloadFactory == null) mt_MasterPayloadFactory = mt_DefaultMasterPayloadFactory; 
+                if (mt_MasterPayloadFactory == null) mt_MasterPayloadFactory = mt_DefaultMasterPayloadFactory;
                 Payload tPayload = mt_MasterPayloadFactory.createPayload(iCurrOffset, mtbuffer);
                 mt_Payloads.set(ii, tPayload);
                 iCurrOffset += tPayload.getPayloadLength();
@@ -201,34 +201,34 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
     public void dispose() {
         //-the abstract method takes care of the disposal of the
         // composite payloads.
-		if (mt_Payloads != null) {
-			for (int ii=0; ii < mt_Payloads.size(); ii++) {
-				((Poolable) mt_Payloads.get(ii)).dispose();
-			}
-			mt_Payloads = null;
-		}
-		//-DO THIS LAST!!!
+        if (mt_Payloads != null) {
+            for (int ii=0; ii < mt_Payloads.size(); ii++) {
+                ((Poolable) mt_Payloads.get(ii)).dispose();
+            }
+            mt_Payloads = null;
+        }
+        //-DO THIS LAST!!!
         super.dispose();
     }
 
-	/**
-	 * recycle the contents.
-	 */
-	public void recycle() {
+    /**
+     * recycle the contents.
+     */
+    public void recycle() {
         //-the abstract method takes care of the disposal of the
         // composite payloads.
-		if (mt_Payloads != null) {
-			//-since these are stand-alone payloads, the calling of the recycle() method
-			// eventually takes care of the dispose, so null the reference after recycle
-			// so when the dispose() is called, this won't be redone.
-			for (int ii=0; ii < mt_Payloads.size(); ii++) {
-				((ILoadablePayload) mt_Payloads.get(ii)).recycle();
-			}
-			mt_Payloads = null;
-		}
-		//-DO THIS LAST!!!
+        if (mt_Payloads != null) {
+            //-since these are stand-alone payloads, the calling of the recycle() method
+            // eventually takes care of the dispose, so null the reference after recycle
+            // so when the dispose() is called, this won't be redone.
+            for (int ii=0; ii < mt_Payloads.size(); ii++) {
+                ((ILoadablePayload) mt_Payloads.get(ii)).recycle();
+            }
+            mt_Payloads = null;
+        }
+        //-DO THIS LAST!!!
         super.recycle();
-	}
+    }
 
     /**
      * get vector of Payload's.
@@ -246,7 +246,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
     public Poolable getPoolable() {
         //-This takes care of the parent payload factory
         AbstractCompositePayload tPayload = (AbstractCompositePayload) super.getPoolable();
-        if (mt_MasterPayloadFactory == null) mt_MasterPayloadFactory = mt_DefaultMasterPayloadFactory; 
+        if (mt_MasterPayloadFactory == null) mt_MasterPayloadFactory = mt_DefaultMasterPayloadFactory;
         //-set the master payload factory for the composite payload.
         tPayload.mt_MasterPayloadFactory = mt_MasterPayloadFactory;
         return (Poolable) tPayload;

@@ -19,7 +19,7 @@ public interface ILoadablePayload
     /**
      * Make a 'deep-copy' of the Payload so that all internally referenced
      * objects are completely new.
-     * 
+     *
      * @return Payload which is a deep copy of this Payload
      */
     Object deepCopy();

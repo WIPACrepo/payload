@@ -20,9 +20,9 @@ import icecube.util.ICopyable;
  * @author hellwig, dwharton
  */
 public interface ISourceID extends ICopyable, Comparable {
-	/**
-	 * get reference ID of source as integer 
-	 */
-	int getSourceID();
+    /**
+     * get reference ID of source as integer
+     */
+    int getSourceID();
 
 }

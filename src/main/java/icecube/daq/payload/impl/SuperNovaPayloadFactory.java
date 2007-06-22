@@ -2,8 +2,6 @@ package icecube.daq.payload.impl;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Iterator;
-import java.util.List;
 import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
@@ -11,13 +9,8 @@ import org.apache.commons.logging.LogFactory;
 
 import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.IPayload;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.impl.SuperNovaPayload;
-import icecube.daq.payload.impl.SuperNovaRecord;
-import icecube.daq.payload.splicer.Payload;
 import icecube.daq.payload.splicer.PayloadFactory;
-import icecube.daq.splicer.Spliceable;
 
 /**
  * This Factory class produces SuperNovaPayload's from
@@ -54,23 +47,21 @@ public class SuperNovaPayloadFactory extends PayloadFactory {
      * @param  iOffset - int, the offset into the reference buffer of the domhub-tcalrecord.
      * @param   tReferenceBuffer - ByteBuffer which contains the reference code
      * @param  tTCalEngine - the tcal engine to be used to create the time calibration
-     * 
+     *
      * @return ByteBuffer a new buffer created by the IByteBufferCache or null if there is a problem
-     * 
+     *
      */
     public static ByteBuffer createFormattedBufferFromDomHubRecord(
-            IByteBufferCache tCache, 
-            IDOMID tDomId, 
-            int iOffset, 
+            IByteBufferCache tCache,
+            IDOMID tDomId,
+            int iOffset,
             ByteBuffer tReferenceBuffer,
             IUTCTime tTime) throws IOException {
         //-variables
-        long lutctime  = -1L;
-        long ldomclock = -1L;
         int iBlockLength = -1;
         //-pull out the record length and dom-clock.
         try {
-            ldomclock = SuperNovaRecord.readDomClock(iOffset, tReferenceBuffer);
+            SuperNovaRecord.readDomClock(iOffset, tReferenceBuffer);
             iBlockLength = SuperNovaRecord.readBlockLength(iOffset, tReferenceBuffer);
         } catch (DataFormatException tDataFormatException) {
             mtLog.error("Error loading SuperNovaRecord header information.");
@@ -104,18 +95,18 @@ public class SuperNovaPayloadFactory extends PayloadFactory {
             //-make the actual copy
             tNewBuffer.put(tReferenceBuffer);
 
-            //-restore the position 
+            //-restore the position
             tNewBuffer.position(0);
 
             //-install the domid and UTC time in the correct place in the new buffer.
-            // This will allow the new buffer to be passed to this TimeCalibrationPayloadFactory to be created.
+            // This will allow the new buffer to be passed to this SuperNovaPayloadFactory to be created.
             SuperNovaPayload.writePayloadEnvelopeAndID( iTotalPayloadLength, tDomId, tTime.getUTCTimeAsLong() , 0, tNewBuffer);
 
             //-restore the limit and position
             tReferenceBuffer.position(iSavePosition);
             tReferenceBuffer.limit(iSaveLimit);
         } else {
-            mtLog.error("IByteBufferCache unable to provide new buffer to create TimeCalibrationPayload from domhub-tcal-record");
+            mtLog.error("IByteBufferCache unable to provide new buffer to create SuperNovaPayload from record");
         }
         return tNewBuffer;
 

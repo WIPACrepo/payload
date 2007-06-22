@@ -12,7 +12,6 @@ package icecube.daq.trigger;
 
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IDOMID;
-import icecube.daq.trigger.ITriggerPayload;
 
 /**
  * Interface of a payload describing a single hit
@@ -24,15 +23,15 @@ public interface IHitPayload extends ITriggerPayload {
     /**
      * Get Hit Time (leading edge)
      */
-    public IUTCTime getHitTimeUTC();
+    IUTCTime getHitTimeUTC();
 
     /**
      * Get Charge
      */
-    public double getIntegratedCharge();
+    double getIntegratedCharge();
 
     /**
      * Get DOM ID
      */
-    public IDOMID getDOMID();
+    IDOMID getDOMID();
 }

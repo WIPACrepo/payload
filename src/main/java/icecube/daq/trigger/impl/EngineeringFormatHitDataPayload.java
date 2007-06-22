@@ -2,27 +2,15 @@ package icecube.daq.trigger.impl;
 
 import java.io.IOException;
 import java.util.zip.DataFormatException;
-import java.nio.ByteBuffer;
 
 import icecube.util.Poolable;
 import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
-import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.payload.impl.UTCTime8B;
-import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.payload.IDOMID;
-import icecube.daq.trigger.IHitPayload;
 import icecube.daq.trigger.IHitDataRecord;
-import icecube.daq.trigger.impl.DOMID8B;
-import icecube.daq.trigger.impl.EngineeringFormatTriggerPayload;
-import icecube.daq.trigger.ITriggerPayload;
 import icecube.daq.trigger.IHitDataPayload;
-import icecube.daq.trigger.impl.EngineeringFormatHitPayload;
-import icecube.daq.splicer.Spliceable;
 
 /**
  * This object is the implementaion if IHitDataPayload which
@@ -72,30 +60,11 @@ public class EngineeringFormatHitDataPayload extends EngineeringFormatHitPayload
      */
     public Poolable getPoolable() {
         //-for new just create a new EventPayload
-		Payload tPayload = (Payload) getFromPool();
+        Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
 
-    /**
-     * Returns an instance of this object so that it can be
-     * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
-     */
-    public void recycle() {
-		//-since this class (at this level of inheritance does not need to recycle anything)
-		//-THIS MUST BE CALLED LAST!!
-		super.recycle();
-    }
-    /**
-     * Object is able to dispose of itself.
-     * This means it is able to return itself to the pool from
-     * which it came.
-     */
-    public void dispose() {
-		//-nothing to dispose at this level so move to the next level of inheritance.
-        super.dispose();
-    }
     /**
      * This method writes this payload to the PayloadDestination.
      *

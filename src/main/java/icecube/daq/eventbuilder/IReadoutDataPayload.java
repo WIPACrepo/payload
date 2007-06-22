@@ -2,7 +2,6 @@ package icecube.daq.eventbuilder;
 
 import icecube.daq.payload.ISourceID;
 import java.util.Vector;
-import icecube.daq.payload.IPayload;
 import icecube.daq.trigger.ICompositePayload;
 
 /**

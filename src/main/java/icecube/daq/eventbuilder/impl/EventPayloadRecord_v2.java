@@ -37,7 +37,7 @@ import java.io.IOException;
  */
 public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayloadRecord {
     public static final int REC_TYPE               = RecordTypeRegistry.RECORD_TYPE_EVENT_V2;
-    protected boolean mb_IsDataLoaded = false;
+    protected boolean mb_IsDataLoaded;
 
     public static final int SIZE_REC_TYPE          = 2;
     public static final int SIZE_UID               = 4;
@@ -76,14 +76,14 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
     public static final String RUN_NUMBER     = "RUN_NUMBER";
 
 
-    public short           msi_RecType        = (short) REC_TYPE;
-    public int             mi_UID             = -1;    //-unique id for this event.
-    public ISourceID       mt_sourceid        = null;  //-the source of this request.
-    public IUTCTime        mt_firstTime       = null;  //-start of the time window
-    public IUTCTime        mt_lastTime        = null;  //-end of the time window
-    public int             mi_eventType       = -1;    //-config type which produced event
-    public int             mi_eventConfigID   = -1;    //-primary key to parameters to this config type
-    public int             mi_runNumber       = -1;    //-run number for this event
+    public short           msi_RecType      = (short) REC_TYPE;
+    public int             mi_UID           = -1; //-unique id for this event.
+    public ISourceID       mt_sourceid;           //-the source of this request.
+    public IUTCTime        mt_firstTime;          //-start of the time window
+    public IUTCTime        mt_lastTime;           //-end of the time window
+    public int             mi_eventType     = -1; //-config type which produced event
+    public int             mi_eventConfigID = -1; //-primary key to parameters to this config type
+    public int             mi_runNumber     = -1; //-run number for this event
 
     /**
      * Standard Constructor.
@@ -144,19 +144,19 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
     public void recycle() {
         //-todo: keep the low level obejcts around in an uninitialized state so
         //       just have to pool the upper level object.
-		if (mt_sourceid != null) {
-			((Poolable) mt_sourceid).recycle();
-			mt_sourceid        = null;
-		}
-		if (mt_firstTime != null) {
-			((Poolable) mt_firstTime).recycle();
-			mt_firstTime       = null;
-		}
-		if (mt_lastTime != null) {
-			((Poolable) mt_lastTime).recycle();
-			mt_lastTime        = null;
-		}
-		dispose();
+        if (mt_sourceid != null) {
+            ((Poolable) mt_sourceid).recycle();
+            mt_sourceid        = null;
+        }
+        if (mt_firstTime != null) {
+            ((Poolable) mt_firstTime).recycle();
+            mt_firstTime       = null;
+        }
+        if (mt_lastTime != null) {
+            ((Poolable) mt_lastTime).recycle();
+            mt_lastTime        = null;
+        }
+        dispose();
     }
     /**
      * Determines if this record is loaded with valid data.
@@ -267,18 +267,18 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
     public void dispose() {
         //-todo: keep the low level obejcts around in an uninitialized state so
         //       just have to pool the upper level object.
-		if (mt_sourceid != null) {
-			((Poolable) mt_sourceid).dispose();
-			mt_sourceid        = null;
-		}
-		if (mt_firstTime != null) {
-			((Poolable) mt_firstTime).dispose();
-			mt_firstTime       = null;
-		}
-		if (mt_lastTime != null) {
-			((Poolable) mt_lastTime).dispose();
-			mt_lastTime        = null;
-		}
+        if (mt_sourceid != null) {
+            ((Poolable) mt_sourceid).dispose();
+            mt_sourceid        = null;
+        }
+        if (mt_firstTime != null) {
+            ((Poolable) mt_firstTime).dispose();
+            mt_firstTime       = null;
+        }
+        if (mt_lastTime != null) {
+            ((Poolable) mt_lastTime).dispose();
+            mt_lastTime        = null;
+        }
         mb_IsDataLoaded    = false;
         mi_eventType       = -1;
         mi_eventConfigID   = -1;

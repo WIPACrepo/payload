@@ -1,31 +1,16 @@
 package icecube.daq.eventbuilder.impl;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Vector;
-import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import icecube.daq.eventbuilder.IEventPayload;
-import icecube.daq.eventbuilder.IReadoutDataPayload;
-import icecube.daq.eventbuilder.impl.EventPayload_v2;
-import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.ILoadablePayload;
-import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.impl.PayloadEnvelope;
 import icecube.daq.payload.splicer.CompositePayloadFactory;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.payload.splicer.PayloadFactory;
-import icecube.daq.splicer.Spliceable;
 import icecube.daq.trigger.ITriggerRequestPayload;
-import icecube.daq.trigger.impl.TriggerRequestPayload;
-import icecube.util.Poolable;
 
 /**
  *  This Factory produces IEventPayload's from their
@@ -112,14 +97,14 @@ public class EventPayload_v2Factory  extends PayloadFactory {
             tPayload = null;
         } else {
             tPayload = (EventPayload_v2) EventPayload_v2.getFromPool();
-            tPayload.initialize(iUID, 
-                                (ISourceID) tSourceID.deepCopy(), 
-                                (IUTCTime) tFirstTimeUTC.deepCopy(), 
+            tPayload.initialize(iUID,
+                                (ISourceID) tSourceID.deepCopy(),
+                                (IUTCTime) tFirstTimeUTC.deepCopy(),
                                 (IUTCTime) tLastTimeUTC.deepCopy(),
-                                iEventType, 
-                                iEventConfigID, 
-                                iRunNumber, 
-                                tTriggerRequestCopy, 
+                                iEventType,
+                                iEventConfigID,
+                                iRunNumber,
+                                tTriggerRequestCopy,
                                 tDataPayloadsCopy);
         }
         return tPayload;

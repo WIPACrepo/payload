@@ -1,18 +1,14 @@
 package icecube.daq.payload;
 
 import java.util.zip.DataFormatException;
-import java.io.InputStream;
 import java.io.IOException;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.File;
-import java.io.EOFException;
 
 import java.nio.ByteBuffer;
-import java.nio.channels.ReadableByteChannel;
 
 import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.payload.MasterPayloadFactory;
 import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.payload.splicer.Payload;
 
@@ -26,7 +22,7 @@ public class PayloadReader {
     protected DataInputStream mtDataStream;
     protected File mtFile;
     protected FileInputStream mtFileInStream;
-    protected boolean mbIsOpen = false;
+    protected boolean mbIsOpen;
 
     public PayloadReader(String sFileName) {
         msFileName = ""+sFileName;
@@ -90,7 +86,7 @@ public class PayloadReader {
      * @throws IOException if an error reading the data has occured
      *         EOFException if an attempt is made to read past end of stream.
      */
-    public int readNextPayload(int iOffset, ByteBuffer tBuffer) throws IOException, EOFException, DataFormatException {
+    public int readNextPayload(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
         PayloadEnvelope tEnvelope = new PayloadEnvelope();
         int iStartPosition = iOffset;
         int iLimit = tBuffer.limit();
@@ -129,7 +125,7 @@ public class PayloadReader {
      * @throws IOException if an error reading the data has occured
      *         EOFException if an attempt is made to read past end of stream.
      */
-    public int readNextPayload(ByteBuffer tBuffer) throws IOException, EOFException, DataFormatException {
+    public int readNextPayload(ByteBuffer tBuffer) throws IOException, DataFormatException {
         int iStartPosition = tBuffer.position();
 
         int iBytes = readNextPayload(iStartPosition, tBuffer);
@@ -152,10 +148,9 @@ public class PayloadReader {
      *                         and should be handled as a normal condition.
      * @exception IOException, DataFormatException ... are thrown when there is an error condition.
      */
-    public Payload createNextPayload(int iOffset, ByteBuffer tBuffer) throws IOException, EOFException, DataFormatException  {
-        int iBytes = readNextPayload(iOffset, tBuffer);
-        Payload tPayload = mtPayloadFactory.createPayload(iOffset, tBuffer);
-        return tPayload;
+    public Payload createNextPayload(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException  {
+        readNextPayload(iOffset, tBuffer);
+        return mtPayloadFactory.createPayload(iOffset, tBuffer);
     }
 
 }

@@ -2,12 +2,9 @@ package icecube.daq.payload.impl;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 
-import icecube.daq.payload.IPayloadRecord;
 import icecube.daq.payload.PayloadDestination;
-import icecube.daq.payload.impl.MonitorRecord;
 import icecube.util.Poolable;
 
 /**
@@ -31,8 +28,8 @@ import icecube.util.Poolable;
     public static final int OFFSET_DOM_SLOW_CONTROL_REQUEST = MonitorRecord.OFFSET_NONHEADER_DATA;
     public static final int OFFSET_EVENT_CODE = OFFSET_DOM_SLOW_CONTROL_REQUEST + 1;
 
-    public static final String LABEL_DOM_SLOW_CONTROL_REQUEST = "DOM_SLOW_CONTROL_REQUEST"; 
-    public static final String LABEL_EVENT_CODE               = "EVENT_CODE"; 
+    public static final String LABEL_DOM_SLOW_CONTROL_REQUEST = "DOM_SLOW_CONTROL_REQUEST";
+    public static final String LABEL_EVENT_CODE               = "EVENT_CODE";
 
     /**
      * Record Data Consistent with each Record.
@@ -112,7 +109,7 @@ import icecube.util.Poolable;
      /**
       * Container Data Variables.
       */
-     public boolean mbConfigStateChangeMonitorRecordLoaded = false;
+     public boolean mbConfigStateChangeMonitorRecordLoaded;
      /**
       * General Constructor. Usable for Object Pooling
       */
@@ -134,7 +131,7 @@ import icecube.util.Poolable;
       */
      public void dispose() {
          mbConfigStateChangeMonitorRecordLoaded = false;
-		 //-CALL THIS LAST!!
+         //-CALL THIS LAST!!
          super.dispose();
      }
      /**
@@ -182,7 +179,7 @@ import icecube.util.Poolable;
       *
       * @param tDestination ......PayloadDestination to which to write the payload
       * @return int ..............the length in bytes which was writtern.
-      * 
+      *
       * NOTE: Since IPayloadRecords do not have a ByteBuffer backing they have no choice
       *       but to write from their internal values.  This is generally only used for
       *       StringFilePayloadDesitinations and the like for documentation purposes because

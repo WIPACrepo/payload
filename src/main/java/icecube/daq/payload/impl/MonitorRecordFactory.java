@@ -2,12 +2,9 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IPayloadRecordFactory;
 import icecube.daq.payload.IPayloadRecord;
-import icecube.daq.payload.impl.MonitorRecord;
-import icecube.daq.payload.impl.ASCIIMonitorRecord;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 /**
  *
@@ -19,9 +16,9 @@ import java.util.zip.DataFormatException;
  * TODO: IMplement and install record pooling.
  * @author dwharton
  */
-public class MonitorRecordFactory implements IPayloadRecordFactory {
+public final class MonitorRecordFactory implements IPayloadRecordFactory {
 
-    private static MonitorRecordFactory mt_singleton = null;
+    private static MonitorRecordFactory mt_singleton;
     /**
      * Private Constructor for use as singleton.
      */

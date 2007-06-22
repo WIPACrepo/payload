@@ -2,44 +2,25 @@ package icecube.daq.eventbuilder.impl;
 
 //-Java imports
 import java.util.Vector;
-import java.util.List;
-import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
-import java.util.Iterator;
 import java.io.IOException;
 
 //-icecube imports
-import icecube.daq.eventbuilder.IEventPayload;
 import icecube.daq.eventbuilder.IReadoutDataPayload;
 // import icecube.daq.eventbuilder.impl.EventPayloadFactory;
-import icecube.daq.eventbuilder.impl.EventPayload_v2Factory;
-import icecube.daq.eventbuilder.impl.ReadoutDataPayload;
-import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.impl.PayloadEnvelope;
 import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.payload.splicer.PayloadFactory;
-import icecube.daq.splicer.Spliceable;
 import icecube.daq.trigger.IHitPayload;
 import icecube.daq.trigger.IHitDataPayload;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
 import icecube.daq.trigger.ITriggerRequestPayload;
 import icecube.daq.trigger.impl.DOMID8B;
-import icecube.daq.trigger.impl.EngineeringFormatHitDataPayload;
-import icecube.daq.trigger.impl.EngineeringFormatHitPayload;
-import icecube.daq.trigger.impl.HitPayload;
 import icecube.daq.trigger.impl.HitPayloadFactory;
-import icecube.daq.trigger.impl.ReadoutRequestElementRecord;
-import icecube.daq.trigger.impl.ReadoutRequestPayload;
-import icecube.daq.trigger.impl.ReadoutRequestPayloadFactory;
-import icecube.daq.trigger.impl.ReadoutRequestRecord;
 import icecube.daq.trigger.impl.TriggerRequestPayload;
 import icecube.daq.trigger.impl.TriggerRequestPayloadFactory;
-import icecube.util.Poolable;
 
 
 /**
@@ -121,7 +102,7 @@ public class SimpleEventBuilder {
         tReadoutDataPayloads.add(tReadoutDataPayload);
         //-Create the IEventPayload ...
         Payload tEventPayload =  mtEventPayload_v2Factory.createPayload(
-                                iEventUID, tEventSourceID, tFirstTime, tLastTime, 
+                                iEventUID, tEventSourceID, tFirstTime, tLastTime,
                                 iEventType, iEventConfigID, iRunNumber,
                                 tTriggerRequestPayload, tReadoutDataPayloads);
         return tEventPayload;
@@ -160,7 +141,7 @@ public class SimpleEventBuilder {
         tReadoutDataPayloads.add(tReadoutDataPayload);
         //-Create the IEventPayload ...
         Payload tEventPayload =  mtEventPayload_v2Factory.createPayload(
-                                iEventUID, tEventSourceID, tFirstTime, tLastTime, 
+                                iEventUID, tEventSourceID, tFirstTime, tLastTime,
                                 iEventType, iEventConfigID, iRunNumber,
                                 tTriggerRequestPayload, tReadoutDataPayloads);
         return tEventPayload;
@@ -240,7 +221,7 @@ public class SimpleEventBuilder {
 
         //-Create the IEventPayload ...
         Payload tEventPayload =  mtEventPayload_v2Factory.createPayload(
-                                iEventUID, tEventSourceID, tFirstTime, tLastTime, 
+                                iEventUID, tEventSourceID, tFirstTime, tLastTime,
                                 iEventType, iEventConfigID, iRunNumber,
                                 tTriggerRequestPayload, tReadoutDataPayloads);
         return tEventPayload;

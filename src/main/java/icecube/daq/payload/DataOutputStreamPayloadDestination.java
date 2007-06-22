@@ -3,11 +3,7 @@ package icecube.daq.payload;
 import java.io.OutputStream;
 import java.io.IOException;
 import java.io.DataOutputStream;
-import java.io.EOFException;
 import java.nio.ByteBuffer;
-
-
-import icecube.daq.payload.PayloadDestination;
 
 /**
  * This object wrappers a DataInputStream as the source of
@@ -19,7 +15,7 @@ public class DataOutputStreamPayloadDestination extends PayloadDestination {
     /**
      * The destination of the data.
      */
-    private DataOutputStream mtPayloadDest = null;
+    private DataOutputStream mtPayloadDest;
 
     /**
      * Constructor. Initializes IPayloadSource with specific type
@@ -94,7 +90,7 @@ public class DataOutputStreamPayloadDestination extends PayloadDestination {
      * @param      b   the data.
      * @exception  IOException  if an I/O error occurs.
      */
-    public void write(byte b[]) throws IOException {
+    public void write(byte[] b) throws IOException {
         mtPayloadDest.write(b);
     }
     /**
@@ -138,7 +134,7 @@ public class DataOutputStreamPayloadDestination extends PayloadDestination {
      * @param      len   the number of bytes to write.
      * @exception  IOException  if an I/O error occurs.
      */
-    public void write(byte b[], int off, int len) throws IOException {
+    public void write(byte[] b, int off, int len) throws IOException {
         mtPayloadDest.write(b, off, len);
     }
     /**
@@ -454,16 +450,12 @@ public class DataOutputStreamPayloadDestination extends PayloadDestination {
         return iRemaining;
     }
     /**
-     * Tells whether or not this channel is open.  </p>
+     * Tells whether or not this channel is open.
      *
      * @return <tt>true</tt> if, and only if, this channel is open
      */
     public boolean isOpen() {
-        if (mtPayloadDest != null) {
-            return true;
-        } else {
-            return false;
-        }
+        return mtPayloadDest != null;
     }
     // (end)
     //-writeablechannel implementation

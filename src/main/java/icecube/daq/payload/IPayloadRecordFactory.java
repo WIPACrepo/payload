@@ -1,11 +1,9 @@
 package icecube.daq.payload;
 
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 import java.io.IOException;
 
-import icecube.daq.payload.IPayloadRecord;
 /**
  * Objects which implement this interface are able to construct IPayloadRecords
  * from a given source (ByteBuffer).
@@ -23,12 +21,12 @@ public interface IPayloadRecordFactory {
      * @exception DataFormatException if the record is not of the correct format.
      *
      */
-    public IPayloadRecord createPayloadRecord(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException;
+    IPayloadRecord createPayloadRecord(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException;
 
     /**
      * This record returns the payload record to the record source (or pool)
      * so it can be reused.
      * @param tRecord ....IPayloadRecord the record to be reused, or disposed.
      */
-    public void returnPayloadRecord(IPayloadRecord tRecord);
+    void returnPayloadRecord(IPayloadRecord tRecord);
 }

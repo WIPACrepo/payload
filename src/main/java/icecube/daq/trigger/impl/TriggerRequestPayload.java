@@ -17,17 +17,16 @@ import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.AbstractCompositePayload;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.ITriggerRequestPayload;
-import icecube.daq.trigger.impl.TriggerRequestRecord;
 import icecube.util.Poolable;
 
 /**
  * This payload object represents a Trigger which is produced by either
  * the InIce or IceTop triggers in response to the ITriggerPayload's
- * recieved from the StringProcessor(s) or IceTopDataHandler(s).
+ * received from the StringProcessor(s) or IceTopDataHandler(s).
  * OR
  * --
  * A Trigger produced by the collation/merging/grokking of the GlobalTrigger
- * from the TriggerRequestPayload's recieved from InIceTrigger or the
+ * from the TriggerRequestPayload's received from InIceTrigger or the
  * IceTopTrigger.
  *
  * In the former case, the Global Trigger will analyze these to construct
@@ -44,7 +43,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
     //-CompositePayloadEnvelope starts right after the end of the TriggerRequestRecord.
 
     protected int mi_UID = -1;  //-uid for this specific request.
-    protected TriggerRequestRecord mt_triggerRequestRecord = null;
+    protected TriggerRequestRecord mt_triggerRequestRecord;
 
     protected int mi_sizeTriggerRequestRecord = -1;
 
@@ -226,7 +225,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
      */
     public Poolable getPoolable() {
         //-for new just create a new EventPayload
-		Payload tPayload = (Payload) getFromPool();
+        Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
@@ -237,13 +236,13 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		//-null objects which have been recycle'd so they don't
-		// have to be explicitly disposed.
+        //-null objects which have been recycle'd so they don't
+        // have to be explicitly disposed.
         if (mt_triggerRequestRecord != null) {
             mt_triggerRequestRecord.recycle();
-			mt_triggerRequestRecord = null;
+            mt_triggerRequestRecord = null;
         }
-		//-THIS MUST BE CALLED LAST!!
+        //-THIS MUST BE CALLED LAST!!
         super.recycle();
     }
 
@@ -296,11 +295,11 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
     public void dispose() {
         if (mt_triggerRequestRecord != null) {
             mt_triggerRequestRecord.dispose();
-			mt_triggerRequestRecord = null;
+            mt_triggerRequestRecord = null;
         }
         mi_UID = -1;  //-uid for this specific request.
         mi_sizeTriggerRequestRecord = -1;
-		//-THIS MUST BE CALLED LAST!!
+        //-THIS MUST BE CALLED LAST!!
         super.dispose();
     }
 
@@ -319,7 +318,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         int iBytesWritten = 0;
         //-If backing then use it..
-        if (mtbuffer != null && bWriteLoaded == false) {
+        if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten =  super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
@@ -360,7 +359,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[TriggerRequestPayload(bWriteLoaded="+bWriteLoaded+")]=>").indent();
         //-If backing then use it..
-        if (mtbuffer != null && bWriteLoaded == false) {
+        if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten = super.writePayload(bWriteLoaded, tDestination);
         } else {

@@ -10,7 +10,6 @@
 
 package icecube.daq.trigger;
 
-import icecube.daq.payload.splicer.Payload;
 import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IPayload;
 import icecube.daq.payload.PayloadInterfaceRegistry;
@@ -22,9 +21,6 @@ import java.util.LinkedList;
 import java.util.zip.DataFormatException;
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * This class ...does what?
  *
@@ -33,12 +29,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class PayloadUtil
 {
-
-    /**
-     * Logging obect.
-     */
-    private static final Log log = LogFactory.getLog(PayloadUtil.class);
-
     /**
      * Get the top-level payloads of a composite payload.
      * @param payload an ICompositePayload

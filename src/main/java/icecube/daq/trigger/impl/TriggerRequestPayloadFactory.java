@@ -2,29 +2,17 @@ package icecube.daq.trigger.impl;
 
 
 
-import icecube.util.Poolable;
-import icecube.daq.splicer.Spliceable;
-import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.payload.splicer.CompositePayloadFactory;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.payload.IPayload;
 import icecube.daq.trigger.IReadoutRequestElement;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.ITriggerRequestPayload;
-import icecube.daq.trigger.impl.TriggerRequestPayload;
-import icecube.daq.trigger.impl.ReadoutRequestPayloadFactory;
-import icecube.daq.trigger.impl.ReadoutRequestRecord;
-import icecube.daq.trigger.impl.ReadoutRequestElementRecord;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IDOMID;
 
 import java.util.Vector;
-import java.util.List;
-import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
-import java.util.Iterator;
 import java.io.IOException;
 
 /**
@@ -72,16 +60,15 @@ public class TriggerRequestPayloadFactory extends CompositePayloadFactory {
             IReadoutRequest tRequest
     ) {
         TriggerRequestPayload tTriggerRequestPayload = null;
-        boolean bDeepCopyOk = false;
         Vector tPayloadsCopy = null;
         tPayloadsCopy = CompositePayloadFactory.deepCopyPayloadVector(tPayloads);
         if (tPayloadsCopy != null) {
             tTriggerRequestPayload = (TriggerRequestPayload) mt_PoolablePayloadFactory.getPoolable();
-            tTriggerRequestPayload.initialize( iUID, iTriggerType, iTriggerConfigID, 
-                                               (ISourceID) tRequestorSourceID.deepCopy(), 
-                                               (IUTCTime) tFirstTimeUTC.deepCopy(), 
-                                               (IUTCTime) tLastTimeUTC.deepCopy(), 
-                                               tPayloadsCopy, 
+            tTriggerRequestPayload.initialize( iUID, iTriggerType, iTriggerConfigID,
+                                               (ISourceID) tRequestorSourceID.deepCopy(),
+                                               (IUTCTime) tFirstTimeUTC.deepCopy(),
+                                               (IUTCTime) tLastTimeUTC.deepCopy(),
+                                               tPayloadsCopy,
                                                tRequest);
         }
         return tTriggerRequestPayload;

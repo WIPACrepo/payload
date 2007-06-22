@@ -2,24 +2,15 @@ package icecube.daq.trigger.impl;
 
 import java.io.IOException;
 import java.util.zip.DataFormatException;
-import java.nio.ByteBuffer;
 
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
-import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.payload.impl.UTCTime8B;
-import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.splicer.Spliceable;
 import icecube.daq.trigger.IHitPayload;
 import icecube.daq.payload.IDOMID;
-import icecube.daq.trigger.impl.DOMID8B;
-import icecube.daq.trigger.impl.DOMID8B;
-import icecube.daq.trigger.impl.EngineeringFormatTriggerPayload;
-import icecube.daq.trigger.ITriggerPayload;
 import icecube.util.Poolable;
 
 /**
@@ -29,7 +20,7 @@ import icecube.util.Poolable;
  * @author dwharton
  */
 public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload implements IHitPayload {
-    protected DOMID8B mt_DomID = null;
+    protected DOMID8B mt_DomID;
     /**
      * Standard Constructor, enabling pooling
      */
@@ -54,7 +45,7 @@ public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload
      */
     public Poolable getPoolable() {
         //-for new just create a new EventPayload
-		Payload tPayload = (Payload) getFromPool();
+        Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
@@ -137,7 +128,7 @@ public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload
             mt_DomID.dispose();
             mt_DomID = null;
         }
-		//-CALL THIS LAST!!
+        //-CALL THIS LAST!!
         super.dispose();
     }
     /**

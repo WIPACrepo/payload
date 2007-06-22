@@ -22,13 +22,13 @@ public interface IHitDataRecord {
      * that the object which is returned can be formatted/interpreted correctly.
      * @return int ... the type of record, as identified by the RecordRegistry
      */
-    public int getRecordType();
+    int getRecordType();
 
     /**
      * Returns the particular version of this record type.
      * @return int ... the version of this record type.
      */
-    public int getVersion();
+    int getVersion();
 
 
     /**
@@ -36,5 +36,5 @@ public interface IHitDataRecord {
      *
      * @return Object ... the record which contains the Hit data, which is interpretted by the above id's
      */
-    public Object getRecord();
+    Object getRecord();
 }

@@ -1,21 +1,17 @@
 package icecube.daq.payload.splicer;
 
-import java.io.IOException;
 import java.util.Vector;
-import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import icecube.daq.payload.ILoadablePayload;
 
-import icecube.daq.payload.splicer.PayloadFactory;
-
 /**
  * This Object extends PayloadFactory to the extent that
  * it contains the MasterPayloadFactory which is used for
  * instantiating the sub-payloads.
- * 
+ *
  * @author dwharton
  */
 public class CompositePayloadFactory extends PayloadFactory {
@@ -27,7 +23,7 @@ public class CompositePayloadFactory extends PayloadFactory {
      * which are created so that they have the appropriate MasterPayloadFactory
      * with which to create
      */
-    protected PayloadFactory mtMasterCompositePayloadFactory = null;
+    protected PayloadFactory mtMasterCompositePayloadFactory;
 
     /**
      * This method gets the internal PayloadFactory which is used to construct

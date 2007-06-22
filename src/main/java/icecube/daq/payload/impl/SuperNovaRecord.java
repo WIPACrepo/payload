@@ -14,35 +14,35 @@ import icecube.daq.payload.PayloadDestination;
  * This Object is used as a repository of information
  * for a single record of a variable number of SuperNova
  * scalers from a single DOM at a specific time.
- * 
+ *
  * Note: This object has the ability to read and load
  *       raw information from the record as written by
  *       the dom/domhub-mux'd fromat.
  * Formatting Information is taken from:<br>
  *<br>
- *       Domapp API    
- *       John Jacobsen 
+ *       Domapp API
+ *       John Jacobsen
  *       Last revision 11/23/2005
- *       $Id: SuperNovaRecord.java,v 1.4 2006/08/06 01:32:41 dwharton Exp $ 
+ *       $Id: SuperNovaRecord.java,v 1.4 2006/08/06 01:32:41 dwharton Exp $
  *<br>
- * 
+ *
  * US = (unsigned short)
  * UB = (unsigned byte)
  * Format of Record Data
- * 
- * Header                                
+ *
+ * Header
  *   2 US (Big-endian unsigned short) block length
  *   2 US (Big-endian unsigned short) format ID (300 decimal, 0x012C)
  *   6 UB*6  complete time stamp of time slice 0
- *        
+ *
  * Scaler Data
  *   1 UB trigger count for time slice 0
  *   1 UB trigger count for time slice 1
- *     ...                                   
- *     ...                                   
- *   1 UB trigger count for time slice N-1                                   
- *           
- * 
+ *     ...
+ *     ...
+ *   1 UB trigger count for time slice N-1
+ *
+ *
  */
 public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
 
@@ -78,8 +78,8 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
     public int miFormatId;
     public long  mlDomClock; // lower order 48 bits are used here
     public byte[] mabDomClock = new byte[SIZE_DOMCLOCK];
-    public byte[] mabScalarData = null;
-    public boolean mbLoaded = false;
+    public byte[] mabScalarData;
+    public boolean mbLoaded;
 
     /**
      * Determines if this record is loaded with valid data.
@@ -213,14 +213,14 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
     /**
      * This method writes this IPayloadRecord to the PayloadDestination.
      *
      * @param tDestination ......PayloadDestination to which to write the payload
      * @return int ..............the length in bytes which was writtern.
-     * 
+     *
      * NOTE: Since IPayloadRecords do not have a ByteBuffer backing they have no choice
      *       but to write from their internal values.  This is generally only used for
      *       StringFilePayloadDesitinations and the like for documentation purposes because

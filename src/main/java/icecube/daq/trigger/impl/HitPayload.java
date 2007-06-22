@@ -16,15 +16,11 @@ import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.util.Poolable;
 import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.splicer.Spliceable;
-import icecube.daq.trigger.ITriggerPayload;
 import icecube.daq.trigger.IHitPayload;
 import icecube.daq.trigger.IHitDataPayload;
 import icecube.daq.trigger.AbstractTriggerPayload;
-import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 
 
 import org.apache.commons.logging.Log;
@@ -63,13 +59,13 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     public static final int SIZE_HIT_PAYLOAD = PayloadEnvelope.SIZE_ENVELOPE + SIZE_TRIGGER_TYPE +
                                                SIZE_TRIGGER_CONFIG_ID + SIZE_SOURCE_ID + SIZE_DOM_ID + SIZE_TRIGGER_MODE;
 
-    protected boolean mb_IsHitPayloadLoaded = false;
+    protected boolean mb_IsHitPayloadLoaded;
 
     protected int mi_TriggerConfigID = -1;
     protected int mi_TriggerType     = -1;
 
-    protected ISourceID mt_sourceId = null;
-    protected IDOMID mt_domID = null;
+    protected ISourceID mt_sourceId;
+    protected IDOMID mt_domID;
     protected short msi_TriggerMode = -1;   //-from the Engineering Record
     /**
       * Standard Constructor, enabling pooling
@@ -168,7 +164,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         int iBytesWritten = 0;
         //-Check to make sure if this is a payload that has been loaded with backing
-        if ( super.mtbuffer != null && bWriteLoaded == false) {
+        if ( super.mtbuffer != null && !bWriteLoaded) {
             iBytesWritten =  super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
             if (super.mtbuffer != null) {
@@ -211,7 +207,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[HitPayload]=>").indent();
         //-Check to make sure if this is a payload that has been loaded with backing
-        if ( super.mtbuffer != null && bWriteLoaded == false) {
+        if ( super.mtbuffer != null && !bWriteLoaded) {
             iBytesWritten =  super.writePayload(bWriteLoaded, tDestination);
         } else {
             if (super.mtbuffer != null) {
@@ -272,18 +268,10 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     }
 
     /**
-     * shift offset of object inside buffer (called by PayloadFactory)
-     * NOTE: This is overriden from Payload to accomodate the subpayload
-     */
-    public void shiftOffset(int shift) {
-        super.shiftOffset(shift);
-    }
-
-    /**
      * `returns ID of trigger
      */
     public int getTriggerConfigID() {
-        if ( mb_IsHitPayloadLoaded == false ) {
+        if ( !mb_IsHitPayloadLoaded ) {
             try {
                 //-Load the engineering payload so it can be accessed
                 loadHitPayload();
@@ -301,7 +289,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      * returns type of trigger based on the trigger mode in the underlying hit
      */
     public int getTriggerType() {
-        if ( mb_IsHitPayloadLoaded == false ) {
+        if ( !mb_IsHitPayloadLoaded ) {
             try {
                 //-Load the engineering payload so it can be accessed
                 loadHitPayload();
@@ -322,7 +310,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      * This is undefined at this point.
      */
     public ISourceID getSourceID() {
-        if ( mb_IsHitPayloadLoaded == false ) {
+        if ( !mb_IsHitPayloadLoaded ) {
             try {
                 //-Load the engineering payload so it can be accessed
                 loadHitPayload();
@@ -341,7 +329,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      * Get DOM ID
      */
     public IDOMID getDOMID() {
-        if ( mb_IsHitPayloadLoaded == false ) {
+        if ( !mb_IsHitPayloadLoaded ) {
             try {
                 //-Load the engineering payload so it can be accessed
                 loadHitPayload();
@@ -371,7 +359,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      */
     public Poolable getPoolable() {
         //-for new just create a new EventPayload
-		Payload tPayload = (Payload) getFromPool();
+        Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
@@ -385,17 +373,17 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      * recycled, ie returned to the pool.
      */
     public void recycle() {
-		//-all recycling is done here
-		if (mt_domID != null) {
-			((Poolable)mt_domID).recycle();
-			mt_domID = null;
-		}
-		if (mt_sourceId != null) {
-			((Poolable)mt_sourceId).recycle();
-			mt_sourceId = null;
-		}
-		//-this must be called LAST!! - dipsose() is eventually called by the based class Payload
-		super.recycle();
+        //-all recycling is done here
+        if (mt_domID != null) {
+            ((Poolable)mt_domID).recycle();
+            mt_domID = null;
+        }
+        if (mt_sourceId != null) {
+            ((Poolable)mt_sourceId).recycle();
+            mt_sourceId = null;
+        }
+        //-this must be called LAST!! - dipsose() is eventually called by the based class Payload
+        super.recycle();
     }
 
     /**
@@ -405,15 +393,15 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
         //-envelope is handled by AbstractTriggerPayload
         mb_IsHitPayloadLoaded = false;
         msi_TriggerMode = -1;
-		if (mt_domID != null) {
-			((DOMID8B)mt_domID).dispose();
-			mt_domID = null;
-		}
-		if (mt_sourceId != null) {
-			((SourceID4B)mt_sourceId).dispose();
-			mt_sourceId = null;
-		}
-		//-this must be called LAST!! 
+        if (mt_domID != null) {
+            ((DOMID8B)mt_domID).dispose();
+            mt_domID = null;
+        }
+        if (mt_sourceId != null) {
+            ((SourceID4B)mt_sourceId).dispose();
+            mt_sourceId = null;
+        }
+        //-this must be called LAST!!
         super.dispose();
     }
 

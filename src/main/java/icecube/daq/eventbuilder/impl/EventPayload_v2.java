@@ -27,7 +27,7 @@ import icecube.daq.payload.ILoadablePayload;
  *       online team. (1) Run-Number, (2) event-type (like trigger type), (3) event-config-id
  *
  * This payload object represents a Event which is produced by when
- * the EventBuilder recieves an ITriggerRequest from the GlobalTrigger.
+ * the EventBuilder receives an ITriggerRequest from the GlobalTrigger.
  * The EventBuilder then sends the appropriate IReadoutRequestPayload's
  * to the StringProcessors and IceTopDataHandlers to full the request
  * for data.  Then, in turn, the StringProcessor's and IceTopDataHandlers
@@ -54,7 +54,7 @@ public class EventPayload_v2 extends AbstractCompositePayload implements IEventP
     //-CompositePayloadEnvelope starts right after the end of the EventPayloadRecord.
     public static final int OFFSET_COMPOSITE_START = OFFSET_EVENT_RECORD + EventPayloadRecord_v2.SIZE_TOTAL;
 
-    protected EventPayloadRecord_v2  mt_eventRecord           = null;
+    protected EventPayloadRecord_v2  mt_eventRecord;
 
 
     /**
@@ -304,7 +304,7 @@ public class EventPayload_v2 extends AbstractCompositePayload implements IEventP
      */
     public Poolable getPoolable() {
         //-for new just create a new EventPayload
-		Payload tPayload = (Payload) getFromPool();
+        Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
@@ -316,10 +316,10 @@ public class EventPayload_v2 extends AbstractCompositePayload implements IEventP
     public void recycle() {
         if (mt_eventRecord != null) {
             mt_eventRecord.recycle();
-			mt_eventRecord = null;
+            mt_eventRecord = null;
         }
-		//-LET the Base Class call dipose()!
-		//-ALWAYS call this LAST...
+        //-LET the Base Class call dipose()!
+        //-ALWAYS call this LAST...
         super.recycle();
     }
     //
@@ -361,9 +361,9 @@ public class EventPayload_v2 extends AbstractCompositePayload implements IEventP
         // composite payloads.
         if (mt_eventRecord != null) {
             mt_eventRecord.dispose();
-			mt_eventRecord = null;
+            mt_eventRecord = null;
         }
-		//-MAKE SURE TO CALL THIS LAST!
+        //-MAKE SURE TO CALL THIS LAST!
         super.dispose();
     }
 
@@ -382,7 +382,7 @@ public class EventPayload_v2 extends AbstractCompositePayload implements IEventP
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         int iBytesWritten = 0;
         //-If backing then use it..
-        if (mtbuffer != null && bWriteLoaded == false) {
+        if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten =  super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
@@ -423,7 +423,7 @@ public class EventPayload_v2 extends AbstractCompositePayload implements IEventP
         if (tDestination.doLabel()) tDestination.label("[EventPayload_v2]=>").indent();
         int iBytesWritten = 0;
         //-If backing then use it..
-        if (mtbuffer != null && bWriteLoaded == false) {
+        if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten = super.writePayload(bWriteLoaded,tDestination);
         } else {

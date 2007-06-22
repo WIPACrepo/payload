@@ -1,15 +1,7 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.splicer.Spliceable;
-
-import java.util.Iterator;
-
 import icecube.daq.payload.splicer.PayloadFactory;
-import icecube.daq.payload.splicer.Payload;
-import icecube.daq.payload.IPayload;
-import icecube.daq.payload.impl.DomHitDeltaCompressedFormatPayload;
 
-import java.util.List;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 import java.io.IOException;

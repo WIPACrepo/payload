@@ -11,6 +11,6 @@ package icecube.daq.payload;
  */
 public interface PayloadConstants {
 
-    public static final int DEFAULT_MAX_BUFFERS = 1000;
-    public static final int DEFAULT_BUFFER_BLEN = 32000;
+    int DEFAULT_MAX_BUFFERS = 1000;
+    int DEFAULT_BUFFER_BLEN = 32000;
 }

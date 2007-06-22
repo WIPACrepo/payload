@@ -1,27 +1,11 @@
 package icecube.daq.eventbuilder.impl;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Vector;
-import java.util.zip.DataFormatException;
 
-import icecube.daq.eventbuilder.IReadoutDataPayload;
-import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.impl.PayloadEnvelope;
 import icecube.daq.payload.splicer.CompositePayloadFactory;
-import icecube.daq.payload.splicer.Payload;
-import icecube.daq.payload.splicer.PayloadFactory;
-import icecube.daq.splicer.Spliceable;
-import icecube.util.Poolable;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 
 /**
  *  This Factory produces IReadoutRequestPayload's from their
@@ -30,11 +14,6 @@ import org.apache.commons.logging.LogFactory;
  *  @author dwharton
  */
 public class ReadoutDataPayloadFactory extends CompositePayloadFactory {
-
-    /**
-     * Log object for this class
-     */
-    private static final Log mtLog = LogFactory.getLog(ReadoutDataPayloadFactory.class);
 
     /**
      * Standard Constructor.
@@ -67,7 +46,7 @@ public class ReadoutDataPayloadFactory extends CompositePayloadFactory {
     ) {
         ReadoutDataPayload tPayload = null;
         boolean bDeepCopyOk = true;
-        Vector tDataPayloadsCopy =  null; 
+        Vector tDataPayloadsCopy =  null;
         //-make deep copy of input Payloads
         if (tDataPayloads != null) {
             tDataPayloadsCopy = CompositePayloadFactory.deepCopyPayloadVector(tDataPayloads);
@@ -79,12 +58,12 @@ public class ReadoutDataPayloadFactory extends CompositePayloadFactory {
         if (bDeepCopyOk) {
             tPayload = (ReadoutDataPayload) ReadoutDataPayload.getFromPool();
             tPayload.initialize(
-                iUID, 
-                iPayloadNum, 
-                bPayloadLast, 
-                (ISourceID) tSourceID.deepCopy(), 
-                (IUTCTime) tFirstTimeUTC.deepCopy(), 
-                (IUTCTime) tLastTimeUTC.deepCopy(), 
+                iUID,
+                iPayloadNum,
+                bPayloadLast,
+                (ISourceID) tSourceID.deepCopy(),
+                (IUTCTime) tFirstTimeUTC.deepCopy(),
+                (IUTCTime) tLastTimeUTC.deepCopy(),
                 tDataPayloadsCopy);
         }
         return tPayload;

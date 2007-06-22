@@ -6,7 +6,7 @@ package icecube.daq.payload;
  * associated with the Payload Record types and their human readable names
  *
  * @author dwharton
- * 
+ *
  * ====================================================================
  */
 public final class RecordTypeRegistry {

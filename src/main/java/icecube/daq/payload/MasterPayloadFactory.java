@@ -4,12 +4,7 @@ import icecube.daq.payload.impl.PayloadEnvelope;
 import icecube.daq.splicer.Spliceable;
 import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.payload.IPayload;
-import icecube.daq.payload.IByteBufferCache;
-import icecube.daq.payload.splicer.CompositePayloadFactory;
 
-import java.util.Iterator;
-import java.util.List;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 import java.io.IOException;
@@ -24,37 +19,37 @@ import java.io.IOException;
  * @author dwharton
  */
 public class MasterPayloadFactory extends PayloadFactory {
-    private boolean mbCreateSeperateBuffers = false;
+    private boolean mbCreateSeperateBuffers;
 
-	private PayloadRegistry mtPayloadRegistry = null;
+    private PayloadRegistry mtPayloadRegistry;
 
     /**
      * Standard constructor.
      */
     public MasterPayloadFactory() {
-		mtPayloadRegistry = new PayloadRegistry();
+        mtPayloadRegistry = new PayloadRegistry();
     }
 
-	/**
-	 * Constructor which uses an installable IByteBufferCache
-	 * @param tByteBufferCache IByteBufferCache which will serve as the recycling destination
-	 *                            for the ByteBuffer's which are used as the basis of the Payloads
-	 *                            which are created by the individual PayloadFactories managed by this
-	 *                            factory.
-	 */
-	public MasterPayloadFactory(IByteBufferCache tByteBufferCache) {
-		super.mtByteBufferCache =  tByteBufferCache;
-		mtPayloadRegistry = new PayloadRegistry(tByteBufferCache, this);
-	}
+    /**
+     * Constructor which uses an installable IByteBufferCache
+     * @param tByteBufferCache IByteBufferCache which will serve as the recycling destination
+     *                            for the ByteBuffer's which are used as the basis of the Payloads
+     *                            which are created by the individual PayloadFactories managed by this
+     *                            factory.
+     */
+    public MasterPayloadFactory(IByteBufferCache tByteBufferCache) {
+        super.mtByteBufferCache =  tByteBufferCache;
+        mtPayloadRegistry = new PayloadRegistry(tByteBufferCache, this);
+    }
 
     /**
      *  Get's a PayloadFactory from the installed registry of the following types.
      *  PayloadRegistry.
-     * 
+     *
      * @see icecube.daq.payload.PayloadRegistry
      */
     public PayloadFactory getPayloadFactory(int iType) {
-        if (mtPayloadRegistry != null) 
+        if (mtPayloadRegistry != null)
             return mtPayloadRegistry.getPayloadFactory(iType);
         else
             return null;
@@ -132,7 +127,7 @@ public class MasterPayloadFactory extends PayloadFactory {
      *         a new ByteBuffer.
      *      2) If there is no IByteBufferCache installed then a ByteBuffer will be
      *         allocated normally outside of any caching system.
-     * 
+     *
      *  @return IPayload ...the Payload object specific to this class which is
      *                     specific to the class which is derived from PayloadFactory.
      */
@@ -199,8 +194,8 @@ public class MasterPayloadFactory extends PayloadFactory {
      */
     public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws IOException,DataFormatException {
         PayloadEnvelope tEnvelope = readPayloadEnvelope(iOffset, tBuffer);
-		int iLength = tEnvelope.miPayloadLen;
+        int iLength = tEnvelope.miPayloadLen;
         tEnvelope.recycle();
-		return iLength;
+        return iLength;
     }
 }

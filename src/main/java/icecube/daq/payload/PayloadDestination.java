@@ -14,7 +14,7 @@ import java.io.IOException;
  *  NOTE: removed WriteableByteChannel implementation because of conflicting polymorphism with return types
  */
 public abstract class PayloadDestination extends DataOutputAdapter implements IPayloadDestination {
-    protected boolean mb_doLabel = false;
+    protected boolean mb_doLabel;
 
     /**
      * This methods proxies the call to write Payload to allow the whole
@@ -124,7 +124,7 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
         return -1;
     }
     /**
-     * Tells whether or not this channel is open.  </p>
+     * Tells whether or not this channel is open.
      *
      * @return <tt>true</tt> if, and only if, this channel is open
      */
@@ -266,14 +266,14 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      * <code>b[0]</code> is written first, then
      * <code>b[1]</code>, and so on; the last byte
      * written is <code>b[b.length-1]</code>.
-     * 
+     *
      * @param      sName String the label
      * @param      sSpecial ... any special interpretation of this
      *                      data
      * @param      b   the data.
      * @exception  IOException  if an I/O error occurs.
      */
-    public void write(String sName, String sSpecial, byte b[]) throws IOException {
+    public void write(String sName, String sSpecial, byte[] b) throws IOException {
         write(b);
     }
     /**
@@ -290,7 +290,7 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      * @param      b   the data.
      * @exception  IOException  if an I/O error occurs.
      */
-    public void write(String sName, byte b[]) throws IOException {
+    public void write(String sName, byte[] b) throws IOException {
         write(b);
     }
     /**
@@ -334,7 +334,7 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      * @param      len   the number of bytes to write.
      * @exception  IOException  if an I/O error occurs.
      */
-    public void write(String sName, byte b[], int off, int len) throws IOException {
+    public void write(String sName, byte[] b, int off, int len) throws IOException {
         write(b, off, len);
     }
     /**

@@ -21,45 +21,45 @@ import icecube.daq.payload.ISourceID;
  * @author hellwig, dwharton
  */
 public abstract class TriggerPayload
-	extends Payload implements ITriggerPayload
+    extends Payload implements ITriggerPayload
 {
-	/** 
-	 * type of trigger 
-	 */
-	private int miTriggerType;
+    /**
+     * type of trigger
+     */
+    private int miTriggerType;
 
-	/**
-	 * ID of trigger
-	 */
-	private int miTriggerID;
-		 	
-	/**
-	 * ID of Source
-	 */
-	private ISourceID mtSourceID;
+    /**
+     * ID of trigger
+     */
+    private int miTriggerID;
 
-	/**
-	 * returns type of trigger
-	 */
-	public int getTriggerType()
-	{
-		return miTriggerType;
-	}
-	
-	/**
-	 * returns ID of trigger
-	 */
-	public int getTriggerConfigID()
-	{
-		return miTriggerID;
-	}
-	
-	/**
-	 * returns ID of process that is responsible for this payload
-	 */
-	public ISourceID getSourceID()
-	{
-		return mtSourceID;
-	}
+    /**
+     * ID of Source
+     */
+    private ISourceID mtSourceID;
+
+    /**
+     * returns type of trigger
+     */
+    public int getTriggerType()
+    {
+        return miTriggerType;
+    }
+
+    /**
+     * returns ID of trigger
+     */
+    public int getTriggerConfigID()
+    {
+        return miTriggerID;
+    }
+
+    /**
+     * returns ID of process that is responsible for this payload
+     */
+    public ISourceID getSourceID()
+    {
+        return mtSourceID;
+    }
 
 }

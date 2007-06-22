@@ -56,8 +56,8 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     /**
      * boolean indicating if data has been successfully loaded into this 'container'
      */
-    public boolean mbLoaded = false;
-    public boolean mbDomClockLoaded = false;
+    public boolean mbLoaded;
+    public boolean mbDomClockLoaded;
 
     //.
     //--EngineeringFormatPayload container variables (start)
@@ -124,7 +124,7 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
      * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
 
 
@@ -207,12 +207,12 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
                     for (int ii = 0; ii < mtaAtwdFormat[ch].numSamples(); ii++) {
                         maiATWD[ch][ii] = tBuffer.getShort(iATWDSamplesPosition + (ii * 2));
                     }
-					iATWDSamplesPosition += mtaAtwdFormat[ch].numSamples() * 2; 
+                    iATWDSamplesPosition += mtaAtwdFormat[ch].numSamples() * 2;
                 } else {
                     for (int ii = 0; ii < mtaAtwdFormat[ch].numSamples(); ii++) {
                         maiATWD[ch][ii] = tBuffer.get( iATWDSamplesPosition + ii );
                     }
-					iATWDSamplesPosition += mtaAtwdFormat[ch].numSamples(); 
+                    iATWDSamplesPosition += mtaAtwdFormat[ch].numSamples();
                 }
             }
         }
@@ -346,10 +346,8 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
         //-Determine the ByteOrder of this record by the formatid which should always
         // be read out as '1' if the correct ording has been used.
         ByteOrder tSaveOrder = tBuffer.order();
-        //-NOTE: The byte order is set by this call
-        ByteOrder tReadOrder = tSaveOrder;
         try {
-            tReadOrder = DomHitEngineeringFormatRecord.getCorrectByteOrder(iRecordOffset, tBuffer);
+            getCorrectByteOrder(iRecordOffset, tBuffer);
         } catch (DataFormatException tException) {
             throw new IOException("DataFormatException caught in reading ByteOrder");
         }
@@ -502,7 +500,7 @@ class ATWDFormat {
 
     public boolean mbShortWords;
     int miWsel;
-    static int maiStab[] = { 0, 32, 64, 16, 128 };
+    static int[] maiStab = { 0, 32, 64, 16, 128 };
 
     /**
      * initial creation of object format
