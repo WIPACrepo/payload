@@ -19,6 +19,9 @@ import icecube.daq.trigger.AbstractCompositePayload;
 import icecube.daq.trigger.impl.CompositePayloadEnvelope;
 import icecube.util.Poolable;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This Object is an implementation of IReadoutDataPayload and
  * corresponds to the content which is requested by an IReadoutRequest
@@ -28,16 +31,26 @@ import icecube.util.Poolable;
  */
 public class ReadoutDataPayload extends AbstractCompositePayload implements IReadoutDataPayload, IWriteablePayload {
 
+    private static final Log mtLog =
+        LogFactory.getLog(ReadoutDataPayload.class);
+
     public static final int OFFSET_READOUT_DATA_RECORD = OFFSET_PAYLOAD_ENVELOPE + PayloadEnvelope.SIZE_ENVELOPE;
 
     protected boolean mb_IsReadoutDataRecordLoaded;
     protected ReadoutDataRecord mt_ReadoutDataRecord;
+
+    private static int nextNum = 1;
+    private int myNum = nextNum++;
+    private Throwable created;
+    private Throwable recycled;
+
     /**
      * Standard Constructor.
      */
     public ReadoutDataPayload() {
         super.mipayloadtype = PayloadRegistry.PAYLOAD_ID_READOUT_DATA;
         super.mipayloadinterfacetype = PayloadInterfaceRegistry.I_READOUT_DATA_PAYLOAD;
+try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
     }
 
     /**
@@ -269,6 +282,7 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
         //-CALL THIS LAST! The based class Payload.recycle() takes care of calling .dispose() after
         // all the recycling has been done.
         super.recycle();
+if (recycled == null) try { throw new Throwable("Originally recycled"); } catch (Throwable t) { recycled = t; }
     }
 
     /**
@@ -285,6 +299,19 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
         super.dispose();
     }
 
+    public Object deepCopy() {
+        if (recycled != null) {
+            try {
+                throw new Throwable("Stack trace");
+            } catch (Throwable thr) {
+                mtLog.error("Deep-copying recycled RDP#" + myNum, thr);
+                mtLog.error("Created here", created);
+                mtLog.error("Recycled here", recycled);
+            }
+        }
+        return super.deepCopy();
+    }
+
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
@@ -298,6 +325,16 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
      * @throws IOException if an error occurs during the process
      */
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
+        if (recycled != null) {
+            try {
+                throw new Throwable("Stack trace");
+            } catch (Throwable thr) {
+                mtLog.error("Writing recycled RDP#" + myNum, thr);
+                mtLog.error("Created here", created);
+                mtLog.error("Recycled here", recycled);
+            }
+            throw new IOException("Attempted to write recycled RDP");
+        }
         int iBytesWritten = 0;
         //-If backing then use it..
         if (mtbuffer != null && !bWriteLoaded) {
