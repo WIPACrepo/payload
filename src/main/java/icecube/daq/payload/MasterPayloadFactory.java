@@ -146,7 +146,7 @@ public class MasterPayloadFactory extends PayloadFactory {
         if (bCreateSeperateBuffers) {
             ByteBuffer tNewPayloadBuffer = null;
             if (mtBufferCache != null) {
-                //-create the new ByteBuffer from the installed ByteBufferCache
+                //-create the new ByteBuffer from the installed buffer cache
                 // and copy the contents into the new ByteBuffer before creation
                 tNewPayloadBuffer = mtBufferCache.acquireBuffer(tEnvelope.miPayloadLen);
                 int iOldLimit = tPayloadBuffer.limit();
