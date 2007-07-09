@@ -59,7 +59,7 @@ public final class PayloadRegistry {
     //      the managed PayloadFactory's and subsiquently all the Payload's which
     //      they produce. In this way a consistent management of the ByteBuffer's which
     //      form the optional support of the of the Payload.
-    private IByteBufferCache mtByteBufferCache;
+    private IByteBufferCache mtBufferCache;
 
     //-dbw: This factory is used by all implementations of AbstractCompositePayload so that
     //      a consistenty parent-factory/IByteBufferCache system can be maintained for all.
@@ -78,12 +78,12 @@ public final class PayloadRegistry {
     /**
      * Constructor which Specifies the byte-buffer cache and the PayloadFactory for
      * all CompositePayload's to use for generating their sub-payloads.
-     * @param  tByteBufferCache IByteBufferCache
+     * @param  tBufferCache IByteBufferCache
      * @param  tMasterCompositePayloadFactory CompositePayloadFactory used for generating sub-payloads of composite
      *         payloads.
      */
-    public PayloadRegistry(IByteBufferCache tByteBufferCache, PayloadFactory tMasterCompositePayloadFactory) {
-        mtByteBufferCache = tByteBufferCache;
+    public PayloadRegistry(IByteBufferCache tBufferCache, PayloadFactory tMasterCompositePayloadFactory) {
+        mtBufferCache = tBufferCache;
         mtMasterCompositePayloadFactory = tMasterCompositePayloadFactory;
         initializeDefaultPayloadFactoryBindings();
     }
@@ -201,11 +201,11 @@ public final class PayloadRegistry {
         mt_PayloadFactories.setElementAt( new  DomHitDeltaCompressedFormatPayloadFactory() , PAYLOAD_ID_DELTA_HIT    );
         mt_PayloadFactories.setElementAt( new  DeltaCompressedFormatHitDataPayloadFactory() , PAYLOAD_ID_COMPRESSED_HIT_DATA    );
         //-Install the recycler if present
-        if (mtByteBufferCache != null) {
+        if (mtBufferCache != null) {
             for (int ii=0; ii < mt_PayloadFactories.size(); ii++) {
                 PayloadFactory tFactory = (PayloadFactory) mt_PayloadFactories.elementAt(ii);
                 if (tFactory != null) {
-                    tFactory.setByteBufferCache(mtByteBufferCache);
+                    tFactory.setByteBufferCache(mtBufferCache);
                     //-If a master composite payload factory has been set to non-null
                     // then make sure these are set in any factories which are derived
                     // from AbstractCompositePayload.

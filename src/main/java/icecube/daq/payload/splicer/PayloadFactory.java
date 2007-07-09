@@ -36,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
 public abstract class PayloadFactory
     implements SpliceableFactory {
     protected Poolable mt_PoolablePayloadFactory;
-    protected IByteBufferCache mtByteBufferCache;
+    protected IByteBufferCache mtBufferCache;
 
     /** logging object */
     private static final Log LOG = LogFactory.getLog(PayloadFactory.class);
@@ -58,7 +58,7 @@ public abstract class PayloadFactory
      * @param tCache an IByteBufferCache to be used by this factory.
      */
     public void setByteBufferCache(IByteBufferCache tCache) {
-        mtByteBufferCache = tCache;
+        mtBufferCache = tCache;
     }
 
     /**
@@ -69,7 +69,7 @@ public abstract class PayloadFactory
      *
      */
     public IByteBufferCache getByteBufferCache() {
-        return mtByteBufferCache;
+        return mtBufferCache;
     }
 
     /**

@@ -32,14 +32,14 @@ public class MasterPayloadFactory extends PayloadFactory {
 
     /**
      * Constructor which uses an installable IByteBufferCache
-     * @param tByteBufferCache IByteBufferCache which will serve as the recycling destination
+     * @param tBufferCache IByteBufferCache which will serve as the recycling destination
      *                            for the ByteBuffer's which are used as the basis of the Payloads
      *                            which are created by the individual PayloadFactories managed by this
      *                            factory.
      */
-    public MasterPayloadFactory(IByteBufferCache tByteBufferCache) {
-        super.mtByteBufferCache =  tByteBufferCache;
-        mtPayloadRegistry = new PayloadRegistry(tByteBufferCache, this);
+    public MasterPayloadFactory(IByteBufferCache tBufferCache) {
+        mtBufferCache =  tBufferCache;
+        mtPayloadRegistry = new PayloadRegistry(tBufferCache, this);
     }
 
     /**
@@ -145,10 +145,10 @@ public class MasterPayloadFactory extends PayloadFactory {
         // This allows the system to be tested distinctly from buffering.
         if (bCreateSeperateBuffers) {
             ByteBuffer tNewPayloadBuffer = null;
-            if (super.mtByteBufferCache != null) {
+            if (mtBufferCache != null) {
                 //-create the new ByteBuffer from the installed ByteBufferCache
                 // and copy the contents into the new ByteBuffer before creation
-                tNewPayloadBuffer = super.mtByteBufferCache.acquireBuffer(tEnvelope.miPayloadLen);
+                tNewPayloadBuffer = mtBufferCache.acquireBuffer(tEnvelope.miPayloadLen);
                 int iOldLimit = tPayloadBuffer.limit();
                 int iOldPos   = tPayloadBuffer.position();
                 tPayloadBuffer.position(iOffset);
