@@ -28,7 +28,7 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      * @throws IOException if an error occurs during the process
      */
     public int writePayload(Payload tPayload) throws IOException {
-        return this.writePayload(false, tPayload);
+        return writePayload(false, tPayload);
     }
 
     /**
