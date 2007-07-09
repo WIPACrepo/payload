@@ -3,10 +3,8 @@ package icecube.daq.payload;
 import java.nio.ByteBuffer;
 
 /**
- * This is class which emulates the ByteBufferCache by
- * simply going back to the heap and asking for buffers
- * directly from the VM.  It does not cache the buffers
- * in any way.
+ * This buffer cache simply allocates buffers directly from the heap.
+ * It does not cache the buffers in any way.
  * @author kael
  *
  */
@@ -95,4 +93,13 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
         return 0;
     }
 
+    public boolean getIsCacheBounded()
+    {
+        return false;
+    }
+
+    public long getMaxAquiredBytes()
+    {
+        return Long.MAX_VALUE;
+    }
 }

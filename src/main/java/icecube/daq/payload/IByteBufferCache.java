@@ -65,4 +65,15 @@ public interface IByteBufferCache extends IByteBufferReceiver {
      * Flushes all the unused buffers in the cache.
      */
     void flush();
+
+    /**
+     * Returns whether or not the cache is bounded.
+     */
+    boolean getIsCacheBounded();
+
+    /**
+     * Returns the current number of bytes which are contained in the buffers
+     * which have not yet been returned.
+     */
+    long getMaxAquiredBytes();
 }

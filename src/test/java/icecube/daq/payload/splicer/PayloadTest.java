@@ -134,6 +134,16 @@ class MyCache
         throw new Error("Unimplemented");
     }
 
+    public boolean getIsCacheBounded()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public long getMaxAquiredBytes()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public int getTotalBuffersAcquired()
     {
         throw new Error("Unimplemented");
@@ -427,8 +437,12 @@ public class PayloadTest
         MockDestination mockDest = new MockDestination();
 
         MyPayload pay = new MyPayload();
-        assertEquals("Unexpected length for empty write",
-                     0, pay.writePayload(false, mockDest));
+        try {
+            pay.writePayload(false, mockDest);
+            fail("Should not be able to write payload without byte buffer");
+        } catch (IOException ioe) {
+            // expect this to fail
+        }
 
         pay.initialize(0, buf, new MyFactory());
         pay.loadSpliceablePayload();
