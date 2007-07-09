@@ -437,12 +437,8 @@ public class PayloadTest
         MockDestination mockDest = new MockDestination();
 
         MyPayload pay = new MyPayload();
-        try {
-            pay.writePayload(false, mockDest);
-            fail("Should not be able to write payload without byte buffer");
-        } catch (IOException ioe) {
-            // expect this to fail
-        }
+        assertEquals("Unexpected length for empty write",
+                     0, pay.writePayload(false, mockDest));
 
         pay.initialize(0, buf, new MyFactory());
         pay.loadSpliceablePayload();
