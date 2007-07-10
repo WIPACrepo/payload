@@ -103,9 +103,9 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
     /**
      * This method allows an object to be reinitialized to a new backing buffer
      * and position within that buffer.
-     * @param iOffset ...int representing the initial position of the object
+     * @param iOffset int representing the initial position of the object
      *                   within the ByteBuffer backing.
-     * @param tBackingBuffer ...ByteBuffer the backing buffer for this object.
+     * @param tBackingBuffer the backing buffer for this object.
      */
     public void initialize(int iOffset, ByteBuffer tBackingBuffer) {
         //-Make sure that this object is ready to receive new information
@@ -247,15 +247,15 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
     //-Payload abstract method implementation (end)
 
     /**
-     * Get's the Payload length from a Backing buffer (ByteBuffer)
+     * Get the Payload length from a Backing buffer (ByteBuffer)
      * if possible, otherwise return -1.
-     * @param iOffset .....int which holds the position in the ByteBuffer
+     * @param iOffset int which holds the position in the ByteBuffer
      *                     to check for the Payload length.
-     * @param tBuffer .....ByteBuffer from which to extract the lenght of the payload
-     * @return int ........the lenght of the payload if it can be extracted, otherwise -1
+     * @param tBuffer ByteBuffer from which to extract the length of the payload
+     * @return the length of the payload if it can be extracted, otherwise -1
      *
-     * @exception IOException ...........is thrown if there is trouble reading the Payload length
-     * @exception DataFormatException ...is thrown if there is something wrong with the payload and the
+     * @exception IOException if there is trouble reading the Payload length
+     * @exception DataFormatException if there is something wrong with the payload and the
      *                                   length cannot be read.
      */
     public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
@@ -264,8 +264,8 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
     }
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return (Poolable) new TimeCalibrationPayload();
@@ -273,7 +273,7 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
 
     /**
      * Method to create instance from the object pool.
-     * @return Object .... this is an object which is ready for reuse.
+     * @return an object which is ready for reuse.
      */
     public Poolable getPoolable() {
         return (Poolable) getFromPool();
@@ -282,7 +282,6 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
         if (mtTimeCalRecord != null) {
@@ -312,10 +311,10 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -325,8 +324,8 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -337,10 +336,10 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param tDestination ...... PayloadDestination to which to write the payload
-     * @return int .............. the length in bytes which was written to the destination.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the destination.
      *
      * @throws IOException if an error occurs during the process
      */

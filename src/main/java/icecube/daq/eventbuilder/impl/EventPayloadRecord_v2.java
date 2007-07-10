@@ -25,10 +25,10 @@ import java.io.IOException;
  * @author dwharton
  *
  * NOTE: This is now RecordType v2 and includes the following fields
- * EVENT_TYPE ........ int which corresponds to the TriggerType for an Event
- * EVENT_CONFIGID .... int the event-config-id corresponding to the configuration for this
+ * EVENT_TYPE the TriggerType for an Event
+ * EVENT_CONFIGID the event-config-id corresponding to the configuration for this
  *                     type of event. (ie a type code for for instance Monolith Events... etc)
- * EVENT_RUN_NUMBER .. int the run number in which this event was produced.
+ * EVENT_RUN_NUMBER the run number in which this event was produced.
  *
  *
  * NOTE: This record will support backward compatible for RECORD_TYPE_EVENT which does not
@@ -94,13 +94,13 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
     /**
      * create's the data portion of this record form
      * the contained data.
-     * @param iUID ............ int the unique id for this event
-     * @param tSourceID ....... ISourceID the source id (ie event-builder source-id) which is producing this event-data
-     * @param tFirstTimeUTC ... IUTCTime the first time in this event-data window
-     * @param tLastTimeUTC .... IUTCTime the last time in this event-data window
-     * @param iEventType ..... int the type of config that produced this event.
-     * @param iEventConfigID . int the primary key leading to the specific parameters associated with events of this type.
-     * @param iRunNumber ..... int the run-number in which this event occured.
+     * @param iUID the unique id for this event
+     * @param tSourceID the source id (ie event-builder source-id) which is producing this event-data
+     * @param tFirstTimeUTC the first time in this event-data window
+     * @param tLastTimeUTC the last time in this event-data window
+     * @param iEventType the type of config that produced this event.
+     * @param iEventConfigID the primary key leading to the specific parameters associated with events of this type.
+     * @param iRunNumber the run-number in which this event occured.
      */
     public void initialize(
             int             iUID,
@@ -123,15 +123,15 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
     /**
      * Pool method to get an object from the pool
      * for reuse.
-     * @return Object ... a EventDataPayloadRecord object for reuse.
+     * @return a EventPayloadRecord_v2 object for reuse.
      */
     public static Poolable getFromPool() {
         return (Poolable) new EventPayloadRecord_v2();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -160,7 +160,7 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
     }
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mb_IsDataLoaded;
@@ -170,8 +170,8 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
 
     /**
      * Loads the data from the buffer into the container record.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -216,7 +216,7 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
 
     /**
      * Method to write this record to the payload destination.
-     * @param tDestination ....PayloadDestination to which to write this record.
+     * @param tDestination PayloadDestination to which to write this record.
      */
     public int writeData(PayloadDestination tDestination) throws IOException {
         //-eventually will switch to new format
@@ -239,8 +239,8 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
     }
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset ....the offset at which to start writing the object.
-     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
+     * @param iOffset the offset at which to start writing the object.
+     * @param tBuffer the ByteBuffer into which to write this payload-record.
      */
     public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
         ByteOrder tSaveOrder = tBuffer.order();

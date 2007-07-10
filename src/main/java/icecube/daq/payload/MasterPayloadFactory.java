@@ -43,7 +43,7 @@ public class MasterPayloadFactory extends PayloadFactory {
     }
 
     /**
-     *  Get's a PayloadFactory from the installed registry of the following types.
+     *  Get a PayloadFactory from the installed registry of the following types.
      *  PayloadRegistry.
      *
      * @see icecube.daq.payload.PayloadRegistry
@@ -61,7 +61,7 @@ public class MasterPayloadFactory extends PayloadFactory {
      *       payload. This is helpfull (but wasteful) for debugging the results of
      *       buffered payload handling and comparing the results when using Seperate
      *       and combined buffers.
-     * @return boolean ... the previous value
+     * @return the previous value
      */
     public boolean setCreateSeperateBuffers(boolean bOn) {
         boolean bBefore = mbCreateSeperateBuffers;
@@ -73,14 +73,14 @@ public class MasterPayloadFactory extends PayloadFactory {
     /**
      * This method must be implemented specific to the format of the
      * the input stream to determine when a complete data element is available.
-     * @param iOffset ............The offset in the ByteBuffer from which to create the payload/spliceable
-     * @param tBuffer ............ByteBuffer from which to detect a spliceable.
+     * @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable
+     * @param tBuffer ByteBuffer from which to detect a spliceable.
      *
-     * @return PayloadEnvelope ............... the PayloadEnvelope for this payload
+     * @return the PayloadEnvelope for this payload
      *
-     * @exception IOException ........... this is thrown if there is an error reading the ByteBuffer
+     * @exception IOException if there is an error reading the ByteBuffer
      *                                    to pull out the length of the spliceable.
-     * @exception DataFormatException ... if there is an error in the format of the payload
+     * @exception DataFormatException if there is an error in the format of the payload
      */
     private static PayloadEnvelope readPayloadEnvelope(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
         PayloadEnvelope tEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
@@ -105,10 +105,10 @@ public class MasterPayloadFactory extends PayloadFactory {
     /**
      *  This method must be implemented by the non-abstract class
      *  to create the specific payload.
-     *  @param iOffset ..........The offset in the ByteBuffer from which to create the payload/spliceable
-     *  @param tPayloadBuffer ...ByteBuffer form which to construct the Payload
+     *  @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable
+     *  @param tPayloadBuffer ByteBuffer from which to construct the Payload
      *                           which implements BOTH IPayload and Spliceable
-     *  @return IPayload ...the Payload object specific to this class which is
+     *  @return the Payload object specific to this class which is
      *                     specific to the class which is derived from PayloadFactory.
      */
     public Payload createPayload(int iOffset, ByteBuffer tPayloadBuffer) throws IOException,DataFormatException {
@@ -118,17 +118,17 @@ public class MasterPayloadFactory extends PayloadFactory {
     /**
      *  This method must be implemented by the non-abstract class
      *  to create the specific payload.
-     *  @param iOffset ..........The offset in the ByteBuffer from which to create the payload/spliceable
-     *  @param tPayloadBuffer ...ByteBuffer form which to construct the Payload
+     *  @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable
+     *  @param tPayloadBuffer ByteBuffer from which to construct the Payload
      *                           which implements BOTH IPayload and Spliceable
-     * @param bCreateSeperateBuffers ... boolean indicating the a new ByteBuffer will be
+     * @param bCreateSeperateBuffers boolean indicating the a new ByteBuffer will be
      *                                   allocated and used for Payload creation.
      *      1) If there is an IByteBufferCache installed this will be used to create
      *         a new ByteBuffer.
      *      2) If there is no IByteBufferCache installed then a ByteBuffer will be
      *         allocated normally outside of any caching system.
      *
-     *  @return IPayload ...the Payload object specific to this class which is
+     *  @return the Payload object specific to this class which is
      *                     specific to the class which is derived from PayloadFactory.
      */
     public Payload createPayload(int iOffset, ByteBuffer tPayloadBuffer, boolean bCreateSeperateBuffers) throws IOException,DataFormatException {
@@ -183,14 +183,14 @@ public class MasterPayloadFactory extends PayloadFactory {
     /**
      * This method must be implemented specific to the format of the
      * the input stream to determine when a complete data element is available.
-     * @param iOffset ............ The offset in the ByteBuffer from which to create the payload/spliceable
-     * @param tBuffer ............ ByteBuffer from which to detect a spliceable.
+     * @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable
+     * @param tBuffer ByteBuffer from which to detect a spliceable.
      *
-     * @return int ............... the length of this spliceable
+     * @return the length of this spliceable
      *
-     * @exception IOException ........... this is thrown if there is an error reading the ByteBuffer
+     * @exception IOException if there is an error reading the ByteBuffer
      *                                    to pull out the length of the spliceable.
-     * @exception DataFormatException ... if there is an error in the format of the payload
+     * @exception DataFormatException if there is an error in the format of the payload
      */
     public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws IOException,DataFormatException {
         PayloadEnvelope tEnvelope = readPayloadEnvelope(iOffset, tBuffer);

@@ -55,7 +55,7 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
 
     /**
      * Returns the unique id assigned to this ITriggerRequestPayload
-     * @return int ... the unique id for this event.
+     * @return the unique id for this event.
      */
     public int getUID() {
         if (mt_ReadoutDataRecord != null) {
@@ -115,13 +115,13 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
      * independently of a ByteBuffer with the representative container
      * objects themselves.
      *
-     * @param iUID               ... the unique id (event id) for this readout-data corresponds to a readout-request
-     * @param iPayloadNum        ... the payload number of this payload in a possible sequence of payload's for this iUID.
-     * @param bPayloadLast       ... boolean indicating if this is the last payload in this group.
-     * @param tSourceid          ... the ISourceID of the component producing this data.
-     * @param tFirstTimeUTC      ... IUTCTime of the start of this time window
-     * @param tLastTimeUTC       ... IUTCTime of the end of this time window
-     * @param tPayloads          ... Vector of IPayload's which have contributed to this trigger.
+     * @param iUID the unique id (event id) for this readout-data corresponds to a readout-request
+     * @param iPayloadNum the payload number of this payload in a possible sequence of payload's for this iUID.
+     * @param bPayloadLast boolean indicating if this is the last payload in this group.
+     * @param tSourceid the ISourceID of the component producing this data.
+     * @param tFirstTimeUTC IUTCTime of the start of this time window
+     * @param tLastTimeUTC IUTCTime of the end of this time window
+     * @param tPayloads Vector of IPayload's which have contributed to this trigger.
      *
      */
     public void initialize(
@@ -198,7 +198,7 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
     }
     /**
      * This is the number that associates all read's for a givent EB event together
-     * @return int ... the unique id for this data requests
+     * @return the unique id for this data requests
      */
     public int getRequestUID() {
         if (mt_ReadoutDataRecord != null) {
@@ -210,7 +210,7 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
     /**
      * A Vector of the IHitDataPayload's which correspond
      * to the hit-data that has been requested.
-     * @return Vector .... a vector of IHitDataPayload's which contain the desired data.
+     * @return a vector of IHitDataPayload's which contain the desired data.
      */
     public Vector getDataPayloads() {
         return super.mt_Payloads;
@@ -223,7 +223,7 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
      * the number (of a sub-sequence of payloads which are
      * grouped together for this IReadoutDataPayload - in reply to a single IReadoutRequest)
      * ---
-     * @return int .... the number of this payload relative to this group by uid.
+     * @return the number of this payload relative to this group by uid.
      */
     public int getReadoutDataPayloadNumber() {
         if (mt_ReadoutDataRecord != null) {
@@ -235,7 +235,7 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
     /**
      * Boolean which indicates if this is the final
      * data payload for this group.
-     * @return boolean ... true if this is the last payload, false if not.
+     * @return true if this is the last payload, false if not.
      * ---
      * true if this is the last payload to expect, note: there should be
      * a monotonically increasing number of payload numbers up to this point with no gaps in the sequence
@@ -252,19 +252,18 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
         }
     }
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return (Poolable) new ReadoutDataPayload();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
-        //-for new just create a new EventPayload
         Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
@@ -272,7 +271,6 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
         if (mt_ReadoutDataRecord != null) {
@@ -315,12 +313,12 @@ if (recycled == null) try { throw new Throwable("Originally recycled"); } catch 
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -368,10 +366,10 @@ if (recycled == null) try { throw new Throwable("Originally recycled"); } catch 
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param tDestination ...... PayloadDestination to which to write the payload
-     * @return int .............. the length in bytes which was written to the destination.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the destination.
      *
      * @throws IOException if an error occurs during the process
      */

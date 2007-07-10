@@ -83,7 +83,7 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
 
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mbLoaded;
@@ -91,8 +91,8 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
 
     /**
      * Static method to pull out the DOM Clock from a SuperNova record.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer .........ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * NOTE: This is usefull when constructing spliceables which depend on time ordering.
      *
@@ -110,8 +110,8 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
     /**
      * Reads the SuperNova record information from the ByteBuffer containing the SuperNova and
      * returns the length.
-     * @param iRecordOffset ... int the offset from which to start loading the data fro the engin.
-     * @param tBuffer       ... ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -135,8 +135,8 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
 
     /**
      * Reads the SuperNova record information from the ByteBuffer containing the MonitorRecord.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -156,7 +156,7 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
         miFormatId = (int) ((int) 0x0000FFFF & (int) tBuffer.getShort(iRecordOffset + OFFSET_FORMAT_ID));
         mlDomClock = readDomClock(iRecordOffset,tBuffer);
 
-        //-the scalar data array lenght is computed from the blocklen - the header size.
+        //-the scalar data array length is computed from the blocklen - the header size.
         int iScalarDataLength = miBlockLen - SIZE_HEADER;
 
         //-set the position to the beginning of the scalar data
@@ -192,16 +192,16 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
         mbLoaded      = false;
     }
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return (Poolable) new SuperNovaRecord();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -210,7 +210,7 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
+     * @param tReadoutRequestPayload ReadoutRequestPayload which is to be returned to the pool.
      */
     public void recycle() {
         dispose();
@@ -218,8 +218,8 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
     /**
      * This method writes this IPayloadRecord to the PayloadDestination.
      *
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was writtern.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was writtern.
      *
      * NOTE: Since IPayloadRecords do not have a ByteBuffer backing they have no choice
      *       but to write from their internal values.  This is generally only used for

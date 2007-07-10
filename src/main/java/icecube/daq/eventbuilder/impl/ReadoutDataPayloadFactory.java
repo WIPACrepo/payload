@@ -27,13 +27,13 @@ public class ReadoutDataPayloadFactory extends CompositePayloadFactory {
     /**
      *  This method is used to create the ReadoutDataPayload from constituent pieces, instead
      *  of reading it from a ByteBuffer.
-     * @param iUID               ... the unique id (event id) for readout-data corresponds to a readout-request
-     * @param iPayloadNum        ... the payload number of this payload in a possible sequence of payload's for this iUID.
-     * @param bPayloadLast       ... boolean indicating if this is the last payload in this group.
-     * @param tSourceid          ... the ISourceID of the component producing this data.
-     * @param tFirstTimeUTC      ... IUTCTime of the start of this time window
-     * @param tLastTimeUTC       ... IUTCTime of the end of this time window
-     * @param tPayloads          ... Vector of IPayload's which have contributed to this composite.
+     * @param iUID the unique id (event id) for readout-data corresponds to a readout-request
+     * @param iPayloadNum the payload number of this payload in a possible sequence of payload's for this iUID.
+     * @param bPayloadLast boolean indicating if this is the last payload in this group.
+     * @param tSourceid the ISourceID of the component producing this data.
+     * @param tFirstTimeUTC IUTCTime of the start of this time window
+     * @param tLastTimeUTC IUTCTime of the end of this time window
+     * @param tPayloads Vector of IPayload's which have contributed to this composite.
      */
     public IPayload createPayload(
         int             iUID,

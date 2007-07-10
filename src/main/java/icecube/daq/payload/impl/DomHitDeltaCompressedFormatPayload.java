@@ -92,9 +92,9 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     /**
      * This method allows an object to be reinitialized to a new backing buffer
      * and position within that buffer.
-     * @param iOffset ...int representing the initial position of the object
+     * @param iOffset int representing the initial position of the object
      *                   within the ByteBuffer backing.
-     * @param tBackingBuffer ...ByteBuffer the backing buffer for this object.
+     * @param tBackingBuffer the backing buffer for this object.
      */
     public void initialize(int iOffset, ByteBuffer tBackingBuffer) throws IOException, DataFormatException {
         super.mioffset = iOffset;
@@ -182,7 +182,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     }
 
     /**
-     * Get's the TriggerMode from the Engineering Format Payload
+     * Get the TriggerMode from the Engineering Format Payload
      * Test pattern trigger     0x0
      * CPU requested trigger    0x1
      * SPE discriminator trigger    0x2
@@ -237,8 +237,8 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     }
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         Payload tPayload = (Payload) new DomHitDeltaCompressedFormatPayload();
@@ -247,7 +247,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
 
     /**
      * Method to create instance from the object pool.
-     * @return Object .... this is an object which is ready for reuse.
+     * @return an object which is ready for reuse.
      */
     public Poolable getPoolable() {
         return (Poolable) getFromPool();
@@ -255,7 +255,6 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
         if (mtDomHitDeltaCompressedRecord != null) {
@@ -271,10 +270,10 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -284,8 +283,8 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -299,9 +298,9 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      * for making use of specialized PayloadDestinations which can document
      * the output if necessary.
      *
-     * @param bWriteLoaded ...... boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */

@@ -17,7 +17,7 @@ import java.io.IOException;
  */
 public interface IHitDataPayload extends IHitPayload {
     /**
-     * Get's access to the underlying data for an engineering hit
+     * Get access to the underlying data for an engineering hit
      */
     IHitDataRecord getHitRecord() throws IOException, DataFormatException;
 }

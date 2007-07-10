@@ -45,15 +45,14 @@ public interface IReadoutRequestElement {
 
     /**
      * getDomID()
-     * @return IDOMID ...identifies module to readout.
-     *                   IDOMID object if request is for single DOM
+     * @return IDOMID object if request is for single DOM
      *                   null if request is not specific to a single DOM.
      */
     IDOMID getDomID();
 
     /**
      * getSourceID()
-     * @return ISourceID ....the component from which to get data (typically a StringProcessor)
+     * @return the component from which to get data (typically a StringProcessor)
      */
     ISourceID getSourceID();
 

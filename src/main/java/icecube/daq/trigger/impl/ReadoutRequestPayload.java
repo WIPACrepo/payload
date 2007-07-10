@@ -56,18 +56,17 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      * Standard way of getting object from
      * the pool. Use this instead of the constructor
      * if you wish pooling.
-     * @return Object ... ReadoutRequestPayload cast as Object.
+     * @return ReadoutRequestPayload cast as Object.
      */
     public static Poolable getFromPool() {
         return (Poolable) new ReadoutRequestPayload();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
-        //-for new just create a new EventPayload
         Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
@@ -88,8 +87,8 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
 
     /**
      * intialization outside of constructor.
-     * @param tRequestTime .... IUTCTime the start time of this request.
-     * @param tRequest ........ IReadoutRequest the readout request to be transmitted.
+     * @param tRequestTime the start time of this request.
+     * @param tRequest the readout request to be transmitted.
      */
     public void initialize(IUTCTime tRequestTime, IReadoutRequest tRequest) {
         UTCTime8B tTime = (UTCTime8B) UTCTime8B.getFromPool();
@@ -135,10 +134,10 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBufferf the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -148,8 +147,8 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -160,11 +159,11 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param bWriteLoaded ...... boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
-     * @param iDestOffset .......int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer .......ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param bWriteLoaded boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -190,9 +189,9 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded ...... boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -260,8 +259,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      *  The locations of the individual sources which are to
      *  be requested for data are contained in the request-elements
      *  themselves.
-     *  @return ISourceID ...the ISourceID of the Trigger which generated
-     *                       this request.
+     *  @return the ISourceID of the Trigger which generated this request.
      */
     public ISourceID getSourceID() {
         ISourceID tID = null;

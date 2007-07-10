@@ -97,7 +97,7 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
     /**
      * Constructor.
      *
-     * @param iGranularity         int the size unit of which the resulting buffer will be.
+     * @param iGranularity         the size unit of which the resulting buffer will be.
      *                             this is checked that is greater than or equal to the default value
      *                             which is statically defined above.
      * @param lMaxNumCachedBytes   long max # of bytes to keep in the cache at any one time
@@ -115,7 +115,7 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
     /**
      * Constructor.
      *
-     * @param iGranularity         int the size unit of which the resulting buffer will be.
+     * @param iGranularity         the size unit of which the resulting buffer will be.
      *                             this is checked that is greater than or equal to the default value
      *                             which is statically defined above.
      * @param lMaxNumCachedBytes   long max # of bytes to keep in the cache at any one time
@@ -154,7 +154,7 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
     /**
      * Constructor.
      *
-     * @param iGranularity int the size unit of which the resulting buffer will be.
+     * @param iGranularity the size unit of which the resulting buffer will be.
      *                     this is checked that is greater than or equal to the default value
      *                     which is statically defined above.
      * @param long         lMaxNumCachedBytes the bound for the max num bytes to cache,
@@ -171,7 +171,7 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
     /**
      * Constructor.
      *
-     * @param iGranularity int the size unit of which the resulting buffer will be.
+     * @param iGranularity the size unit of which the resulting buffer will be.
      *                     this is checked that is greater than or equal to the default value
      *                     which is statically defined above.
      * @param long         lMaxNumCachedBytes the bound for the max num bytes to cache,
@@ -190,7 +190,7 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
     /**
      * Constructor.
      *
-     * @param iGranularity int the size unit of which the resulting buffer will be.
+     * @param iGranularity the size unit of which the resulting buffer will be.
      *                     this is checked that is greater than or equal to the default value
      *                     which is statically defined above.
      */
@@ -202,7 +202,7 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
     /**
      * Constructor.
      *
-     * @param iGranularity int the size unit of which the resulting buffer will be.
+     * @param iGranularity the size unit of which the resulting buffer will be.
      *                     this is checked that is greater than or equal to the default value
      *                     which is statically defined above.
      */
@@ -665,7 +665,7 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
     /**
      * Finds a cached buffer or creates a new one to satisfy the request.
      *
-     * @param iGranularSize int the size (to the next nearest granularity size) of the ByteBuffer
+     * @param iGranularSize the size (to the next nearest granularity size) of the ByteBuffer
      *                      to retrieve.
      * @return ByteBuffer of the specified granular size.
      */
@@ -718,8 +718,8 @@ public class ByteBufferCache implements IByteBufferCache, ByteBufferCacheMBean {
      * of the granular size which is greater than or equal to the requested
      * size.
      *
-     * @param iRequestedSize int the requested size
-     * @return int the granular size based on the input granule size.
+     * @param iRequestedSize the requested size
+     * @return the granular size based on the input granule size.
      */
     private static int computeGranularSize(int iGranuleSize, int iRequestedSize) {
         int iNewGranularSize = ((iRequestedSize / iGranuleSize) + ((iRequestedSize % iGranuleSize) > 0 ? 1 : 0)) * iGranuleSize;
@@ -796,7 +796,7 @@ class CacheElementStats implements Comparable {
     /**
      * Returns the number of unique elements created.
      *
-     * @return int the number of elements created.
+     * @return the number of elements created.
      */
     public int getElementsCreated() {
         return miNumElementsCreated;
@@ -820,7 +820,7 @@ class CacheElementStats implements Comparable {
         return miNumElementsInCache;
     }
     /**
-     * Get's the number of elements being used.
+     * Get the number of elements being used.
      *
      * @return int - the number of elements currently being used of this type.
      */
@@ -958,7 +958,7 @@ class CacheHistogram {
             return -1;
     }
     /**
-     * Get's the number of elements being used.
+     * Get the number of elements being used.
      *
      * @return int - the number of elements currently being used of this type.
      */

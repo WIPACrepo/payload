@@ -31,16 +31,16 @@ public class UTCTime8B extends Poolable implements IUTCTime {
     }
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return (Poolable) new UTCTime8B();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -49,7 +49,6 @@ public class UTCTime8B extends Poolable implements IUTCTime {
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
         dispose();
@@ -96,7 +95,7 @@ public class UTCTime8B extends Poolable implements IUTCTime {
      * Compares ThisTime - tDifferenceTime and computes time
      * difference in the time units of the DOR Card.
      * @param tTime IUTCTime to compare to.
-     * @return long ...the difference in time in dor card units
+     * @return the difference in time in dor card units
      */
     public long timeDiff(IUTCTime tTime) {
         long lDifference = this.mlutctime - tTime.getUTCTimeAsLong();
@@ -107,7 +106,7 @@ public class UTCTime8B extends Poolable implements IUTCTime {
      * Compares ThisTime - tDifferenceTime and computes time
      * difference in nanoseconds.
      * @param tTime IUTCTime to compare to.
-     * @return long ...the difference in time in ns
+     * @return the difference in time in ns
      */
     public double timeDiff_ns(IUTCTime tTime) {
         double dDifference = (double)(this.mlutctime - tTime.getUTCTimeAsLong())/ 10.0;
@@ -115,7 +114,7 @@ public class UTCTime8B extends Poolable implements IUTCTime {
     }
     /**
      * Generates IUTCTime based on offset in ns from this time.
-     * @param dNanoSec ....the positive or negative nanosec value from which to
+     * @param dNanoSec the positive or negative nanosec value from which to
      *                     produce another IUTCTime which is representative of this
      *                     time difference.
      */

@@ -17,7 +17,7 @@ public class IndentingPrintStream extends PrintStream {
     private boolean mbIndent;
     /**
      * constructor
-     * @param tPrintStream ... print stream used for indenting
+     * @param tPrintStream print stream used for indenting
      */
     public IndentingPrintStream(PrintStream tPrintStream) {
         super(tPrintStream);
@@ -33,7 +33,7 @@ public class IndentingPrintStream extends PrintStream {
 
     /**
      * Set's the default indent object.
-     * @param tDefault ... Object whose toString() method is used for the default indent.
+     * @param tDefault Object whose toString() method is used for the default indent.
      */
     public void setDefaultIndentUnit(Object tDefault) {
         synchronized (this) {

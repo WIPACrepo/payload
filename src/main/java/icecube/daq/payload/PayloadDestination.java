@@ -22,8 +22,8 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      * be invoke the write method itself, or to pass the payload by refernce
      * to the target.
      *
-     * @param tPayload ...... Payload to which to write to this destination
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param tPayload Payload to which to write to this destination
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -37,9 +37,9 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      * be invoke the write method itself, or to pass the payload by refernce
      * to the target.
      *
-     * @param bWriteLoaded ...... boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tPayload ...... Payload to which to write to this destination
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tPayload Payload to which to write to this destination
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -53,11 +53,11 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      * be invoke the write method itself, or to pass the payload by refernce
      * to the target.
      *
-     * @param bWriteLoaded ....... boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tPayload ........... Payload to which to write to this destination
-     * @param iDestOffset ........ int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer ........ ByteBuffer the destination ByteBuffer to write the payload to.
-     * @return int ............... the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tPayload Payload to which to write to this destination
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -160,11 +160,11 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
     //
 
     /**
-     * This method writes bytes from the given offset in the ByteBuffer for a lenght of iBytes
+     * This method writes bytes from the given offset in the ByteBuffer for a length of iBytes
      * to the destination.
-     * @param iOffset ........int the offset in the ByteBuffer to start
-     * @param tBuffer ........ByteBuffer from which to write to destination.
-     * @param iBytes  ........int the number of bytes to write to the destination.
+     * @param iOffset the offset in the ByteBuffer to start
+     * @param tBuffer ByteBuffer from which to write to destination.
+     * @param iBytes  the number of bytes to write to the destination.
      *
      * @throws IOException....if an error occurs either reading the ByteBuffer or writing
      *                        to the destination.
@@ -176,7 +176,7 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
     /**
      * simple labeling routine which is a stub but is useful for debugging.
      * this is NOT INTENDED to contribute to the output stream.
-     * @param sLabel ... String which indicates some aspect of how the destination is being used
+     * @param sLabel String which indicates some aspect of how the destination is being used
      *                   at a point in the writing of payloads.
      */
     public PayloadDestination label(String sLabel) {
@@ -213,13 +213,13 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
         return writeRemaining(src);
     }
     /**
-     * This method writes bytes from the given offset in the ByteBuffer for a lenght of iBytes
+     * This method writes bytes from the given offset in the ByteBuffer for a length of iBytes
      * to the destination.
      *
-     * @param sFieldName ........... name of the field.
-     * @param iOffset .............. int the offset in the ByteBuffer to start
-     * @param tBuffer .............. ByteBuffer from which to write to destination.
-     * @param iBytes ............... int the number of bytes to write to the destination.
+     * @param sFieldName name of the field.
+     * @param iOffset the offset in the ByteBuffer to start
+     * @param tBuffer ByteBuffer from which to write to destination.
+     * @param iBytes the number of bytes to write to the destination.
      *
      * @throws IOException....if an error occurs either reading the ByteBuffer or writing
      *                        to the destination.
@@ -267,9 +267,8 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      * <code>b[1]</code>, and so on; the last byte
      * written is <code>b[b.length-1]</code>.
      *
-     * @param      sName String the label
-     * @param      sSpecial ... any special interpretation of this
-     *                      data
+     * @param      sName the label
+     * @param      sSpecial any special interpretation of this data
      * @param      b   the data.
      * @exception  IOException  if an I/O error occurs.
      */
@@ -569,10 +568,10 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      * Writes out elements of an int array from a source element
      * to a final element.
      *
-     * @param sArrayName String, name of the int array
-     * @param iFirst int the first element number to write
-     * @param iLast int the last element number to write
-     * @param iaArray int[] containing the elements to write
+     * @param sArrayName name of the int array
+     * @param iFirst the first element number to write
+     * @param iLast the last element number to write
+     * @param iaArray array containing the elements to write
      *
      */
     public void writeIntArrayRange(String sArrayName, int iFirst, int iLast, int[] iaArray) throws IOException {
@@ -584,10 +583,10 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      * Writes out elements of an short array from a source element
      * to a final element.
      *
-     * @param sArrayName String, name of the int array
-     * @param iFirst int the first element number to write
-     * @param iLast int the last element number to write
-     * @param iaArray short[] containing the elements to write
+     * @param sArrayName name of the int array
+     * @param iFirst the first element number to write
+     * @param iLast the last element number to write
+     * @param iaArray array containing the elements to write
      *
      */
     public void writeShortArrayRange(String sArrayName, int iFirst, int iLast, short[] iaArray) throws IOException {
@@ -599,10 +598,10 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      * Writes out elements of an short array from a source element
      * to a final element as bytes.
      *
-     * @param sArrayName String, name of the int array
-     * @param iFirst int the first element number to write
-     * @param iLast int the last element number to write
-     * @param iaArray short[] containing the elements to write
+     * @param sArrayName name of the int array
+     * @param iFirst the first element number to write
+     * @param iLast the last element number to write
+     * @param iaArray array containing the elements to write
      *
      */
     public void writeShortArrayRangeAsBytes(String sArrayName, int iFirst, int iLast, short[] iaArray) throws IOException {

@@ -228,11 +228,11 @@ public class DomHitDeltaCompressedFormatUtility {
     /**
      * Extracts the least significant 32 bits of the dom clock given the offset of
      * an individual delta compressed record.
-     * @param iWORD0Offset ...int offset in the Bytebuffer of WORD0 as received by
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iWORD0Offset offset in the Bytebuffer of WORD0 as received by
+     * @param tBuffer ByteBuffer from which to construct the record.
      * @exception IOException if errors are detected reading the record
      *
-     * @return long ...the value of the DomClock stored in a long
+     * @return the value of the DomClock stored in a long
      */
     public static final long extractDomClock_LSB32(int iWORD0Offset, ByteBuffer tBuffer) throws IOException {
         long ldomClock = 0L;

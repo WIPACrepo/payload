@@ -61,7 +61,7 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
     public static final String FIRST_UTCTIME = "FIRST_UTCTIME";
     public static final String LAST_UTCTIME  = "LAST_UTCTIME";
 
-    //-This is the start of the variable lenght portion of the Payload
+    //-This is the start of the variable length portion of the Payload
     public static final int OFFSET_READOUT_COMPOSITE_ENVELOPE = OFFSET_LAST_UTCTIME      + SIZE_LAST_UTCTIME;
 
     public short           msi_RecType        = DEFAULT_REC_TYPE;//this is used for endian too.
@@ -104,7 +104,7 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
     /**
      * returns the size in bytes of this record as it would
      * be written to a buffer.
-     * @return int ... number of bytes contained in this record, and as written.
+     * @return number of bytes contained in this record, and as written.
      */
     public int getTotalRecordSize() {
         return mi_recordSize;
@@ -112,15 +112,15 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
     /**
      * Pool method to get an object from the pool
      * for reuse.
-     * @return Object ... a TriggerRequestRecord object for reuse.
+     * @return a TriggerRequestRecord object for reuse.
      */
     public static Poolable getFromPool() {
         return (Poolable) new ReadoutDataRecord();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -129,7 +129,6 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
         if (mt_sourceid != null) {
@@ -150,7 +149,7 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
     }
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mb_IsDataLoaded;
@@ -158,8 +157,8 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
 
     /**
      * Loads the data from the buffer into the container record.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -210,8 +209,8 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
 
     /**
      * Method to write this record to the payload destination.
-     * @param tDestination ....PayloadDestination to which to write this record.
-     * @return int the nubmer of bytes written.
+     * @param tDestination PayloadDestination to which to write this record.
+     * @return the number of bytes written.
      */
     public int writeData(PayloadDestination tDestination) throws IOException {
         if (tDestination.doLabel()) tDestination.label("[ReadoutDataRecord]=>").indent();
@@ -227,9 +226,9 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
     }
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset ....the offset at which to start writing the object.
-     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
-     * @return int the nubmer of bytes written.
+     * @param iOffset the offset at which to start writing the object.
+     * @param tBuffer the ByteBuffer into which to write this payload-record.
+     * @return the number of bytes written.
      */
     public int  writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
         tBuffer.putShort( iOffset + OFFSET_REC_TYPE,      msi_RecType                     );

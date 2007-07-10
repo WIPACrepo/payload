@@ -25,7 +25,7 @@ public interface IUTCTime  extends ICopyable {
      * Compares ThisTime - tDifferenceTime and computes time
      * difference in the time units of the DOR Card.
      * @param tTime IUTCTime to compare to.
-     * @return long ...the difference in time in dor card units
+     * @return the difference in time in dor card units
      */
     long timeDiff(IUTCTime tTime);
 
@@ -33,7 +33,7 @@ public interface IUTCTime  extends ICopyable {
      * Compares ThisTime - tDifferenceTime and computes time
      * difference in nanoseconds.
      * @param tTime IUTCTime to compare to.
-     * @return long ...the difference in time in ns
+     * @return the difference in time in ns
      */
     double timeDiff_ns(IUTCTime tTime);
 
@@ -44,7 +44,7 @@ public interface IUTCTime  extends ICopyable {
 
     /**
      * Generates IUTCTime based on offset in ns from this time.
-     * @param dNanoSec ....the positive or negative nanosec value from which to
+     * @param dNanoSec the positive or negative nanosec value from which to
      *                     produce another IUTCTime which is representative of this
      *                     time difference.
      */

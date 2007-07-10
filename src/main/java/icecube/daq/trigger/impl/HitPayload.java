@@ -102,7 +102,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
 
     /**
      * Initialize the hit information from a test-daq payload.
-     * @param IHitDataPayload .... the Reference Payload (carrying data) to use
+     * @param IHitDataPayload the Reference Payload (carrying data) to use
      *                             to create this light-weight version without
      *                             the waveform or other engineering data.
      */
@@ -126,12 +126,12 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
 
     /**
      * Initialize the hit information from a test-daq payload.
-     *  @param   tSourceID .......... ISourceID ,  of this hit
-     *  @param   iTriggerType ....... int ,  type of trigger
-     *  @param   iTriggerConfigID ... int ,  unique config for this type of trigger
-     *  @param   tHitTime ........... IUTCTime ,  UTC time of this Hit
-     *  @param   iTriggerMode ....... int , from the EngineeringFormat (lower-order 2 bytes represent the trigger in the Eng record).
-     *  @param   IDOMID ............. tDomID the domid of this Hit.
+     *  @param   tSourceID source ID of this hit
+     *  @param   iTriggerType type of trigger
+     *  @param   iTriggerConfigID unique config for this type of trigger
+     *  @param   tHitTime UTC time of this Hit
+     *  @param   iTriggerMode from the EngineeringFormat (lower-order 2 bytes represent the trigger in the Eng record).
+     *  @param   tDomID the domid of this Hit.
      */
     public void initialize(ISourceID tSourceID, int iTriggerType, int iTriggerConfigID, IUTCTime tHitTime, int iTriggerMode, IDOMID tDomID) {
         mt_sourceId = tSourceID;
@@ -153,11 +153,11 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param bWriteLoaded ...... boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
-     * @param iDestOffset .......int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer .......ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param bWriteLoaded boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -197,9 +197,9 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded ...... boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -354,11 +354,10 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
-        //-for new just create a new EventPayload
         Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;

@@ -110,7 +110,7 @@ public abstract class Payload extends Poolable
     /**
      * Returns the ByteBuffer which backs this payload
      * if it has one.
-     * @return ByteBuffer ... the backing of this payload if it has one.
+     * @return the backing of this payload if it has one.
      *                        this will be null if it is not 'backed'.
      * NOTE: dbw: this is for Chuck McParland for testing...
      */
@@ -119,7 +119,7 @@ public abstract class Payload extends Poolable
     }
     /**
      * Returns the offset of this payload in the ByteBuffer backing.
-     * @return int ... the offset.
+     * @return the offset.
      */
     public int getPayloadOffset() {
         return mioffset;
@@ -128,10 +128,10 @@ public abstract class Payload extends Poolable
     /**
      * This method allows an object to be reinitialized to a new backing buffer
      * and position within that buffer.
-     * @param iOffset ...int representing the initial position of the object
+     * @param iOffset the initial position of the object
      *                   within the ByteBuffer backing.
-     * @param tBackingBuffer ...ByteBuffer the backing buffer for this object.
-     * @param tFactory ... PayloadFactory which was used to create this Payload
+     * @param tBackingBuffer the backing buffer for this object.
+     * @param tFactory PayloadFactory which was used to create this Payload
      */
     public void initialize(int iOffset, ByteBuffer tBackingBuffer, PayloadFactory tFactory) throws IOException, DataFormatException {
         //-set the parent factory for use with recycle/pooling
@@ -163,25 +163,25 @@ public abstract class Payload extends Poolable
     /**
      * This method must be implemented specific to the format of the
      * the input stream to determine when a complete data element is available.
-     * @param iOffset ............The offset in the ByteBuffer from which to create the payload/spliceable
-     * @param tBuffer ............ByteBuffer from which to detect a spliceable.
-     * @exception IOException ..........this is thrown if there is an error reading the ByteBuffer
+     * @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable
+     * @param tBuffer ByteBuffer from which to detect a spliceable.
+     * @exception IOException if there is an error reading the ByteBuffer
      *                                  to pull out the length of the spliceable.
-     * @exception DataFormatException...is thrown if the format of the data is incorrect.
+     * @exception DataFormatException if the format of the data is incorrect.
      */
     public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
         return readPayloadLength(iOffset, tBuffer);
     }
     /**
-     * Get's the Payload length from a Backing buffer (ByteBuffer)
+     * Get the Payload length from a Backing buffer (ByteBuffer)
      * if possible, otherwise return -1.
-     * @param iOffset .....int which holds the position in the ByteBuffer
+     * @param iOffset int which holds the position in the ByteBuffer
      *                     to check for the Payload length.
-     * @param tBuffer .....ByteBuffer from which to extract the lenght of the payload
-     * @return int ........the lenght of the payload if it can be extracted, otherwise -1
+     * @param tBuffer ByteBuffer from which to extract the length of the payload
+     * @return the length of the payload if it can be extracted, otherwise -1
      *
-     * @exception IOException ...........is thrown if there is trouble reading the Payload length
-     * @exception DataFormatException ...is thrown if there is something wrong with the payload and the
+     * @exception IOException if there is trouble reading the Payload length
+     * @exception DataFormatException if there is something wrong with the payload and the
      *                                   length cannot be read.
      */
     public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
@@ -207,7 +207,7 @@ public abstract class Payload extends Poolable
     /**
      * returns the Payload interface type as defined
      * in the PayloadInterfaceRegistry.
-     * @return int ... one of the defined types in icecube.daq.payload.PayloadInterfaceRegistry
+     * @return one of the defined types in icecube.daq.payload.PayloadInterfaceRegistry
      */
     public int getPayloadInterfaceType() {
         return mipayloadinterfacetype;
@@ -263,8 +263,8 @@ public abstract class Payload extends Poolable
 
     /**
      * Set's the backing buffer of this Payload.
-     * @param iOffset ...int the offset into the ByteBuffer of this objects Payload
-     * @param tPayloadBuffer ...the backing buffer for this payload.
+     * @param iOffset the offset into the ByteBuffer of this objects Payload
+     * @param tPayloadBuffer the backing buffer for this payload.
      */
     public void setPayloadBuffer(int iOffset, ByteBuffer tPayloadBuffer) throws IOException, DataFormatException {
         if (mb_IsEnvelopeLoaded) recycle();
@@ -278,11 +278,11 @@ public abstract class Payload extends Poolable
      * for making use of specialized PayloadDestinations which can document
      * the output if necessary.
      *
-     * @param bWriteLoaded ...... boolean to indicate if the loaded vs buffered payload should be written.
-     * @param iDestOffset ........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer ........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -309,9 +309,9 @@ public abstract class Payload extends Poolable
      * for making use of specialized PayloadDestinations which can document
      * the output if necessary.
      *
-     * @param bWriteLoaded ...... boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -331,10 +331,10 @@ public abstract class Payload extends Poolable
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -343,8 +343,8 @@ public abstract class Payload extends Poolable
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -515,8 +515,8 @@ public abstract class Payload extends Poolable
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         //-create a new Payload

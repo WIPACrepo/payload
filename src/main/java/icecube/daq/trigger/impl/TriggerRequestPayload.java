@@ -57,7 +57,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
 
     /**
      * Returns the unique id assigned to this ITriggerRequestPayload
-     * @return int ... the unique id for this event.
+     * @return the unique id for this event.
      */
     public int getUID() {
         if (mt_triggerRequestRecord != null) {
@@ -131,14 +131,14 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
      * independently of a ByteBuffer with the representative container
      * objects themselves.
      *
-     * @param iUID               ... the unique id (event id) for this trigger-request
-     * @param iTriggerType       ... the type of trigger
-     * @param iTriggerConfigID   ... the id, which along with trigger type uniquely id's configuration for this trigger
-     * @param tRequestorSourceID ... the ISourceID of the source which is constructing this trigger request.
-     * @param tFirstTimeUTC      ... IUTCTime of the start of this time window
-     * @param tLastTimeUTC       ... IUTCTime of the end of this time window
-     * @param tPayloads          ... Vector of IPayload's which have contributed to this trigger.
-     * @param tRequest           ... IReadoutRequest which has been constructed for this payload.
+     * @param iUID the unique id (event id) for this trigger-request
+     * @param iTriggerType the type of trigger
+     * @param iTriggerConfigID the id, which along with trigger type uniquely id's configuration for this trigger
+     * @param tRequestorSourceID the ISourceID of the source which is constructing this trigger request.
+     * @param tFirstTimeUTC IUTCTime of the start of this time window
+     * @param tLastTimeUTC IUTCTime of the end of this time window
+     * @param tPayloads Vector of IPayload's which have contributed to this trigger.
+     * @param tRequest IReadoutRequest which has been constructed for this payload.
      *
      */
     public void initialize(
@@ -200,7 +200,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
     /**
      *  Returns the IReadoutRequest which has been associated
      *  with this ITriggerRequestPayload.
-     *  @return IReadoutRequest ....the request.
+     *  @return the request.
      */
     public IReadoutRequest getReadoutRequest() {
         if (mt_triggerRequestRecord != null) {
@@ -213,18 +213,17 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
 
     /**
      * Method to create instance from the object pool.
-     * @return Object .... this is an TriggerRequestPayload object which is ready for reuse.
+     * @return an TriggerRequestPayload object which is ready for reuse.
      */
     public static Poolable getFromPool() {
         return (Poolable) new TriggerRequestPayload();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
-        //-for new just create a new EventPayload
         Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
@@ -233,7 +232,6 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
         //-null objects which have been recycle'd so they don't
@@ -278,8 +276,8 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
     }
     /**
      * Set's the backing buffer of this Payload.
-     * @param iOffset ...int the offset into the ByteBuffer of this objects Payload
-     * @param tPayloadBuffer ...the backing buffer for this payload.
+     * @param iOffset the offset into the ByteBuffer of this objects Payload
+     * @param tPayloadBuffer the backing buffer for this payload.
      * NOTE: This is inherited from Payload so must be overridden to
      *       provide the correct behavior.
      */
@@ -306,12 +304,12 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -348,10 +346,10 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param tDestination ...... PayloadDestination to which to write the payload
-     * @return int .............. the length in bytes which was written to the destination.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the destination.
      *
      * @throws IOException if an error occurs during the process
      */

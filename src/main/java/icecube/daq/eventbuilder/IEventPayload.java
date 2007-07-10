@@ -30,26 +30,26 @@ import icecube.daq.trigger.ICompositePayload;
 public interface IEventPayload extends ICompositePayload {
 
     /**
-     * Get's the event type indicating the configuration type which
+     * Get the event type indicating the configuration type which
      * produced this event.
-     * @return int the event-type
+     * @return the event-type
      *  NOTE:a value of -1 indicates that this is not implemented by this object
      */
     int getEventType();
 
     /**
-     * Get's the event config id for this event type which acts as
+     * Get the event config id for this event type which acts as
      * a primary key for looking up the parameters/settings which are specific
      * to this specific event-type.
-     * @return int the event configuration id for this event.
+     * @return the event configuration id for this event.
      *  NOTE:a value of -1 indicates that this is not implemented by this object
      */
     int getEventConfigID();
 
     /**
-     * Get's the run number for this event which provides a key to the instrumentation
+     * Get the run number for this event which provides a key to the instrumentation
      * configuration at the time that this event was produced.
-     * @return int .... the run number
+     * @return the run number
      *  NOTE:a value of -1 indicates that this is not implemented by this object
      */
     int getRunNumber();
@@ -57,21 +57,21 @@ public interface IEventPayload extends ICompositePayload {
     /**
      * Returns the unique id assigned to this event by the GlobalTrigger.
      *
-     * @return int ... the unique id for this event.
+     * @return the unique id for this event.
      */
     int getEventUID();
 
     /**
      * Returns the ITriggerRequestPayload which provides the
      * context for the data of this event.
-     * @return ITriggerRequestPayload ... the payload representing the trigger context.
+     * @return the payload representing the trigger context.
      */
     ITriggerRequestPayload getTriggerRequestPayload();
 
     /**
      * Returns the IReadoutDataPayload's which represent the actual data associated
      * with the event.
-     * @return Vector .... of IReadoutDataPayload's which can be queried for IHitDataPayload's
+     * @return Vector of IReadoutDataPayload's which can be queried for IHitDataPayload's
      */
     Vector getReadoutDataPayloads();
 

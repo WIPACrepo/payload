@@ -31,8 +31,8 @@ public class PayloadReader {
     /**
      * Constructor which specifies the PayloadFactory to use for
      * creating payloads.
-     * @param sFileName ... String the name of the file to create payloads from.
-     * @param tFactory .... PayloadFactory to use to create payloads.
+     * @param sFileName the name of the file to create payloads from.
+     * @param tFactory PayloadFactory to use to create payloads.
      */
     public PayloadReader(String sFileName, PayloadFactory tFactory) {
         msFileName = ""+sFileName;
@@ -41,7 +41,7 @@ public class PayloadReader {
 
     /**
      * Returns the filename for this PayloadReader.
-     * @return String .... the filename.
+     * @return the filename.
      */
     public String getFileName() {
         return msFileName;
@@ -76,10 +76,10 @@ public class PayloadReader {
 
     /**
      * Reads the next record into the current position into the ByteBuffer.
-     * @param iOffset ... int the offset from which to start this read.
-     * @param tBuffer ...ByteBuffer into which the raw record is read.
-     * @return int ...the length of the record read into the buffer.
-     *                -1 if not enough room is left in the ByteBuffer.
+     * @param iOffset the offset from which to start this read.
+     * @param tBuffer ByteBuffer into which the raw record is read.
+     * @return the length of the record read into the buffer.
+     *         -1 if not enough room is left in the ByteBuffer.
      * NTOE: This method positions the ByteBuffer to the next position
      *       past the payload that was read (ie startPosition + return value)
      *       if it is successful. Otherwise buffer position is unchanged.
@@ -116,8 +116,8 @@ public class PayloadReader {
     }
     /**
      * Reads the next record into the current position into the ByteBuffer.
-     * @param tBuffer ...ByteBuffer into which the raw record is read.
-     * @return int ...the length of the record read into the buffer.
+     * @param tBuffer ByteBuffer into which the raw record is read.
+     * @return the length of the record read into the buffer.
      *                -1 if not enough room is left in the ByteBuffer.
      * NTOE: This method positions the ByteBuffer to the next position
      *       past the payload that was read (ie startPosition + return value)
@@ -135,18 +135,19 @@ public class PayloadReader {
     }
     /**
      * Create's the next payload from the input stream source.
-     * @param iOffset .... int the offset into which to read and create the payload.
-     * @param tBuffer .... ByteBuffer into which the next payload is to be read at the given offset.
+     * @param iOffset the offset into which to read and create the payload.
+     * @param tBuffer ByteBuffer into which the next payload is to be read at the given offset.
      *
-     * @return Payload ... created by PayloadFactory after payload has been read into
-     *                     the buffer starting at the given offset.
+     * @return  Payload created by PayloadFactory after payload has been read
+     *                     into the buffer starting at the given offset.
      *                     returns null if there is not enough room in the ByteBuffer to read
      *                     the payload.
      * NOTE: The length can be determined by position of buffer after read
      *       or from the Payload.getPayloadLength() attribute.
      * @exception EOFException is thrown to indicate that there are no more payloads in this source
      *                         and should be handled as a normal condition.
-     * @exception IOException, DataFormatException ... are thrown when there is an error condition.
+     * @exception IOException if there is an error condition.
+     * @exception DataFormatException if there is an error condition.
      */
     public Payload createNextPayload(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException  {
         readNextPayload(iOffset, tBuffer);

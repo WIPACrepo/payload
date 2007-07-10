@@ -39,18 +39,18 @@ public class EventPayload_v2Factory  extends PayloadFactory {
     /**
      *  This method is used to create an EventPayload_v2 from constituent pieces, instead
      *  of reading it from a ByteBuffer.
-     *  @param iUID              ... the unique id (event id) for this event
-     *  @param tSourceID         ... the ISourceID of the source which is constructing this event.
-     *  @param tFirstTimeUTC     ... IUTCTime of the start of this time window
-     *  @param tLastTimeUTC      ... IUTCTime of the end of this time window
-     *  @param iEventType        ... int the code analogous to triggerType indicating the type of config for eventBuilder
-     *  @param iEventConfigID    ... int the primary key to determine specific parameters for this event type
-     *  @param iRunNumber        ... int the run-number associated with this event which keys the instrument configuration when
+     *  @param iUID the unique id (event id) for this event
+     *  @param tSourceID the ISourceID of the source which is constructing this event.
+     *  @param tFirstTimeUTC IUTCTime of the start of this time window
+     *  @param tLastTimeUTC IUTCTime of the end of this time window
+     *  @param iEventType the code analogous to triggerType indicating the type of config for eventBuilder
+     *  @param iEventConfigID the primary key to determine specific parameters for this event type
+     *  @param iRunNumber the run-number associated with this event which keys the instrument configuration when
      *                               this event was created.
-     *  @param tTriggerRequest   ... ITriggerRequestPayload which is the trigger causing the collection of this event.
-     *  @param tDataPayloads     ... Vector of IReadoutDataPayload's which constitute this event.
+     *  @param tTriggerRequest ITriggerRequestPayload which is the trigger causing the collection of this event.
+     *  @param tDataPayloads Vector of IReadoutDataPayload's which constitute this event.
      *
-     *  @return Payload ...the Payload object specific to this class which is
+     *  @return the Payload object specific to this class which is
      *                     specific to the class which is derived from PayloadFactory.
      */
     public Payload createPayload(

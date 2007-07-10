@@ -39,7 +39,7 @@ public interface IReadoutRequest {
      *  The locations of the individual sources which are to
      *  be requested for data are contained in the request-elements
      *  themselves.
-     *  @return ISourceID ...the ISourceID of the Trigger which generated
+     *  @return the ISourceID of the Trigger which generated
      *                       this request.
      */
     ISourceID getSourceID();

@@ -466,13 +466,13 @@ public class DataOutputStreamPayloadDestination extends PayloadDestination {
     //
 
     /**
-     * This method writes bytes from the given offset in the ByteBuffer for a lenght of iBytes
+     * This method writes bytes from the given offset in the ByteBuffer for a length of iBytes
      * to the destination.
-     * @param iOffset.........int the offset in the ByteBuffer to start
-     * @param tBuffer.........ByteBuffer from which to write to destination.
-     * @param iBytes..........int the number of bytes to write to the destination.
+     * @param iOffset the offset in the ByteBuffer to start
+     * @param tBuffer ByteBuffer from which to write to destination.
+     * @param iBytes the number of bytes to write to the destination.
      *
-     * @throws IOException....if an error occurs either reading the ByteBuffer or writing
+     * @throws IOException if an error occurs either reading the ByteBuffer or writing
      *                        to the destination.
      */
     public void write(int iOffset, ByteBuffer tBuffer, int iBytes) throws IOException {

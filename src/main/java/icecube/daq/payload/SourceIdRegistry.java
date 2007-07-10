@@ -14,7 +14,7 @@ import icecube.daq.common.DAQCmdInterface;
 import icecube.daq.payload.impl.SourceID4B;
 
 /**
- * This class ...does what?
+ * Source ID registry and associated methods.
  *
  * @author pat
  * @version $Id: SourceIdRegistry.java,v 1.7 2005/12/20 03:03:08 dglo Exp $

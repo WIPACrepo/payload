@@ -32,7 +32,7 @@ public interface IPayload extends ICopyable {
     /**
      * returns the Payload interface type as defined
      * in the PayloadInterfaceRegistry.
-     * @return int ... one of the defined types in icecube.daq.payload.PayloadInterfaceRegistry
+     * @return one of the defined types in icecube.daq.payload.PayloadInterfaceRegistry
      */
     int getPayloadInterfaceType();
 

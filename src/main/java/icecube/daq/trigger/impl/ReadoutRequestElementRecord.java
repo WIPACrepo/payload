@@ -60,7 +60,7 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
     //--[IWriteablePayloadRecord]----
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mb_IsLoaded;
@@ -86,8 +86,8 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
 
     /**
      * Loads the data from the buffer into the container record.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -123,8 +123,8 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
     }
     /**
      * Method to write this record to the payload destination.
-     * @param tDestination ....PayloadDestination to which to write this record.
-     * @return int the nubmer of bytes written.
+     * @param tDestination PayloadDestination to which to write this record.
+     * @return the number of bytes written.
      */
     public int writeData(PayloadDestination tDestination) throws IOException {
         //-write out READOUT_TYPE
@@ -152,9 +152,9 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
 
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset ....the offset at which to start writing the object.
-     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
-     * @return int the nubmer of bytes written.
+     * @param iOffset the offset at which to start writing the object.
+     * @param tBuffer the ByteBuffer into which to write this payload-record.
+     * @return the number of bytes written.
      */
     public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
         //-write out READOUT_TYPE
@@ -203,9 +203,7 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
     }
 
     /**
-     * getDomID()
-     * @return IDOMID ...identifies module to readout.
-     *                   IDOMID object if request is for single DOM
+     * getDomID() IDOMID object if request is for single DOM
      *                   null if request is not specific to a single DOM.
      */
     public IDOMID getDomID() {
@@ -214,7 +212,7 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
 
     /**
      * getSourceID()
-     * @return ISourceID ....the component from which to get data (typically a StringProcessor)
+     * @return the component from which to get data (typically a StringProcessor)
      */
     public ISourceID getSourceID() {
         return mt_sourceId;
@@ -236,7 +234,7 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
 
     /**
      * Allows this object to know how to pool itself.
-     * @return  ReadoutRequestRecord ....from the pool
+     * @return  ReadoutRequestElementRecord from the pool
      * TODO: implement pooling!!!!!
      */
     public static ReadoutRequestElementRecord getFromPool() {

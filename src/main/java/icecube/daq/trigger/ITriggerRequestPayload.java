@@ -20,14 +20,14 @@ package icecube.daq.trigger;
 public interface ITriggerRequestPayload extends ICompositePayload  {
     /**
      * Returns the unique id assigned to this ITriggerRequestPayload
-     * @return int ... the unique id for this event.
+     * @return the unique id for this event.
      */
     int getUID();
 
     /**
      *  Returns the IReadoutRequest which has been associated
      *  with this ITriggerRequestPayload.
-     *  @return IReadoutRequest ....the request.
+     *  @return the request.
      */
     IReadoutRequest getReadoutRequest();
 }

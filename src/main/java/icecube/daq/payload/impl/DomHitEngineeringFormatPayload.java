@@ -107,9 +107,9 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
     /**
      * This method allows an object to be reinitialized to a new backing buffer
      * and position within that buffer.
-     * @param iOffset ...int representing the initial position of the object
+     * @param iOffset representing the initial position of the object
      *                   within the ByteBuffer backing.
-     * @param tBackingBuffer ...ByteBuffer the backing buffer for this object.
+     * @param tBackingBuffer the backing buffer for this object.
      */
     public void initialize(int iOffset, ByteBuffer tBackingBuffer) throws IOException, DataFormatException {
         super.mioffset = iOffset;
@@ -200,15 +200,15 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
     }
 
     /**
-     * Get's the Payload length from a Backing buffer (ByteBuffer)
+     * Get the Payload length from a Backing buffer (ByteBuffer)
      * if possible, otherwise return -1.
-     * @param iOffset .....int which holds the position in the ByteBuffer
+     * @param iOffset int which holds the position in the ByteBuffer
      *                     to check for the Payload length.
-     * @param tBuffer .....ByteBuffer from which to extract the lenght of the payload
-     * @return int ........the lenght of the payload if it can be extracted, otherwise -1
+     * @param tBuffer ByteBuffer from which to extract the length of the payload
+     * @return the length of the payload if it can be extracted, otherwise -1
      *
-     * @exception IOException ...........is thrown if there is trouble reading the Payload length
-     * @exception DataFormatException ...is thrown if there is something wrong with the payload and the
+     * @exception IOException if there is trouble reading the Payload length
+     * @exception DataFormatException if there is something wrong with the payload and the
      *                                   length cannot be read.
      */
     public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
@@ -217,7 +217,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
         //       have to change as we move to multiplexed DomHub data, that can contain multiple hits!!
         //       This means that this payload will ONLY represent a single hit and will have to pull
         //       the length of a single record from the record itself.......developing dbw 11/08/04
-        //-Check to make sure that enough data exists to read the lenght...
+        //-Check to make sure that enough data exists to read the length...
         int iOffsetNeeded = iOffset + OFFSET_RECLEN + SIZE_RECLEN;
         if (iOffsetNeeded < tBuffer.limit()) {
             //-If enough data to read length, then read the length and return it.
@@ -252,7 +252,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
     }
 
     /**
-     * Get's the TriggerMode from the Engineering Format Payload
+     * Get the TriggerMode from the Engineering Format Payload
      * Test pattern trigger     0x0
      * CPU requested trigger    0x1
      * SPE discriminator trigger    0x2
@@ -307,7 +307,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
     /**
      * Create's the Object which has the Payload's information
      * independent of the backing representing the payload of this object.
-     * @return Object ...the Object specific to the type of Payload which
+     * @return the Object specific to the type of Payload which
      *                   contains the information in the backing of the Payload
      *                   which is independent of the Payload
      */
@@ -342,8 +342,8 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
         super.dispose();
     }
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         Payload tPayload = (Payload) new DomHitEngineeringFormatPayload();
@@ -352,7 +352,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
 
     /**
      * Method to create instance from the object pool.
-     * @return Object .... this is an object which is ready for reuse.
+     * @return an object which is ready for reuse.
      */
     public Poolable getPoolable() {
         return (Poolable) getFromPool();
@@ -360,7 +360,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
+     * @param tReadoutRequestPayload ReadoutRequestPayload which is to be returned to the pool.
      */
     public void recycle() {
         if (mtDomHitEngineeringFormatRecord != null) {
@@ -384,10 +384,10 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -397,8 +397,8 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -412,9 +412,9 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      * for making use of specialized PayloadDestinations which can document
      * the output if necessary.
      *
-     * @param bWriteLoaded ...... boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -437,7 +437,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
     }
     /**
      * converts domid to hex string.
-     * @return String .... hex representation of domid, useful for hashing
+     * @return hex representation of domid, useful for hashing
      */
     public String getDomIdAsString() {
         String sHex = hex.toHex(mlDomId);

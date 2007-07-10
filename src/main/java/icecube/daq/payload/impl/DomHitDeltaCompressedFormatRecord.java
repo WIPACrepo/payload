@@ -188,7 +188,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     //-Delta Compressed Header offsets
     /**
      * This is the offset into the deta-format record of the
-     * beginning of the variable lenght data. This is where a
+     * beginning of the variable length data. This is where a
      * decompressor would start to read and decompress the waveform
      * data. (This is not a function of this record at the time of
      * this writing 2-2-2007)
@@ -322,8 +322,8 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      * compressed record into the class variables so that it may be
      * quickly accessed.
      *
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -396,7 +396,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     /**
      * Returns the type code used for the interpretation of this record so
      * that the object which is returned can be formatted/interpreted correctly.
-     * @return int ... the type of record, as identified by the RecordRegistry
+     * @return the type of record, as identified by the RecordRegistry
      */
     public int getRecordType() {
         return RecordTypeRegistry.RECORD_TYPE_DELTA_COMPRESSED_HIT;
@@ -405,7 +405,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
 
     /**
      * Returns the particular version of this record type.
-     * @return int ... the version of this record type.
+     * @return the version of this record type.
      *
      * NOTE: This should probably be deprecated from the interface
      */
@@ -417,7 +417,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     /**
      * Returns the record itself, generically as an object.
      *
-     * @return Object ... the record which contains the Hit data, which is interpretted by the above id's
+     * @return the record which contains the Hit data, which is interpretted by the above id's
      */
     public Object getRecord() {
         return this;
@@ -427,8 +427,8 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
 
     /**
      * Method to write this record to the payload destination.
-     * @param tDestination ....PayloadDestination to which to write this record.
-     * @return int the number of bytes written to this destination.
+     * @param tDestination PayloadDestination to which to write this record.
+     * @return the number of bytes written to this destination.
      */
     public int writeData(PayloadDestination tDestination) throws IOException {
         int iBytesWritten = 0;
@@ -472,9 +472,9 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
 
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset ....the offset at which to start writing the object.
-     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
-     * @return int the number of bytes written to this destination.
+     * @param iOffset the offset at which to start writing the object.
+     * @param tBuffer the ByteBuffer into which to write this payload-record.
+     * @return the number of bytes written to this destination.
      */
     public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
         int iBytesWritten = 0;
@@ -518,8 +518,8 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      * Pulls out the Trigger Mode of the compressed record This
      * assumes the ByteBuffer has been set to BIG_ENDIAN.
      *
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @return the Beacon and SPE/MPE bits mapped to their appropriate places
      *         in the Engineering trigger mode
@@ -563,23 +563,23 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
 
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mbLoaded;
     }
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return (Poolable) new DomHitDeltaCompressedFormatRecord();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -588,7 +588,6 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
         dispose();

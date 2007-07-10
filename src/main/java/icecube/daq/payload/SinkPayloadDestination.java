@@ -24,8 +24,8 @@ public class SinkPayloadDestination extends ByteBufferPayloadDestination   {
     /**
      * This method does nothing.
      *
-     * @param tPayload ...... Payload to which to write to this destination
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param tPayload Payload to which to write to this destination
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -36,9 +36,9 @@ public class SinkPayloadDestination extends ByteBufferPayloadDestination   {
     /**
      * This method does nothing.
      *
-     * @param bWriteLoaded ...... boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tPayload ...... Payload to which to write to this destination
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tPayload Payload to which to write to this destination
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */

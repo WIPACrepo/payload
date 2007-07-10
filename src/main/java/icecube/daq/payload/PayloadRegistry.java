@@ -95,8 +95,8 @@ public final class PayloadRegistry {
      *       the interface type which is returned by the MasterPayloadFactory
      *       when it is dynamically binding the PayloadFactory by payload-type
      *       to create payloads.
-     * @param tPayload ... IPayload the payload to be identified
-     * @return int ... the Payload's interface type as defined: above
+     * @param tPayload the payload to be identified
+     * @return the Payload's interface type as defined: above
      */
     public static int getPayloadInterfaceType(IPayload tPayload) {
         return getPayloadInterfaceType(tPayload.getPayloadType());
@@ -110,9 +110,9 @@ public final class PayloadRegistry {
      *       when it is dynamically binding the PayloadFactory by payload-type
      *       to create payloads.
      *
-     * @param iPayloadID ... int the payload-type as returned from
+     * @param iPayloadID the payload-type as returned from
      *                       IPayload.getPayloadType()
-     * @return int ... the Payload's interface type as defined:
+     * @return the Payload's interface type as defined:
      * @see icecube.daq.payload.PayloadInterfaceRegistry
      */
     public static int getPayloadInterfaceType(int iPayloadID) {
@@ -222,8 +222,8 @@ public final class PayloadRegistry {
     /**
      * This method binds the PayloadType to the factory designed to interpret
      * the payload.
-     * @param iPayloadType ... the type of payload which indicates the factory associated with it.
-     * @return PayloadFactory ... the factory that is appropriate for this type of payload.
+     * @param iPayloadType the type of payload which indicates the factory associated with it.
+     * @return the factory that is appropriate for this type of payload.
      */
     public PayloadFactory getPayloadFactory(int iPayloadType) {
         Object tFactory = mt_PayloadFactories.get(iPayloadType);

@@ -27,7 +27,7 @@ public final class MonitorRecordFactory implements IPayloadRecordFactory {
 
     /**
      * Instance Method to get the factory class.
-     * @return MonitorRecordFactory ...the singleton instance of this factory.
+     * @return the singleton instance of this factory.
      */
     public static MonitorRecordFactory getFromPool() {
         if (mt_singleton == null) {
@@ -40,8 +40,8 @@ public final class MonitorRecordFactory implements IPayloadRecordFactory {
      * Creates IPayloadRecord from the given ByteBuffer starting
      * at the given offset.
      *
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -55,7 +55,7 @@ public final class MonitorRecordFactory implements IPayloadRecordFactory {
     /**
      * This record returns the payload record to the record source (or pool)
      * so it can be reused.
-     * @param tRecord ....IPayloadRecord the record to be reused, or disposed.
+     * @param tRecord the record to be reused, or disposed.
      */
     public void returnPayloadRecord(IPayloadRecord tRecord) {
         //-do nothing so far
@@ -64,7 +64,7 @@ public final class MonitorRecordFactory implements IPayloadRecordFactory {
     /**
      * private method to either construct or retieve from a pool the monitor record
      * of the type indicated.
-     * @param iRecordType ....the type of monitor record to construct.
+     * @param iRecordType the type of monitor record to construct.
      * @exception DataFormatException is thrown if the type is not supported.
      * TODO: Implement Object Pooling
      */

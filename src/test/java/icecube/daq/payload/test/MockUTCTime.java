@@ -54,7 +54,7 @@ public class MockUTCTime
     }
 
     /**
-     * Gets an object form the pool in a non-static context.
+     * Get an object from the pool in a non-static context.
      *
      * @return object of this type from the object pool.
      */

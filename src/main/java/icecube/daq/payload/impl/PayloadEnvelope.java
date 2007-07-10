@@ -56,16 +56,16 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
     public PayloadEnvelope() {}
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded(){ return mb_IsLoaded;}
 
     /**
      * method to initialize envelope that does not correspond to data that
      * has been loaded from a buffer.
-     * @param iPayloadType .......int the type of payload contained in the envelope
-     * @param  iPayloadLen ........int the length of the payload (including this header)
-     * @param lUtime .............long the universal time for this payload.
+     * @param iPayloadType the type of payload contained in the envelope
+     * @param  iPayloadLen the length of the payload (including this header)
+     * @param lUtime the universal time for this payload.
      */
     public void initialize(int iPayloadType, int iPayloadLen, long lUtime) {
         miPayloadType = iPayloadType;
@@ -75,8 +75,8 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
     }
     /**
      * Loads the data from the buffer into the container record.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -109,8 +109,8 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
 
     /**
      *  Writes the contents of the PayloadEnvelope to the specified position.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected writing the record
      */
@@ -128,7 +128,7 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
     }
     /**
      *  Writes the contents of the PayloadEnvelope to the specified destination.
-     * @param tDestination ....PayloadDestination the destination for this record.
+     * @param tDestination the destination for this record.
      *
      * @exception IOException if errors are detected writing the record
      */
@@ -156,8 +156,8 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -166,22 +166,22 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
+     * @param tReadoutRequestPayload ReadoutRequestPayload which is to be returned to the pool.
      */
     public void recycle() {
         dispose();
     }
 
     /**
-     * Get's the Payload length from a Backing buffer (ByteBuffer)
+     * Get the Payload length from a Backing buffer (ByteBuffer)
      * if possible, otherwise return -1.
-     * @param iOffset .....int which holds the position in the ByteBuffer
+     * @param iOffset int which holds the position in the ByteBuffer
      *                     to check for the Payload length.
-     * @param tBuffer .....ByteBuffer from which to extract the lenght of the payload
-     * @return int ........the lenght of the payload if it can be extracted, otherwise -1
+     * @param tBuffer ByteBuffer from which to extract the length of the payload
+     * @return the length of the payload if it can be extracted, otherwise -1
      *
-     * @exception IOException ...........is thrown if there is trouble reading the Payload length
-     * @exception DataFormatException ...is thrown if there is something wrong with the payload and the
+     * @exception IOException if there is trouble reading the Payload length
+     * @exception DataFormatException if there is something wrong with the payload and the
      *                                   length cannot be read.
      */
     public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {

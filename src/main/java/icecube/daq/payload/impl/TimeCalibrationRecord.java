@@ -71,16 +71,16 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
     //.
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return (Poolable) new TimeCalibrationRecord();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -89,7 +89,7 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
+     * @param tReadoutRequestPayload ReadoutRequestPayload which is to be returned to the pool.
      */
     public void recycle() {
         dispose();
@@ -103,7 +103,7 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
     }
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mbLoaded;
@@ -130,8 +130,8 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
     /**
      * reads the time calibration data from the TimeCalibration Record a ByteBuffer
      * containing the data.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -170,8 +170,8 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
 
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset ....the offset at which to start writing the object.
-     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
+     * @param iOffset the offset at which to start writing the object.
+     * @param tBuffer the ByteBuffer into which to write this payload-record.
      *
      * @see IWriteablePayloadRecord
      */
@@ -228,7 +228,7 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
      * target destination.
      * @param tDestination PayloadDestination to which to write the output.
      *
-     * @return int the number of bytes written to the destination.
+     * @return the number of bytes written to the destination.
      *
      * @see IWriteablePayloadRecord
      */

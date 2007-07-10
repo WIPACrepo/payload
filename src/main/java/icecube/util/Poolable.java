@@ -40,8 +40,8 @@ public abstract class Poolable {
     }
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         System.out.println("ERROR: Poolable.getFromPool() called...");
@@ -49,8 +49,8 @@ public abstract class Poolable {
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public abstract Poolable getPoolable();
 

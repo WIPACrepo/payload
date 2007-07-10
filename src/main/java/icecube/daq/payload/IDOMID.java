@@ -20,7 +20,7 @@ import icecube.util.ICopyable;
  */
 public interface IDOMID extends ICopyable {
     /**
-     * Get's the DOMID as a long
+     * Get the DOMID as a long
      */
     long getDomIDAsLong();
 

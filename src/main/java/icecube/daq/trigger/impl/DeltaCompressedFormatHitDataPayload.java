@@ -103,9 +103,9 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
     /**
      * This method allows an object to be reinitialized to a new backing buffer
      * and position within that buffer.
-     * @param iOffset ...int representing the initial position of the object
+     * @param iOffset int representing the initial position of the object
      *                   within the ByteBuffer backing.
-     * @param tBackingBuffer ...ByteBuffer the backing buffer for this object.
+     * @param tBackingBuffer the backing buffer for this object.
      */
     public void initialize(int iOffset, ByteBuffer tBackingBuffer) throws IOException, DataFormatException {
         super.mioffset = iOffset;
@@ -113,7 +113,7 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
     }
 
     /**
-     * Get's access to the underlying data for a delta compressed hit.
+     * Get access to the underlying data for a delta compressed hit.
      *
      * @return DomHitDeltaCompressedFormatRecord which contains the information in the
      *         delta-compressed hit without the waveforms.
@@ -220,19 +220,18 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
     //--[Poolable]-----
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return (Poolable) new DeltaCompressedFormatHitDataPayload();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
-        //-for new just create a new EventPayload
         Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
@@ -308,10 +307,10 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param tDestination ...... PayloadDestination to which to write the payload
-     * @return int .............. the length in bytes which was written to the destination.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the destination.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -355,12 +354,12 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -435,7 +434,7 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
     }
 
     /**
-     * Get's access to the underlying data for a delta compressed hit
+     * Get access to the underlying data for a delta compressed hit
      */
     public IHitDataRecord getHitRecord() throws IOException, DataFormatException {
         return (IHitDataRecord) mt_DeltaFormatRecord;

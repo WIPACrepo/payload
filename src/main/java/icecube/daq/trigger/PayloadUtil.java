@@ -22,7 +22,7 @@ import java.util.zip.DataFormatException;
 import java.io.IOException;
 
 /**
- * This class ...does what?
+ * Payload utility methods.
  *
  * @version $Id: PayloadUtil.java,v 1.2 2005/12/24 12:42:48 toale Exp $
  * @author pat

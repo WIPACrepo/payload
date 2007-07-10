@@ -91,8 +91,8 @@ public class GpsRecord {
     /**
      * Constructor which automatically laods the gps record into it's internal buffer
      * from the given position in the input ByteBuffer.
-     * @param iOffset - int the offset into the input ByteBuffer at which the gps record begins.
-     * @param tBuffer - ByteBuffer, the input buffer from which to extract the gps record.
+     * @param iOffset the offset into the input ByteBuffer at which the gps record begins.
+     * @param tBuffer the input buffer from which to extract the gps record.
      */
     public GpsRecord(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
         loadData(iOffset, tBuffer);
@@ -125,8 +125,8 @@ public class GpsRecord {
     /**
      * Loads the data from the gps portion of a time-calibration record
      * into it's internal record for reading and validation.
-     * @param iOffset - int the offset into the buffer for the beginning of the gps record.
-     * @param tBuffer - ByteBuffer which contains the gps record starting at iOffset.
+     * @param iOffset the offset into the buffer for the beginning of the gps record.
+     * @param tBuffer ByteBuffer which contains the gps record starting at iOffset.
      */
     public void loadData(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
         mbValid = true;

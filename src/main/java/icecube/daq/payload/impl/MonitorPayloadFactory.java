@@ -57,7 +57,7 @@ public class MonitorPayloadFactory extends PayloadFactory {
         //-pull out the record length.
         try {
             //-initialize the monitor record from the contained internal data in the buffer at the
-            // offset of the begining of the monitor record.
+            // offset of the beginning of the monitor record.
             iRecordLength = MonitorRecord.readRecordLength(iOffset, tReferenceBuffer);
         } catch (DataFormatException tDataFormatException) {
             mtLog.error("Error loading MonitorRecord header information.");
@@ -77,7 +77,7 @@ public class MonitorPayloadFactory extends PayloadFactory {
             //-copy the domhub-data to the new buffer
             //...
 
-            //-position the refrence buffer to the begining of the domhub-timecalibration-record.
+            //-position the refrence buffer to the beginning of the domhub-timecalibration-record.
             tReferenceBuffer.position(iOffset);
             tReferenceBuffer.limit(iOffset + iRecordLength);
 

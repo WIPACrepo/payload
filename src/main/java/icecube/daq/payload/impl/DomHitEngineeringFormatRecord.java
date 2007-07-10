@@ -84,7 +84,7 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     }
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mbLoaded;
@@ -103,16 +103,16 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     }
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return (Poolable) new DomHitEngineeringFormatRecord();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -121,7 +121,6 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
         dispose();
@@ -141,8 +140,8 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     /**
      * reads the engineering data from the Engineering Record from a DomHit
      * in TestDAQ format.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -228,8 +227,8 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     }
     /**
      * Pulls out the Trigger Mode if not already loaded
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -243,9 +242,9 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
      * Utility function to detect the correct ByteOrder based on the record format id, and set's
      * the correct ByteOrder for subsiquent reads of the ByteBuffer.
      *
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
-     * @return ByteOrder ...the correct ByteOrder for this buffer which is now set for subsiquent reads.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
+     * @return the correct ByteOrder for this buffer which is now set for subsiquent reads.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -274,9 +273,9 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
      * Utility function to detect the correct ByteOrder based on the record format id, and set's
      * the correct ByteOrder for subsiquent reads of the ByteBuffer.
      *
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
-     * @return ByteOrder ...the correct ByteOrder for this buffer which is now set for subsiquent reads.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
+     * @return the correct ByteOrder for this buffer which is now set for subsiquent reads.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -303,9 +302,9 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     }
     /**
      * Method to quickly get the DomClockValue either from the cache or from the bytebuffer.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
-     * @return long ...representing the dom clock value.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
+     * @return representing the dom clock value.
      *
      * @exception IOException if errors are detected reading the record
      */
@@ -320,11 +319,11 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
 
     /**
      * This is a utility function to extract the value of the DomClock without creating an intermediate value.
-     * @param iRecordOffset ...int the offset from which to start loading the data for the engin. format rec.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data for the engin. format rec.
+     * @param tBuffer ByteBuffer from which to construct the record.
      * @exception IOException if errors are detected reading the record
      *
-     * @return long ...the value of the DomClock stored in a long
+     * @return the value of the DomClock stored in a long
      */
     public static final long extractDomClockValue(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
         long ldomClock = 0L;
@@ -335,11 +334,11 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     }
     /**
      * This is a utility function to extract the value of the record length without creating an intermediate value.
-     * @param iRecordOffset ...int the offset from which to start loading the data for the engin. format rec.
-     * @param tBuffer       ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data for the engin. format rec.
+     * @param tBuffer ByteBuffer from which to construct the record.
      * @exception IOException if errors are detected reading the record
      *
-     * @return int ... the record length.
+     * @return the record length.
      */
     public static final int extractRecordLength(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
         int iRecLen = 0;
@@ -362,7 +361,7 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     /**
      * Returns the type code used for the interpretation of this record so
      * that the object which is returned can be formatted/interpreted correctly.
-     * @return int ... the type of record, as identified by the RecordRegistry
+     * @return the type of record, as identified by the RecordRegistry
      */
     public int getRecordType() {
         return RecordTypeRegistry.RECORD_TYPE_DOMHIT_ENGINEERING_FORMAT;
@@ -371,7 +370,7 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
 
     /**
      * Returns the particular version of this record type.
-     * @return int ... the version of this record type.
+     * @return the version of this record type.
      */
     public int getVersion() {
         return miFormatID;
@@ -381,7 +380,7 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     /**
      * Returns the record itself, generically as an object.
      *
-     * @return Object ... the record which contains the Hit data, which is interpretted by the above id's
+     * @return the record which contains the Hit data, which is interpretted by the above id's
      */
     public Object getRecord() {
         return this;
@@ -391,8 +390,8 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
 
     /**
      * Method to write this record to the payload destination.
-     * @param tDestination ....PayloadDestination to which to write this record.
-     * @return int the number of bytes written to this destination.
+     * @param tDestination PayloadDestination to which to write this record.
+     * @return the number of bytes written to this destination.
      */
     public int writeData(PayloadDestination tDestination) throws IOException {
         int iBytesWritten = 0;
@@ -483,9 +482,9 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
 
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset ....the offset at which to start writing the object.
-     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
-     * @return int the number of bytes written to this destination.
+     * @param iOffset the offset at which to start writing the object.
+     * @param tBuffer the ByteBuffer into which to write this payload-record.
+     * @return the number of bytes written to this destination.
      */
     public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
         throw new IOException("this method is not implemented yet");

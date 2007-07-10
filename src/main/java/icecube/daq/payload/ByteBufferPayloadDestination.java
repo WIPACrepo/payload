@@ -48,8 +48,8 @@ public class ByteBufferPayloadDestination extends PayloadDestination   {
      * be invoke the write method itself, or to pass the payload by refernce
      * to the target.
      *
-     * @param tPayload ...... Payload to which to write to this destination
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param tPayload Payload to which to write to this destination
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -63,9 +63,9 @@ public class ByteBufferPayloadDestination extends PayloadDestination   {
      * be invoke the write method itself, or to pass the payload by refernce
      * to the target.
      *
-     * @param bWriteLoaded ...... boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tPayload ...... Payload to which to write to this destination
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tPayload Payload to which to write to this destination
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */

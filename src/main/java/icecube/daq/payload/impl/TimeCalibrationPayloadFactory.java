@@ -32,15 +32,15 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
         setPoolablePayloadFactory(tPayload);
     }
     /**
-     * Get's the Payload length from a Backing buffer (ByteBuffer)
+     * Get the Payload length from a Backing buffer (ByteBuffer)
      * if possible, otherwise return -1.
-     * @param iOffset .....int which holds the position in the ByteBuffer
+     * @param iOffset int which holds the position in the ByteBuffer
      *                     to check for the Payload length.
-     * @param tBuffer .....ByteBuffer from which to extract the lenght of the payload
-     * @return int ........the lenght of the payload if it can be extracted, otherwise -1
+     * @param tBuffer ByteBuffer from which to extract the length of the payload
+     * @return the length of the payload if it can be extracted, otherwise -1
      *
-     * @exception IOException ...........is thrown if there is trouble reading the Payload length
-     * @exception DataFormatException ...is thrown if there is something wrong with the payload and the
+     * @exception IOException if there is trouble reading the Payload length
+     * @exception DataFormatException if there is something wrong with the payload and the
      *                                   length cannot be read.
      */
     public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
@@ -129,7 +129,7 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
             //-copy the domhub-data to the new buffer
             //...
 
-            //-position the refrence buffer to the begining of the domhub-timecalibration-record.
+            //-position the refrence buffer to the beginning of the domhub-timecalibration-record.
             tReferenceBuffer.position(iOffset);
             tReferenceBuffer.limit(iOffset + TimeCalibrationPayload.SIZE_DOMHUB_TCAL_RECORD_TOTAL);
 

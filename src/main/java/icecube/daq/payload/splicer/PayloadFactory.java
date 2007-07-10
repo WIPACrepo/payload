@@ -45,7 +45,7 @@ public abstract class PayloadFactory
      * This method allows setting of the Poolable which acts as the
      * the factory to produce Payloads from a pool for the createPayload method
      * when creating payload's from a byte-buffer.
-     * @param tPoolablePayloadFactory .... Poolable which always returns a Payload when the
+     * @param tPoolablePayloadFactory Poolable which always returns a Payload when the
      *                                     method getFromPool() is invoked.
      */
     protected void setPoolablePayloadFactory(Poolable tFactory) {
@@ -206,14 +206,14 @@ public abstract class PayloadFactory
     /**
      * This method must be implemented specific to the format of the
      * the input stream to determine when a complete data element is available.
-     * @param iOffset ............ The offset in the ByteBuffer from which to create the payload/spliceable
-     * @param tBuffer ............ ByteBuffer from which to detect a spliceable.
+     * @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable
+     * @param tBuffer ByteBuffer from which to detect a spliceable.
      *
-     * @return int ............... the length of this spliceable
+     * @return the length of this spliceable
      *
-     * @exception IOException ........... this is thrown if there is an error reading the ByteBuffer
+     * @exception IOException if there is an error reading the ByteBuffer
      *                                    to pull out the length of the spliceable.
-     * @exception DataFormatException ... if there is an error in the format of the payload
+     * @exception DataFormatException if there is an error in the format of the payload
      */
     public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
         int iLength;
@@ -231,14 +231,14 @@ public abstract class PayloadFactory
     /**
      * This method must be implemented specific to the format of the
      * the input stream to determine when a complete data element is available.
-     * @param iOffset ............ The offset in the ByteBuffer from which to create the payload/spliceable
-     * @param tBuffer ............ ByteBuffer from which to detect a spliceable.
+     * @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable
+     * @param tBuffer ByteBuffer from which to detect a spliceable.
      *
-     * @return int ............... the length of this payload
+     * @return the length of this payload
      *
-     * @exception IOException ........... this is thrown if there is an error reading the ByteBuffer
+     * @exception IOException if there is an error reading the ByteBuffer
      *                                    to pull out the length of the spliceable.
-     * @exception DataFormatException ... if there is an error in the format of the payload
+     * @exception DataFormatException if there is an error in the format of the payload
      */
     public int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
         return readSpliceableLength(iOffset, tBuffer);
@@ -248,12 +248,12 @@ public abstract class PayloadFactory
      *  This method creates the EngineeringFormatHitPayload which
      *  is derived from Payload (which is both IPayload and Spliceable)
      *
-     *  @param iOffset ..........The offset in the ByteBuffer from which to create the payload/spliceable
-     *  @param tPayloadBuffer ...ByteBuffer form which to construct the Payload
+     *  @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable
+     *  @param tPayloadBuffer ByteBuffer from which to construct the Payload
      *                           which implements BOTH IPayload and Spliceable
-     *  @return Payload ...the Payload object specific to this class which is
+     *  @return the Payload object specific to this class which is
      *                     an EngineeringFormatHitDataPayload.
-     * @exception IOException ..........this is thrown if there is an error reading the ByteBuffer
+     * @exception IOException if there is an error reading the ByteBuffer
      * @exception DataFormatException...is thrown if the format of the data is incorrect.
      */
     public Payload createPayload(int iOffset, ByteBuffer tPayloadBuffer)  throws IOException, DataFormatException {

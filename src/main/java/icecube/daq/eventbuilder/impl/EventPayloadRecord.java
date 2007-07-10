@@ -50,7 +50,7 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
     public static final String FIRST_UTCTIME = "FIRST_UTCTIME";
     public static final String LAST_UTCTIME  = "LAST_UTCTIME";
 
-    //-This is the start of the variable lenght portion of the Payload
+    //-This is the start of the variable length portion of the Payload
     public static final int OFFSET_READOUT_REQUEST_RECORD  = OFFSET_LAST_UTCTIME      + SIZE_LAST_UTCTIME;
 
     public short           msi_RecType        = (short) REC_TYPE;
@@ -68,10 +68,10 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
     /**
      * create's the data portion of this record form
      * the contained data.
-     * @param iUID ............ the unique id for this event
-     * @param tSourceID ....... the source id (ie event-builder source-id) which is producing this event-data
-     * @param tFirstTimeUTC ... the first time in this event-data window
-     * @param tLastTimeUTC .... the last time in this event-data window
+     * @param iUID the unique id for this event
+     * @param tSourceID the source id (ie event-builder source-id) which is producing this event-data
+     * @param tFirstTimeUTC the first time in this event-data window
+     * @param tLastTimeUTC the last time in this event-data window
      */
     public void initialize(
             int             iUID,
@@ -88,15 +88,15 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
     /**
      * Pool method to get an object from the pool
      * for reuse.
-     * @return Object ... a EventDataPayloadRecord object for reuse.
+     * @return a EventPayloadRecord object for reuse.
      */
     public static Poolable getFromPool() {
         return (Poolable) new EventPayloadRecord();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -105,7 +105,6 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
         //-this is ok to be called here because this is the terminal node of inherited calls
@@ -114,7 +113,7 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
     }
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mb_IsDataLoaded;
@@ -124,8 +123,8 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
 
     /**
      * Loads the data from the buffer into the container record.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -159,7 +158,7 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
 
     /**
      * Method to write this record to the payload destination.
-     * @param tDestination ....PayloadDestination to which to write this record.
+     * @param tDestination PayloadDestination to which to write this record.
      */
     public int writeData(PayloadDestination tDestination) throws IOException {
         if (tDestination.doLabel()) tDestination.label("[EventPayloadRecord]=>").indent();
@@ -173,8 +172,8 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
     }
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset ....the offset at which to start writing the object.
-     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
+     * @param iOffset the offset at which to start writing the object.
+     * @param tBuffer the ByteBuffer into which to write this payload-record.
      */
     public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
         ByteOrder tSaveOrder = tBuffer.order();

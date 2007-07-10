@@ -55,22 +55,22 @@ public class SimpleEventBuilder {
 
     /**
      * Main method to constuct and EventPayload from a Vector of EngineeringFormatHitDataPayload.
-     * @param iReadoutType ......... readout type for this simple EB, either
+     * @param iReadoutType readout type for this simple EB, either
      *                               IReadoutRequestElement.READOUT_TYPE_II_MODULE, or
      *                               IReadoutRequestElement.READOUT_TYPE_IT_MODULE
-     * @param tSPSourceID ................. ISourceID id of the StringProcessor (fake) providing this data
-     * @param iEventUID ................... int  global UID for this event
-     * @param iEventType .................. int  type of event (so far undefined)
-     * @param iEventConfigID .............. int  unique config-id for this type of event
-     * @param iRunNumber .................. int run-number which keys instrument configuration for this event.
-     * @param tEventSourceID .............. ISourceID  id of the event-builder generating this event
-     * @param iTriggerUID ................. int UID for this Trigger.
-     * @param iTriggerType ................ int  the id of the trigger-type producing the trigger/event
-     * @param iTriggerConfigID ............ int the id of the parameters which are specific to this trigger type
-     * @param tTriggerSourceID ............ ISourceID source ID of the GT which produced this trigger
-     * @param tHitDataPayloads ............ Vector of IHitDataPayloads which will constitute this event.
+     * @param tSPSourceID id of the StringProcessor (fake) providing this data
+     * @param iEventUID global UID for this event
+     * @param iEventType type of event (so far undefined)
+     * @param iEventConfigID unique config-id for this type of event
+     * @param iRunNumber run-number which keys instrument configuration for this event.
+     * @param tEventSourceID id of the event-builder generating this event
+     * @param iTriggerUID UID for this Trigger.
+     * @param iTriggerType the id of the trigger-type producing the trigger/event
+     * @param iTriggerConfigID the id of the parameters which are specific to this trigger type
+     * @param tTriggerSourceID source ID of the GT which produced this trigger
+     * @param tHitDataPayloads Vector of IHitDataPayloads which will constitute this event.
      *
-     * @return Payload .............. IEventPayload constructed from the simple hit vector and parameters.
+     * @return Payload IEventPayload constructed from the simple hit vector and parameters.
      */
     public Payload createPayload(
                                 int iReadoutType,
@@ -90,7 +90,7 @@ public class SimpleEventBuilder {
         //-Create TriggerRequestPayload from the
         ITriggerRequestPayload tTriggerRequestPayload = createTriggerRequest(iReadoutType, iTriggerUID, iTriggerType, iTriggerConfigID,
                                                                         tTriggerSourceID, tHitPayloads);
-        //-Create the IReadoutDataPayloads ...
+        //-Create the IReadoutDataPayloads
         Vector tReadoutDataPayloads = new Vector();
         //-Set first and last time to reflect the first and last hit times
         // It is assumed that they are time-ordered in this list.
@@ -100,7 +100,7 @@ public class SimpleEventBuilder {
                     mtReadoutDataPayloadFactory.createPayload(iEventUID,1,true,tSPSourceID,tFirstTime,tLastTime,tHitDataPayloads);
         //-only a single entry, but required for the interface.
         tReadoutDataPayloads.add(tReadoutDataPayload);
-        //-Create the IEventPayload ...
+        //-Create the IEventPayload
         Payload tEventPayload =  mtEventPayload_v2Factory.createPayload(
                                 iEventUID, tEventSourceID, tFirstTime, tLastTime,
                                 iEventType, iEventConfigID, iRunNumber,
@@ -110,16 +110,16 @@ public class SimpleEventBuilder {
 
     /**
      * Main method to constuct and EventPayload from a Vector of EngineeringFormatHitDataPayload.
-     * @param tTriggerRequestPayload ...... TriggerRequestPayload from trigger
-     * @param tSPSourceID ................. ISourceID id of the StringProcessor (fake) providing this data
-     * @param iEventUID ................... int  global UID for this event
-     * @param iEventType .................. int  type of event (so far undefined)
-     * @param iEventConfigID .............. int  unique config-id for this type of event
-     * @param iRunNumber .................. int run number; instrument context for this event. (v2)
-     * @param tEventSourceID .............. ISourceID  id of the event-builder generating this event
-     * @param tHitDataPayloads ............ Vector of IHitDataPayloads which will constitute this event.
+     * @param tTriggerRequestPayload TriggerRequestPayload from trigger
+     * @param tSPSourceID id of the StringProcessor (fake) providing this data
+     * @param iEventUID global UID for this event
+     * @param iEventType type of event (so far undefined)
+     * @param iEventConfigID unique config-id for this type of event
+     * @param iRunNumber run number; instrument context for this event. (v2)
+     * @param tEventSourceID id of the event-builder generating this event
+     * @param tHitDataPayloads Vector of IHitDataPayloads which will constitute this event.
      *
-     * @return Payload .............. IEventPayload constructed from the simple hit vector and parameters.
+     * @return IEventPayload constructed from the simple hit vector and parameters.
      */
     public Payload createPayload( TriggerRequestPayload tTriggerRequestPayload,
                                  ISourceID tSPSourceID,
@@ -129,7 +129,7 @@ public class SimpleEventBuilder {
                                  int iRunNumber,
                                  ISourceID tEventSourceID,
                                  Vector tHitDataPayloads) {
-        //-Create the IReadoutDataPayloads ...
+        //-Create the IReadoutDataPayloads
         Vector tReadoutDataPayloads = new Vector();
         //-Set first and last time to reflect the first and last hit times
         // It is assumed that they are time-ordered in this list.
@@ -139,7 +139,7 @@ public class SimpleEventBuilder {
                     mtReadoutDataPayloadFactory.createPayload(iEventUID,1,true,tSPSourceID,tFirstTime,tLastTime,tHitDataPayloads);
         //-only a single entry, but required for the interface.
         tReadoutDataPayloads.add(tReadoutDataPayload);
-        //-Create the IEventPayload ...
+        //-Create the IEventPayload
         Payload tEventPayload =  mtEventPayload_v2Factory.createPayload(
                                 iEventUID, tEventSourceID, tFirstTime, tLastTime,
                                 iEventType, iEventConfigID, iRunNumber,
@@ -153,16 +153,16 @@ public class SimpleEventBuilder {
      *
      *  NOTE: This will not normally be the case but is usefull for Monolith testing.
      *
-     * @param tTriggerRequestPayload ...... TriggerRequestPayload from trigger whose IHitPayload's are really
+     * @param tTriggerRequestPayload TriggerRequestPayload from trigger whose IHitPayload's are really
      *                                      IHitDataPayload's which will be converted.
-     * @param tSPSourceID ................. ISourceID id of the StringProcessor (fake) providing this data
-     * @param iEventUID ................... int  global UID for this event
-     * @param iEventType .................. int  type of event (so far undefined)
-     * @param iEventConfigID .............. int  unique config-id for this type of event
-     * @param iRunNumber .................. int the run-number which keys the instrument configuration for this event.
-     * @param tEventSourceID .............. ISourceID  id of the event-builder generating this event
+     * @param tSPSourceID id of the StringProcessor (fake) providing this data
+     * @param iEventUID global UID for this event
+     * @param iEventType type of event (so far undefined)
+     * @param iEventConfigID unique config-id for this type of event
+     * @param iRunNumber the run-number which keys the instrument configuration for this event.
+     * @param tEventSourceID id of the event-builder generating this event
      *
-     * @return Payload .............. IEventPayload constructed from the simple hit vector and parameters.
+     * @return Payload IEventPayload constructed from the simple hit vector and parameters.
      */
     public Payload convertToEventPayload(TriggerRequestPayload tTriggerRequestPayload,
                                  ISourceID tSPSourceID,
@@ -172,7 +172,7 @@ public class SimpleEventBuilder {
                                  int iRunNumber,
                                  ISourceID tEventSourceID
                                  ) {
-        //-Create the IReadoutDataPayloads ...
+        //-Create the IReadoutDataPayloads
         Vector tReadoutDataPayloads = new Vector();
 
 
@@ -219,7 +219,7 @@ public class SimpleEventBuilder {
         tReadoutDataPayloads.add(tReadoutDataPayload);
 
 
-        //-Create the IEventPayload ...
+        //-Create the IEventPayload
         Payload tEventPayload =  mtEventPayload_v2Factory.createPayload(
                                 iEventUID, tEventSourceID, tFirstTime, tLastTime,
                                 iEventType, iEventConfigID, iRunNumber,
@@ -228,16 +228,16 @@ public class SimpleEventBuilder {
     }
     /**
      * Creats TriggerRequestPayload from IHitDataPayload vector.
-     * @param iReadoutType ......... readout type for this simple EB, either
-     * @param iReadoutType ......... readout type for this simple EB, either
+     * @param iReadoutType readout type for this simple EB, either
+     * @param iReadoutType readout type for this simple EB, either
      *                               IReadoutRequestElement.READOUT_TYPE_II_MODULE, or
      *                               IReadoutRequestElement.READOUT_TYPE_IT_MODULE
-     * @param iTriggerUID .......... UID for this trigger.
-     * @param iTriggerType ......... int type of trigger being created
-     * @param iTriggerConfigID ..... int unique id corresponding to the trigger configuration for
+     * @param iTriggerUID UID for this trigger.
+     * @param iTriggerType type of trigger being created
+     * @param iTriggerConfigID unique id corresponding to the trigger configuration for
      *                               the above iTriggerType.
-     * @param tSourceID ............ tSourceID the source of this event.
-     * @param tHitPayloads ......... Vector of IHitPayloads for use in creating the Trigger Request.
+     * @param tSourceID the source of this event.
+     * @param tHitPayloads Vector of IHitPayloads for use in creating the Trigger Request.
      */
     public ITriggerRequestPayload createTriggerRequest( int iReadoutType,
                             int iTriggerUID, int iTriggerType, int iTriggerConfigID,
@@ -279,7 +279,7 @@ public class SimpleEventBuilder {
      * Method to convert existing IHitDataPayloads into new IHitPayloads based
      * on contained information.
      *
-     * @param tHitDataPayloads .... Vector of IHitDataPayloads from which to create the IHitPayloads.
+     * @param tHitDataPayloads Vector of IHitDataPayloads from which to create the IHitPayloads.
      */
     public Vector createHitPayloads(Vector tHitDataPayloads) {
         Vector tHitPayloads = new Vector();

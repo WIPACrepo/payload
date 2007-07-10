@@ -81,7 +81,7 @@ public class SuperNovaPayloadFactory extends PayloadFactory {
             //-copy the domhub-data to the new buffer
             //...
 
-            //-position the refrence buffer to the begining of the domhub-timecalibration-record.
+            //-position the refrence buffer to the beginning of the domhub-timecalibration-record.
             tReferenceBuffer.position(iOffset);
             tReferenceBuffer.limit(iOffset + iBlockLength);
 

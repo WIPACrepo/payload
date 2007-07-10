@@ -49,7 +49,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
 
     /**
      * Set's the factory for creating the sub-payloads contained in the composite.
-     * @param tFactory ... PayloadFactory the factory used for creating sub-payloads.
+     * @param tFactory the factory used for creating sub-payloads.
      */
     public void setMasterPayloadFactory(PayloadFactory tFactory) {
         mt_MasterPayloadFactory = tFactory;
@@ -57,8 +57,8 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
 
 
     /**
-     * Get's the PayloadFactory used for creating sub-payload.
-     * @return PayloadFactory ... the PayloadFactory used for creating sub-payloads
+     * Get the PayloadFactory used for creating sub-payload.
+     * @return the PayloadFactory used for creating sub-payloads
      */
     public PayloadFactory getMasterPayloadFactory() {
         return mt_MasterPayloadFactory;
@@ -67,7 +67,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
     /**
      * Load's the composite envelope for this composite from the correct
      * (given) position in the buffer stream.
-     * @param iEnvelopeOffset ... int the offset of the CompositePayloadEnvelope
+     * @param iEnvelopeOffset the offset of the CompositePayloadEnvelope
      */
     protected void loadCompositeEnvelope(int iEnvelopeOffset) throws IOException, DataFormatException {
         if (!mb_IsCompositeEnvelopeLoaded) {
@@ -105,7 +105,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
     }
     /**
      * returns the length of the contained composite of payloads.
-     * @return int ... the total lenght of contained payloads, excluding
+     * @return the total length of contained payloads, excluding
      *                 the size of the CompositePayloadEnvelop.
      */
     protected int getTotalLengthOfCompositePayloads() {
@@ -122,11 +122,11 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
     /**
      * Writes out the CompositePayloadEnvelope and the associated Payloads starting
      * at the given position.
-     * @param bWriteLoaded ...... boolean to indicate if 'loaded' payloads should be written
-     * @param iOffset ........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tBuffer ........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param bWriteLoaded boolean to indicate if 'loaded' payloads should be written
+     * @param iOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      *
@@ -150,9 +150,9 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded ...... boolean to indicate if 'loaded' payloads should be written
-     * @param tDestination ...... PayloadDestination to which to write the payload
-     * @return int .............. the length in bytes which was written to the destination.
+     * @param bWriteLoaded boolean to indicate if 'loaded' payloads should be written
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the destination.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -231,8 +231,8 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
     }
 
     /**
-     * get vector of Payload's.
-     * @return Vector ... of Payload's contained in the composite.
+     * get vector of Payloads.
+     * @return Vector of Payloads contained in the composite.
      */
     public Vector getPayloads() throws IOException, DataFormatException {
         if (mt_Payloads == null) loadCompositePayloads();
@@ -240,8 +240,8 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         //-This takes care of the parent payload factory
