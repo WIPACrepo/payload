@@ -40,8 +40,7 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
      *
      * @return A new object representing the current place.
      */
-    public Spliceable createCurrentPlaceSplicaeable() {
-        //return (Spliceable) ReadoutRequestPayload.getFromPool();
+    public Spliceable createCurrentPlaceSpliceable() {
         return (Spliceable) mt_PoolablePayloadFactory.getPoolable();
     }
 

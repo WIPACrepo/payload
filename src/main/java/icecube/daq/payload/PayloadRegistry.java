@@ -237,8 +237,7 @@ public final class PayloadRegistry {
      *
      * @return A new object representing the current place.
      */
-    // public static Spliceable createCurrentPlaceSplicaeable() {
-    public Spliceable createCurrentPlaceSplicaeable() {
-        return (Spliceable) ((PayloadFactory) mt_PayloadFactories.get(PAYLOAD_ID_ENGFORMAT_TRIGGER)).createCurrentPlaceSplicaeable();
+    public Spliceable createCurrentPlaceSpliceable() {
+        return (Spliceable) ((PayloadFactory) mt_PayloadFactories.get(PAYLOAD_ID_ENGFORMAT_TRIGGER)).createCurrentPlaceSpliceable();
     }
 }

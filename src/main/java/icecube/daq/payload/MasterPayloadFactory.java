@@ -96,10 +96,10 @@ public class MasterPayloadFactory extends PayloadFactory {
      *
      * @return A new object representing the current place.
      */
-    public Spliceable createCurrentPlaceSplicaeable() {
+    public Spliceable createCurrentPlaceSpliceable() {
         //-Since this is a placeholder, just create an empty spliceable of
         // the default type.
-        return mtPayloadRegistry.createCurrentPlaceSplicaeable();
+        return mtPayloadRegistry.createCurrentPlaceSpliceable();
     }
 
     /**

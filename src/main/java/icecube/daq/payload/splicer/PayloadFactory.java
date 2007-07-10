@@ -103,7 +103,7 @@ public abstract class PayloadFactory
      *
      * @return A new object representing the current place.
      */
-    public Spliceable createCurrentPlaceSplicaeable() {
+    public Spliceable createCurrentPlaceSpliceable() {
         // XXX this doesn't seem to be used anywhere
         return (Spliceable) mt_PoolablePayloadFactory.getPoolable();
     }
