@@ -28,7 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Payload implements the IPayload interface and the Splicable interface
+ * Payload implements the IPayload interface and the Spliceable interface
  * It contains trigger information that is send through the DAQ system
  *
  * @version $Id: Payload.java,v 1.16 2005/11/09 23:52:19 dwharton Exp $

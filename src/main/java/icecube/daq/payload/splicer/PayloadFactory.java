@@ -77,7 +77,7 @@ public abstract class PayloadFactory
      * shifted. This also can be used to release any resources that are held by
      * any objects that will be invalid after the shift.
      *
-     * @param objects the List of Splicable objects before the buffer is
+     * @param objects the List of Spliceable objects before the buffer is
      * shifted.
      * @param index the index to the first valid object after the shift has
      * taken place.
@@ -115,12 +115,12 @@ public abstract class PayloadFactory
      * @return A new object based on the data in the buffer, null if there is
      *         not an object to return. This could mean that the next object is
      *         not fully contained in the buffer, or the object is not ready
-     *         for comparison with other Splicables.
+     *         for comparison with other Spliceables.
      */
     public Spliceable createSpliceable(ByteBuffer tBuffer)
     {
         //-NOTE: skipSpliceable() will change current position of ByteBuffer to
-        //       the beginning of the NEXT splicable, so offset must be preserved
+        //       the beginning of the NEXT spliceable, so offset must be preserved
         //       to pass to the createPayload() method.
         int iCurrentSpliceableOffset = tBuffer.position();
         // If can not skip to next Spliceable then this one is not fully
@@ -150,21 +150,21 @@ public abstract class PayloadFactory
      * interest. It is important not to modify the List that is the parameter
      * of this method as, for efficiency, it is an internal Splicer list!
      *
-     * @param splicables The List of Spliceables not longer in use.
+     * @param spliceables The List of Spliceables not longer in use.
      *
      * NOTE: (dwharton) this is place where objects can be returned to the pool
      *       of objects used by the factory (if the implementation does this
      */
-    public void invalidateSplicables(List splicables) {
+    public void invalidateSpliceables(List spliceables) {
         // XXX this is never used
     }
 
     /**
-     * Skips the next splicable in the buffer if it exist. The resulting buffer
-     * points to the following splicable that might exist.
+     * Skips the next spliceable in the buffer if it exist. The resulting buffer
+     * points to the following spliceable that might exist.
      *
      * @param buffer the ByteBuffer holding the raw objects.
-     * @return true if the Splicable was successfully skipped, false otherwise
+     * @return true if the Spliceable was successfully skipped, false otherwise
      *         (in which case the buffer is untouched).
      */
     public boolean skipSpliceable(ByteBuffer tBuffer)
@@ -192,7 +192,7 @@ public abstract class PayloadFactory
             return false;
         }
 
-        // Check that the Splicable is fully contained.
+        // Check that the Spliceable is fully contained.
         final int iNextSpliceableBegin = iBegin + iSpliceableLength;
         if (iNextSpliceableBegin > tBuffer.limit()) {
             LOG.info("Next spliceable position " + iNextSpliceableBegin +
