@@ -75,4 +75,10 @@ public interface IEventPayload extends ICompositePayload {
      */
     Vector getReadoutDataPayloads();
 
+    /**
+     * Get the number of the active subrun for this event.
+     * @return the subrun number
+     *  NOTE:a value of 0 indicates that no subrun is active
+     */
+    int getSubrunNumber();
 }

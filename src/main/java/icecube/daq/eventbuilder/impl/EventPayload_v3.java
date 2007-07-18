@@ -17,6 +17,7 @@ import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.util.Poolable;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.impl.CompositePayloadEnvelope;
+import icecube.daq.payload.ILoadablePayload;
 
 /**
  * This payload object represents a Event which is produced by when
@@ -27,69 +28,86 @@ import icecube.daq.trigger.impl.CompositePayloadEnvelope;
  * return a series of IReadoutDataPayload's which contain IHitDataPayload's
  * containing the instrument data associated with the generated trigger-request.
  *
- * This class is a composite payload whic contains the following information:
+ * This class is a composite payload which contains the following information:
  * 1. EventID - unique for this triggered event (from the global trigger)
  * 2. Timewindow - for this event-data.
+ * 2.1 RunNumber - the run number which identifies the instrumentation configuration
+ *                 and relative time offset needed to interpret the UTC times.
+ * 2.2 SubrunNumber - indicating the subrun (or 0 if no subrun is active)
+ * 2.3 EventType - indicating a configuration type which cause this event
+ *                     this event-type was configured.
  * 3. ITriggerRequestPayload fromt he GlobalTrigger whic caused the creation of this event.
  * 4. Vector of IReadoutDataPayload's representing the data as queried from the list
  *    of StringProcessor's and IceTopDataHandler's as specified in the ITriggerRequestPayload.
  *
  * @author dwharton, mhellwig
  */
-public class EventPayload extends AbstractCompositePayload implements IEventPayload {
+public class EventPayload_v3 extends AbstractCompositePayload implements IEventPayload {
     //-TriggerRequestRecord starts right after PayloadEnvelope
     public static final int OFFSET_EVENT_RECORD = OFFSET_PAYLOAD_DATA;
-    public static final int OFFSET_COMPOSITE_START = OFFSET_EVENT_RECORD + EventPayloadRecord.SIZE_TOTAL;
     //-CompositePayloadEnvelope starts right after the end of the EventPayloadRecord.
-    protected EventPayloadRecord mt_eventRecord;
-    protected ITriggerRequestPayload mt_triggerRequestPayload;
-    protected Vector mt_readoutDataPayloads;
+    public static final int OFFSET_COMPOSITE_START = OFFSET_EVENT_RECORD + EventPayloadRecord_v3.SIZE_TOTAL;
 
-    //-ADDED this section for additions to IEventPayload: Note this is for supporting
-    // the binary format which is produced by this class.
+    protected EventPayloadRecord_v3  mt_eventRecord;
 
-    /**
-     * Get the event type indicating the configuration type which
-     * produced this event.
-     * @return the event-type
-     *  NOTE:a value of -1 indicates that this is not implemented by this object
-     */
-    public int getEventType() {
-        return -1;
-    }
-
-    /**
-     * Get the event config id for this event type which acts as
-     * a primary key for looking up the parameters/settings which are specific
-     * to this specific event-type.
-     * @return the event configuration id for this event.
-     *  NOTE:a value of -1 indicates that this is not implemented by this object
-     */
-    public int getEventConfigID() {
-        return -1;
-    }
-
-    /**
-     * Get the run number for this event which provides a key to the instrumentation
-     * configuration at the time that this event was produced.
-     * @return the run number
-     *  NOTE:a value of -1 indicates that this is not implemented by this object
-     */
-    public int getRunNumber() {
-        return -1;
-    }
 
     /**
      * standare Constructory which can be pooled.
      */
-    public EventPayload() {
-        super.mipayloadtype = PayloadRegistry.PAYLOAD_ID_EVENT;
+    public EventPayload_v3() {
+        super.mipayloadtype = PayloadRegistry.PAYLOAD_ID_EVENT_V3;
         super.mipayloadinterfacetype = PayloadInterfaceRegistry.I_EVENT_PAYLOAD;
     }
     //
     //--Section for creating Payload outside of ByteBuffer
     //  environment.
     //
+    /**
+     * Get the event type indicating the configuration type which
+     * produced this event.
+     * @return the event-type
+     */
+    public int getEventType() {
+        if (mt_eventRecord != null) {
+            return mt_eventRecord.mi_eventType;
+        } else {
+            return -1;
+        }
+    }
+
+    /**
+     * Get the event config id for this event type which acts as
+     * a primary key for looking up the parameters/settings which are specific
+     * to this specific event-type.
+     */
+    public int getEventConfigID() {
+        return -1;
+    }
+
+    /**
+     * Get the run number for this event.
+     * @return the run number, -1 if not known, &gt;0 if known
+     */
+    public int getRunNumber() {
+        if (mt_eventRecord != null) {
+            return mt_eventRecord.mi_runNumber;
+        } else {
+            return -1;
+        }
+    }
+
+    /**
+     * Get the subrun number for this event.
+     * @return the subrun number, 0 if no subrun is active,
+               &lt;0 if the subrun is in transition
+     */
+    public int getSubrunNumber() {
+        if (mt_eventRecord != null) {
+            return mt_eventRecord.mi_subrunNumber;
+        } else {
+            return 0;
+        }
+    }
 
     /**
      * returns start time of interval
@@ -117,8 +135,14 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      * `returns ID of trigger
      */
     public int getTriggerConfigID() {
-        if (mt_triggerRequestPayload != null) {
-            return mt_triggerRequestPayload.getTriggerConfigID();
+        ITriggerRequestPayload trigReq = getTriggerRequestPayload();
+        if (trigReq != null) {
+            try {
+                ((ILoadablePayload) trigReq).loadPayload();
+            } catch (Exception ex) {
+                // ignore exceptions
+            }
+            return trigReq.getTriggerConfigID();
         } else {
             return -1;
         }
@@ -127,8 +151,14 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      * returns type of trigger based on the trigger mode in the underlying hit
      */
     public int getTriggerType() {
-        if (mt_triggerRequestPayload != null) {
-            return mt_triggerRequestPayload.getTriggerType();
+        ITriggerRequestPayload trigReq = getTriggerRequestPayload();
+        if (trigReq != null) {
+            try {
+                ((ILoadablePayload) trigReq).loadPayload();
+            } catch (Exception ex) {
+                // ignore exceptions
+            }
+            return trigReq.getTriggerType();
         } else {
             return -1;
         }
@@ -154,6 +184,9 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      * @param tSourceID the ISourceID of the creator of this payload
      * @param tFirstTimeUTC IUTCTime of the start of this time window
      * @param tLastTimeUTC IUTCTime of the end of this time window
+     * @param iEventType the type of config that produced this event.
+     * @param iRunNumber the run-number in which this event occured.
+     * @param iSubrunNumber the subrun number in which this event occured.
      * @param tTriggerRequest ITriggerRequestPayload which caused this event to be constructed.
      * @param tDataPayloads Vector of IReadoutDataPayload's which constitute the data as returned from
      *                               the StringProcessor's/IceTopDataHandler's
@@ -166,10 +199,13 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
         ISourceID              tSourceID,
         IUTCTime               tFirstTimeUTC,
         IUTCTime               tLastTimeUTC,
+        int                    iEventType,
+        int                    iRunNumber,
+        int                    iSubrunNumber,
         ITriggerRequestPayload tTriggerRequest,
         Vector                 tDataPayloads
     ) {
-        mt_eventRecord = (EventPayloadRecord) EventPayloadRecord.getFromPool();
+        mt_eventRecord = (EventPayloadRecord_v3) EventPayloadRecord_v3.getFromPool();
         //-Payload portion
         // This is the composite portion of this payload
         super.mt_Payloads = new Vector();
@@ -185,7 +221,10 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
                                     iUID,
                                     tSourceID,
                                     tFirstTimeUTC,
-                                    tLastTimeUTC
+                                    tLastTimeUTC,
+                                    iEventType,
+                                    iRunNumber,
+                                    iSubrunNumber
                                     );
         //-If we go to write out then will have to assess the size of the record
         // before placing onto stream so can correctly have the data length.
@@ -195,8 +234,8 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
         //-sum up payload length
         //--PayloadEnvelope.size
         iPayloadLength += PayloadEnvelope.SIZE_ENVELOPE;
-        //-Add the size of the EventPayloadRecord
-        iPayloadLength += EventPayloadRecord.SIZE_TOTAL;
+        //-Add the size of the EventPayloadRecord_v3
+        iPayloadLength += EventPayloadRecord_v3.SIZE_TOTAL;
         //--For each Payload in composite
         int iCompositePayloadlength = getTotalLengthOfCompositePayloads();
         iPayloadLength +=iCompositePayloadlength + CompositePayloadEnvelope.SIZE_COMPOSITE_ENVELOPE;
@@ -207,7 +246,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
         mt_CompositeEnvelope.initialize(CompositePayloadEnvelope.DEFAULT_COMPOSITE_TYPE, mt_Payloads.size(), iCompositePayloadlength);
         mi_CompositeEnvelopeOffset = OFFSET_COMPOSITE_START;
         //--- length+= Payload(i).size
-        mt_PayloadEnvelope.initialize(PayloadRegistry.PAYLOAD_ID_EVENT, milength, time);
+        mt_PayloadEnvelope.initialize(PayloadRegistry.PAYLOAD_ID_EVENT_V3, milength, time);
         super.mb_IsCompositeEnvelopeLoaded = true;
         super.mb_IsEnvelopeLoaded = true;
     }
@@ -232,6 +271,10 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      * @return the payload representing the trigger context.
      */
     public ITriggerRequestPayload getTriggerRequestPayload() {
+        if (mt_Payloads == null) {
+            return null;
+        }
+
         return (ITriggerRequestPayload) mt_Payloads.get(0);
     }
 
@@ -242,29 +285,21 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      */
     public Vector getReadoutDataPayloads() {
         Vector tDataPayloads = new Vector();
-        for (int ii=0; ii < mt_Payloads.size() -1; ii++) {
-            tDataPayloads.add(mt_Payloads.get(ii+1));
+        // start from 1 to skip initial ITriggerRequestPayload
+        for (int ii=1; ii < mt_Payloads.size(); ii++) {
+            tDataPayloads.add(mt_Payloads.get(ii));
         }
         return tDataPayloads;
     }
 
     /**
-     * Get the number of the active subrun for this event.
-     * @return the subrun number
-     *  NOTE:a value of 0 indicates that no subrun is active
-     */
-    public int getSubrunNumber()
-    {
-        return 0;
-    }
-
-    /**
      * Method to create instance from the object pool.
-     * @return an object which is ready for reuse.
+     * @return an TriggerRequestPayload object which is ready for reuse.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new EventPayload();
+        return (Poolable) new EventPayload_v3();
     }
+
 
     /**
      * Get an object from the pool in a non-static context.
@@ -284,7 +319,8 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
             mt_eventRecord.recycle();
             mt_eventRecord = null;
         }
-        //-THIS MUST BE CALLED LAST!!
+        //-LET the Base Class call dipose()!
+        //-ALWAYS call this LAST...
         super.recycle();
     }
     //
@@ -303,7 +339,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      */
     protected void loadEventRecord() throws IOException, DataFormatException {
         if (mtbuffer != null && mt_eventRecord == null) {
-            mt_eventRecord = (EventPayloadRecord) EventPayloadRecord.getFromPool();
+            mt_eventRecord = (EventPayloadRecord_v3) EventPayloadRecord_v3.getFromPool();
             mt_eventRecord.loadData(mioffset + OFFSET_EVENT_RECORD, mtbuffer);
             //-compute the composite offset so the super-class can load the
             // composite-payload correctly.
@@ -328,7 +364,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
             mt_eventRecord.dispose();
             mt_eventRecord = null;
         }
-        //-always call super-class LAST
+        //-MAKE SURE TO CALL THIS LAST!
         super.dispose();
     }
 
@@ -366,7 +402,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
                 iBytesWritten += PayloadEnvelope.SIZE_ENVELOPE;
                 //-write the trigger-request-record
                 mt_eventRecord.writeData(iDestOffset + OFFSET_EVENT_RECORD, tDestBuffer);
-                iBytesWritten += EventPayloadRecord.SIZE_TOTAL;
+                iBytesWritten += EventPayloadRecord_v3.SIZE_TOTAL;
                 //-write the composite payload portion
                 iBytesWritten += writeCompositePayload(bWriteLoaded, (iDestOffset + mi_CompositeEnvelopeOffset), tDestBuffer);
             }
@@ -385,7 +421,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      * @throws IOException if an error occurs during the process
      */
     public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
-        if (tDestination.doLabel()) tDestination.label("[EventPayload]=>").indent();
+        if (tDestination.doLabel()) tDestination.label("[EventPayload_v3]=>").indent();
         int iBytesWritten = 0;
         //-If backing then use it..
         if (mtbuffer != null && !bWriteLoaded) {
@@ -406,29 +442,13 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
                 mt_PayloadEnvelope.writeData(tDestination);
                 iBytesWritten += PayloadEnvelope.SIZE_ENVELOPE;
                 mt_eventRecord.writeData(tDestination);
-                iBytesWritten += EventPayloadRecord.SIZE_TOTAL;
+                iBytesWritten += EventPayloadRecord_v3.SIZE_TOTAL;
                 //-write the composite payload portion
                 iBytesWritten += writeCompositePayload(bWriteLoaded, tDestination);
             }
         }
-        if (tDestination.doLabel()) tDestination.undent().label("<=[EventPayload]");
+        if (tDestination.doLabel()) tDestination.undent().label("<=[EventPayload_v3]");
         return iBytesWritten;
     }
 
-    /**
-     * Formats the output of this object to string
-     */
-    public String toString() {
-        StringBuffer sbBuff = new StringBuffer();
-        sbBuff.append("EventPayload(");
-        sbBuff.append(", getFirstTimeUTC()="+getFirstTimeUTC().getUTCTimeAsLong());
-        sbBuff.append(", getLastTimeUTC()="+getLastTimeUTC().getUTCTimeAsLong());
-        sbBuff.append(", getTriggerConfigID()="+getTriggerConfigID());
-        sbBuff.append(", getTriggerType()="+getTriggerType());
-        sbBuff.append(", getSourceID()="+getSourceID().getSourceID() );
-        sbBuff.append(", getEventUID()="+getEventUID() );
-        sbBuff.append(")");
-
-        return sbBuff.toString();
-    }
 }

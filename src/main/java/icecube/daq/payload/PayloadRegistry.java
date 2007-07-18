@@ -3,6 +3,7 @@ import java.util.Vector;
 
 import icecube.daq.eventbuilder.impl.EventPayloadFactory;
 import icecube.daq.eventbuilder.impl.EventPayload_v2Factory;
+import icecube.daq.eventbuilder.impl.EventPayload_v3Factory;
 import icecube.daq.eventbuilder.impl.ReadoutDataPayloadFactory;
 import icecube.daq.payload.splicer.CompositePayloadFactory;
 import icecube.daq.payload.splicer.PayloadFactory;
@@ -53,7 +54,8 @@ public final class PayloadRegistry {
     public static final int PAYLOAD_ID_SN                    = 16;  //-SuperNovaPayload
     public static final int PAYLOAD_ID_DELTA_HIT             = 17; // DomHitDeltaCompressedFormatPayload
     public static final int PAYLOAD_ID_COMPRESSED_HIT_DATA   = 18;  // delta and SLC hits including the compressed waveform data
-    public static final int PAYLOAD_ID_LASTVALID             = PAYLOAD_ID_COMPRESSED_HIT_DATA;
+    public static final int PAYLOAD_ID_EVENT_V3              = 19;
+    public static final int PAYLOAD_ID_LASTVALID             = PAYLOAD_ID_EVENT_V3;
 
     //-dbw: if this value is non-null then it will be installed into all
     //      the managed PayloadFactory's and subsiquently all the Payload's which
@@ -149,6 +151,7 @@ public final class PayloadRegistry {
                 break;
             case PAYLOAD_ID_EVENT :
             case PAYLOAD_ID_EVENT_V2 :
+            case PAYLOAD_ID_EVENT_V3 :
                 iPayloadInterfaceType = PayloadInterfaceRegistry.I_EVENT_PAYLOAD;
                 break;
             case PAYLOAD_ID_BEACON :
@@ -200,6 +203,8 @@ public final class PayloadRegistry {
         mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                       , PAYLOAD_ID_BEACON                 );
         mt_PayloadFactories.setElementAt( new  DomHitDeltaCompressedFormatPayloadFactory() , PAYLOAD_ID_DELTA_HIT    );
         mt_PayloadFactories.setElementAt( new  DeltaCompressedFormatHitDataPayloadFactory() , PAYLOAD_ID_COMPRESSED_HIT_DATA    );
+        mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                       , PAYLOAD_ID_BEACON                 );
+        mt_PayloadFactories.setElementAt( new  EventPayload_v3Factory()                     , PAYLOAD_ID_EVENT_V3               );
         //-Install the recycler if present
         if (mtBufferCache != null) {
             for (int ii=0; ii < mt_PayloadFactories.size(); ii++) {

@@ -13,7 +13,7 @@ import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
 
-public class EventPayloadRecord_v2Test
+public class EventPayloadRecord_v3Test
     extends TestCase
 {
     /**
@@ -21,21 +21,21 @@ public class EventPayloadRecord_v2Test
      *
      * @param name the name of the test.
      */
-    public EventPayloadRecord_v2Test(String name)
+    public EventPayloadRecord_v3Test(String name)
     {
         super(name);
     }
 
     public static Test suite()
     {
-        return new TestSuite(EventPayloadRecord_v2Test.class);
+        return new TestSuite(EventPayloadRecord_v3Test.class);
     }
 
     public void testBasic()
         throws Exception
     {
-        EventPayloadRecord_v2 hitRec =
-            new EventPayloadRecord_v2();
+        EventPayloadRecord_v3 hitRec =
+            new EventPayloadRecord_v3();
         assertFalse("Data should NOT be loaded", hitRec.isDataLoaded());
     }
 
@@ -47,15 +47,15 @@ public class EventPayloadRecord_v2Test
         final long firstTime = 333L;
         final long lastTime = 444L;
         final int type = 555;
-        final int cfgId = 666;
-        final int runNum = 777;
+        final int runNum = 666;
+        final int subrunNum = 777;
 
-        ByteBuffer buf = TestUtil.createEventRecordv2(uid, srcId, firstTime,
-                                                      lastTime, type, cfgId,
-                                                      runNum);
+        ByteBuffer buf = TestUtil.createEventRecordv3(uid, srcId, firstTime,
+                                                      lastTime, type, runNum,
+                                                      subrunNum);
 
-        EventPayloadRecord_v2 evtRec =
-            new EventPayloadRecord_v2();
+        EventPayloadRecord_v3 evtRec =
+            new EventPayloadRecord_v3();
         assertFalse("Data should NOT be loaded", evtRec.isDataLoaded());
 
         evtRec.loadData(0, buf);
@@ -71,8 +71,8 @@ public class EventPayloadRecord_v2Test
         assertEquals("Bad last time",
                      lastTime, evtRec.mt_lastTime.getUTCTimeAsLong());
         assertEquals("Bad event type", type, evtRec.mi_eventType);
-        assertEquals("Bad event config ID", cfgId, evtRec.mi_eventConfigID);
         assertEquals("Bad run number", runNum, evtRec.mi_runNumber);
+        assertEquals("Bad subrun number", subrunNum, evtRec.mi_subrunNumber);
 
         evtRec.dispose();
         assertFalse("Data should NOT be loaded", evtRec.isDataLoaded());
@@ -86,16 +86,16 @@ public class EventPayloadRecord_v2Test
         final long firstTime = 333L;
         final long lastTime = 444L;
         final int type = 555;
-        final int cfgId = 666;
-        final int runNum = 777;
+        final int runNum = 666;
+        final int subrunNum = 777;
 
-        EventPayloadRecord_v2 evtRec =
-            new EventPayloadRecord_v2();
+        EventPayloadRecord_v3 evtRec =
+            new EventPayloadRecord_v3();
         assertFalse("Data should NOT be loaded", evtRec.isDataLoaded());
 
         evtRec.initialize(uid, new MockSourceID(srcId),
                           new MockUTCTime(firstTime),
-                          new MockUTCTime(lastTime), type, cfgId, runNum);
+                          new MockUTCTime(lastTime), type, runNum, subrunNum);
 
         assertTrue("Data should be loaded", evtRec.isDataLoaded());
 
@@ -109,8 +109,8 @@ public class EventPayloadRecord_v2Test
         assertEquals("Bad last time",
                      lastTime, evtRec.mt_lastTime.getUTCTimeAsLong());
         assertEquals("Bad event type", type, evtRec.mi_eventType);
-        assertEquals("Bad event config ID", cfgId, evtRec.mi_eventConfigID);
         assertEquals("Bad run number", runNum, evtRec.mi_runNumber);
+        assertEquals("Bad subrun number", subrunNum, evtRec.mi_subrunNumber);
 
         evtRec.recycle();
         assertFalse("Data should NOT be loaded", evtRec.isDataLoaded());
@@ -124,15 +124,15 @@ public class EventPayloadRecord_v2Test
         final long firstTime = 333L;
         final long lastTime = 444L;
         final int type = 555;
-        final int cfgId = 666;
-        final int runNum = 777;
+        final int runNum = 666;
+        final int subrunNum = 777;
 
-        ByteBuffer buf = TestUtil.createEventRecordv2(uid, srcId, firstTime,
-                                                      lastTime, type, cfgId,
-                                                      runNum);
+        ByteBuffer buf = TestUtil.createEventRecordv3(uid, srcId, firstTime,
+                                                      lastTime, type, runNum,
+                                                      subrunNum);
 
-        EventPayloadRecord_v2 evtRec =
-            new EventPayloadRecord_v2();
+        EventPayloadRecord_v3 evtRec =
+            new EventPayloadRecord_v3();
         assertFalse("Data should NOT be loaded", evtRec.isDataLoaded());
 
         evtRec.loadData(0, buf);
@@ -156,15 +156,15 @@ public class EventPayloadRecord_v2Test
         final long firstTime = 333L;
         final long lastTime = 444L;
         final int type = 555;
-        final int cfgId = 666;
-        final int runNum = 777;
+        final int runNum = 666;
+        final int subrunNum = 777;
 
-        ByteBuffer buf = TestUtil.createEventRecordv2(uid, srcId, firstTime,
-                                                      lastTime, type, cfgId,
-                                                      runNum);
+        ByteBuffer buf = TestUtil.createEventRecordv3(uid, srcId, firstTime,
+                                                      lastTime, type, runNum,
+                                                      subrunNum);
 
-        EventPayloadRecord_v2 evtRec =
-            new EventPayloadRecord_v2();
+        EventPayloadRecord_v3 evtRec =
+            new EventPayloadRecord_v3();
         assertFalse("Data should NOT be loaded", evtRec.isDataLoaded());
 
         evtRec.loadData(0, buf);

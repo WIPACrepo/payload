@@ -341,14 +341,14 @@ public abstract class TestUtil
         return buf;
     }
 
-    public static ByteBuffer createEvent(int uid, int srcId, long firstTime,
-                                         long lastTime, int type, int cfgId,
-                                         int runNum,
-                                         ITriggerRequestPayload trigReq,
-                                         List hitList)
+    public static ByteBuffer createEventv2(int uid, int srcId, long firstTime,
+                                           long lastTime, int type, int cfgId,
+                                           int runNum,
+                                           ITriggerRequestPayload trigReq,
+                                           List hitList)
     {
-        ByteBuffer recBuf = createEventRecord(uid, srcId, firstTime, lastTime,
-                                              type, cfgId, runNum);
+        ByteBuffer recBuf = createEventRecordv2(uid, srcId, firstTime, lastTime,
+                                                type, cfgId, runNum);
 
         ByteBuffer trBuf = createTriggerRequest(trigReq);
 
@@ -380,14 +380,81 @@ public abstract class TestUtil
         return buf;
     }
 
-    public static ByteBuffer createEventRecord(int uid, int srcId,
-                                               long firstTime, long lastTime,
-                                               int type, int cfgId, int runNum)
+    public static ByteBuffer createEventv3(int uid, int srcId, long firstTime,
+                                           long lastTime, int type,
+                                           int runNum, int subrunNum,
+                                           ITriggerRequestPayload trigReq,
+                                           List hitList)
+    {
+        ByteBuffer recBuf = createEventRecordv2(uid, srcId, firstTime, lastTime,
+                                                type, runNum, subrunNum);
+
+        ByteBuffer trBuf = createTriggerRequest(trigReq);
+
+        ByteBuffer rdBuf =
+            createReadoutDataPayload(uid, 1, true, srcId, firstTime, lastTime,
+                                     hitList);
+
+        final int bufListBytes = trBuf.limit() + rdBuf.limit();
+        final int compLen = 8 + bufListBytes;
+        final int bufLen = 16 + recBuf.limit() + compLen;
+
+        ByteBuffer buf = ByteBuffer.allocate(bufLen);
+        putPayloadEnvelope(buf, bufLen, PayloadRegistry.PAYLOAD_ID_EVENT_V3,
+                           firstTime);
+        buf.put(recBuf);
+
+        putCompositeEnvelope(buf, bufListBytes,
+                             PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT, 2);
+        buf.put(trBuf);
+        buf.put(rdBuf);
+
+        buf.flip();
+
+        if (buf.limit() != buf.capacity()) {
+            throw new Error("Expected payload length is " + buf.capacity() +
+                            ", actual length is " + buf.limit());
+        }
+
+        return buf;
+    }
+
+    public static ByteBuffer createEventRecordv2(int uid, int srcId,
+                                                 long firstTime, long lastTime,
+                                                 int type, int cfgId,
+                                                 int runNum)
     {
         final int bufLen = 38;
 
         ByteBuffer buf = ByteBuffer.allocate(bufLen);
         buf.putShort((short) RecordTypeRegistry.RECORD_TYPE_EVENT_V2);
+        buf.putInt(uid);
+        buf.putInt(srcId);
+        buf.putLong(firstTime);
+        buf.putLong(lastTime);
+        buf.putInt(type);
+        buf.putInt(cfgId);
+        buf.putInt(runNum);
+
+        buf.flip();
+
+        if (buf.limit() != buf.capacity()) {
+            throw new Error("Expected payload length is " + buf.capacity() +
+                            ", actual length is " + buf.limit());
+        }
+
+        return buf;
+    }
+
+    public static ByteBuffer createEventRecordv3(int uid, int srcId,
+                                                 long firstTime, long lastTime,
+                                                 int type, int cfgId,
+                                                 int runNum)
+    {
+        final int bufLen = 38;
+
+        ByteBuffer buf = ByteBuffer.allocate(bufLen);
+        buf.putShort((short) RecordTypeRegistry.RECORD_TYPE_EVENT_V3);
         buf.putInt(uid);
         buf.putInt(srcId);
         buf.putLong(firstTime);

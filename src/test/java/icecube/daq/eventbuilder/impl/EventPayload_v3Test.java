@@ -21,7 +21,7 @@ import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
 
-public class EventPayload_v2Test
+public class EventPayload_v3Test
     extends TestCase
 {
     /**
@@ -29,21 +29,21 @@ public class EventPayload_v2Test
      *
      * @param name the name of the test.
      */
-    public EventPayload_v2Test(String name)
+    public EventPayload_v3Test(String name)
     {
         super(name);
     }
 
     public static Test suite()
     {
-        return new TestSuite(EventPayload_v2Test.class);
+        return new TestSuite(EventPayload_v3Test.class);
     }
 
     public void testBasic()
         throws Exception
     {
-        EventPayload_v2 evt = new EventPayload_v2();
-        assertEquals("Bad payload type", PayloadRegistry.PAYLOAD_ID_EVENT_V2,
+        EventPayload_v3 evt = new EventPayload_v3();
+        assertEquals("Bad payload type", PayloadRegistry.PAYLOAD_ID_EVENT_V3,
                      evt.getPayloadType());
 
         assertEquals("Bad payload UTC time",
@@ -80,8 +80,8 @@ public class EventPayload_v2Test
         final long firstTime = 1111L;
         final long lastTime = 2222L;
         final int evtType = 3333;
-        final int evtCfgId = 4444;
-        final int runNum = 5555;
+        final int runNum = 4444;
+        final int subrunNum = 5555;
 
         final int trigCfgId = 6666;
         final int trigType = 7777;
@@ -97,10 +97,10 @@ public class EventPayload_v2Test
         hitList.add(new MockHit(hitTime1, hitType1, hitCfgId1, hitSrcId1,
                                 hitDomId1, hitMode1));
 
-        EventPayload_v2 evt = new EventPayload_v2();
+        EventPayload_v3 evt = new EventPayload_v3();
         evt.initialize(uid, new MockSourceID(srcId),
                        new MockUTCTime(firstTime), new MockUTCTime(lastTime),
-                       evtType, evtCfgId, runNum,
+                       evtType, runNum, subrunNum,
                        new MockTriggerRequest(trigType, trigCfgId),
                        new Vector(hitList));
 
@@ -114,8 +114,8 @@ public class EventPayload_v2Test
         assertEquals("Bad last UTC time",
                      lastTime, evt.getLastTimeUTC().getUTCTimeAsLong());
         assertEquals("Bad event type", evtType, evt.getEventType());
-        assertEquals("Bad config ID", evtCfgId, evt.getEventConfigID());
         assertEquals("Bad run number", runNum, evt.getRunNumber());
+        assertEquals("Bad subrun number", subrunNum, evt.getSubrunNumber());
 
         assertEquals("Bad trigger type", trigType, evt.getTriggerType());
         assertEquals("Bad trigger config ID",
@@ -140,8 +140,8 @@ public class EventPayload_v2Test
         final long firstTime = 1111L;
         final long lastTime = 2222L;
         final int evtType = 333;
-        final int evtCfgId = 444;
-        final int runNum = 555;
+        final int runNum = 444;
+        final int subrunNum = 555;
 
         final int trigUID = 666;
         final int trigType = 777;
@@ -193,10 +193,10 @@ public class EventPayload_v2Test
                                    hitList, mockReq);
 
         ByteBuffer buf =
-            TestUtil.createEventv2(uid, srcId, firstTime, lastTime, evtType,
-                                   evtCfgId, runNum, trigReq, hitList);
+            TestUtil.createEventv3(uid, srcId, firstTime, lastTime, evtType,
+                                   runNum, subrunNum, trigReq, hitList);
 
-        EventPayload_v2 evt = new EventPayload_v2();
+        EventPayload_v3 evt = new EventPayload_v3();
         evt.initialize(0, buf, null);
         evt.loadPayload();
 
@@ -210,8 +210,8 @@ public class EventPayload_v2Test
         assertEquals("Bad last UTC time",
                      lastTime, evt.getLastTimeUTC().getUTCTimeAsLong());
         assertEquals("Bad event type", evtType, evt.getEventType());
-        assertEquals("Bad config ID", evtCfgId, evt.getEventConfigID());
         assertEquals("Bad run number", runNum, evt.getRunNumber());
+        assertEquals("Bad subrun number", subrunNum, evt.getSubrunNumber());
 
         assertEquals("Bad trigger type", trigType, evt.getTriggerType());
         assertEquals("Bad trigger config ID",
@@ -236,8 +236,8 @@ public class EventPayload_v2Test
         final long firstTime = 1111L;
         final long lastTime = 2222L;
         final int evtType = 333;
-        final int evtCfgId = 444;
-        final int runNum = 555;
+        final int runNum = 444;
+        final int subrunNum = 555;
 
         final int trigUID = 666;
         final int trigType = 777;
@@ -289,10 +289,10 @@ public class EventPayload_v2Test
                                    hitList, mockReq);
 
         ByteBuffer buf =
-            TestUtil.createEventv2(uid, srcId, firstTime, lastTime, evtType,
-                                   evtCfgId, runNum, trigReq, hitList);
+            TestUtil.createEventv3(uid, srcId, firstTime, lastTime, evtType,
+                                   runNum, subrunNum, trigReq, hitList);
 
-        EventPayload_v2 evt = new EventPayload_v2();
+        EventPayload_v3 evt = new EventPayload_v3();
         evt.initialize(0, buf, null);
         evt.loadPayload();
 
@@ -318,8 +318,8 @@ public class EventPayload_v2Test
         final long firstTime = 1111L;
         final long lastTime = 2222L;
         final int evtType = 333;
-        final int evtCfgId = 444;
-        final int runNum = 555;
+        final int runNum = 444;
+        final int subrunNum = 555;
 
         final int trigUID = 666;
         final int trigType = 777;
@@ -371,10 +371,10 @@ public class EventPayload_v2Test
                                    hitList, mockReq);
 
         ByteBuffer buf =
-            TestUtil.createEventv2(uid, srcId, firstTime, lastTime, evtType,
-                                   evtCfgId, runNum, trigReq, hitList);
+            TestUtil.createEventv3(uid, srcId, firstTime, lastTime, evtType,
+                                   runNum, subrunNum, trigReq, hitList);
 
-        EventPayload_v2 evt = new EventPayload_v2();
+        EventPayload_v3 evt = new EventPayload_v3();
         evt.initialize(0, buf, null);
         evt.loadPayload();
 

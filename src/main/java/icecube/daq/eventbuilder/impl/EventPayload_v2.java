@@ -288,6 +288,16 @@ public class EventPayload_v2 extends AbstractCompositePayload implements IEventP
         return tDataPayloads;
     }
 
+    /**
+     * Get the number of the active subrun for this event.
+     * @return the subrun number
+     *  NOTE:a value of 0 indicates that no subrun is active
+     */
+    public int getSubrunNumber()
+    {
+        return 0;
+    }
+
 
     /**
      * Method to create instance from the object pool.

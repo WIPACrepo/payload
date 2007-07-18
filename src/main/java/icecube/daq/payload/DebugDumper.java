@@ -274,6 +274,11 @@ class DumpEventV2
         return srcObj;
     }
 
+    public int getSubrunNumber()
+    {
+        return 0;
+    }
+
     public int getTriggerConfigID()
     {
         return getEventConfigID();
