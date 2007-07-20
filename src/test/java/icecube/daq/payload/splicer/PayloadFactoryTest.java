@@ -269,8 +269,10 @@ public class PayloadFactoryTest
     public void testNegativeSkip()
         throws Exception
     {
+        final int badLen = -100;
+
         ByteBuffer buf = ByteBuffer.allocate(4);
-        buf.putInt(-100);
+        buf.putInt(badLen);
 
         buf.flip();
 
@@ -369,10 +371,10 @@ public class PayloadFactoryTest
     public void testNegativeCreateSpliceable()
         throws Exception
     {
-        final int payLen = 16;
+        final int badLen = -4;
 
         ByteBuffer buf = ByteBuffer.allocate(4);
-        buf.putInt(-4);
+        buf.putInt(badLen);
 
         buf.flip();
         assertEquals("Bad starting position", 0, buf.position());
