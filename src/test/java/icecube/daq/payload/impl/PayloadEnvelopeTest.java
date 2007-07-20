@@ -16,77 +16,6 @@ import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
 
-class MockPayloadDestination
-    extends PayloadDestination
-{
-    private ByteBuffer buf;
-
-    public MockPayloadDestination()
-    {
-    }
-
-    /**
-     * Clear cached ByteBuffer.
-     */
-    void clear()
-    {
-        buf = null;
-    }
-
-    /**
-     * Get cached ByteBuffer.
-     *
-     * @return cached ByteBuffer
-     */
-    ByteBuffer getCachedBuffer()
-    {
-        return buf;
-    }
-
-    /**
-     * Write a 4-byte integer.
-     *
-     * @param val integer value
-     *
-     * @throws IOException if an I/O error occurs
-     */
-    public void writeInt(String name, int val)
-        throws IOException
-    {
-        if (buf == null) {
-            // must be writing length, so allocate an appropriate buffer
-            buf = ByteBuffer.allocate(val);
-        } else if (buf.position() + 4 > buf.limit()) {
-            throw new IOException("Buffer contains " + buf.position() +
-                                  " (of " + buf.limit() +
-                                  ") bytes, cannot write int");
-        }
-
-        buf.putInt(val);
-    }
-
-    /**
-     * Write an 8-byte long.
-     *
-     * @param val long value
-     *
-     * @throws IOException if an I/O error occurs
-     */
-    public void writeLong(String name, long val)
-        throws IOException
-    {
-        if (buf == null) {
-            throw new IOException("Buffer has not been allocated");
-        } else if (buf.position() + 8 > buf.limit()) {
-            throw new IOException("Buffer contains " + buf.position() +
-                                  " (of " + buf.limit() +
-                                  ") bytes, cannot write long");
-        }
-
-        buf.putLong(val);
-    }
-}
-
 public class PayloadEnvelopeTest
     extends TestCase
 {
@@ -275,7 +204,7 @@ public class PayloadEnvelopeTest
         env.loadData(0, buf);
         assertTrue("Envelope should be loaded", env.isDataLoaded());
 
-        MockPayloadDestination dest = new MockPayloadDestination();
+        MockDestination dest = new MockDestination();
 
         final int written = env.writeData(dest);
 
