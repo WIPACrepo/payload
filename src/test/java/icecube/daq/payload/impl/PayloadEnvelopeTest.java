@@ -210,7 +210,7 @@ public class PayloadEnvelopeTest
 
         assertEquals("Bad number of bytes written", buf.limit(), written);
 
-        ByteBuffer newBuf = dest.getCachedBuffer();
+        ByteBuffer newBuf = dest.getByteBuffer();
 
         for (int i = 0; i < buf.limit(); i++) {
             assertEquals("Bad byte #" + i, buf.get(i), newBuf.get(i));
