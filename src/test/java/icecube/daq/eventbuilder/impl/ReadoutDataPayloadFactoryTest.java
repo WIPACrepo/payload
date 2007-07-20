@@ -6,7 +6,7 @@ import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IPayload;
 import icecube.daq.payload.PayloadRegistry;
 
-import icecube.daq.payload.test.MockAppender;
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockHit;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockUTCTime;
@@ -18,15 +18,12 @@ import java.util.List;
 import java.util.Vector;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
 
-import org.apache.log4j.BasicConfigurator;
-
 public class ReadoutDataPayloadFactoryTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.
@@ -36,12 +33,6 @@ public class ReadoutDataPayloadFactoryTest
     public ReadoutDataPayloadFactoryTest(String name)
     {
         super(name);
-    }
-
-    protected void setUp()
-    {
-        BasicConfigurator.resetConfiguration();
-        BasicConfigurator.configure(new MockAppender());
     }
 
     public static Test suite()
@@ -169,6 +160,9 @@ public class ReadoutDataPayloadFactoryTest
                                 hitDomId1, hitMode1));
         hitList.add(badHit);
 
+        assertEquals("Bad number of log messages",
+                     0, getNumberOfMessages());
+
         ReadoutDataPayloadFactory factory = new ReadoutDataPayloadFactory();
         IPayload pay = factory.createPayload(uid, payNum, isLast,
                                              new MockSourceID(srcId),
@@ -177,6 +171,16 @@ public class ReadoutDataPayloadFactoryTest
                                              new Vector(hitList));
 
         assertNull("Expected create to fail", pay);
+
+        assertEquals("Bad number of log messages",
+                     1, getNumberOfMessages());
+        assertEquals("Unexpected log message",
+                     "Cannot deep-copy composite payload 2 of " +
+                     hitList.size() + " (type " + badHit.getPayloadType() +
+                     ", length " + badHit.getPayloadLength() + ")",
+                     getMessage(0));
+
+        clearMessages();
     }
 
     public static void main(String[] args)

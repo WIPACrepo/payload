@@ -2,6 +2,7 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.RecordTypeRegistry;
 
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.TestUtil;
 
@@ -9,13 +10,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
 
 public class DomHitDeltaCompressedFormatRecordTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.

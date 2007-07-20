@@ -8,6 +8,7 @@ import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
 import icecube.daq.payload.impl.SourceID4B;
 
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDOMID;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockSourceID;
@@ -24,7 +25,6 @@ import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
@@ -110,7 +110,7 @@ class MockHitData
 }
 
 public class HitPayloadTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.

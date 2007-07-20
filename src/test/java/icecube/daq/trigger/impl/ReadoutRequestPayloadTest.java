@@ -2,6 +2,7 @@ package icecube.daq.trigger.impl;
 
 import icecube.daq.payload.PayloadRegistry;
 
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockReadoutRequest;
 import icecube.daq.payload.test.MockReadoutRequestElement;
@@ -17,13 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
 
 public class ReadoutRequestPayloadTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.

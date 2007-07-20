@@ -1,5 +1,6 @@
 package icecube.daq.trigger.impl;
 
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDOMID;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockSourceID;
@@ -10,13 +11,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
 
 public class ReadoutRequestElementRecordTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.

@@ -3,7 +3,7 @@ package icecube.daq.payload.splicer;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.IByteBufferCache;
 
-import icecube.daq.payload.test.MockAppender;
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockUTCTime;
 
@@ -16,12 +16,9 @@ import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
-
-import org.apache.log4j.BasicConfigurator;
 
 class MyPayload
     extends Payload
@@ -203,7 +200,7 @@ class MyFactory
 }
 
 public class PayloadTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.
@@ -213,12 +210,6 @@ public class PayloadTest
     public PayloadTest(String name)
     {
         super(name);
-    }
-
-    protected void setUp()
-    {
-        BasicConfigurator.resetConfiguration();
-        BasicConfigurator.configure(new MockAppender());
     }
 
     public static Test suite()
@@ -504,8 +495,18 @@ public class PayloadTest
         pay.initialize(0, buf, null);
         pay.loadSpliceablePayload();
 
+        assertEquals("Bad number of log messages",
+                     0, getNumberOfMessages());
+
         MyPayload empty = (MyPayload) pay.deepCopy();
         assertNull("Didn't expect to copy 0-length payload", empty);
+
+        assertEquals("Bad number of log messages",
+                     1, getNumberOfMessages());
+        assertEquals("Unexpected log message",
+                     "Not copying 0-length payload (type " +
+                     MyPayload.PAYLOAD_TYPE + ")", getMessage(0));
+        clearMessages();
 
         pay.recycle();
     }
@@ -561,8 +562,17 @@ public class PayloadTest
         pay.initialize(0, buf, new MyFactory(new DataFormatException("Test")));
         pay.loadSpliceablePayload();
 
+        assertEquals("Bad number of log messages",
+                     0, getNumberOfMessages());
+
         MyPayload empty = (MyPayload) pay.deepCopy();
         assertNull("Did not expect deepCopy to return payload", empty);
+
+        assertEquals("Bad number of log messages",
+                     1, getNumberOfMessages());
+        assertEquals("Unexpected log message",
+                     "Couldn't make deep copy", getMessage(0));
+        clearMessages();
 
         pay.recycle();
     }
@@ -584,8 +594,17 @@ public class PayloadTest
         pay.initialize(0, buf, new MyFactory(new IOException("Test")));
         pay.loadSpliceablePayload();
 
+        assertEquals("Bad number of log messages",
+                     0, getNumberOfMessages());
+
         MyPayload empty = (MyPayload) pay.deepCopy();
         assertNull("Did not expect deepCopy to return payload", empty);
+
+        assertEquals("Bad number of log messages",
+                     1, getNumberOfMessages());
+        assertEquals("Unexpected log message",
+                     "Couldn't make deep copy", getMessage(0));
+        clearMessages();
 
         pay.recycle();
     }

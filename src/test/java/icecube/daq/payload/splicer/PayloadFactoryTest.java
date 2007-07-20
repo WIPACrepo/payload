@@ -3,7 +3,7 @@ package icecube.daq.payload.splicer;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.IByteBufferCache;
 
-import icecube.daq.payload.test.MockAppender;
+import icecube.daq.payload.test.LoggingCase;
 
 import icecube.util.Poolable;
 
@@ -14,12 +14,9 @@ import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
-
-import org.apache.log4j.BasicConfigurator;
 
 class FooPayload
     extends Payload
@@ -151,7 +148,7 @@ class FooFactory
 }
 
 public class PayloadFactoryTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.
@@ -161,12 +158,6 @@ public class PayloadFactoryTest
     public PayloadFactoryTest(String name)
     {
         super(name);
-    }
-
-    protected void setUp()
-    {
-        BasicConfigurator.resetConfiguration();
-        BasicConfigurator.configure(new MockAppender());
     }
 
     public static Test suite()
@@ -276,10 +267,21 @@ public class PayloadFactoryTest
 
         buf.flip();
 
+        assertEquals("Bad number of log messages",
+                     0, getNumberOfMessages());
+
         FooFactory factory = new FooFactory();
         assertEquals("Bad starting position", 0, buf.position());
         assertFalse("Didn't skip spliceable", factory.skipSpliceable(buf));
         assertEquals("Bad post-skip position", 0, buf.position());
+
+        assertEquals("Bad number of log messages",
+                     1, getNumberOfMessages());
+        assertEquals("Unexpected log message",
+                     "Negative spliceable length " + badLen,
+                     getMessage(0));
+
+        clearMessages();
     }
 
     public void testCreatePayload()
@@ -381,9 +383,20 @@ public class PayloadFactoryTest
 
         FooFactory factory = new FooFactory();
 
+        assertEquals("Bad number of log messages",
+                     0, getNumberOfMessages());
+
         FooPayload pay = (FooPayload) factory.createSpliceable(buf);
         assertNull("Didn't expect spliceable", pay);
         assertEquals("Bad post-create position", 0, buf.position());
+
+        assertEquals("Bad number of log messages",
+                     1, getNumberOfMessages());
+        assertEquals("Unexpected log message",
+                     "Negative spliceable length " + badLen,
+                     getMessage(0));
+
+        clearMessages();
     }
 
     public static void main(String[] args)

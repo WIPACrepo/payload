@@ -1,7 +1,9 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.VitreousBufferCache;
+
+import icecube.daq.payload.test.LoggingCase;
+import icecube.daq.payload.test.MockDestination;
 
 import java.io.IOException;
 
@@ -11,13 +13,12 @@ import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
 
 public class PayloadEnvelopeTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.

@@ -1,6 +1,6 @@
 package icecube.daq.eventbuilder.impl;
 
-import icecube.daq.payload.test.MockAppender;
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockHit;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockTriggerRequest;
@@ -10,15 +10,12 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
 
-import org.apache.log4j.BasicConfigurator;
-
 public class EventPayload_v3FactoryTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.
@@ -28,12 +25,6 @@ public class EventPayload_v3FactoryTest
     public EventPayload_v3FactoryTest(String name)
     {
         super(name);
-    }
-
-    protected void setUp()
-    {
-        BasicConfigurator.resetConfiguration();
-        BasicConfigurator.configure(new MockAppender());
     }
 
     public static Test suite()
@@ -141,6 +132,9 @@ public class EventPayload_v3FactoryTest
 
         EventPayload_v3Factory factory = new EventPayload_v3Factory();
 
+        assertEquals("Bad number of log messages",
+                     0, getNumberOfMessages());
+
         EventPayload_v3 evt =
             (EventPayload_v3) factory.createPayload(uid,
                                                     new MockSourceID(srcId),
@@ -151,6 +145,19 @@ public class EventPayload_v3FactoryTest
                                                     new Vector(hitList));
 
         assertNull("Expected create to fail", evt);
+
+        assertEquals("Bad number of log messages",
+                     2, getNumberOfMessages());
+        assertEquals("Unexpected log message #1",
+                     "Cannot deep-copy composite payload 1 of " +
+                     hitList.size() + " (type " + badHit.getPayloadType() +
+                     ", length " + badHit.getPayloadLength() + ")",
+                     getMessage(0));
+        assertEquals("Unexpected log message #2",
+                     "Couldn't create event uid " + uid + " from source " +
+                     srcId, getMessage(1));
+
+        clearMessages();
     }
 
     public void testBadTriggerRequest()
@@ -184,6 +191,9 @@ public class EventPayload_v3FactoryTest
 
         EventPayload_v3Factory factory = new EventPayload_v3Factory();
 
+        assertEquals("Bad number of log messages",
+                     0, getNumberOfMessages());
+
         EventPayload_v3 evt =
             (EventPayload_v3) factory.createPayload(uid,
                                                     new MockSourceID(srcId),
@@ -194,6 +204,14 @@ public class EventPayload_v3FactoryTest
                                                     new Vector(hitList));
 
         assertNull("Expected create to fail", evt);
+
+        assertEquals("Bad number of log messages",
+                     1, getNumberOfMessages());
+        assertEquals("Unexpected log message",
+                     "Couldn't create event uid " + uid + " from source " +
+                     srcId, getMessage(0));
+
+        clearMessages();
     }
 
     public static void main(String[] args)

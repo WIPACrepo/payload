@@ -1,5 +1,6 @@
 package icecube.daq.eventbuilder.impl;
 
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockUTCTime;
@@ -8,13 +9,12 @@ import icecube.daq.payload.test.TestUtil;
 import java.nio.ByteBuffer;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
 
 public class EventPayloadRecord_v2Test
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.

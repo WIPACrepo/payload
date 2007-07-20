@@ -3,7 +3,7 @@ package icecube.daq.payload.splicer;
 import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IUTCTime;
 
-import icecube.daq.payload.test.MockAppender;
+import icecube.daq.payload.test.LoggingCase;
 
 import java.io.IOException;
 
@@ -13,12 +13,9 @@ import java.util.Vector;
 import java.util.zip.DataFormatException;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import junit.textui.TestRunner;
-
-import org.apache.log4j.BasicConfigurator;
 
 class MockPayload
     implements ILoadablePayload
@@ -109,7 +106,7 @@ class MockPayload
 }
 
 public class CompositePayloadFactoryTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.
@@ -119,12 +116,6 @@ public class CompositePayloadFactoryTest
     public CompositePayloadFactoryTest(String name)
     {
         super(name);
-    }
-
-    protected void setUp()
-    {
-        BasicConfigurator.resetConfiguration();
-        BasicConfigurator.configure(new MockAppender());
     }
 
     public static Test suite()
@@ -170,8 +161,19 @@ public class CompositePayloadFactoryTest
 
         CompositePayloadFactory factory = new CompositePayloadFactory();
 
+        assertEquals("Bad number of log messages",
+                     0, getNumberOfMessages());
+
         Vector newV = factory.deepCopyPayloadVector(v);
         assertNull("Returned copy is not null", newV);
+
+        assertEquals("Bad number of log messages",
+                     1, getNumberOfMessages());
+        assertEquals("Unexpected log message",
+                     "Cannot deep-copy composite payload 1 of 2" +
+                     " (type 0, length 4)", getMessage(0));
+
+        clearMessages();
     }
 
     public void testDeepCopy()
