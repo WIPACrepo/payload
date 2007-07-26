@@ -14,9 +14,16 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
     private long acquiredBytes;
     private int returnedBuffers;
     private int totalBufferCount;
+    private long maxAcquiredBytes;
 
     public VitreousBufferCache()
     {
+        this(Long.MIN_VALUE);
+    }
+
+    public VitreousBufferCache(long maxAcquiredBytes)
+    {
+        this.maxAcquiredBytes = maxAcquiredBytes;
     }
 
     public synchronized ByteBuffer acquireBuffer(int iLength)
@@ -95,11 +102,11 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
 
     public boolean getIsCacheBounded()
     {
-        return false;
+        return (maxAcquiredBytes > 0);
     }
 
     public long getMaxAquiredBytes()
     {
-        return Long.MAX_VALUE;
+        return maxAcquiredBytes;
     }
 }
