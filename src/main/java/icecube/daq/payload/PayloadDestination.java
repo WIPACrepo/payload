@@ -27,7 +27,7 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(Payload tPayload) throws IOException {
+    public int writePayload(IWriteablePayload tPayload) throws IOException {
         return writePayload(false, tPayload);
     }
 
@@ -43,7 +43,7 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, Payload tPayload) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload) throws IOException {
         return tPayload.writePayload(bWriteLoaded, this);
     }
 
@@ -61,7 +61,7 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, Payload tPayload, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         return tPayload.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
     }
     //

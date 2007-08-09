@@ -53,7 +53,7 @@ public class ByteBufferPayloadDestination extends PayloadDestination   {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(Payload tPayload) throws IOException {
+    public int writePayload(IWriteablePayload tPayload) throws IOException {
         return writePayload(false,tPayload);
     }
 
@@ -69,7 +69,7 @@ public class ByteBufferPayloadDestination extends PayloadDestination   {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, Payload tPayload) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload) throws IOException {
 
         if (mtByteBufferReceiver == null) {
             throw new IOException("This PayloadDestination is not valid");

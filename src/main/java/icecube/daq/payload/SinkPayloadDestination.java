@@ -1,7 +1,6 @@
 package icecube.daq.payload;
-import java.io.IOException;
 
-import icecube.daq.payload.splicer.Payload;
+import java.io.IOException;
 
 /**
  * This object is a PayloadDestination that does nothing. It does know how
@@ -29,7 +28,7 @@ public class SinkPayloadDestination extends ByteBufferPayloadDestination   {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(Payload tPayload) throws IOException {
+    public int writePayload(IWriteablePayload tPayload) throws IOException {
         return writePayload(false,tPayload);
     }
 
@@ -42,7 +41,7 @@ public class SinkPayloadDestination extends ByteBufferPayloadDestination   {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, Payload tPayload) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload) throws IOException {
         return 0;
     }
 

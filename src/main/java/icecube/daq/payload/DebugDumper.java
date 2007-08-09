@@ -31,6 +31,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import java.util.zip.DataFormatException;
+
 class DumpDOMID
     implements IDOMID
 {
@@ -188,6 +190,11 @@ class DumpEventV2
         throw new Error("Unimplemented");
     }
 
+    public void dispose()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public int getEventConfigID()
     {
         return -1;
@@ -308,6 +315,32 @@ class DumpEventV2
         this.trigReq = trigReq;
         this.elems = elems;
     }
+
+    /**
+     * Initializes Payload from backing so it can be used as an IPayload.
+     */
+    public void loadPayload()
+        throws IOException, DataFormatException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void recycle()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
 }
 
 class DumpHitSimple
@@ -353,6 +386,11 @@ class DumpHitSimple
     }
 
     public Object deepCopy()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void dispose()
     {
         throw new Error("Unimplemented");
     }
@@ -429,6 +467,32 @@ class DumpHitSimple
         this.srcId = srcId;
         this.domId = domId;
     }
+
+    /**
+     * Initializes Payload from backing so it can be used as an IPayload.
+     */
+    public void loadPayload()
+        throws IOException, DataFormatException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void recycle()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
 }
 
 class DumpHitDataRecord
@@ -503,6 +567,28 @@ class DumpHitEngFmt
         initialize(time, srcId, domId, recId);
     }
 
+    /**
+     * Make a 'deep-copy' of the Payload so that all internally referenced
+     * objects are completely new.
+     *
+     * @return Payload which is a deep copy of this Payload
+     */
+    public Object deepCopy()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void dispose()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public IHitDataRecord getHitRecord()
+        throws IOException
+    {
+        return dataRec;
+    }
+
     void initialize(long time, int srcId, long domId, int recId)
     {
         super.initialize(time, srcId, domId);
@@ -510,10 +596,30 @@ class DumpHitEngFmt
         dataRec = new DumpHitDataRecord(recId, -1, null);
     }
 
-    public IHitDataRecord getHitRecord()
+    /**
+     * Initializes Payload from backing so it can be used as an IPayload.
+     */
+    public void loadPayload()
+        throws IOException, DataFormatException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void recycle()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
         throws IOException
     {
-        return dataRec;
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
     }
 }
 
@@ -553,6 +659,28 @@ class DumpHitDeltaFmt
         initialize(time, srcId, domId);
     }
 
+    /**
+     * Make a 'deep-copy' of the Payload so that all internally referenced
+     * objects are completely new.
+     *
+     * @return Payload which is a deep copy of this Payload
+     */
+    public Object deepCopy()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void dispose()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public IHitDataRecord getHitRecord()
+        throws IOException
+    {
+        return dataRec;
+    }
+
     void initialize(long time, int srcId, long domId)
     {
         super.initialize(time, srcId, domId);
@@ -560,10 +688,30 @@ class DumpHitDeltaFmt
         dataRec = null;
     }
 
-    public IHitDataRecord getHitRecord()
+    /**
+     * Initializes Payload from backing so it can be used as an IPayload.
+     */
+    public void loadPayload()
+        throws IOException, DataFormatException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void recycle()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
         throws IOException
     {
-        return dataRec;
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
     }
 }
 
@@ -730,6 +878,11 @@ class DumpReadoutData
         throw new Error("Unimplemented");
     }
 
+    public void dispose()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public Vector getDataPayloads()
     {
         if (elemVec == null) {
@@ -831,6 +984,32 @@ class DumpReadoutData
     public boolean isLastPayloadOfGroup()
     {
         return isLast;
+    }
+
+    /**
+     * Initializes Payload from backing so it can be used as an IPayload.
+     */
+    public void loadPayload()
+        throws IOException, DataFormatException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void recycle()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
     }
 }
 
@@ -1246,6 +1425,11 @@ class DumpTriggerRequest
         throw new Error("Unimplemented");
     }
 
+    public void dispose()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public IUTCTime getFirstTimeUTC()
     {
         if (firstObj == null) {
@@ -1340,6 +1524,32 @@ class DumpTriggerRequest
         this.rdoutReq = rdoutReq;
 
         this.elems = new ArrayList();
+    }
+
+    /**
+     * Initializes Payload from backing so it can be used as an IPayload.
+     */
+    public void loadPayload()
+        throws IOException, DataFormatException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void recycle()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
     }
 }
 

@@ -98,7 +98,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @return number of bytes written
      * @throws IOException if there is a write error from the underlying PayloadDestination
      */
-    public int writePayload(ISourceID sourceId, Payload payload) throws IOException {
+    public int writePayload(ISourceID sourceId, IWriteablePayload payload) throws IOException {
         if (!destinationMap.containsKey(sourceId)) {
             final String errMsg = "No destination for source ID " +
                 sourceId.getSourceID();
@@ -114,7 +114,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @return total number of bytes written
      * @throws IOException if there is a write error from the underlying PayloadDestination
      */
-    public int writePayload(Payload payload) throws IOException {
+    public int writePayload(IWriteablePayload payload) throws IOException {
         int nWrite = 0;
         Iterator destinationIter = destinationMap.keySet().iterator();
         while (destinationIter.hasNext()) {

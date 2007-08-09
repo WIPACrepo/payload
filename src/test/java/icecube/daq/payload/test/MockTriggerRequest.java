@@ -3,11 +3,14 @@ package icecube.daq.payload.test;
 import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.PayloadDestination;
 
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.ITriggerRequestPayload;
 
 import java.io.IOException;
+
+import java.nio.ByteBuffer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -77,6 +80,11 @@ public class MockTriggerRequest
 
         return new MockTriggerRequest(utcTime, uid, type, cfgId, srcId,
                                       firstTime, lastTime, newList, newReq);
+    }
+
+    public void dispose()
+    {
+        throw new Error("Unimplemented");
     }
 
     public IUTCTime getFirstTimeUTC()
@@ -197,5 +205,17 @@ public class MockTriggerRequest
     public void setDeepCopyFail(boolean fail)
     {
         failDeepCopy = fail;
+    }
+
+    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
     }
 }

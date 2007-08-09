@@ -56,7 +56,7 @@ public interface IPayloadDestination extends DataOutput {
      *
      * @throws IOException if an error occurs during the process
      */
-    int writePayload(Payload tPayload)
+    int writePayload(IWriteablePayload tPayload)
             throws IOException;
 
     /**
@@ -71,7 +71,7 @@ public interface IPayloadDestination extends DataOutput {
      *
      * @throws IOException if an error occurs during the process
      */
-    int writePayload(boolean bWriteLoaded, Payload tPayload)
+    int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload)
             throws IOException;
 
     /**
@@ -88,7 +88,7 @@ public interface IPayloadDestination extends DataOutput {
      *
      * @throws IOException if an error occurs during the process
      */
-    int writePayload(boolean bWriteLoaded, Payload tPayload, int iDestOffset, ByteBuffer tDestBuffer)
+    int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload, int iDestOffset, ByteBuffer tDestBuffer)
             throws IOException;
 
 
