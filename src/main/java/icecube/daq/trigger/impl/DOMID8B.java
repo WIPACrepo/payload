@@ -128,4 +128,14 @@ public class DOMID8B extends Poolable implements IDOMID {
         tCopy.initialize(ml_DomID);
         return tCopy;
     }
+
+    /**
+     * Return string representation.
+     *
+     * @return DOM ID string
+     */
+    public String toString()
+    {
+        return getDomIDAsString();
+    }
 }

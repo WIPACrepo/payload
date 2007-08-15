@@ -152,4 +152,14 @@ public class UTCTime8B extends Poolable implements IUTCTime {
     public void dispose() {
         mlutctime = -1;
     }
+
+    /**
+     * Return string representation.
+     *
+     * @return UTC time string
+     */
+    public String toString()
+    {
+        return (mlutctime == -1 ? "UNSET" : Long.toString(mlutctime));
+    }
 }
