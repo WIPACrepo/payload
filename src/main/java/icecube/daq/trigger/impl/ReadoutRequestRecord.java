@@ -75,7 +75,10 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
      * @return the size in bytes of the record(including header + elements)
      */
     public int getTotalRecordSize() {
-        int iSize = SIZE_HEADER + (mt_RequestElementVector.size() * ReadoutRequestElementRecord.SIZE_READOUT_REQUEST_ELEMENT_RECORD);
+        int iSize = SIZE_HEADER;
+        if (mt_RequestElementVector != null) {
+            iSize += mt_RequestElementVector.size() * ReadoutRequestElementRecord.SIZE_READOUT_REQUEST_ELEMENT_RECORD;
+        }
         return iSize;
     }
 
@@ -110,7 +113,11 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
         mi_TriggerUID             = tRequest.getUID();
         mt_SourceID               = tRequest.getSourceID();
         mt_RequestElementVector   = tRequest.getReadoutRequestElements();
-        mi_numRequestElements     = mt_RequestElementVector.size();
+        if (mt_RequestElementVector == null) {
+            mi_numRequestElements = 0;
+        } else {
+            mi_numRequestElements = mt_RequestElementVector.size();
+        }
     }
 
     //--[IWriteablePayloadRecord]---
@@ -241,7 +248,9 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
         if ( mb_IsLoaded ) {
             mb_IsLoaded = false;
             //-recycle the loaded request elements
-            for ( int ii=0; ii < mt_RequestElementVector.size(); ii++ ) {
+            for ( int ii=0; mt_RequestElementVector != null &&
+                            ii < mt_RequestElementVector.size(); ii++ )
+            {
                 ((IWriteablePayloadRecord) mt_RequestElementVector.get(ii)).dispose();
             }
             mt_RequestElementVector = null;

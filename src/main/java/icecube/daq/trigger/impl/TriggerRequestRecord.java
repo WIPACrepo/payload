@@ -105,7 +105,7 @@ public class TriggerRequestRecord extends Poolable implements IWriteablePayloadR
         mt_lastTime        = tLastTimeUTC;
         //-Initialize the payload associated with this readout request.
         mt_readoutRequestRecord = (ReadoutRequestRecord) ReadoutRequestRecord.getFromPool();
-        mt_readoutRequestRecord.initialize(tRequest);
+        if (tRequest != null) mt_readoutRequestRecord.initialize(tRequest);
         mi_recordSize = SIZE_HDR_PORTION + mt_readoutRequestRecord.getTotalRecordSize();
         mb_IsDataLoaded = true;
     }
