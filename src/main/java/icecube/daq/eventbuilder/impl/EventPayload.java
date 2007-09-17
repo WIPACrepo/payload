@@ -421,8 +421,8 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
     public String toString() {
         StringBuffer sbBuff = new StringBuffer();
         sbBuff.append("EventPayload(");
-        sbBuff.append(", getFirstTimeUTC()="+getFirstTimeUTC().getUTCTimeAsLong());
-        sbBuff.append(", getLastTimeUTC()="+getLastTimeUTC().getUTCTimeAsLong());
+        sbBuff.append(", getFirstTimeUTC()="+getFirstTimeUTC());
+        sbBuff.append(", getLastTimeUTC()="+getLastTimeUTC());
         sbBuff.append(", getTriggerConfigID()="+getTriggerConfigID());
         sbBuff.append(", getTriggerType()="+getTriggerType());
         sbBuff.append(", getSourceID()="+getSourceID().getSourceID() );
