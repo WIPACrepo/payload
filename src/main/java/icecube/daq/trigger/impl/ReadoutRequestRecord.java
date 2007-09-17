@@ -328,4 +328,18 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
         dispose();
     }
 
+    public String toDataString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append("reqType ").append(msi_RequestType);
+        buf.append(" trigUID ").append(mi_TriggerUID);
+        buf.append(" src ").append(mt_SourceID.toString());
+        buf.append(" numElems ").append(mi_numRequestElements);
+        return buf.toString();
+    }
+
+    public String toString()
+    {
+        return "ReadoutRequestRecord " + toDataString();
+    }
 }

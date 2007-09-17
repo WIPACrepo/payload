@@ -384,4 +384,10 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
         if (tDestination.doLabel()) tDestination.undent().label("<=[TriggerRequestPayload]");
         return iBytesWritten;
     }
+
+    public String toString()
+    {
+        return "TriggerRequest uid " + mi_UID + " " +
+            mt_triggerRequestRecord.toDataString();
+    }
 }

@@ -259,4 +259,17 @@ public class TriggerRequestRecord extends Poolable implements IWriteablePayloadR
         //-this takes care of dispose()
         mt_readoutRequestRecord  = null;
     }
+
+    public String toDataString()
+    {
+        return "type " + mi_triggerType + " cfgId " + mi_triggerConfigID +
+            " src " + mt_sourceid +
+            " [" + mt_firstTime + "-" + mt_lastTime + "] " +
+            mt_readoutRequestRecord.toDataString();
+    }
+
+    public String toString()
+    {
+        return "TriggerRequestRecord " + toDataString();
+    }
 }

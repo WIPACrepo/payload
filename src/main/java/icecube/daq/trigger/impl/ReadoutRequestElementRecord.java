@@ -240,5 +240,42 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
     public static ReadoutRequestElementRecord getFromPool() {
         return new ReadoutRequestElementRecord();
     }
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
+    public String toString()
+    {
+        String typeStr;
+        switch (mi_readoutType) {
+        case READOUT_TYPE_GLOBAL:
+            typeStr = "GLOBAL";
+            break;
+        case READOUT_TYPE_II_GLOBAL:
+            typeStr = "II_GLOBAL";
+            break;
+        case READOUT_TYPE_IT_GLOBAL:
+            typeStr = "IT_GLOBAL";
+            break;
+        case READOUT_TYPE_II_STRING:
+            typeStr = "II_STRING";
+            break;
+        case READOUT_TYPE_II_MODULE:
+            typeStr = "II_MODULE";
+            break;
+        case READOUT_TYPE_IT_MODULE:
+            typeStr = "IT_MODULE";
+            break;
+        default:
+            typeStr = "UNKNOWN";
+            break;
+        }
+
+        return "ReadoutRequestElementRecord[" + typeStr + " [" + mt_firstTime +
+            "-" + mt_lastTime + "] dom " + mt_domId + " src " +
+            mt_sourceId + "]";
+    }
 }
 

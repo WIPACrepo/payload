@@ -195,7 +195,7 @@ public class SourceID4B extends Poolable implements ISourceID
      *
      * @return DAQName#DAQId
      */
-   public String toString()
+    public String toString()
     {
         return SourceIdRegistry.getDAQNameFromSourceID(misource) + "#" +
             SourceIdRegistry.getDAQIdFromSourceID(misource);
