@@ -173,6 +173,41 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
     }
 
     /**
+     * Get the Payload type from a Backing buffer (ByteBuffer)
+     * if possible, otherwise return -1.
+     * @param iOffset int which holds the position in the ByteBuffer
+     *                     to check for the Payload length.
+     * @param tBuffer ByteBuffer from which to extract the length of the payload
+     * @return the payload type if it can be extracted, otherwise -1
+     *
+     * @exception IOException if there is trouble reading the Payload type
+     * @exception DataFormatException if there is something wrong with the
+     *                                payload and the type cannot be read.
+     */
+    public static int readPayloadType(int iOffset, ByteBuffer tBuffer)
+        throws IOException, DataFormatException
+    {
+        if (tBuffer.limit() < iOffset + OFFSET_PAYLOADTYPE + SIZE_PAYLOADTYPE) {
+            throw new DataFormatException("Cannot read payload type;" +
+                                          " need " +
+                                          (iOffset + OFFSET_PAYLOADTYPE +
+                                           SIZE_PAYLOADTYPE) +
+                                          " bytes, but only " +
+                                          tBuffer.limit() + " are available");
+        }
+        int iRecType = -1;
+        ByteOrder tSaveOrder = tBuffer.order();
+        //-The Payload Envelope has been defined to always be BIG_ENDIAN
+        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        iRecType = tBuffer.getInt(iOffset + OFFSET_PAYLOADTYPE);
+        //-restore endianess to the buffer
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
+        return iRecType;
+    }
+
+    /**
      * Get the Payload length from a Backing buffer (ByteBuffer)
      * if possible, otherwise return -1.
      * @param iOffset int which holds the position in the ByteBuffer
