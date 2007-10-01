@@ -193,9 +193,6 @@ public class MasterPayloadFactory extends PayloadFactory {
      * @exception DataFormatException if there is an error in the format of the payload
      */
     public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws IOException,DataFormatException {
-        PayloadEnvelope tEnvelope = readPayloadEnvelope(iOffset, tBuffer);
-        int iLength = tEnvelope.miPayloadLen;
-        tEnvelope.recycle();
-        return iLength;
+        return PayloadEnvelope.readPayloadLength(iOffset, tBuffer);
     }
 }
