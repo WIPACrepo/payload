@@ -404,4 +404,11 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
         super.dispose();
     }
 
+
+    public String toString()
+    {
+        return "HitPayload@" + mttime + "[type " + mi_TriggerType +
+            " cfgId " + mi_TriggerConfigID + " src " + mt_sourceId +
+            " dom " + mt_domID + " mode " + msi_TriggerMode + "]";
+    }
 }
