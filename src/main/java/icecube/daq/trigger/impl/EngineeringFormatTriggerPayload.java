@@ -257,12 +257,16 @@ public class EngineeringFormatTriggerPayload  extends AbstractTriggerPayload {
             if (super.mtbuffer != null) {
                 //-extract the order, so can switch to BIG_ENDIAN for reading the payload
                 ByteOrder tSaveOrder = mtbuffer.order();
-                mtbuffer.order(ByteOrder.BIG_ENDIAN);
+                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                    mtbuffer.order(ByteOrder.BIG_ENDIAN);
+                }
                 mi_TriggerConfigID = mtbuffer.getInt( mioffset + OFFSET_TRIGGER_CONFIG_ID );
                 mt_sourceId = (ISourceID) SourceID4B.getFromPool();
                 ((SourceID4B) mt_sourceId).initialize( mtbuffer.getInt(  mioffset + OFFSET_SOURCE_ID) );
                 //-restore order
-                mtbuffer.order(tSaveOrder);
+                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                    mtbuffer.order(tSaveOrder);
+                }
                 mb_IsTriggerPayloadLoaded = true;
             }
         }

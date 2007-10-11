@@ -143,7 +143,9 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
         //-Fill in the internal data
         // this.domId = domId;
         ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        if (tSaveOrder != ByteOrder.LITTLE_ENDIAN) {
+            tBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        }
 
         //-read in the packet length
         miPacketLen = tBuffer.getInt(iRecordOffset + OFFSET_PACKET_LEN);
@@ -162,7 +164,9 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
             maiDomwf[ii] = (int) tBuffer.getShort(iRecordOffset + OFFSET_DOMWF_ARRAY + ii * 2);
 
         //-Restore the ordering of the buffer if needed.
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.LITTLE_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
 
         //-If have loaded to this point without an exception, then set loaded to true
         mbLoaded = true;
@@ -179,7 +183,9 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
         int iBytesWritten = 0;
         //-save the byte-order
         ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        if (tSaveOrder != ByteOrder.LITTLE_ENDIAN) {
+            tBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        }
 
         //-The packet length of the array.
         iBytesWritten += 4;
@@ -216,7 +222,9 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
         tBuffer.put(PADDING_BYTE_ARRAY);
 
         //-restore the input byte-order
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.LITTLE_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
 
         //-return the total number of bytes written.
         return iBytesWritten;

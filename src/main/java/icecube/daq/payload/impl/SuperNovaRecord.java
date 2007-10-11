@@ -120,13 +120,17 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
         int iBlockLen = -1;
         ByteOrder tSaveOrder = tBuffer.order();
         //-Defined as BIG_ENDIAN
-        tBuffer.order( ByteOrder.BIG_ENDIAN );
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order( ByteOrder.BIG_ENDIAN );
+        }
 
         //-Get the block length (using correct endian-ness)
         iBlockLen = (int) tBuffer.getShort(iRecordOffset + OFFSET_BLOCK_LEN);
 
         //-Restore the ByteOrder if necessary
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
 
         //-return the record length
         return iBlockLen;
@@ -146,7 +150,9 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
         if (mbLoaded) return;
         //-US Big-Endian block-length
         ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
 
         int iRestoreLimit = tBuffer.limit();
         int iRestorePos = tBuffer.position();
@@ -174,7 +180,9 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
         //-set the boolean indicating that the information has been successfully loaded
         mbLoaded = true;
         //-restore order, position and limit
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
         tBuffer.position(iRestorePos);
         tBuffer.limit(iRestoreLimit);
     }

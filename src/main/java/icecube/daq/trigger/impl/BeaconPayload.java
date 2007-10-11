@@ -167,7 +167,9 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
                 }
             }
             ByteOrder tSaveOrder = tDestBuffer.order();
-            tDestBuffer.order(ByteOrder.BIG_ENDIAN);
+            if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                tDestBuffer.order(ByteOrder.BIG_ENDIAN);
+            }
             //-create the new payload from both the envelope and the hit payload
             //-Write out the PayloadEnvelope
             // NOTE: the initialize method has already filled in the appropriate lengths
@@ -178,7 +180,9 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
             tDestBuffer.putLong(  iDestOffset + OFFSET_DOM_ID            , mt_domID.getDomIDAsLong() );
             iBytesWritten = mt_PayloadEnvelope.miPayloadLen;
             //-restore the order
-            tDestBuffer.order(tSaveOrder);
+            if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                tDestBuffer.order(tSaveOrder);
+            }
         }
         return iBytesWritten;
     }
@@ -229,7 +233,9 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
             if ( super.mtbuffer != null ) {
                 //-extract the order, so can switch to BIG_ENDIAN for reading the payload
                 ByteOrder tSaveOrder = mtbuffer.order();
-                mtbuffer.order(ByteOrder.BIG_ENDIAN);
+                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                    mtbuffer.order(ByteOrder.BIG_ENDIAN);
+                }
 
                 mt_sourceId = (ISourceID) SourceID4B.getFromPool();
                 ((SourceID4B) mt_sourceId).initialize( mtbuffer.getInt(  mioffset + OFFSET_SOURCE_ID) );
@@ -237,7 +243,9 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
                 ((DOMID8B)mt_domID).initialize( mtbuffer.getLong( mioffset + OFFSET_DOM_ID)    );
                 mb_IsPayloadLoaded = true;
                 //-restore order
-                mtbuffer.order(tSaveOrder);
+                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                    mtbuffer.order(tSaveOrder);
+                }
             }
         }
     }

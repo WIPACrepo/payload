@@ -130,7 +130,9 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      */
     public static void writePayloadEnvelopeAndID(IDOMID tDomId, long lUTCTime, int iPayloadStartOffset, ByteBuffer tPayloadBuffer)  throws IOException {
         ByteOrder tSaveOrder = tPayloadBuffer.order();
-        tPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         //-get and envelope from the pool
         PayloadEnvelope tEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
         //-initiliaze it with the passed in parameters
@@ -139,7 +141,9 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
         tEnvelope.writeData(iPayloadStartOffset, tPayloadBuffer);
         //-write the domid to the correct position (BIG_ENDIAN)
         tPayloadBuffer.putLong( (iPayloadStartOffset + OFFSET_DOMID), tDomId.getDomIDAsLong() );
-        tPayloadBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tPayloadBuffer.order(tSaveOrder);
+        }
     }
 
     /**
@@ -221,7 +225,9 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
             // of Spliceable ie - needed for compareTo() ).
             ByteOrder tSaveOrder = mtbuffer.order();
             //-extract the original byte-order so it can later be restored.
-            mtbuffer.order(ByteOrder.LITTLE_ENDIAN);
+            if (tSaveOrder != ByteOrder.LITTLE_ENDIAN) {
+                mtbuffer.order(ByteOrder.LITTLE_ENDIAN);
+            }
             if (mtTimeCalRecord == null) {
                 mtTimeCalRecord = (TimeCalibrationRecord) TimeCalibrationRecord.getFromPool(); //getUseableRecord();
             } else {
@@ -231,7 +237,9 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
             }
             mtTimeCalRecord.loadData(mioffset+OFFSET_DOMHUB_TCAL_RECORD, mtbuffer);
             //-restore the byte order
-            mtbuffer.order(tSaveOrder);
+            if (tSaveOrder != ByteOrder.LITTLE_ENDIAN) {
+                mtbuffer.order(tSaveOrder);
+            }
         }
     }
     /**

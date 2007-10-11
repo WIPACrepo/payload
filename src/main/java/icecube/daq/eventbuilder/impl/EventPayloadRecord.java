@@ -130,10 +130,12 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
      * @exception DataFormatException if the record is not of the correct format.
      */
     public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
-        ByteOrder tSaveOrder = tBuffer.order();
         mb_IsDataLoaded = false;
+        ByteOrder tSaveOrder = tBuffer.order();
         //-read record-type
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         // OFFSET_REC_TYPE
         msi_RecType = tBuffer.getShort(iRecordOffset + OFFSET_REC_TYPE);
 
@@ -152,7 +154,9 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
         mt_lastTime = new UTCTime8B(tBuffer.getLong(iRecordOffset + OFFSET_LAST_UTCTIME));
 
         //-restore order
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
         mb_IsDataLoaded = true;
     }
 
@@ -178,14 +182,18 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
     public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
         ByteOrder tSaveOrder = tBuffer.order();
         //-switch to BIG_ENDIAN
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         tBuffer.putShort(                  iOffset + OFFSET_REC_TYPE,               msi_RecType                     );
         tBuffer.putInt(                    iOffset + OFFSET_UID,                    mi_UID                          );
         tBuffer.putInt(                    iOffset + OFFSET_SOURCE_ID,              mt_sourceid.getSourceID()       );
         tBuffer.putLong(                   iOffset + OFFSET_FIRST_UTCTIME,          mt_firstTime.getUTCTimeAsLong() );
         tBuffer.putLong(                   iOffset + OFFSET_LAST_UTCTIME,           mt_lastTime.getUTCTimeAsLong()  );
         //-restore order
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
         return SIZE_TOTAL;
     }
 

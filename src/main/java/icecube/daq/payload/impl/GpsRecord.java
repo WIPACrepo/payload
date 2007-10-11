@@ -135,10 +135,13 @@ public class GpsRecord {
         miGpsSeconds = (int) read_UTCTime_seconds(iOffset, tBuffer);
         mbyGpsQualityByte = (byte) tBuffer.get(iOffset + OFFSET_QUALITY_Q );
         ByteOrder tSaveOrder = tBuffer.order();
-        // tBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         mlDorGpsSyncTime = tBuffer.getLong(iOffset + OFFSET_DORTIMER_8C);
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
     }
 
     /**

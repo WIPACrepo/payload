@@ -177,10 +177,12 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
      * @exception DataFormatException if the record is not of the correct format.
      */
     public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
-        ByteOrder tSaveOrder = tBuffer.order();
         mb_IsDataLoaded = false;
+        ByteOrder tSaveOrder = tBuffer.order();
         //-read record-type
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         // OFFSET_REC_TYPE
         msi_RecType = tBuffer.getShort(iRecordOffset + OFFSET_REC_TYPE);
 
@@ -210,7 +212,9 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
         mi_runNumber = tBuffer.getInt(iRecordOffset + OFFSET_RUN_NUMBER);
 
         //-restore order
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
         mb_IsDataLoaded = true;
     }
 
@@ -245,7 +249,9 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
     public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
         ByteOrder tSaveOrder = tBuffer.order();
         //-switch to BIG_ENDIAN
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         tBuffer.putShort(  iOffset + OFFSET_REC_TYPE,               msi_RecType                     );
         tBuffer.putInt(    iOffset + OFFSET_UID,                    mi_UID                          );
         tBuffer.putInt(    iOffset + OFFSET_SOURCE_ID,              mt_sourceid.getSourceID()       );
@@ -255,7 +261,9 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
         tBuffer.putInt(    iOffset + OFFSET_EVENT_CONFIGID,         mi_eventConfigID                );
         tBuffer.putInt(    iOffset + OFFSET_RUN_NUMBER,             mi_runNumber                    );
         //-restore order
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
         return SIZE_TOTAL;
     }
 

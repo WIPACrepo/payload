@@ -329,8 +329,8 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      * @exception DataFormatException if the record is not of the correct format.
      */
     public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
-        ByteOrder tOrder = tBuffer.order();
         if (!mbLoaded) {
+            ByteOrder tOrder = tBuffer.order();
             short chk = tBuffer.getShort(iRecordOffset + OFFSET_ORDERCHECK);
             if (chk != 1) {
                 ByteOrder tReadOrder = (tOrder == ByteOrder.LITTLE_ENDIAN ?
@@ -385,11 +385,11 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
             tBuffer.get(compressedData);
             tBuffer.position(origPos);
 
+            tBuffer.order(tOrder);
+
             //-don't load if un-needed.
             mbLoaded = true;
         }
-        //-restore order
-        tBuffer.order(tOrder);
     }
 
 

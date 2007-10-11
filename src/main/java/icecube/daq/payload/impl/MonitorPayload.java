@@ -55,10 +55,14 @@ public class MonitorPayload extends Payload {
         if (super.mtbuffer != null) {
             if (mtDomId == null) {
                 ByteOrder tSaveOrder = mtbuffer.order();
-                mtbuffer.order(ByteOrder.BIG_ENDIAN);
+                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                    mtbuffer.order(ByteOrder.BIG_ENDIAN);
+                }
                 long ldomid = mtbuffer.getLong(mioffset + OFFSET_DOMID);
                 mtDomId = new DOMID8B(ldomid);
-                mtbuffer.order(tSaveOrder);
+                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                    mtbuffer.order(tSaveOrder);
+                }
             }
             //-create the internal monitor record from the binary record.
             if (mtMonitorRecord == null ) {
@@ -215,7 +219,9 @@ public class MonitorPayload extends Payload {
      */
     public static void writePayloadEnvelopeAndID(int iPayloadLength, IDOMID tDomId, long lUTCTime, int iPayloadStartOffset, ByteBuffer tPayloadBuffer)  throws IOException {
         ByteOrder tSaveOrder = tPayloadBuffer.order();
-        tPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         //-get and envelope from the pool
         PayloadEnvelope tEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
         //-initiliaze it with the passed in parameters
@@ -224,6 +230,8 @@ public class MonitorPayload extends Payload {
         tEnvelope.writeData(iPayloadStartOffset, tPayloadBuffer);
         //-write the domid to the correct position (BIG_ENDIAN)
         tPayloadBuffer.putLong( (iPayloadStartOffset + OFFSET_DOMID), tDomId.getDomIDAsLong() );
-        tPayloadBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tPayloadBuffer.order(tSaveOrder);
+        }
     }
 }

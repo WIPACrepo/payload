@@ -221,9 +221,13 @@ public abstract class PayloadFactory
             iLength = -1;
         } else {
             ByteOrder tSaveOrder = tBuffer.order();
-            tBuffer.order(ByteOrder.BIG_ENDIAN);
+            if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                tBuffer.order(ByteOrder.BIG_ENDIAN);
+            }
             iLength = tBuffer.getInt(iOffset);
-            tBuffer.order(tSaveOrder);
+            if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                tBuffer.order(tSaveOrder);
+            }
         }
         return iLength;
     }

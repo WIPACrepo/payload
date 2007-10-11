@@ -162,7 +162,9 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
     public int writeData(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
         int iBytesWritten = SIZE_HEADER;
         ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         //-write request-type (including endianness)
         // OFFSET_REQUEST_TYPE
         tBuffer.putShort(iRecordOffset + OFFSET_REQUEST_TYPE, msi_RequestType);
@@ -185,7 +187,9 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
             ReadoutRequestElementRecord tRequestElement = (ReadoutRequestElementRecord) mt_RequestElementVector.get(ii);
             iBytesWritten += tRequestElement.writeData(iCurrOffset, tBuffer);
         }
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
         return iBytesWritten;
     }
 
@@ -209,7 +213,9 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
     public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
         mb_IsLoaded = false;
         ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         //-read request-type
         // OFFSET_REQUEST_TYPE
         msi_RequestType = tBuffer.getShort(iRecordOffset + OFFSET_REQUEST_TYPE);
@@ -236,7 +242,9 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
         }
 
         //-restore order
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
         mb_IsLoaded = true;
     }
 

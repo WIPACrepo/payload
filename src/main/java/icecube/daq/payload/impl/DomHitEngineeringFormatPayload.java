@@ -246,9 +246,13 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      */
     public static void writeUTCTime(long lUTCTime, int iTestDaqRecordOffset, ByteBuffer tBuffer) {
         ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         tBuffer.putLong( iTestDaqRecordOffset + OFFSET_UTIME, lUTCTime);
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
     }
 
     /**

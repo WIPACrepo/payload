@@ -169,7 +169,9 @@ public class CompositePayloadEnvelope extends Poolable implements IWriteablePayl
      */
     public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
         ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         // OFFSET_COMPOSITE_PAYLOAD_BYTES
         mi_compositePayloadBytes = tBuffer.getInt(iRecordOffset + OFFSET_COMPOSITE_PAYLOAD_BYTES);
         // OFFSET_COMPOSITE_TYPE
@@ -179,7 +181,9 @@ public class CompositePayloadEnvelope extends Poolable implements IWriteablePayl
         //-ok, env loaded
         mb_IsLoaded = true;
 
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
     }
 
 }

@@ -175,7 +175,9 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
                 }
             }
             ByteOrder tSaveOrder = tDestBuffer.order();
-            tDestBuffer.order(ByteOrder.BIG_ENDIAN);
+            if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                tDestBuffer.order(ByteOrder.BIG_ENDIAN);
+            }
             //-create the new payload from both the envelope and the hit payload
             //-Write out the PayloadEnvelope
             // NOTE: the initialize method has already filled in the appropriate lengths
@@ -189,7 +191,9 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
             tDestBuffer.putShort( iDestOffset + OFFSET_TRIGGER_MODE      , msi_TriggerMode           );
             iBytesWritten = mt_PayloadEnvelope.miPayloadLen;
             //-restore the order
-            tDestBuffer.order(tSaveOrder);
+            if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                tDestBuffer.order(tSaveOrder);
+            }
         }
         return iBytesWritten;
     }
@@ -243,7 +247,9 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
             if ( super.mtbuffer != null ) {
                 //-extract the order, so can switch to BIG_ENDIAN for reading the payload
                 ByteOrder tSaveOrder = mtbuffer.order();
-                mtbuffer.order(ByteOrder.BIG_ENDIAN);
+                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                    mtbuffer.order(ByteOrder.BIG_ENDIAN);
+                }
                 mi_TriggerType     = mtbuffer.getInt( mioffset + OFFSET_TRIGGER_TYPE      );
                 mi_TriggerConfigID = mtbuffer.getInt( mioffset + OFFSET_TRIGGER_CONFIG_ID );
 
@@ -254,7 +260,9 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
                 msi_TriggerMode = mtbuffer.getShort( mioffset + OFFSET_TRIGGER_MODE );
                 mb_IsHitPayloadLoaded = true;
                 //-restore order
-                mtbuffer.order(tSaveOrder);
+                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                    mtbuffer.order(tSaveOrder);
+                }
             }
         }
     }

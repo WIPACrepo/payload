@@ -184,12 +184,16 @@ public class DomHitDeltaCompressedFormatUtility {
         //-exctract the current order to save
         ByteOrder tSaveOrder = tBuffer.order();
         //-change to LITTLE_ENDIAN for reading the MSB short
-        tBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        if (tSaveOrder != ByteOrder.LITTLE_ENDIAN) {
+            tBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        }
         //-pull out the 16bits and kill any sign extension that may have come through
         // when casting to a long.
         long l_MSB16 = ((long) tBuffer.getShort(iMUXHeaderOffset) & 0x00000000FFFFFFFFL);
         //-restore the entry order
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.LITTLE_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
         return l_MSB16;
     }
 
@@ -238,9 +242,13 @@ public class DomHitDeltaCompressedFormatUtility {
         long ldomClock = 0L;
         //-save the byte order and pull out the data
         ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         ldomClock = ( 0x00000000FFFFFFFFL & ((long) tBuffer.getInt(iWORD0Offset)));
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
         return ldomClock;
     }
 }
