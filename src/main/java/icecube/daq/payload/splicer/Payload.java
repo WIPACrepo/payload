@@ -243,6 +243,18 @@ public abstract class Payload extends Poolable
     }
 
     /**
+     * Is the specified object equal to this object?
+     *
+     * @param obj object being compared
+     *
+     * @return <tt>true</tt> if the objects are equal
+     */
+    public boolean equals(Object obj)
+    {
+        return compareTo(obj) == 0;
+    }
+
+    /**
      * shift offset of object inside buffer (called by PayloadFactory)
      */
     public void shiftOffset(int shift) {

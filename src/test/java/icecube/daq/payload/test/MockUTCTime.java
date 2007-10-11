@@ -48,6 +48,11 @@ public class MockUTCTime
         // do nothing
     }
 
+    public boolean equals(Object obj)
+    {
+        return compareTo(obj) == 0;
+    }
+
     public IUTCTime getOffsetUTCTime(double x0)
     {
         throw new Error("Unimplemented");

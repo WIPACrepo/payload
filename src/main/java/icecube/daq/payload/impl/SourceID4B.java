@@ -177,7 +177,7 @@ public class SourceID4B extends Poolable implements ISourceID
      */
     public boolean equals(Object obj)
     {
-        return (compareTo(obj) == 0);
+        return compareTo(obj) == 0;
     }
 
     /**
