@@ -47,9 +47,6 @@ public abstract class Payload extends Poolable
      */
     private static final Log mtLog = LogFactory.getLog(Payload.class);
 
-    //-Lock object for recycle() of Bytebuffer
-    private Object mtbuffer_lock = new Object();
-
     //-Reference to the PayloadFactory which created this
     // Payload. This is used for recycling, and for cloning.
     //-TODO: change this scope
@@ -432,12 +429,10 @@ public abstract class Payload extends Poolable
             if (tCache != null) {
                 //-TODO: (make a better way to check this other than a non-null mtByteBufferReceiver
                 //-double check to make sure that this Payload 'owns' this ByteBuffer
-                synchronized (mtbuffer_lock) {
-                    tCache.returnBuffer(mtbuffer);
-                    //-eventhough dispose() takes care of this, if the ByteBuffer is passed on
-                    // then the reference to it must be removed.
-                    mtbuffer = null;
-                }
+                tCache.returnBuffer(mtbuffer);
+                //-eventhough dispose() takes care of this, if the ByteBuffer is passed on
+                // then the reference to it must be removed.
+                mtbuffer = null;
             }
         } else {
             mtbuffer = null;
