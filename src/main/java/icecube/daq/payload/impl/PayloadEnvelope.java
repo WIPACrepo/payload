@@ -92,7 +92,9 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
         }
 
         ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         //-read the payload length
         miPayloadLen = tBuffer.getInt(iRecordOffset + OFFSET_PAYLOADLEN);
         //-Read the payload type and correct for endiannes
@@ -116,7 +118,9 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
      */
     public int writeData(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
         ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         tBuffer.putInt((iRecordOffset + OFFSET_PAYLOADLEN), miPayloadLen);
         tBuffer.putInt((iRecordOffset + OFFSET_PAYLOADTYPE), miPayloadType);
         tBuffer.putLong((iRecordOffset + OFFSET_UTIME), mlUTime);
@@ -198,7 +202,9 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
         int iRecType = -1;
         ByteOrder tSaveOrder = tBuffer.order();
         //-The Payload Envelope has been defined to always be BIG_ENDIAN
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         iRecType = tBuffer.getInt(iOffset + OFFSET_PAYLOADTYPE);
         //-restore endianess to the buffer
         if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
@@ -231,7 +237,9 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
         int iRecLength = -1;
         ByteOrder tSaveOrder = tBuffer.order();
         //-The Payload Envelope has been defined to always be BIG_ENDIAN
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         iRecLength = tBuffer.getInt(iOffset + OFFSET_PAYLOADLEN);
         //-restore endianess to the buffer
         if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
