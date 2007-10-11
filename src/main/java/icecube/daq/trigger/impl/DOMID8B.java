@@ -14,9 +14,6 @@ public class DOMID8B extends Poolable implements IDOMID {
 
     private long ml_DomID;
     private String ms_DomID;
-    //-can probably get rid of the initial internal long since this is
-    // sufficient to produce both the hash code and hold the long.
-    private Long mtDomID;
     /**
      * Simple constructor fo pooling.
      */
@@ -31,16 +28,12 @@ public class DOMID8B extends Poolable implements IDOMID {
      */
     public void initialize(long ldomid) {
         ml_DomID = ldomid;
-        mtDomID = new Long(ldomid);
-        getDomIDAsString();
     }
     /**
      * Constructor to populate the domid.
      */
     public DOMID8B(long ldomid) {
-        ml_DomID = ldomid;
-        mtDomID = new Long(ml_DomID);
-        getDomIDAsString();
+        initialize(ldomid);
     }
     /**
      * Get the DOMID as a long
@@ -102,7 +95,7 @@ public class DOMID8B extends Poolable implements IDOMID {
      * domid long value will always hash to the same code.
      */
     public int hashCode() {
-        return mtDomID.hashCode();
+        return (int) (ml_DomID % (long) Integer.MAX_VALUE);
     }
     /**
      * this compares the internal representation of the domid and will
