@@ -1,7 +1,7 @@
 /*
  * class: PayloadDestinationCollection
  *
- * Version $Id: PayloadDestinationCollection.java,v 1.5 2005/12/09 00:09:41 artur Exp $
+ * Version $Id: PayloadDestinationCollection.java 2125 2007-10-12 18:27:05Z ksb $
  *
  * Date: October 19 2005
  *
@@ -22,7 +22,7 @@ import java.io.IOException;
 /**
  * This class is a simple implementation of the IPayloadDestinationCollection interface.
  *
- * @version $Id: PayloadDestinationCollection.java,v 1.5 2005/12/09 00:09:41 artur Exp $
+ * @version $Id: PayloadDestinationCollection.java 2125 2007-10-12 18:27:05Z ksb $
  * @author pat
  */
 public class PayloadDestinationCollection implements IPayloadDestinationCollection

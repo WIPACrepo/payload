@@ -1,7 +1,7 @@
 /*
  * class: PayloadFactory
  *
- * Version $Id: PayloadFactory.java,v 1.9 2005/11/09 21:11:37 artur Exp $
+ * Version $Id: PayloadFactory.java 2125 2007-10-12 18:27:05Z ksb $
  *
  * Date: September 21 2004
  *
@@ -30,7 +30,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Interface for the Payload Factory (Trigger primitive)
  *
- * @version $Id: PayloadFactory.java,v 1.9 2005/11/09 21:11:37 artur Exp $
+ * @version $Id: PayloadFactory.java 2125 2007-10-12 18:27:05Z ksb $
  * @author hellwig,dwharton
  */
 public abstract class PayloadFactory

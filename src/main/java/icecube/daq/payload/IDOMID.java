@@ -1,7 +1,7 @@
 /*
  * class: IDOMID
  *
- * Version $Id: IDOMID.java,v 1.3 2005/10/07 22:35:45 dwharton Exp $
+ * Version $Id: IDOMID.java 2125 2007-10-12 18:27:05Z ksb $
  *
  * Date: September 18 2004
  *
@@ -14,7 +14,7 @@ import icecube.util.ICopyable;
 /**
  * Encoding the DOM ID as an interface
  *
- * @version $Id: IDOMID.java,v 1.3 2005/10/07 22:35:45 dwharton Exp $
+ * @version $Id: IDOMID.java 2125 2007-10-12 18:27:05Z ksb $
  * @author hellwig,dwharton
  * dwharton: added descriptions and moved package.
  */

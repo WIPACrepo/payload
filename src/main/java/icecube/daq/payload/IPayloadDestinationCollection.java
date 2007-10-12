@@ -1,7 +1,7 @@
 /*
  * interface: IPayloadDestinationCollection
  *
- * Version $Id: IPayloadDestinationCollection.java,v 1.4 2005/12/09 00:09:41 artur Exp $
+ * Version $Id: IPayloadDestinationCollection.java 2125 2007-10-12 18:27:05Z ksb $
  *
  * Date: October 19 2005
  *
@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * This interface defines a collection of PayloadDestinations.
  *
- * @version $Id: IPayloadDestinationCollection.java,v 1.4 2005/12/09 00:09:41 artur Exp $
+ * @version $Id: IPayloadDestinationCollection.java 2125 2007-10-12 18:27:05Z ksb $
  * @author pat
  */
 public interface IPayloadDestinationCollection

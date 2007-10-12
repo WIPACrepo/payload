@@ -1,7 +1,7 @@
 /*
  * class: SourceID4B
  *
- * Version $Id: SourceID4B.java,v 1.11 2006/08/08 20:18:15 vav111 Exp $
+ * Version $Id: SourceID4B.java 2125 2007-10-12 18:27:05Z ksb $
  *
  * Date: September 21 2004
  *
@@ -17,7 +17,7 @@ import icecube.util.Poolable;
 /**
  * Implementation of ISourceID using a 4 byte int
  *
- * @version $Id: SourceID4B.java,v 1.11 2006/08/08 20:18:15 vav111 Exp $
+ * @version $Id: SourceID4B.java 2125 2007-10-12 18:27:05Z ksb $
  * @author hellwig,dwharton
  */
 public class SourceID4B extends Poolable implements ISourceID

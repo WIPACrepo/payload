@@ -1,7 +1,7 @@
 /*
  * class: IUTCTime
  *
- * Version $Id: IUTCTime.java,v 1.3 2005/10/07 22:35:45 dwharton Exp $
+ * Version $Id: IUTCTime.java 2125 2007-10-12 18:27:05Z ksb $
  *
  * Date: September 18 2004
  *
@@ -16,7 +16,7 @@ import icecube.util.ICopyable;
  * as defined by the DOR time definition.  Nanosec time difference
  * is available computed as a double.
  *
- * @version $Id: IUTCTime.java,v 1.3 2005/10/07 22:35:45 dwharton Exp $
+ * @version $Id: IUTCTime.java 2125 2007-10-12 18:27:05Z ksb $
  * @author hellwig,dwharton
  */
 public interface IUTCTime extends Comparable, ICopyable {

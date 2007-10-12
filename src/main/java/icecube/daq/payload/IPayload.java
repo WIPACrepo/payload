@@ -1,7 +1,7 @@
 /*
  * class: IPayload
  *
- * Version $Id: IPayload.java,v 1.6 2006/08/08 22:42:51 toale Exp $
+ * Version $Id: IPayload.java 2125 2007-10-12 18:27:05Z ksb $
  *
  * Date: September 17 2004
  *
@@ -15,7 +15,7 @@ import icecube.util.ICopyable;
 /**
  * Basic interface defining a trigger primitive payload
  *
- * @version $Id: IPayload.java,v 1.6 2006/08/08 22:42:51 toale Exp $
+ * @version $Id: IPayload.java 2125 2007-10-12 18:27:05Z ksb $
  * @author hellwig, dwharton
  */
 public interface IPayload extends ICopyable {

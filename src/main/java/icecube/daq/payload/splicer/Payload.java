@@ -1,7 +1,7 @@
 /*
  * class: Payload
  *
- * Version $Id: Payload.java,v 1.16 2005/11/09 23:52:19 dwharton Exp $
+ * Version $Id: Payload.java 2125 2007-10-12 18:27:05Z ksb $
  *
  * Date: September 21 2004
  *
@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
  * Payload implements the IPayload interface and the Spliceable interface
  * It contains trigger information that is send through the DAQ system
  *
- * @version $Id: Payload.java,v 1.16 2005/11/09 23:52:19 dwharton Exp $
+ * @version $Id: Payload.java 2125 2007-10-12 18:27:05Z ksb $
  * @author hellwig,dwharton
  *
  * 8/24/2005 dbw
