@@ -7,7 +7,6 @@ package icecube.daq.trigger;
 
 
 import java.util.Vector;
-import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.ISourceID;
 
 /**
@@ -24,7 +23,7 @@ public interface IReadoutRequest {
      * readout request for a single ISourceID (ie String)
      * @return Vector Vector of IReadoutRequestElement
      */
-    public Vector getReadoutRequestElements();
+    Vector getReadoutRequestElements();
 
     /**
      * getUID()
@@ -33,15 +32,15 @@ public interface IReadoutRequest {
      * reassemble the events
      * @return int unique Trigger ID given by GlobalTrigger
      */
-    public int getUID();
+    int getUID();
 
     /**
      *  This is the ISourceID which generated this request.
      *  The locations of the individual sources which are to
      *  be requested for data are contained in the request-elements
      *  themselves.
-     *  @return ISourceID ...the ISourceID of the Trigger which generated
+     *  @return the ISourceID of the Trigger which generated
      *                       this request.
      */
-    public ISourceID getSourceID();
+    ISourceID getSourceID();
 }

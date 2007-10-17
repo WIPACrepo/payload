@@ -18,7 +18,6 @@ import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
 import icecube.daq.trigger.ITriggerRequestPayload;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -152,7 +151,7 @@ class DumpEventV2
                    trigReq, elems);
     }
 
-    DumpEventV2(ByteBuffer buf, int offset, int len, int index, long elemTime)
+    DumpEventV2(ByteBuffer buf, int offset, int len, int index)
         throws DumpPayloadException
     {
         if (len - offset < 38) {
@@ -162,31 +161,36 @@ class DumpEventV2
                                            " bytes)");
         }
 
-        final int recType = buf.getShort(offset + 0);
-        final int uid = buf.getInt(offset + 2);
-        final int srcId = buf.getInt(offset + 6);
-        final long firstTime = buf.getLong(offset + 10);
-        final long lastTime = buf.getLong(offset + 18);
-        final int type = buf.getInt(offset + 26);
-        final int cfgId = buf.getInt(offset + 30);
-        final int runNum = buf.getInt(offset + 34);
+        //final int xRecType = buf.getShort(offset + 0);
+        final int xUID = buf.getInt(offset + 2);
+        final int xSrcId = buf.getInt(offset + 6);
+        final long xFirstTime = buf.getLong(offset + 10);
+        final long xLastTime = buf.getLong(offset + 18);
+        final int xType = buf.getInt(offset + 26);
+        final int xCfgId = buf.getInt(offset + 30);
+        final int xRunNum = buf.getInt(offset + 34);
 
-        ArrayList elems = extractComposite(buf, offset + 38);
+        ArrayList xElems = extractComposite(buf, offset + 38);
 
-        ITriggerRequestPayload trigReq;
-        if (elems.size() > 0 &&
-            elems.get(0) instanceof ITriggerRequestPayload)
+        ITriggerRequestPayload xTrigReq;
+        if (xElems.size() > 0 &&
+            xElems.get(0) instanceof ITriggerRequestPayload)
         {
-            trigReq = (ITriggerRequestPayload) elems.remove(0);
+            xTrigReq = (ITriggerRequestPayload) xElems.remove(0);
         } else {
-            trigReq = null;
+            xTrigReq = null;
         }
 
-        initialize(uid, srcId, firstTime, lastTime, type, cfgId, runNum,
-                   trigReq, elems);
+        initialize(xUID, xSrcId, xFirstTime, xLastTime, xType, xCfgId, xRunNum,
+                   xTrigReq, xElems);
     }
 
     public Object deepCopy()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void dispose()
     {
         throw new Error("Unimplemented");
     }
@@ -277,6 +281,11 @@ class DumpEventV2
         return srcObj;
     }
 
+    public int getSubrunNumber()
+    {
+        return 0;
+    }
+
     public int getTriggerConfigID()
     {
         return getEventConfigID();
@@ -305,6 +314,32 @@ class DumpEventV2
         this.runNum = runNum;
         this.trigReq = trigReq;
         this.elems = elems;
+    }
+
+    /**
+     * Initializes Payload from backing so it can be used as an IPayload.
+     */
+    public void loadPayload()
+        throws IOException, DataFormatException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void recycle()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
     }
 }
 
@@ -341,16 +376,21 @@ class DumpHitSimple
                                            " bytes)");
         }
 
-        final int trigType = buf.getInt(offset + 0);
-        final int cfgId = buf.getInt(offset + 4);
-        final int srcId = buf.getInt(offset + 8);
-        final long domId = buf.getLong(offset + 12);
-        final int trigMode = buf.getShort(offset + 20);
+        //final int xTrigType = buf.getInt(offset + 0);
+        //final int xCfgId = buf.getInt(offset + 4);
+        final int xSrcId = buf.getInt(offset + 8);
+        final long xDomId = buf.getLong(offset + 12);
+        //final int xTrigMode = buf.getShort(offset + 20);
 
-        initialize(elemTime, srcId, domId);
+        initialize(elemTime, xSrcId, xDomId);
     }
 
     public Object deepCopy()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void dispose()
     {
         throw new Error("Unimplemented");
     }
@@ -427,6 +467,32 @@ class DumpHitSimple
         this.srcId = srcId;
         this.domId = domId;
     }
+
+    /**
+     * Initializes Payload from backing so it can be used as an IPayload.
+     */
+    public void loadPayload()
+        throws IOException, DataFormatException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void recycle()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
 }
 
 class DumpHitDataRecord
@@ -465,8 +531,7 @@ class DumpHitEngFmt
 {
     private DumpHitDataRecord dataRec;
 
-    DumpHitEngFmt(ByteBuffer buf, int offset, int len, int index,
-                  long elemTime)
+    DumpHitEngFmt(ByteBuffer buf, int offset, int len, int index)
         throws DumpPayloadException
     {
         super();
@@ -478,13 +543,13 @@ class DumpHitEngFmt
                                            " bytes)");
         }
 
-        final int cfgId = buf.getInt(offset + 0);
+        //final int cfgId = buf.getInt(offset + 0);
         final int srcId = buf.getInt(offset + 4);
 
         final int recLen = buf.getInt(offset + 8);
         final int recId = buf.getInt(offset + 12);
         final long domId = buf.getLong(offset + 16);
-        final long skip = buf.getLong(offset + 24);
+        //final long skip = buf.getLong(offset + 24);
         final long time = buf.getLong(offset + 32);
 
         if (len - offset < 24 + recLen) {
@@ -502,17 +567,151 @@ class DumpHitEngFmt
         initialize(time, srcId, domId, recId);
     }
 
-    void initialize(long time, int srcId, long domId, int recId)
-    {        
-        super.initialize(time, srcId, domId);
+    /**
+     * Make a 'deep-copy' of the Payload so that all internally referenced
+     * objects are completely new.
+     *
+     * @return Payload which is a deep copy of this Payload
+     */
+    public Object deepCopy()
+    {
+        throw new Error("Unimplemented");
+    }
 
-        dataRec = new DumpHitDataRecord(recId, -1, null);
+    public void dispose()
+    {
+        throw new Error("Unimplemented");
     }
 
     public IHitDataRecord getHitRecord()
         throws IOException
     {
         return dataRec;
+    }
+
+    void initialize(long time, int srcId, long domId, int recId)
+    {
+        super.initialize(time, srcId, domId);
+
+        dataRec = new DumpHitDataRecord(recId, -1, null);
+    }
+
+    /**
+     * Initializes Payload from backing so it can be used as an IPayload.
+     */
+    public void loadPayload()
+        throws IOException, DataFormatException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void recycle()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
+}
+
+class DumpHitDeltaFmt
+    extends DumpHitSimple
+    implements IHitDataPayload
+{
+    private DumpHitDataRecord dataRec;
+
+    DumpHitDeltaFmt(ByteBuffer buf, int offset, int len, int index,
+                    long elemTime)
+        throws DumpPayloadException
+    {
+        super();
+
+        if (len - offset < 36) {
+            throw new DumpPayloadException("DeltaFmtHitData#" + index +
+                                           " payload too short (" +
+                                           (len - offset) + " of " + len +
+                                           " bytes)");
+        }
+
+        //final int trigType = buf.getInt(offset + 0);
+        //final int cfgId = buf.getInt(offset + 4);
+        final int srcId = buf.getInt(offset + 8);
+        final long domId = buf.getLong(offset + 12);
+
+        //final long domClk = buf.getLong(offset + 20);
+        //final int word0 = buf.getInt(offset + 28);
+        //final int word2 = buf.getInt(offset + 32);
+
+        initialize(elemTime, srcId, domId);
+    }
+
+    DumpHitDeltaFmt(long time, int srcId, long domId)
+    {
+        initialize(time, srcId, domId);
+    }
+
+    /**
+     * Make a 'deep-copy' of the Payload so that all internally referenced
+     * objects are completely new.
+     *
+     * @return Payload which is a deep copy of this Payload
+     */
+    public Object deepCopy()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void dispose()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public IHitDataRecord getHitRecord()
+        throws IOException
+    {
+        return dataRec;
+    }
+
+    void initialize(long time, int srcId, long domId)
+    {
+        super.initialize(time, srcId, domId);
+
+        dataRec = null;
+    }
+
+    /**
+     * Initializes Payload from backing so it can be used as an IPayload.
+     */
+    public void loadPayload()
+        throws IOException, DataFormatException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void recycle()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
     }
 }
 
@@ -521,7 +720,7 @@ abstract class DumpPayload
     static ArrayList extractComposite(ByteBuffer buf, int offset)
         throws DumpPayloadException
     {
-        final int compBytes = buf.getInt(offset);
+        //final int compBytes = buf.getInt(offset);
         final int compType = buf.getShort(offset + 4);
         final int numElems = buf.getShort(offset + 6);
 
@@ -554,8 +753,7 @@ abstract class DumpPayload
                 {
                     try {
                         elems.add(new DumpHitEngFmt(buf, elemOff + 16,
-                                                    elemOff + elemLen, i,
-                                                    elemTime));
+                                                    elemOff + elemLen, i));
                     } catch (DumpPayloadException dpe) {
                         dpe.printStackTrace();
                     }
@@ -565,8 +763,7 @@ abstract class DumpPayload
                 {
                     try {
                         elems.add(new DumpTriggerRequest(buf, elemOff + 16,
-                                                         elemOff + elemLen, i,
-                                                         elemTime));
+                                                         elemOff + elemLen, i));
                     } catch (DumpPayloadException dpe) {
                         dpe.printStackTrace();
                     }
@@ -576,6 +773,16 @@ abstract class DumpPayload
                 {
                     try {
                         elems.add(new DumpReadoutData(buf, elemOff + 16,
+                                                      elemOff + elemLen, i));
+                    } catch (DumpPayloadException dpe) {
+                        dpe.printStackTrace();
+                    }
+                }
+                break;
+            case PayloadRegistry.PAYLOAD_ID_DELTA_HIT:
+                {
+                    try {
+                        elems.add(new DumpHitDeltaFmt(buf, elemOff + 16,
                                                       elemOff + elemLen, i,
                                                       elemTime));
                     } catch (DumpPayloadException dpe) {
@@ -642,8 +849,7 @@ class DumpReadoutData
         initialize(trigUID, num, isLast, srcId, firstTime, lastTime, elems);
     }
 
-    DumpReadoutData(ByteBuffer buf, int offset, int len, int index,
-                    long elemTime)
+    DumpReadoutData(ByteBuffer buf, int offset, int len, int index)
         throws DumpPayloadException
     {
         if (len - offset < 38) {
@@ -653,21 +859,26 @@ class DumpReadoutData
                                            " bytes)");
         }
 
-        final int recType = buf.getShort(offset + 0);
-        final int trigUID = buf.getInt(offset + 2);
-        final int num = buf.getShort(offset + 6);
-        final int isLast = buf.getShort(offset + 8);
-        final int srcId = buf.getInt(offset + 10);
-        final long firstTime = buf.getLong(offset + 14);
-        final long lastTime = buf.getLong(offset + 22);
+        //final int xRecType = buf.getShort(offset + 0);
+        final int xTrigUID = buf.getInt(offset + 2);
+        final int xNum = buf.getShort(offset + 6);
+        final int xIsLast = buf.getShort(offset + 8);
+        final int xSrcId = buf.getInt(offset + 10);
+        final long xFirstTime = buf.getLong(offset + 14);
+        final long xLastTime = buf.getLong(offset + 22);
 
-        ArrayList elems = extractComposite(buf, offset + 30);
+        ArrayList xElems = extractComposite(buf, offset + 30);
 
-        initialize(trigUID, num, (isLast != 0), srcId, firstTime, lastTime,
-                   elems);
+        initialize(xTrigUID, xNum, (xIsLast != 0), xSrcId, xFirstTime,
+                   xLastTime, xElems);
     }
 
     public Object deepCopy()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void dispose()
     {
         throw new Error("Unimplemented");
     }
@@ -774,6 +985,32 @@ class DumpReadoutData
     {
         return isLast;
     }
+
+    /**
+     * Initializes Payload from backing so it can be used as an IPayload.
+     */
+    public void loadPayload()
+        throws IOException, DataFormatException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void recycle()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
 }
 
 class DumpReadoutRequest
@@ -791,8 +1028,7 @@ class DumpReadoutRequest
         initialize(srcId, uid);
     }
 
-    DumpReadoutRequest(ByteBuffer buf, int offset, int len, int index,
-                       long elemTime)
+    DumpReadoutRequest(ByteBuffer buf, int offset, int len, int index)
         throws DumpPayloadException
     {
         if (len - offset < 22) {
@@ -802,7 +1038,7 @@ class DumpReadoutRequest
                                            " bytes)");
         }
 
-        final int reqType = buf.getShort(offset + 0);
+        //final int reqType = buf.getShort(offset + 0);
         final int tmpUID = buf.getInt(offset + 2);
         final int trigSrcId = buf.getInt(offset + 6);
         final long numElems = buf.getInt(offset + 10);
@@ -945,7 +1181,7 @@ class DumpReadoutType
     public static String toString(int type)
     {
         switch (type) {
-        case IReadoutRequestElement.READOUT_TYPE_IIIT_GLOBAL:
+        case IReadoutRequestElement.READOUT_TYPE_GLOBAL:
             return "Global";
         case IReadoutRequestElement.READOUT_TYPE_II_GLOBAL:
             return "InIceGlobal";
@@ -1152,8 +1388,7 @@ class DumpTriggerRequest
         initialize(uid, firstTime, lastTime, cfgId, srcId, type, rReq);
     }
 
-    DumpTriggerRequest(ByteBuffer buf, int offset, int len, int index,
-                       long elemTime)
+    DumpTriggerRequest(ByteBuffer buf, int offset, int len, int index)
         throws DumpPayloadException
     {
         if (len - offset < 48) {
@@ -1163,18 +1398,18 @@ class DumpTriggerRequest
                                            " bytes)");
         }
 
-        final int recType = buf.getShort(offset + 0);
-        final int uid = buf.getInt(offset + 2);
-        final int type = buf.getInt(offset + 6);
-        final int cfgId = buf.getInt(offset + 10);
-        final int srcId = buf.getInt(offset + 14);
-        final long firstTime = buf.getLong(offset + 18);
-        final long lastTime = buf.getLong(offset + 26);
+        //final int xRecType = buf.getShort(offset + 0);
+        final int xUID = buf.getInt(offset + 2);
+        final int xType = buf.getInt(offset + 6);
+        final int xCfgId = buf.getInt(offset + 10);
+        final int xSrcId = buf.getInt(offset + 14);
+        final long xFirstTime = buf.getLong(offset + 18);
+        final long xLastTime = buf.getLong(offset + 26);
 
         DumpReadoutRequest rReq =
-            new DumpReadoutRequest(buf, offset + 34, len, 0, elemTime);
+            new DumpReadoutRequest(buf, offset + 34, len, 0);
 
-        initialize(uid, firstTime, lastTime, cfgId, srcId, type, rReq);
+        initialize(xUID, xFirstTime, xLastTime, xCfgId, xSrcId, xType, rReq);
     }
 
     void add(IHitPayload elem)
@@ -1186,6 +1421,11 @@ class DumpTriggerRequest
     }
 
     public Object deepCopy()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void dispose()
     {
         throw new Error("Unimplemented");
     }
@@ -1284,6 +1524,32 @@ class DumpTriggerRequest
         this.rdoutReq = rdoutReq;
 
         this.elems = new ArrayList();
+    }
+
+    /**
+     * Initializes Payload from backing so it can be used as an IPayload.
+     */
+    public void loadPayload()
+        throws IOException, DataFormatException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void recycle()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
     }
 }
 
@@ -1398,7 +1664,7 @@ public class DebugDumper
     /** XXX This should be in IDomHubPacket */
     private static final int STRINGHUB_ENGHIT_REC = 601;
 
-    private static final void dumpFile(FileInputStream inStream)
+    private static void dumpFile(FileInputStream inStream)
     {
         FileChannel inChan = inStream.getChannel();
 
@@ -1514,6 +1780,7 @@ public class DebugDumper
         buf.append(" fadc#").append(numFADC);
     }
 
+/*
     private static void formatDOMInitPacket(StringBuffer buf, long[] domIds,
                                             boolean includeTitle,
                                             int indentLevel)
@@ -1567,6 +1834,7 @@ public class DebugDumper
         buf.append(" time ").append(DumpUTCTime.toString(timeStamp));
         buf.append(" type ").append(typeStr);
     }
+*/
 
     private static void formatEvent(StringBuffer buf, IEventPayload event,
                                     boolean includeTitle, int indentLevel)
@@ -2161,6 +2429,7 @@ public class DebugDumper
         }
     }
 
+/*
     private static long getDomClock(ByteBuffer buf, int offset)
     {
         long domClock = 0;
@@ -2170,6 +2439,7 @@ public class DebugDumper
         }
         return domClock;
     }
+*/
 
     private static void indent(StringBuffer buf, int indentLevel)
     {
@@ -2378,8 +2648,7 @@ public class DebugDumper
         case PayloadRegistry.PAYLOAD_ID_EVENT_V2:
             {
                 try {
-                    DumpEventV2 evt =
-                        new DumpEventV2(buf, start + 16, len, 0, pUTCTime);
+                    DumpEventV2 evt = new DumpEventV2(buf, start + 16, len, 0);
 
                     StringBuffer strBuf = new StringBuffer();
                     formatEvent(strBuf, evt, true, NO_INDENT);
@@ -2393,8 +2662,7 @@ public class DebugDumper
             {
                 try {
                     DumpReadoutRequest rReq =
-                        new DumpReadoutRequest(buf, start + 16, len, 0,
-                                               pUTCTime);
+                        new DumpReadoutRequest(buf, start + 16, len, 0);
 
                     StringBuffer strBuf = new StringBuffer();
                     formatReadoutRequest(strBuf, rReq, true, NO_INDENT);
@@ -2422,7 +2690,7 @@ public class DebugDumper
             {
                 try {
                     DumpTriggerRequest req =
-                        new DumpTriggerRequest(buf, start + 16, len, 0, 0L);
+                        new DumpTriggerRequest(buf, start + 16, len, 0);
 
                     StringBuffer strBuf = new StringBuffer();
                     formatTriggerRequest(strBuf, req, true, NO_INDENT);
@@ -2436,7 +2704,7 @@ public class DebugDumper
             {
                 try {
                     DumpHitEngFmt hitData =
-                        new DumpHitEngFmt(buf, start + 16, len, 0, pUTCTime);
+                        new DumpHitEngFmt(buf, start + 16, len, 0);
 
                     StringBuffer strBuf = new StringBuffer();
                     formatHitData(strBuf, hitData, true, NO_INDENT);
@@ -2450,7 +2718,7 @@ public class DebugDumper
             {
                 try {
                     DumpReadoutData rData =
-                        new DumpReadoutData(buf, start + 16, len, 0, pUTCTime);
+                        new DumpReadoutData(buf, start + 16, len, 0);
 
                     StringBuffer strBuf = new StringBuffer();
                     formatReadoutData(strBuf, rData, true, NO_INDENT);

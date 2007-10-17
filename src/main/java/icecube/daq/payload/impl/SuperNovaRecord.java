@@ -14,35 +14,35 @@ import icecube.daq.payload.PayloadDestination;
  * This Object is used as a repository of information
  * for a single record of a variable number of SuperNova
  * scalers from a single DOM at a specific time.
- * 
+ *
  * Note: This object has the ability to read and load
  *       raw information from the record as written by
  *       the dom/domhub-mux'd fromat.
  * Formatting Information is taken from:<br>
  *<br>
- *       Domapp API    
- *       John Jacobsen 
+ *       Domapp API
+ *       John Jacobsen
  *       Last revision 11/23/2005
- *       $Id: SuperNovaRecord.java,v 1.4 2006/08/06 01:32:41 dwharton Exp $ 
+ *       $Id: SuperNovaRecord.java,v 1.4 2006/08/06 01:32:41 dwharton Exp $
  *<br>
- * 
+ *
  * US = (unsigned short)
  * UB = (unsigned byte)
  * Format of Record Data
- * 
- * Header                                
+ *
+ * Header
  *   2 US (Big-endian unsigned short) block length
  *   2 US (Big-endian unsigned short) format ID (300 decimal, 0x012C)
  *   6 UB*6  complete time stamp of time slice 0
- *        
+ *
  * Scaler Data
  *   1 UB trigger count for time slice 0
  *   1 UB trigger count for time slice 1
- *     ...                                   
- *     ...                                   
- *   1 UB trigger count for time slice N-1                                   
- *           
- * 
+ *     ...
+ *     ...
+ *   1 UB trigger count for time slice N-1
+ *
+ *
  */
 public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
 
@@ -78,12 +78,12 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
     public int miFormatId;
     public long  mlDomClock; // lower order 48 bits are used here
     public byte[] mabDomClock = new byte[SIZE_DOMCLOCK];
-    public byte[] mabScalarData = null;
-    public boolean mbLoaded = false;
+    public byte[] mabScalarData;
+    public boolean mbLoaded;
 
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mbLoaded;
@@ -91,8 +91,8 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
 
     /**
      * Static method to pull out the DOM Clock from a SuperNova record.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer .........ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * NOTE: This is usefull when constructing spliceables which depend on time ordering.
      *
@@ -110,8 +110,8 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
     /**
      * Reads the SuperNova record information from the ByteBuffer containing the SuperNova and
      * returns the length.
-     * @param iRecordOffset ... int the offset from which to start loading the data fro the engin.
-     * @param tBuffer       ... ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -120,13 +120,17 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
         int iBlockLen = -1;
         ByteOrder tSaveOrder = tBuffer.order();
         //-Defined as BIG_ENDIAN
-        tBuffer.order( ByteOrder.BIG_ENDIAN );
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order( ByteOrder.BIG_ENDIAN );
+        }
 
         //-Get the block length (using correct endian-ness)
         iBlockLen = (int) tBuffer.getShort(iRecordOffset + OFFSET_BLOCK_LEN);
 
         //-Restore the ByteOrder if necessary
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
 
         //-return the record length
         return iBlockLen;
@@ -135,8 +139,8 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
 
     /**
      * Reads the SuperNova record information from the ByteBuffer containing the MonitorRecord.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -146,7 +150,9 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
         if (mbLoaded) return;
         //-US Big-Endian block-length
         ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
 
         int iRestoreLimit = tBuffer.limit();
         int iRestorePos = tBuffer.position();
@@ -156,7 +162,7 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
         miFormatId = (int) ((int) 0x0000FFFF & (int) tBuffer.getShort(iRecordOffset + OFFSET_FORMAT_ID));
         mlDomClock = readDomClock(iRecordOffset,tBuffer);
 
-        //-the scalar data array lenght is computed from the blocklen - the header size.
+        //-the scalar data array length is computed from the blocklen - the header size.
         int iScalarDataLength = miBlockLen - SIZE_HEADER;
 
         //-set the position to the beginning of the scalar data
@@ -174,7 +180,9 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
         //-set the boolean indicating that the information has been successfully loaded
         mbLoaded = true;
         //-restore order, position and limit
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
         tBuffer.position(iRestorePos);
         tBuffer.limit(iRestoreLimit);
     }
@@ -192,16 +200,16 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
         mbLoaded      = false;
     }
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return (Poolable) new SuperNovaRecord();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -210,17 +218,17 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
+     * @param tReadoutRequestPayload ReadoutRequestPayload which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
     /**
      * This method writes this IPayloadRecord to the PayloadDestination.
      *
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was writtern.
-     * 
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was writtern.
+     *
      * NOTE: Since IPayloadRecords do not have a ByteBuffer backing they have no choice
      *       but to write from their internal values.  This is generally only used for
      *       StringFilePayloadDesitinations and the like for documentation purposes because
@@ -234,14 +242,15 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
         iBytes += 2; tDestination.writeShort(LABEL_BLOCK_LEN,(short) this.miBlockLen);
         iBytes += 2; tDestination.writeShort(LABEL_FORMAT_ID,(short) this.miFormatId);
         //-domclock only lower order 6 bytes are used
-        iBytes += SIZE_DOMCLOCK;
         for (int ii=0; ii < SIZE_DOMCLOCK; ii++) {
             mabDomClock[ii] = (byte) ((mlDomClock & ((long) 0xFF << ((SIZE_DOMCLOCK - ii - 1 ) * 8))) >> ((SIZE_DOMCLOCK - ii-1) *8));
             // mabDomClock[ii] = (byte) ii;
         }
         //tDestination.write(LABEL_DOMCLOCK+"("+mlDomClock+")",mabDomClock);
+        iBytes += mabDomClock.length;
         tDestination.write(LABEL_DOMCLOCK, ""+mlDomClock, mabDomClock);
         //-write out SuperNovaScalars
+        iBytes += mabScalarData.length;
         tDestination.write(LABEL_SCALAR_DATA,mabScalarData);
         //-undent and label the end of the record.
         if (tDestination.doLabel()) tDestination.undent().label("} [SuperNovaRecord]");

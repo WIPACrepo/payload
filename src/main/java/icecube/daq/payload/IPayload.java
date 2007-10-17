@@ -1,7 +1,7 @@
 /*
  * class: IPayload
  *
- * Version $Id: IPayload.java,v 1.6 2006/08/08 22:42:51 toale Exp $
+ * Version $Id: IPayload.java 2125 2007-10-12 18:27:05Z ksb $
  *
  * Date: September 17 2004
  *
@@ -10,40 +10,36 @@
 
 package icecube.daq.payload;
 
-import java.io.IOException;
-import java.util.zip.DataFormatException;
-
-import icecube.daq.payload.IUTCTime;
 import icecube.util.ICopyable;
 
 /**
  * Basic interface defining a trigger primitive payload
  *
- * @version $Id: IPayload.java,v 1.6 2006/08/08 22:42:51 toale Exp $
+ * @version $Id: IPayload.java 2125 2007-10-12 18:27:05Z ksb $
  * @author hellwig, dwharton
  */
 public interface IPayload extends ICopyable {
     /**
      * returns the length in bytes of this payload
      */
-    public int getPayloadLength();
+    int getPayloadLength();
 
     /**
      * returns the Payload type
      */
-    public int getPayloadType();
+    int getPayloadType();
 
     /**
      * returns the Payload interface type as defined
      * in the PayloadInterfaceRegistry.
-     * @return int ... one of the defined types in icecube.daq.payload.PayloadInterfaceRegistry
+     * @return one of the defined types in icecube.daq.payload.PayloadInterfaceRegistry
      */
-    public int getPayloadInterfaceType();
+    int getPayloadInterfaceType();
 
     /**
      * gets the UTC time tag of a payload
      */
-    public IUTCTime getPayloadTimeUTC();
+    IUTCTime getPayloadTimeUTC();
 
 
 }

@@ -1,7 +1,7 @@
 /*
  * interface: IPayloadDestinationCollection
  *
- * Version $Id: IPayloadDestinationCollection.java,v 1.4 2005/12/09 00:09:41 artur Exp $
+ * Version $Id: IPayloadDestinationCollection.java 2125 2007-10-12 18:27:05Z ksb $
  *
  * Date: October 19 2005
  *
@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  * This interface defines a collection of PayloadDestinations.
  *
- * @version $Id: IPayloadDestinationCollection.java,v 1.4 2005/12/09 00:09:41 artur Exp $
+ * @version $Id: IPayloadDestinationCollection.java 2125 2007-10-12 18:27:05Z ksb $
  * @author pat
  */
 public interface IPayloadDestinationCollection
@@ -57,7 +57,7 @@ public interface IPayloadDestinationCollection
      * @return number of bytes written
      * @throws IOException if there is a write error from the underlying PayloadDestination
      */
-    int writePayload(ISourceID sourceId, Payload payload) throws IOException;
+    int writePayload(ISourceID sourceId, IWriteablePayload payload) throws IOException;
 
     /**
      * Write a Payload to all destinations.
@@ -65,7 +65,7 @@ public interface IPayloadDestinationCollection
      * @return total number of bytes written
      * @throws IOException if there is a write error from the underlying PayloadDestination
      */
-    int writePayload(Payload payload) throws IOException;
+    int writePayload(IWriteablePayload payload) throws IOException;
 
     /**
      * Close the PayloadDestination for this SourceId.

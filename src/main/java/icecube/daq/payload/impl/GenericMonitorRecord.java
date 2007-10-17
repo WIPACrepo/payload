@@ -1,6 +1,5 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.impl.MonitorRecord;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 import java.io.IOException;
@@ -15,7 +14,7 @@ public class GenericMonitorRecord extends MonitorRecord {
     public static final int OFFSET_GENERIC_BYTES   = OFFSET_NONHEADER_DATA;
 
     public byte[] mabGenericBytes = new byte[SIZE_MAX_GENERIC_BYTES];
-    public int miGenericDataLength = 0;
+    public int miGenericDataLength;
 
     /**
      * General Constructor. Usable for Object Pooling
@@ -26,8 +25,8 @@ public class GenericMonitorRecord extends MonitorRecord {
     }
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return (Poolable) new GenericMonitorRecord();
@@ -35,8 +34,8 @@ public class GenericMonitorRecord extends MonitorRecord {
     /**
      * This method is designed to be overridden by derived classes whic load more than just header data.
      * reads the GenericData portion of the GenericMonitorRecord.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer .........ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -55,7 +54,7 @@ public class GenericMonitorRecord extends MonitorRecord {
      */
     public void dispose() {
         miGenericDataLength = 0;
-		//-CALL THIS LAST!!
+        //-CALL THIS LAST!!
         super.dispose();
     }
 }

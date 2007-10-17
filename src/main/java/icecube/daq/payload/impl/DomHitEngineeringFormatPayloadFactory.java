@@ -1,15 +1,7 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.splicer.Spliceable;
-
-import java.util.Iterator;
-
 import icecube.daq.payload.splicer.PayloadFactory;
-import icecube.daq.payload.splicer.Payload;
-import icecube.daq.payload.IPayload;
-import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 
-import java.util.List;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 import java.io.IOException;
@@ -26,19 +18,18 @@ public class DomHitEngineeringFormatPayloadFactory extends PayloadFactory {
      * Standard Constructor.
      */
     public DomHitEngineeringFormatPayloadFactory() {
-        super();
         DomHitEngineeringFormatPayload tPayload = (DomHitEngineeringFormatPayload) DomHitEngineeringFormatPayload.getFromPool();
         tPayload.mtParentPayloadFactory = this;
-        super.setPoolablePayloadFactory(tPayload);
+        setPoolablePayloadFactory(tPayload);
     }
 
 
     /**
      * This method must be implemented specific to the format of the
      * the input stream to determine when a complete data element is available.
-     * @param iOffset ............The offset in the ByteBuffer from which to create the payload/spliceable
-     * @param tBuffer ............ByteBuffer from which to detect a spliceable.
-     * @exception IOException ....this is thrown if there is an error reading the ByteBuffer
+     * @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable
+     * @param tBuffer ByteBuffer from which to detect a spliceable.
+     * @exception IOException if there is an error reading the ByteBuffer
      *                            to pull out the length of the spliceable.
      * NOTE: This method is overridden because these payload's are from DomHUB and do not have the
      *       same PayloadEnvelope that the rest of the post-StringProcessor payloads.

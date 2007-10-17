@@ -1,7 +1,7 @@
 /*
  * class: SourceIdRegistry
  *
- * Version $Id: SourceIdRegistry.java,v 1.7 2005/12/20 03:03:08 dglo Exp $
+ * Version $Id: SourceIdRegistry.java 2125 2007-10-12 18:27:05Z ksb $
  *
  * Date: January 13 2005
  *
@@ -14,10 +14,10 @@ import icecube.daq.common.DAQCmdInterface;
 import icecube.daq.payload.impl.SourceID4B;
 
 /**
- * This class ...does what?
+ * Source ID registry and associated methods.
  *
  * @author pat
- * @version $Id: SourceIdRegistry.java,v 1.7 2005/12/20 03:03:08 dglo Exp $
+ * @version $Id: SourceIdRegistry.java 2125 2007-10-12 18:27:05Z ksb $
  */
 public final class SourceIdRegistry {
 
@@ -69,7 +69,7 @@ public final class SourceIdRegistry {
         } else if (name.compareTo(DAQCmdInterface.DAQ_SNBUILDER) == 0) {
             return SNBUILDER_SOURCE_ID + id;
         } else if (name.compareTo(DAQCmdInterface.DAQ_STRING_HUB) == 0) {
-            return STRING_HUB_SOURCE_ID + id;
+            return STRING_HUB_SOURCE_ID + (id % 1000);
         }
 
         return 0;

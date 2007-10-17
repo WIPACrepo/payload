@@ -7,41 +7,41 @@ package icecube.util;
  */
 public abstract class Poolable {
 
-	protected boolean mbHasBeenDisposed = false;
-	protected boolean mbHasBeenRecycled = false;
+    protected boolean mbHasBeenDisposed;
+    protected boolean mbHasBeenRecycled;
 
-	/**
-	 * Returns whether or not this object has already been disposed
-	 */
-	public boolean hasBeenDisposed() {
-		return mbHasBeenDisposed;
-	}
+    /**
+     * Returns whether or not this object has already been disposed
+     */
+    public boolean hasBeenDisposed() {
+        return mbHasBeenDisposed;
+    }
     /**
      * Set's the boolean to indicate if this object has been disposed.
      * @param bDisposed - boolean indicating if this has been disposed
      */
-	public void hasBeenDisposed(boolean bDisposed) {
-		 mbHasBeenDisposed = bDisposed;
-	}
+    public void hasBeenDisposed(boolean bDisposed) {
+         mbHasBeenDisposed = bDisposed;
+    }
 
-	/**
-	 * Returns whether or not this object has already been recycled.
-	 */
-	public boolean hasBeenRecycled() {
-		return mbHasBeenRecycled;
-	}
+    /**
+     * Returns whether or not this object has already been recycled.
+     */
+    public boolean hasBeenRecycled() {
+        return mbHasBeenRecycled;
+    }
 
     /**
      * Set's the boolean to indicate if this object has been recycled.
-     * @param bDisposed - boolean indicating if this has been recycled 
+     * @param bDisposed - boolean indicating if this has been recycled
      */
-	public void hasBeenRecycled(boolean bRecycled) {
-		mbHasBeenRecycled = bRecycled;
-	}
+    public void hasBeenRecycled(boolean bRecycled) {
+        mbHasBeenRecycled = bRecycled;
+    }
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         System.out.println("ERROR: Poolable.getFromPool() called...");
@@ -49,8 +49,8 @@ public abstract class Poolable {
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public abstract Poolable getPoolable();
 

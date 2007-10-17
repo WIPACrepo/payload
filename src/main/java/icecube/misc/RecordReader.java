@@ -1,11 +1,9 @@
 package icecube.misc;
 
-import java.io.InputStream;
 import java.io.IOException;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.File;
-import java.io.EOFException;
 
 import java.nio.ByteBuffer;
 
@@ -42,11 +40,11 @@ public class RecordReader {
 
     /**
      * Reads the next record into the current position into the ByteBuffer.
-     * @param tBuffer ...ByteBuffer into which the raw record is read.
-     * @return int ...the length of the record read into the buffer.
+     * @param tBuffer ByteBuffer into which the raw record is read.
+     * @return the length of the record read into the buffer.
      *                -1 if not enough room is left in the ByteBuffer.
      */
-    public int readNextRecord(ByteBuffer tBuffer) throws IOException, EOFException {
+    public int readNextRecord(ByteBuffer tBuffer) throws IOException {
         int iStartPosition = tBuffer.position();
         int iLimit = tBuffer.limit();
         int iRecLen  = mtDataStream.readInt();
@@ -67,12 +65,11 @@ public class RecordReader {
 
     /**
      * Reads the next record into the current position into the ByteBuffer.
-     * @param iRecLen ...int the length of the record to read into the ByteBuffer
-     * @param tBuffer ...ByteBuffer into which the raw record is read.
+     * @param iRecLen the length of the record to read into the ByteBuffer
+     * @param tBuffer ByteBuffer into which the raw record is read.
      */
-    public void readNextFixedLenghtRecord(int iRecLen, ByteBuffer tBuffer) throws IOException, EOFException {
+    public void readNextFixedLenghtRecord(int iRecLen, ByteBuffer tBuffer) throws IOException {
         int iStartPosition = tBuffer.position();
-        int iLimit = tBuffer.limit();
         if (tBuffer.hasArray()) {
             byte[] abBacking = tBuffer.array();
             mtDataStream.readFully(abBacking, iStartPosition, iRecLen);

@@ -9,14 +9,14 @@ import java.io.File;
  * an IPayloadDestination as a file.
  */
  public class FilePayloadDestination extends DataOutputStreamPayloadDestination {
-    private String msFilename = null;
-    private File mtFile = null;
-    private FileOutputStream mtFileOutputStream = null;
+    private String msFilename;
+    private File mtFile;
+    private FileOutputStream mtFileOutputStream;
 
     /**
      * Constructor.
-     * @param sFilename ....String with the name of the file to be the destination.
-     * @throws IOException...if there is an error creating the destination.
+     * @param sFilename String with the name of the file to be the destination.
+     * @throws IOException if there is an error creating the destination.
      */
     public FilePayloadDestination(String sFilename) throws IOException {
         super();
@@ -25,7 +25,7 @@ import java.io.File;
 
     /**
      * Method to get the file name associated with this object.
-     * @return String .... the filename for this destination
+     * @return the filename for this destination
      */
     public String getFileName() {
         return msFilename;

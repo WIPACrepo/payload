@@ -1,7 +1,7 @@
 /*
  * class: ISourceID
  *
- * Version $Id: ISourceID.java,v 1.3 2006/08/08 20:18:15 vav111 Exp $
+ * Version $Id: ISourceID.java 2125 2007-10-12 18:27:05Z ksb $
  *
  * Date: September 18 2004
  *
@@ -16,13 +16,13 @@ import icecube.util.ICopyable;
 /**
  * Interface for encoded DAQ process IDs
  *
- * @version $Id: ISourceID.java,v 1.3 2006/08/08 20:18:15 vav111 Exp $
+ * @version $Id: ISourceID.java 2125 2007-10-12 18:27:05Z ksb $
  * @author hellwig, dwharton
  */
 public interface ISourceID extends ICopyable, Comparable {
-	/**
-	 * get reference ID of source as integer 
-	 */
-	int getSourceID();
+    /**
+     * get reference ID of source as integer
+     */
+    int getSourceID();
 
 }

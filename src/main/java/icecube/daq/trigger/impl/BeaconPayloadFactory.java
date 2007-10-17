@@ -21,19 +21,18 @@ public class BeaconPayloadFactory extends PayloadFactory {
      * Standard Constructor.
      */
     public BeaconPayloadFactory() {
-        super();
-        HitPayload tPayloadPoolableFactory = (HitPayload) HitPayload.getFromPool(); 
+        BeaconPayload tPayloadPoolableFactory = (BeaconPayload) BeaconPayload.getFromPool();
         tPayloadPoolableFactory.mtParentPayloadFactory = this;
-        super.setPoolablePayloadFactory(tPayloadPoolableFactory);
+        setPoolablePayloadFactory(tPayloadPoolableFactory);
     }
 
     /**
      * Initialize the hit information from a test-daq payload.
-     * @param tSourceID .......... ISourceID of the component which is creating this payload
-     * @param tPayload ....DomHitEngineeringFormatPayload used as basis for payload
+     * @param tSourceID ISourceID of the component which is creating this payload
+     * @param tPayload DomHitEngineeringFormatPayload used as basis for payload
      *                     this method is useful for creating payload's outside of a spliceable
      *                     environment.
-     * @return Payload ...the Payload object specific to this class which is
+     * @return the Payload object specific to this class which is
      *                    a EngineeringFormatTriggerPayload.
      */
     public Payload createPayload(ISourceID tSourceID, DomHitEngineeringFormatPayload tPayload) {
@@ -44,8 +43,8 @@ public class BeaconPayloadFactory extends PayloadFactory {
 
     /**
      * Initialize the hit information from an IHitDataPayload
-     * @param tPayload ..... IHitDataPayload from which to base the the IHitPayload
-     * @return Payload ..... the IHitPayload created based on the IHitDataPayload provided.
+     * @param tPayload IHitDataPayload from which to base the the IHitPayload
+     * @return the IHitPayload created based on the IHitDataPayload provided.
      */
     public Payload createPayload(IHitDataPayload tPayload) {
         BeaconPayload tNewPayload = (BeaconPayload) mt_PoolablePayloadFactory.getPoolable();

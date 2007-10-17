@@ -7,14 +7,12 @@ import java.util.zip.DataFormatException;
 
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.IPayload;
 import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IWriteablePayloadRecord;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.trigger.IReadoutRequestElement;
-import icecube.daq.trigger.impl.DOMID8B;
 
 /**
  * ReadoutRequestElementRecord
@@ -48,21 +46,21 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
     public static final String LAST_TIME    = "LAST_TIME";
     public static final String DOMID        = "DOMID";
 
-    private boolean mb_IsLoaded = false;
+    private boolean mb_IsLoaded;
     /**
      * PayloadRecord data...
      */
     public int mi_readoutType = -1;
-    public ISourceID    mt_sourceId    = null;
-    public IUTCTime     mt_firstTime   = null;
-    public IUTCTime     mt_lastTime    = null;
-    public IDOMID       mt_domId       = null;
+    public ISourceID    mt_sourceId;
+    public IUTCTime     mt_firstTime;
+    public IUTCTime     mt_lastTime;
+    public IDOMID       mt_domId;
 
 
     //--[IWriteablePayloadRecord]----
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mb_IsLoaded;
@@ -88,8 +86,8 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
 
     /**
      * Loads the data from the buffer into the container record.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
@@ -125,8 +123,8 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
     }
     /**
      * Method to write this record to the payload destination.
-     * @param tDestination ....PayloadDestination to which to write this record.
-     * @return int the nubmer of bytes written.
+     * @param tDestination PayloadDestination to which to write this record.
+     * @return the number of bytes written.
      */
     public int writeData(PayloadDestination tDestination) throws IOException {
         //-write out READOUT_TYPE
@@ -154,9 +152,9 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
 
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset ....the offset at which to start writing the object.
-     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
-     * @return int the nubmer of bytes written.
+     * @param iOffset the offset at which to start writing the object.
+     * @param tBuffer the ByteBuffer into which to write this payload-record.
+     * @return the number of bytes written.
      */
     public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
         //-write out READOUT_TYPE
@@ -205,9 +203,7 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
     }
 
     /**
-     * getDomID()
-     * @return IDOMID ...identifies module to readout.
-     *                   IDOMID object if request is for single DOM
+     * getDomID() IDOMID object if request is for single DOM
      *                   null if request is not specific to a single DOM.
      */
     public IDOMID getDomID() {
@@ -216,7 +212,7 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
 
     /**
      * getSourceID()
-     * @return ISourceID ....the component from which to get data (typically a StringProcessor)
+     * @return the component from which to get data (typically a StringProcessor)
      */
     public ISourceID getSourceID() {
         return mt_sourceId;
@@ -238,11 +234,48 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
 
     /**
      * Allows this object to know how to pool itself.
-     * @return  ReadoutRequestRecord ....from the pool
+     * @return  ReadoutRequestElementRecord from the pool
      * TODO: implement pooling!!!!!
      */
     public static ReadoutRequestElementRecord getFromPool() {
         return new ReadoutRequestElementRecord();
+    }
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
+    public String toString()
+    {
+        String typeStr;
+        switch (mi_readoutType) {
+        case READOUT_TYPE_GLOBAL:
+            typeStr = "GLOBAL";
+            break;
+        case READOUT_TYPE_II_GLOBAL:
+            typeStr = "II_GLOBAL";
+            break;
+        case READOUT_TYPE_IT_GLOBAL:
+            typeStr = "IT_GLOBAL";
+            break;
+        case READOUT_TYPE_II_STRING:
+            typeStr = "II_STRING";
+            break;
+        case READOUT_TYPE_II_MODULE:
+            typeStr = "II_MODULE";
+            break;
+        case READOUT_TYPE_IT_MODULE:
+            typeStr = "IT_MODULE";
+            break;
+        default:
+            typeStr = "UNKNOWN";
+            break;
+        }
+
+        return "ReadoutRequestElementRecord[" + typeStr + " [" + mt_firstTime +
+            "-" + mt_lastTime + "] dom " + mt_domId + " src " +
+            mt_sourceId + "]";
     }
 }
 

@@ -20,21 +20,21 @@ public interface IHitDataRecord {
     /**
      * Returns the type code used for the interpretation of this record so
      * that the object which is returned can be formatted/interpreted correctly.
-     * @return int ... the type of record, as identified by the RecordRegistry
+     * @return the type of record, as identified by the RecordRegistry
      */
-    public int getRecordType();
+    int getRecordType();
 
     /**
      * Returns the particular version of this record type.
-     * @return int ... the version of this record type.
+     * @return the version of this record type.
      */
-    public int getVersion();
+    int getVersion();
 
 
     /**
      * Returns the record itself, generically as an object.
      *
-     * @return Object ... the record which contains the Hit data, which is interpretted by the above id's
+     * @return the record which contains the Hit data, which is interpretted by the above id's
      */
-    public Object getRecord();
+    Object getRecord();
 }

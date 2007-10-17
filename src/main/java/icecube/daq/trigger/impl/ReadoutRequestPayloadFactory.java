@@ -1,21 +1,16 @@
 package icecube.daq.trigger.impl;
 
 import java.util.Vector;
-import java.util.List;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
-import java.util.Iterator;
 import java.io.IOException;
 
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.splicer.Spliceable;
-import icecube.daq.trigger.impl.ReadoutRequestPayload;
-import icecube.daq.trigger.impl.TriggerRequestPayloadFactory;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
 
@@ -31,11 +26,10 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
      * Standard Constructor.
      */
     public ReadoutRequestPayloadFactory() {
-        super();
-        ReadoutRequestPayload tPayloadPoolableFactory 
-                = (ReadoutRequestPayload) ReadoutRequestPayload.getFromPool(); 
+        ReadoutRequestPayload tPayloadPoolableFactory
+                = (ReadoutRequestPayload) ReadoutRequestPayload.getFromPool();
         tPayloadPoolableFactory.mtParentPayloadFactory = this;
-        super.setPoolablePayloadFactory(tPayloadPoolableFactory);
+        setPoolablePayloadFactory(tPayloadPoolableFactory);
     }
 
     /**
@@ -46,18 +40,17 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
      *
      * @return A new object representing the current place.
      */
-    public Spliceable createCurrentPlaceSplicaeable() {
-        //return (Spliceable) ReadoutRequestPayload.getFromPool();
+    public Spliceable createCurrentPlaceSpliceable() {
         return (Spliceable) mt_PoolablePayloadFactory.getPoolable();
     }
 
     /**
      *  This method must be implemented by the non-abstract class
      *  to create the specific payload.
-     *  @param iOffset ..........The offset in the ByteBuffer from which to create the payload/spliceable
-     *  @param tPayloadBuffer ...ByteBuffer form which to construct the Payload
+     *  @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable
+     *  @param tPayloadBuffer ByteBuffer from which to construct the Payload
      *                           which implements BOTH IPayload and Spliceable
-     *  @return IPayload ...the Payload object specific to this class which is
+     *  @return the Payload object specific to this class which is
      *                     specific to the class which is derived from PayloadFactory.
      */
     public Payload createPayload(int iOffset, ByteBuffer tPayloadBuffer) throws IOException,DataFormatException {
@@ -68,8 +61,8 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
 
     /**
      * this method creats a ReadoutRequestPayload from a constituent IReadoutRequest
-     * @param tReadoutRequest ... IReadoutRequest which is used to construct the payload.
-     * @return Payload ... the ReadoutRequestPayload constructed from the IReadoutRequest.
+     * @param tReadoutRequest IReadoutRequest which is used to construct the payload.
+     * @return the ReadoutRequestPayload constructed from the IReadoutRequest.
      */
     public Payload createPayload(IUTCTime tTime, IReadoutRequest tReadoutRequest) throws IOException, DataFormatException {
         // ReadoutRequestPayload tPayload = (ReadoutRequestPayload) ReadoutRequestPayload.getFromPool();
@@ -80,12 +73,12 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
 
     /**
      * Create's a readout request from parameters
-     * @param tSourceID ........ ISourceID of the component creating the request
-     * @param iTriggerUID ...... int UID for the trigger
+     * @param tSourceID source ID of the component creating the request
+     * @param iTriggerUID UID for the trigger
      *
-     * @param tRequestElements .... Vector the consituent readout-request-elements, which are
-     *                              subsiquently 'owned' by the output IReadoutRequest.
-     * @return IReadoutRequest .... the output request
+     * @param tRequestElements the consituent readout-request-elements, which are
+     *                              subsequently 'owned' by the output IReadoutRequest.
+     * @return the output request
      */
     public static IReadoutRequest createReadoutRequest(ISourceID tSourceID, int iTriggerUID, Vector tRequestElements) {
         ReadoutRequestRecord tRequest = (ReadoutRequestRecord) ReadoutRequestRecord.getFromPool();

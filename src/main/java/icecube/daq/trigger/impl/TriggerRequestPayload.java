@@ -7,6 +7,7 @@ import java.util.zip.DataFormatException;
 
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
@@ -16,17 +17,16 @@ import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.AbstractCompositePayload;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.ITriggerRequestPayload;
-import icecube.daq.trigger.impl.TriggerRequestRecord;
 import icecube.util.Poolable;
 
 /**
  * This payload object represents a Trigger which is produced by either
  * the InIce or IceTop triggers in response to the ITriggerPayload's
- * recieved from the StringProcessor(s) or IceTopDataHandler(s).
+ * received from the StringProcessor(s) or IceTopDataHandler(s).
  * OR
  * --
  * A Trigger produced by the collation/merging/grokking of the GlobalTrigger
- * from the TriggerRequestPayload's recieved from InIceTrigger or the
+ * from the TriggerRequestPayload's received from InIceTrigger or the
  * IceTopTrigger.
  *
  * In the former case, the Global Trigger will analyze these to construct
@@ -37,13 +37,13 @@ import icecube.util.Poolable;
  *
  * @author dwharton,ptoale
  */
-public class TriggerRequestPayload extends AbstractCompositePayload implements ITriggerRequestPayload {
+public class TriggerRequestPayload extends AbstractCompositePayload implements ITriggerRequestPayload, IWriteablePayload {
     //-TriggerRequestRecord starts right after PayloadEnvelope
     public static final int OFFSET_TRIGGER_REQUEST_RECORD = OFFSET_PAYLOAD_DATA;
     //-CompositePayloadEnvelope starts right after the end of the TriggerRequestRecord.
 
     protected int mi_UID = -1;  //-uid for this specific request.
-    protected TriggerRequestRecord mt_triggerRequestRecord = null;
+    protected TriggerRequestRecord mt_triggerRequestRecord;
 
     protected int mi_sizeTriggerRequestRecord = -1;
 
@@ -57,7 +57,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
 
     /**
      * Returns the unique id assigned to this ITriggerRequestPayload
-     * @return int ... the unique id for this event.
+     * @return the unique id for this event.
      */
     public int getUID() {
         if (mt_triggerRequestRecord != null) {
@@ -131,14 +131,14 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
      * independently of a ByteBuffer with the representative container
      * objects themselves.
      *
-     * @param iUID               ... the unique id (event id) for this trigger-request
-     * @param iTriggerType       ... the type of trigger
-     * @param iTriggerConfigID   ... the id, which along with trigger type uniquely id's configuration for this trigger
-     * @param tRequestorSourceID ... the ISourceID of the source which is constructing this trigger request.
-     * @param tFirstTimeUTC      ... IUTCTime of the start of this time window
-     * @param tLastTimeUTC       ... IUTCTime of the end of this time window
-     * @param tPayloads          ... Vector of IPayload's which have contributed to this trigger.
-     * @param tRequest           ... IReadoutRequest which has been constructed for this payload.
+     * @param iUID the unique id (event id) for this trigger-request
+     * @param iTriggerType the type of trigger
+     * @param iTriggerConfigID the id, which along with trigger type uniquely id's configuration for this trigger
+     * @param tRequestorSourceID the ISourceID of the source which is constructing this trigger request.
+     * @param tFirstTimeUTC IUTCTime of the start of this time window
+     * @param tLastTimeUTC IUTCTime of the end of this time window
+     * @param tPayloads Vector of IPayload's which have contributed to this trigger.
+     * @param tRequest IReadoutRequest which has been constructed for this payload.
      *
      */
     public void initialize(
@@ -200,7 +200,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
     /**
      *  Returns the IReadoutRequest which has been associated
      *  with this ITriggerRequestPayload.
-     *  @return IReadoutRequest ....the request.
+     *  @return the request.
      */
     public IReadoutRequest getReadoutRequest() {
         if (mt_triggerRequestRecord != null) {
@@ -213,19 +213,18 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
 
     /**
      * Method to create instance from the object pool.
-     * @return Object .... this is an TriggerRequestPayload object which is ready for reuse.
+     * @return an TriggerRequestPayload object which is ready for reuse.
      */
     public static Poolable getFromPool() {
         return (Poolable) new TriggerRequestPayload();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
-        //-for new just create a new EventPayload
-		Payload tPayload = (Payload) getFromPool();
+        Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
@@ -233,30 +232,17 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		//-null objects which have been recycle'd so they don't
-		// have to be explicitly disposed.
+        //-null objects which have been recycle'd so they don't
+        // have to be explicitly disposed.
         if (mt_triggerRequestRecord != null) {
             mt_triggerRequestRecord.recycle();
-			mt_triggerRequestRecord = null;
+            mt_triggerRequestRecord = null;
         }
-		//-THIS MUST BE CALLED LAST!!
+        //-THIS MUST BE CALLED LAST!!
         super.recycle();
     }
-    /**
-     * Method to return the TriggerRequestPayload to the pool
-     * once it has been used.
-     * @param tPayload ... Object the TriggerRequestPayload object which will be recycled.
-     *                     (note: this is an Object instead of the regular class for later
-     *                      genreal implementation.)
-     */
-	/*
-    public static void recycle(Poolable tPayload) {
-        ((TriggerRequestPayload) tPayload).dispose();
-    }
-	*/
 
     //
     //--Section for accessing/loading data
@@ -278,10 +264,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
             mt_triggerRequestRecord = (TriggerRequestRecord) TriggerRequestRecord.getFromPool();
             mt_triggerRequestRecord.loadData(mioffset + OFFSET_TRIGGER_REQUEST_RECORD, mtbuffer);
             mi_CompositeEnvelopeOffset = OFFSET_TRIGGER_REQUEST_RECORD + mt_triggerRequestRecord.getTotalRecordSize();
-            /*
-            super.mt_firstTime = mt_triggerRequestRecord.mt_firstTime;
-            super.mt_lastTime  = mt_triggerRequestRecord.mt_lastTime;
-            */
+            mi_sizeTriggerRequestRecord = mt_triggerRequestRecord.getTotalRecordSize();
         }
     }
     /**
@@ -293,8 +276,8 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
     }
     /**
      * Set's the backing buffer of this Payload.
-     * @param iOffset ...int the offset into the ByteBuffer of this objects Payload
-     * @param tPayloadBuffer ...the backing buffer for this payload.
+     * @param iOffset the offset into the ByteBuffer of this objects Payload
+     * @param tPayloadBuffer the backing buffer for this payload.
      * NOTE: This is inherited from Payload so must be overridden to
      *       provide the correct behavior.
      */
@@ -310,30 +293,30 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
     public void dispose() {
         if (mt_triggerRequestRecord != null) {
             mt_triggerRequestRecord.dispose();
-			mt_triggerRequestRecord = null;
+            mt_triggerRequestRecord = null;
         }
         mi_UID = -1;  //-uid for this specific request.
         mi_sizeTriggerRequestRecord = -1;
-		//-THIS MUST BE CALLED LAST!!
+        //-THIS MUST BE CALLED LAST!!
         super.dispose();
     }
 
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         int iBytesWritten = 0;
         //-If backing then use it..
-        if (mtbuffer != null && bWriteLoaded == false) {
+        if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten =  super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
@@ -363,10 +346,10 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param tDestination ...... PayloadDestination to which to write the payload
-     * @return int .............. the length in bytes which was written to the destination.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the destination.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -374,7 +357,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[TriggerRequestPayload(bWriteLoaded="+bWriteLoaded+")]=>").indent();
         //-If backing then use it..
-        if (mtbuffer != null && bWriteLoaded == false) {
+        if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten = super.writePayload(bWriteLoaded, tDestination);
         } else {
@@ -402,14 +385,9 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
         return iBytesWritten;
     }
 
-
-    /**
-     * compare Timestamps of two payloads
-     */
-    /*
-    public int compareTo(Object object) {
-        return getFirstTimeUTC().compareTo(((ITriggerRequestPayload) object).getFirstTimeUTC());
+    public String toString()
+    {
+        return "TriggerRequest uid " + mi_UID + " " +
+            mt_triggerRequestRecord.toDataString();
     }
-    */
-
 }

@@ -26,8 +26,9 @@ public class MonitorPayloadFactory extends PayloadFactory {
      * Standard constructor.
      */
     public MonitorPayloadFactory() {
-        super();
-        super.setPoolablePayloadFactory(MonitorPayload.getFromPool());
+        MonitorPayload tPayloadPoolableFactory = (MonitorPayload) MonitorPayload.getFromPool();
+        tPayloadPoolableFactory.mtParentPayloadFactory = this;
+        setPoolablePayloadFactory(tPayloadPoolableFactory);
     }
 
     /**
@@ -41,31 +42,28 @@ public class MonitorPayloadFactory extends PayloadFactory {
      * @param   tReferenceBuffer - ByteBuffer which contains the reference code
      * @param  tTCalEngine - the tcal engine to be used to create the time calibration
      * @return ByteBuffer a new buffer created by the IByteBufferCache
-     * 
+     *
      */
     public static ByteBuffer createFormattedBufferFromDomHubRecord(
-            IByteBufferCache tCache, 
-            IDOMID tDomId, 
-            int iOffset, 
+            IByteBufferCache tCache,
+            IDOMID tDomId,
+            int iOffset,
             ByteBuffer tReferenceBuffer,
             IUTCTime utcTime
             ) throws IOException {
-        long lutctime = 0L;
-        long ldomclock = 0L;
         int iRecordLength =-1;
         //MonitorRecord tRecord = (MonitorRecord) MonitorRecord.getFromPool();
 
         //-pull out the record length.
         try {
-            ldomclock = MonitorRecord.readDomClock(iOffset, tReferenceBuffer);
             //-initialize the monitor record from the contained internal data in the buffer at the
-            // offset of the begining of the monitor record.
+            // offset of the beginning of the monitor record.
             iRecordLength = MonitorRecord.readRecordLength(iOffset, tReferenceBuffer);
         } catch (DataFormatException tDataFormatException) {
             mtLog.error("Error loading MonitorRecord header information.");
             return null;
         }
-        
+
         //-allocate the new Payload buffer for the new Payload which whose length
         // is the length of the individual monitor record plus the payload envelope
         int iTotalPayloadLength = iRecordLength + MonitorPayload.SIZE_FIXED_LENGTH_DATA;
@@ -79,7 +77,7 @@ public class MonitorPayloadFactory extends PayloadFactory {
             //-copy the domhub-data to the new buffer
             //...
 
-            //-position the refrence buffer to the begining of the domhub-timecalibration-record.
+            //-position the refrence buffer to the beginning of the domhub-timecalibration-record.
             tReferenceBuffer.position(iOffset);
             tReferenceBuffer.limit(iOffset + iRecordLength);
 
@@ -94,17 +92,17 @@ public class MonitorPayloadFactory extends PayloadFactory {
             //-make the actual copy
             tNewBuffer.put(tReferenceBuffer);
 
-            //-restore the position 
+            //-restore the position
             tNewBuffer.position(0);
 
             //-install the domid and UTC time in the correct place in the new buffer.
-            // This will allow the new buffer to be passed to this TimeCalibrationPayloadFactory to be created.
+            // This will allow the new buffer to be passed to this MonitorPayloadFactory to be created.
             MonitorPayload.writePayloadEnvelopeAndID(iTotalPayloadLength, tDomId, utcTime.getUTCTimeAsLong() , 0, tNewBuffer);
             //-restore the limit and position
             tReferenceBuffer.position(iSavePosition);
             tReferenceBuffer.limit(iSaveLimit);
         } else {
-            mtLog.error("IByteBufferCache unable to provide new buffer to create TimeCalibrationPayload from domhub-tcal-record");
+            mtLog.error("IByteBufferCache unable to provide new buffer to create MonitorPayload from record");
         }
         return tNewBuffer;
     }

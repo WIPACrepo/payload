@@ -4,11 +4,9 @@ import java.util.zip.DataFormatException;
 import java.io.IOException;
 import java.util.Vector;
 import java.nio.ByteBuffer;
-import java.lang.StringBuffer;
 
 import icecube.daq.trigger.ITriggerRequestPayload;
 import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.trigger.AbstractCompositePayload;
 import icecube.daq.payload.ISourceID;
@@ -18,14 +16,11 @@ import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.util.Poolable;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.eventbuilder.impl.EventPayloadRecord;
-import icecube.daq.eventbuilder.IEventPayload;
 import icecube.daq.trigger.impl.CompositePayloadEnvelope;
 
 /**
  * This payload object represents a Event which is produced by when
- * the EventBuilder recieves an ITriggerRequest from the GlobalTrigger.
+ * the EventBuilder receives an ITriggerRequest from the GlobalTrigger.
  * The EventBuilder then sends the appropriate IReadoutRequestPayload's
  * to the StringProcessors and IceTopDataHandlers to full the request
  * for data.  Then, in turn, the StringProcessor's and IceTopDataHandlers
@@ -46,17 +41,17 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
     public static final int OFFSET_EVENT_RECORD = OFFSET_PAYLOAD_DATA;
     public static final int OFFSET_COMPOSITE_START = OFFSET_EVENT_RECORD + EventPayloadRecord.SIZE_TOTAL;
     //-CompositePayloadEnvelope starts right after the end of the EventPayloadRecord.
-    protected EventPayloadRecord mt_eventRecord = null;
-    protected ITriggerRequestPayload mt_triggerRequestPayload = null;
-    protected Vector                 mt_readoutDataPayloads = null;
+    protected EventPayloadRecord mt_eventRecord;
+    protected ITriggerRequestPayload mt_triggerRequestPayload;
+    protected Vector mt_readoutDataPayloads;
 
     //-ADDED this section for additions to IEventPayload: Note this is for supporting
     // the binary format which is produced by this class.
 
     /**
-     * Get's the event type indicating the configuration type which
+     * Get the event type indicating the configuration type which
      * produced this event.
-     * @return int the event-type 
+     * @return the event-type
      *  NOTE:a value of -1 indicates that this is not implemented by this object
      */
     public int getEventType() {
@@ -64,10 +59,10 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
     }
 
     /**
-     * Get's the event config id for this event type which acts as
+     * Get the event config id for this event type which acts as
      * a primary key for looking up the parameters/settings which are specific
      * to this specific event-type.
-     * @return int the event configuration id for this event.
+     * @return the event configuration id for this event.
      *  NOTE:a value of -1 indicates that this is not implemented by this object
      */
     public int getEventConfigID() {
@@ -75,9 +70,9 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
     }
 
     /**
-     * Get's the run number for this event which provides a key to the instrumentation
+     * Get the run number for this event which provides a key to the instrumentation
      * configuration at the time that this event was produced.
-     * @return int .... the run number
+     * @return the run number
      *  NOTE:a value of -1 indicates that this is not implemented by this object
      */
     public int getRunNumber() {
@@ -155,12 +150,12 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      * independently of a ByteBuffer with the representative container
      * objects themselves.
      *
-     * @param iUID               ... the unique id (event id) for this trigger-request
-     * @param tSourceID          ... the ISourceID of the creator of this payload
-     * @param tFirstTimeUTC      ... IUTCTime of the start of this time window
-     * @param tLastTimeUTC       ... IUTCTime of the end of this time window
-     * @param tTriggerRequest    ... ITriggerRequestPayload which caused this event to be constructed.
-     * @param tDataPayloads      ... Vector of IReadoutDataPayload's which constitute the data as returned from
+     * @param iUID the unique id (event id) for this trigger-request
+     * @param tSourceID the ISourceID of the creator of this payload
+     * @param tFirstTimeUTC IUTCTime of the start of this time window
+     * @param tLastTimeUTC IUTCTime of the end of this time window
+     * @param tTriggerRequest ITriggerRequestPayload which caused this event to be constructed.
+     * @param tDataPayloads Vector of IReadoutDataPayload's which constitute the data as returned from
      *                               the StringProcessor's/IceTopDataHandler's
      *                               NOTE: This Vector should be cleared after this method has been called
      *                               because a new Vector is created to contain these items.
@@ -221,7 +216,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      * Returns the unique id assigned to this ITriggerRequestPayload
      * from the GlobalTrigger.
      *
-     * @return int ... the unique id for this event.
+     * @return the unique id for this event.
      */
     public int getEventUID() {
         if (mt_eventRecord != null) {
@@ -234,7 +229,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
     /**
      * Returns the ITriggerRequestPayload which provides the
      * context for the data of this event.
-     * @return ITriggerRequestPayload ... the payload representing the trigger context.
+     * @return the payload representing the trigger context.
      */
     public ITriggerRequestPayload getTriggerRequestPayload() {
         return (ITriggerRequestPayload) mt_Payloads.get(0);
@@ -243,7 +238,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
     /**
      * Returns the IReadoutDataPayload's which represent the actual data associated
      * with the event.
-     * @return Vector .... of IReadoutDataPayload's which can be queried for IHitDataPayload's
+     * @return Vector of IReadoutDataPayload's which can be queried for IHitDataPayload's
      */
     public Vector getReadoutDataPayloads() {
         Vector tDataPayloads = new Vector();
@@ -253,36 +248,43 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
         return tDataPayloads;
     }
 
+    /**
+     * Get the number of the active subrun for this event.
+     * @return the subrun number
+     *  NOTE:a value of 0 indicates that no subrun is active
+     */
+    public int getSubrunNumber()
+    {
+        return 0;
+    }
 
     /**
      * Method to create instance from the object pool.
-     * @return Object .... this is an object which is ready for reuse.
+     * @return an object which is ready for reuse.
      */
     public static Poolable getFromPool() {
         return (Poolable) new EventPayload();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
-        //-for new just create a new EventPayload
-		Payload tPayload = (Payload) getFromPool();
+        Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
         if (mt_eventRecord != null) {
             mt_eventRecord.recycle();
-			mt_eventRecord = null;
+            mt_eventRecord = null;
         }
-		//-THIS MUST BE CALLED LAST!!
+        //-THIS MUST BE CALLED LAST!!
         super.recycle();
     }
     //
@@ -324,28 +326,28 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
         // composite payloads.
         if (mt_eventRecord != null) {
             mt_eventRecord.dispose();
-			mt_eventRecord = null;
+            mt_eventRecord = null;
         }
-		//-always call super-class LAST
+        //-always call super-class LAST
         super.dispose();
     }
 
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         int iBytesWritten = 0;
         //-If backing then use it..
-        if (mtbuffer != null && bWriteLoaded == false) {
+        if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten =  super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
@@ -375,10 +377,10 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param tDestination ...... PayloadDestination to which to write the payload
-     * @return int .............. the length in bytes which was written to the destination.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the destination.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -386,7 +388,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
         if (tDestination.doLabel()) tDestination.label("[EventPayload]=>").indent();
         int iBytesWritten = 0;
         //-If backing then use it..
-        if (mtbuffer != null && bWriteLoaded == false) {
+        if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten = super.writePayload(bWriteLoaded,tDestination);
         } else {
@@ -419,8 +421,8 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
     public String toString() {
         StringBuffer sbBuff = new StringBuffer();
         sbBuff.append("EventPayload(");
-        sbBuff.append(", getFirstTimeUTC()="+getFirstTimeUTC().getUTCTimeAsLong());
-        sbBuff.append(", getLastTimeUTC()="+getLastTimeUTC().getUTCTimeAsLong());
+        sbBuff.append(", getFirstTimeUTC()="+getFirstTimeUTC());
+        sbBuff.append(", getLastTimeUTC()="+getLastTimeUTC());
         sbBuff.append(", getTriggerConfigID()="+getTriggerConfigID());
         sbBuff.append(", getTriggerType()="+getTriggerType());
         sbBuff.append(", getSourceID()="+getSourceID().getSourceID() );

@@ -7,19 +7,20 @@ import java.util.Vector;
 import java.util.zip.DataFormatException;
 
 import icecube.daq.eventbuilder.IReadoutDataPayload;
-import icecube.daq.eventbuilder.impl.ReadoutDataRecord;
-import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.AbstractCompositePayload;
 import icecube.daq.trigger.impl.CompositePayloadEnvelope;
 import icecube.util.Poolable;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This Object is an implementation of IReadoutDataPayload and
@@ -28,23 +29,33 @@ import icecube.util.Poolable;
  *
  * @author dwharton
  */
-public class ReadoutDataPayload extends AbstractCompositePayload implements IReadoutDataPayload {
+public class ReadoutDataPayload extends AbstractCompositePayload implements IReadoutDataPayload, IWriteablePayload {
+
+    private static final Log mtLog =
+        LogFactory.getLog(ReadoutDataPayload.class);
 
     public static final int OFFSET_READOUT_DATA_RECORD = OFFSET_PAYLOAD_ENVELOPE + PayloadEnvelope.SIZE_ENVELOPE;
 
-    protected boolean mb_IsReadoutDataRecordLoaded = false;
-    protected ReadoutDataRecord mt_ReadoutDataRecord = null;
+    protected boolean mb_IsReadoutDataRecordLoaded;
+    protected ReadoutDataRecord mt_ReadoutDataRecord;
+
+    private static int nextNum = 1;
+    private int myNum = nextNum++;
+    private Throwable created;
+    private Throwable recycled;
+
     /**
      * Standard Constructor.
      */
     public ReadoutDataPayload() {
         super.mipayloadtype = PayloadRegistry.PAYLOAD_ID_READOUT_DATA;
         super.mipayloadinterfacetype = PayloadInterfaceRegistry.I_READOUT_DATA_PAYLOAD;
+try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
     }
 
     /**
      * Returns the unique id assigned to this ITriggerRequestPayload
-     * @return int ... the unique id for this event.
+     * @return the unique id for this event.
      */
     public int getUID() {
         if (mt_ReadoutDataRecord != null) {
@@ -104,13 +115,13 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
      * independently of a ByteBuffer with the representative container
      * objects themselves.
      *
-     * @param iUID               ... the unique id (event id) for this readout-data corresponds to a readout-request
-     * @param iPayloadNum        ... the payload number of this payload in a possible sequence of payload's for this iUID.
-     * @param bPayloadLast       ... boolean indicating if this is the last payload in this group.
-     * @param tSourceid          ... the ISourceID of the component producing this data.
-     * @param tFirstTimeUTC      ... IUTCTime of the start of this time window
-     * @param tLastTimeUTC       ... IUTCTime of the end of this time window
-     * @param tPayloads          ... Vector of IPayload's which have contributed to this trigger.
+     * @param iUID the unique id (event id) for this readout-data corresponds to a readout-request
+     * @param iPayloadNum the payload number of this payload in a possible sequence of payload's for this iUID.
+     * @param bPayloadLast boolean indicating if this is the last payload in this group.
+     * @param tSourceid the ISourceID of the component producing this data.
+     * @param tFirstTimeUTC IUTCTime of the start of this time window
+     * @param tLastTimeUTC IUTCTime of the end of this time window
+     * @param tPayloads Vector of IPayload's which have contributed to this trigger.
      *
      */
     public void initialize(
@@ -187,7 +198,7 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
     }
     /**
      * This is the number that associates all read's for a givent EB event together
-     * @return int ... the unique id for this data requests
+     * @return the unique id for this data requests
      */
     public int getRequestUID() {
         if (mt_ReadoutDataRecord != null) {
@@ -199,7 +210,7 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
     /**
      * A Vector of the IHitDataPayload's which correspond
      * to the hit-data that has been requested.
-     * @return Vector .... a vector of IHitDataPayload's which contain the desired data.
+     * @return a vector of IHitDataPayload's which contain the desired data.
      */
     public Vector getDataPayloads() {
         return super.mt_Payloads;
@@ -212,7 +223,7 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
      * the number (of a sub-sequence of payloads which are
      * grouped together for this IReadoutDataPayload - in reply to a single IReadoutRequest)
      * ---
-     * @return int .... the number of this payload relative to this group by uid.
+     * @return the number of this payload relative to this group by uid.
      */
     public int getReadoutDataPayloadNumber() {
         if (mt_ReadoutDataRecord != null) {
@@ -224,7 +235,7 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
     /**
      * Boolean which indicates if this is the final
      * data payload for this group.
-     * @return boolean ... true if this is the last payload, false if not.
+     * @return true if this is the last payload, false if not.
      * ---
      * true if this is the last payload to expect, note: there should be
      * a monotonically increasing number of payload numbers up to this point with no gaps in the sequence
@@ -241,36 +252,35 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
         }
     }
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
         return (Poolable) new ReadoutDataPayload();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
-        //-for new just create a new EventPayload
-		Payload tPayload = (Payload) getFromPool();
+        Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
         return (Poolable) tPayload;
     }
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		if (mt_ReadoutDataRecord != null) {
-			mt_ReadoutDataRecord.recycle();
-			mt_ReadoutDataRecord = null;
-		}
-		//-CALL THIS LAST! The based class Payload.recycle() takes care of calling .dispose() after
-		// all the recycling has been done.
+        if (mt_ReadoutDataRecord != null) {
+            mt_ReadoutDataRecord.recycle();
+            mt_ReadoutDataRecord = null;
+        }
+        //-CALL THIS LAST! The based class Payload.recycle() takes care of calling .dispose() after
+        // all the recycling has been done.
         super.recycle();
+if (recycled == null) try { throw new Throwable("Originally recycled"); } catch (Throwable t) { recycled = t; }
     }
 
     /**
@@ -279,30 +289,53 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
      * which it came.
      */
     public void dispose() {
-		if (mt_ReadoutDataRecord != null) {
-			mt_ReadoutDataRecord.dispose();
-			mt_ReadoutDataRecord = null;
-		}
-		//-CALL THIS LAST!
+        if (mt_ReadoutDataRecord != null) {
+            mt_ReadoutDataRecord.dispose();
+            mt_ReadoutDataRecord = null;
+        }
+        //-CALL THIS LAST!
         super.dispose();
+    }
+
+    public Object deepCopy() {
+        if (recycled != null) {
+            try {
+                throw new Throwable("Stack trace");
+            } catch (Throwable thr) {
+                mtLog.error("Deep-copying recycled RDP#" + myNum, thr);
+                mtLog.error("Created here", created);
+                mtLog.error("Recycled here", recycled);
+            }
+        }
+        return super.deepCopy();
     }
 
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
+        if (recycled != null) {
+            try {
+                throw new Throwable("Stack trace");
+            } catch (Throwable thr) {
+                mtLog.error("Writing recycled RDP#" + myNum, thr);
+                mtLog.error("Created here", created);
+                mtLog.error("Recycled here", recycled);
+            }
+            throw new IOException("Attempted to write recycled RDP");
+        }
         int iBytesWritten = 0;
         //-If backing then use it..
-        if (mtbuffer != null && bWriteLoaded == false) {
+        if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten =  super.writePayload( bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
@@ -333,10 +366,10 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param tDestination ...... PayloadDestination to which to write the payload
-     * @return int .............. the length in bytes which was written to the destination.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the destination.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -344,7 +377,7 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
         if (tDestination.doLabel()) tDestination.label("[ReadoutDataPayload]=>").indent();
         int iBytesWritten = 0;
         //-If backing then use it..
-        if (mtbuffer != null && bWriteLoaded == false) {
+        if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten = super.writePayload(bWriteLoaded ,tDestination);
         } else {

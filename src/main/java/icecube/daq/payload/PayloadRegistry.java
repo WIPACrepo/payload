@@ -3,6 +3,7 @@ import java.util.Vector;
 
 import icecube.daq.eventbuilder.impl.EventPayloadFactory;
 import icecube.daq.eventbuilder.impl.EventPayload_v2Factory;
+import icecube.daq.eventbuilder.impl.EventPayload_v3Factory;
 import icecube.daq.eventbuilder.impl.ReadoutDataPayloadFactory;
 import icecube.daq.payload.splicer.CompositePayloadFactory;
 import icecube.daq.payload.splicer.PayloadFactory;
@@ -14,7 +15,9 @@ import icecube.daq.trigger.impl.HitPayloadFactory;
 import icecube.daq.trigger.impl.ReadoutRequestPayloadFactory;
 import icecube.daq.trigger.impl.TriggerRequestPayloadFactory;
 import icecube.daq.trigger.impl.BeaconPayloadFactory;
+import icecube.daq.trigger.impl.DeltaCompressedFormatHitDataPayloadFactory;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayloadFactory;
+import icecube.daq.payload.impl.DomHitDeltaCompressedFormatPayloadFactory;
 import icecube.daq.payload.impl.SuperNovaPayloadFactory;
 import icecube.daq.payload.impl.TimeCalibrationPayloadFactory;
 import icecube.daq.payload.impl.MonitorPayloadFactory;
@@ -49,21 +52,23 @@ public final class PayloadRegistry {
     public static final int PAYLOAD_ID_MUX_ENGFORMAT_HIT     = 14;  //-hit created from dom-hub muxed data in eng format.
     public static final int PAYLOAD_ID_BEACON                = 15;  // yea, becons
     public static final int PAYLOAD_ID_SN                    = 16;  //-SuperNovaPayload
-    public static final int PAYLOAD_ID_COMPRESSED_HIT        = 17;  // delta and SLC hits
-    public static final int PAYLOAD_ID_LASTVALID             = PAYLOAD_ID_COMPRESSED_HIT;
+    public static final int PAYLOAD_ID_DELTA_HIT             = 17; // DomHitDeltaCompressedFormatPayload
+    public static final int PAYLOAD_ID_COMPRESSED_HIT_DATA   = 18;  // delta and SLC hits including the compressed waveform data
+    public static final int PAYLOAD_ID_EVENT_V3              = 19;
+    public static final int PAYLOAD_ID_LASTVALID             = PAYLOAD_ID_EVENT_V3;
 
     //-dbw: if this value is non-null then it will be installed into all
     //      the managed PayloadFactory's and subsiquently all the Payload's which
     //      they produce. In this way a consistent management of the ByteBuffer's which
     //      form the optional support of the of the Payload.
-    private IByteBufferCache mtByteBufferCache = null;
+    private IByteBufferCache mtBufferCache;
 
     //-dbw: This factory is used by all implementations of AbstractCompositePayload so that
     //      a consistenty parent-factory/IByteBufferCache system can be maintained for all.
     //private CompositePayloadFactory mtMasterCompositePayloadFactory = null;
-    private PayloadFactory mtMasterCompositePayloadFactory = null;
+    private PayloadFactory mtMasterCompositePayloadFactory;
 
-    private Vector mt_PayloadFactories = null;
+    private Vector mt_PayloadFactories;
 
     /**
      * Standard Constructor
@@ -75,12 +80,12 @@ public final class PayloadRegistry {
     /**
      * Constructor which Specifies the byte-buffer cache and the PayloadFactory for
      * all CompositePayload's to use for generating their sub-payloads.
-     * @param  tByteBufferCache IByteBufferCache
+     * @param  tBufferCache IByteBufferCache
      * @param  tMasterCompositePayloadFactory CompositePayloadFactory used for generating sub-payloads of composite
      *         payloads.
      */
-    public PayloadRegistry(IByteBufferCache tByteBufferCache, PayloadFactory tMasterCompositePayloadFactory) {
-        mtByteBufferCache = tByteBufferCache;
+    public PayloadRegistry(IByteBufferCache tBufferCache, PayloadFactory tMasterCompositePayloadFactory) {
+        mtBufferCache = tBufferCache;
         mtMasterCompositePayloadFactory = tMasterCompositePayloadFactory;
         initializeDefaultPayloadFactoryBindings();
     }
@@ -92,8 +97,8 @@ public final class PayloadRegistry {
      *       the interface type which is returned by the MasterPayloadFactory
      *       when it is dynamically binding the PayloadFactory by payload-type
      *       to create payloads.
-     * @param tPayload ... IPayload the payload to be identified
-     * @return int ... the Payload's interface type as defined: above
+     * @param tPayload the payload to be identified
+     * @return the Payload's interface type as defined: above
      */
     public static int getPayloadInterfaceType(IPayload tPayload) {
         return getPayloadInterfaceType(tPayload.getPayloadType());
@@ -107,9 +112,9 @@ public final class PayloadRegistry {
      *       when it is dynamically binding the PayloadFactory by payload-type
      *       to create payloads.
      *
-     * @param iPayloadID ... int the payload-type as returned from
+     * @param iPayloadID the payload-type as returned from
      *                       IPayload.getPayloadType()
-     * @return int ... the Payload's interface type as defined:
+     * @return the Payload's interface type as defined:
      * @see icecube.daq.payload.PayloadInterfaceRegistry
      */
     public static int getPayloadInterfaceType(int iPayloadID) {
@@ -146,6 +151,7 @@ public final class PayloadRegistry {
                 break;
             case PAYLOAD_ID_EVENT :
             case PAYLOAD_ID_EVENT_V2 :
+            case PAYLOAD_ID_EVENT_V3 :
                 iPayloadInterfaceType = PayloadInterfaceRegistry.I_EVENT_PAYLOAD;
                 break;
             case PAYLOAD_ID_BEACON :
@@ -153,6 +159,14 @@ public final class PayloadRegistry {
                 break;
             case PAYLOAD_ID_SN :
                 iPayloadInterfaceType = PayloadInterfaceRegistry.I_SUPER_NOVA_PAYLOAD;
+                break;
+            case PAYLOAD_ID_COMPRESSED_HIT_DATA :
+                //-dbw: This new payload implements the IHitDataPayload interface
+                //      Note: will have to make sure that the factory which creates
+                //      the IHitPayload from the IHitDataPayload (actual hard objects)
+                //      uses the interface to create it's 'reduced' IHitPayload which
+                //      will be sent on to the trigger.
+                iPayloadInterfaceType = PayloadInterfaceRegistry.I_HIT_DATA_PAYLOAD;
                 break;
             default:
                 iPayloadInterfaceType = PayloadInterfaceRegistry.I_UNKNOWN_PAYLOAD;
@@ -170,30 +184,33 @@ public final class PayloadRegistry {
         mt_PayloadFactories = new Vector();
         mt_PayloadFactories.setSize(PayloadRegistry.PAYLOAD_ID_LASTVALID +1);
 
-        mt_PayloadFactories.setElementAt( null                                            , PAYLOAD_ID_UNKNOWN                );
-        mt_PayloadFactories.setElementAt( new  HitPayloadFactory()                        , PAYLOAD_ID_SIMPLE_HIT             );
-        mt_PayloadFactories.setElementAt( null                                            , PAYLOAD_ID_MULTI_HIT              );
-        mt_PayloadFactories.setElementAt( new  DomHitEngineeringFormatPayloadFactory()    , PAYLOAD_ID_ENGFORMAT_HIT          );
-        mt_PayloadFactories.setElementAt( new  TimeCalibrationPayloadFactory()            , PAYLOAD_ID_TCAL                   );
-        mt_PayloadFactories.setElementAt( new  MonitorPayloadFactory()                    , PAYLOAD_ID_MON                    );
-        // mt_PayloadFactories.setElementAt( new  MuxDomHitEngineeringFormatPayloadFactory() , PAYLOAD_ID_MUX_ENGFORMAT_HIT      );
-        mt_PayloadFactories.setElementAt( new  SuperNovaPayloadFactory()                  , PAYLOAD_ID_SN                     );
-        mt_PayloadFactories.setElementAt( new  EngFormatTriggerPayloadFactory()           , PAYLOAD_ID_ENGFORMAT_TRIGGER      );
-        mt_PayloadFactories.setElementAt( new  EngFormatHitPayloadFactory()               , PAYLOAD_ID_ENGFORMAT_HIT_TRIGGER  );
-        mt_PayloadFactories.setElementAt( new  ReadoutRequestPayloadFactory()             , PAYLOAD_ID_READOUT_REQUEST        );
-        mt_PayloadFactories.setElementAt( new  TriggerRequestPayloadFactory()             , PAYLOAD_ID_TRIGGER_REQUEST        );
-        mt_PayloadFactories.setElementAt( new  EngineeringFormatHitDataPayloadFactory()   , PAYLOAD_ID_ENGFORMAT_HIT_DATA     );
-        mt_PayloadFactories.setElementAt( new  ReadoutDataPayloadFactory()                , PAYLOAD_ID_READOUT_DATA           );
-        mt_PayloadFactories.setElementAt( new  EventPayloadFactory()                      , PAYLOAD_ID_EVENT                  );
-        mt_PayloadFactories.setElementAt( new  EventPayload_v2Factory()                   , PAYLOAD_ID_EVENT_V2               );
-        mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                     , PAYLOAD_ID_BEACON                 );
-		mt_PayloadFactories.setElementAt( null                                            , PAYLOAD_ID_COMPRESSED_HIT         );
+        mt_PayloadFactories.setElementAt( null                                              , PAYLOAD_ID_UNKNOWN                );
+        mt_PayloadFactories.setElementAt( new  HitPayloadFactory()                          , PAYLOAD_ID_SIMPLE_HIT             );
+        mt_PayloadFactories.setElementAt( null                                              , PAYLOAD_ID_MULTI_HIT              );
+        mt_PayloadFactories.setElementAt( new  DomHitEngineeringFormatPayloadFactory()      , PAYLOAD_ID_ENGFORMAT_HIT          );
+        mt_PayloadFactories.setElementAt( new  TimeCalibrationPayloadFactory()              , PAYLOAD_ID_TCAL                   );
+        mt_PayloadFactories.setElementAt( new  MonitorPayloadFactory()                      , PAYLOAD_ID_MON                    );
+        // mt_PayloadFactories.setElementAt( new  MuxDomHitEngineeringFormatPayloadFactory()   , PAYLOAD_ID_MUX_ENGFORMAT_HIT      );
+        mt_PayloadFactories.setElementAt( new  SuperNovaPayloadFactory()                    , PAYLOAD_ID_SN                     );
+        mt_PayloadFactories.setElementAt( new  EngFormatTriggerPayloadFactory()             , PAYLOAD_ID_ENGFORMAT_TRIGGER      );
+        mt_PayloadFactories.setElementAt( new  EngFormatHitPayloadFactory()                 , PAYLOAD_ID_ENGFORMAT_HIT_TRIGGER  );
+        mt_PayloadFactories.setElementAt( new  ReadoutRequestPayloadFactory()               , PAYLOAD_ID_READOUT_REQUEST        );
+        mt_PayloadFactories.setElementAt( new  TriggerRequestPayloadFactory()               , PAYLOAD_ID_TRIGGER_REQUEST        );
+        mt_PayloadFactories.setElementAt( new  EngineeringFormatHitDataPayloadFactory()     , PAYLOAD_ID_ENGFORMAT_HIT_DATA     );
+        mt_PayloadFactories.setElementAt( new  ReadoutDataPayloadFactory()                  , PAYLOAD_ID_READOUT_DATA           );
+        mt_PayloadFactories.setElementAt( new  EventPayloadFactory()                        , PAYLOAD_ID_EVENT                  );
+        mt_PayloadFactories.setElementAt( new  EventPayload_v2Factory()                     , PAYLOAD_ID_EVENT_V2               );
+        mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                       , PAYLOAD_ID_BEACON                 );
+        mt_PayloadFactories.setElementAt( new  DomHitDeltaCompressedFormatPayloadFactory() , PAYLOAD_ID_DELTA_HIT    );
+        mt_PayloadFactories.setElementAt( new  DeltaCompressedFormatHitDataPayloadFactory() , PAYLOAD_ID_COMPRESSED_HIT_DATA    );
+        mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                       , PAYLOAD_ID_BEACON                 );
+        mt_PayloadFactories.setElementAt( new  EventPayload_v3Factory()                     , PAYLOAD_ID_EVENT_V3               );
         //-Install the recycler if present
-        if (mtByteBufferCache != null) {
+        if (mtBufferCache != null) {
             for (int ii=0; ii < mt_PayloadFactories.size(); ii++) {
                 PayloadFactory tFactory = (PayloadFactory) mt_PayloadFactories.elementAt(ii);
                 if (tFactory != null) {
-                    tFactory.setByteBufferCache(mtByteBufferCache);
+                    tFactory.setByteBufferCache(mtBufferCache);
                     //-If a master composite payload factory has been set to non-null
                     // then make sure these are set in any factories which are derived
                     // from AbstractCompositePayload.
@@ -210,10 +227,10 @@ public final class PayloadRegistry {
     /**
      * This method binds the PayloadType to the factory designed to interpret
      * the payload.
-     * @param iPayloadType ... the type of payload which indicates the factory associated with it.
-     * @return PayloadFactory ... the factory that is appropriate for this type of payload.
+     * @param iPayloadType the type of payload which indicates the factory associated with it.
+     * @return the factory that is appropriate for this type of payload.
      */
-    public final PayloadFactory getPayloadFactory(int iPayloadType) {
+    public PayloadFactory getPayloadFactory(int iPayloadType) {
         Object tFactory = mt_PayloadFactories.get(iPayloadType);
         return (PayloadFactory) tFactory;
     }
@@ -225,8 +242,7 @@ public final class PayloadRegistry {
      *
      * @return A new object representing the current place.
      */
-    // public static Spliceable createCurrentPlaceSplicaeable() {
-    public Spliceable createCurrentPlaceSplicaeable() {
-        return (Spliceable) ((PayloadFactory) mt_PayloadFactories.get(PAYLOAD_ID_ENGFORMAT_TRIGGER)).createCurrentPlaceSplicaeable();
+    public Spliceable createCurrentPlaceSpliceable() {
+        return (Spliceable) ((PayloadFactory) mt_PayloadFactories.get(PAYLOAD_ID_ENGFORMAT_TRIGGER)).createCurrentPlaceSpliceable();
     }
 }
