@@ -299,6 +299,111 @@ public class TriggerRequestPayloadTest
         }
     }
 
+    public void testCompareTo()
+        throws Exception
+    {
+        final int uid = 34;
+        final int trigType = 98;
+        final int cfgId = 385;
+        final int srcId = 12;
+        final long firstTime = 1000L;
+        final long lastTime = 2000L;
+
+        final int rrType = 100;
+        final long rrFirstTime = 1001L;
+        final long rrLastTime = 1002L;
+        final long rrDomId = 103;
+        final int rrSrcId = 104;
+
+        final long hitTime = 1011L;
+        final int hitType = 30;
+        final int hitCfgId = 33;
+        final int hitSrcId = 36;
+        final long hitDomId = 333L;
+        final int hitMode = 39;
+
+        MockReadoutRequest mockReq = new MockReadoutRequest(uid, srcId);
+        mockReq.addElement(makeElement(rrType, rrFirstTime, rrLastTime,
+                                       rrDomId, rrSrcId));
+
+        ArrayList hitList = new ArrayList();
+        hitList.add(new MockHit(hitTime, hitType, hitCfgId, hitSrcId, hitDomId,
+                                hitMode));
+
+        Vector hitVec = new Vector(hitList);
+
+        TriggerRequestPayload req = new TriggerRequestPayload();
+        req.initialize(uid, trigType, cfgId, new MockSourceID(srcId),
+                       new MockUTCTime(firstTime), new MockUTCTime(lastTime),
+                       hitVec, mockReq);
+
+        TriggerRequestPayload cmpTR = new TriggerRequestPayload();
+        for (int i = 0; i <= 6; i++) {
+            int cmpUID = uid;
+            int cmpType = trigType;
+            int cmpCfgId = cfgId;
+            int cmpSrcId = srcId;
+            long cmpFirst = firstTime;
+            long cmpLast = lastTime;
+
+            String cmpDiff;
+            switch (i) {
+            case 1:
+                cmpUID++;
+                cmpDiff = "uid";
+                break;
+            case 2:
+                cmpType++;
+                cmpDiff = "trigType";
+                break;
+            case 3:
+                cmpCfgId++;
+                cmpDiff = "configId";
+                break;
+            case 4:
+                cmpSrcId++;
+                cmpDiff = "sourceId";
+                break;
+            case 5:
+                cmpFirst++;
+                cmpDiff = "firstTime";
+                break;
+            case 6:
+                cmpLast++;
+                cmpDiff = "lastTime";
+                break;
+            default:
+                cmpDiff = "identical";
+                break;
+            }
+
+            cmpTR.initialize(cmpUID, cmpType, cmpCfgId,
+                             new MockSourceID(cmpSrcId),
+                             new MockUTCTime(cmpFirst),
+                             new MockUTCTime(cmpLast), hitVec, mockReq);
+
+            if (i == 0) {
+                assertTrue("Bad " + cmpDiff + " equality",
+                           cmpTR.equals(req));
+                assertTrue("Bad " + cmpDiff + " equality",
+                           req.equals(cmpTR));
+                assertEquals("Bad " + cmpDiff + " comparison",
+                             0, req.compareTo(cmpTR));
+                assertEquals("Bad " + cmpDiff + " reverse comparison",
+                             0, cmpTR.compareTo(req));
+            } else {
+                assertFalse("Bad " + cmpDiff + " inequality",
+                           cmpTR.equals(req));
+                assertFalse("Bad " + cmpDiff + " inequality",
+                           req.equals(cmpTR));
+                assertTrue("Bad " + cmpDiff + " comparison",
+                           req.compareTo(cmpTR) < 0);
+                assertTrue("Bad " + cmpDiff + " reverse comparison",
+                           cmpTR.compareTo(req) > 0);
+            }
+        }
+    }
+
     public void testWriteByteBuffer()
         throws Exception
     {

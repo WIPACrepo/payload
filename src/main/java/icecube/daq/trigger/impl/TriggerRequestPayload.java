@@ -55,6 +55,56 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
         super.mipayloadinterfacetype = PayloadInterfaceRegistry.I_TRIGGER_REQUEST_PAYLOAD;
     }
 
+    private static final int compareObjects(Comparable myCmp,
+                                            Comparable otherCmp)
+    {
+        if (myCmp == null) {
+            if (otherCmp == null) {
+                return 0;
+            }
+
+            return -11;
+        } else if (otherCmp == null) {
+            return 1;
+        }
+
+        return myCmp.compareTo(otherCmp);
+    }
+
+    public int compareTo(Object obj)
+    {
+        if (obj == null) {
+            return 1;
+        }
+
+        if (!(obj instanceof ITriggerRequestPayload)) {
+            return getClass().getName().compareTo(obj.getClass().getName());
+        }
+
+        ITriggerRequestPayload tr = (ITriggerRequestPayload) obj;
+
+        int cmpVal = getUID() - tr.getUID();
+        if (cmpVal == 0) {
+            cmpVal = getTriggerType() - tr.getTriggerType();
+            if (cmpVal == 0) {
+                cmpVal = getTriggerConfigID() - tr.getTriggerConfigID();
+                if (cmpVal == 0) {
+                    cmpVal = compareObjects(getSourceID(), tr.getSourceID());
+                    if (cmpVal == 0) {
+                        cmpVal = compareObjects(getFirstTimeUTC(),
+                                                tr.getFirstTimeUTC());
+                        if (cmpVal == 0) {
+                            cmpVal = compareObjects(getLastTimeUTC(),
+                                                    tr.getLastTimeUTC());
+                        }
+                    }
+                }
+            }
+        }
+
+        return cmpVal;
+    }
+
     /**
      * Returns the unique id assigned to this ITriggerRequestPayload
      * @return the unique id for this event.
