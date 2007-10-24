@@ -15,9 +15,17 @@ public class MockSourceID
         this.id = id;
     }
 
-    public int compareTo(Object x0)
+    public int compareTo(Object obj)
     {
-        throw new Error("Unimplemented");
+        if (obj == null) {
+            return 1;
+        }
+
+        if (!(obj instanceof ISourceID)) {
+            return getClass().getName().compareTo(obj.getClass().getName());
+        }
+
+        return getSourceID() - ((ISourceID) obj).getSourceID();
     }
 
     public Object deepCopy()
