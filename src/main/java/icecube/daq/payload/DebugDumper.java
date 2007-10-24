@@ -233,6 +233,11 @@ class DumpEventV2
         return lastObj;
     }
 
+    public ByteBuffer getPayloadBacking()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public int getPayloadInterfaceType()
     {
         throw new Error("Unimplemented");
@@ -414,6 +419,11 @@ class DumpHitSimple
     }
 
     public double getIntegratedCharge()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public ByteBuffer getPayloadBacking()
     {
         throw new Error("Unimplemented");
     }
@@ -913,6 +923,11 @@ class DumpReadoutData
         }
 
         return lastObj;
+    }
+
+    public ByteBuffer getPayloadBacking()
+    {
+        throw new Error("Unimplemented");
     }
 
     public int getPayloadLength()
@@ -1468,6 +1483,11 @@ class DumpTriggerRequest
     }
 
     public Vector getPayloads()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public ByteBuffer getPayloadBacking()
     {
         throw new Error("Unimplemented");
     }

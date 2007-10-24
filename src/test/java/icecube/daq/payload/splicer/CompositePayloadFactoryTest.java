@@ -7,6 +7,8 @@ import icecube.daq.payload.test.LoggingCase;
 
 import java.io.IOException;
 
+import java.nio.ByteBuffer;
+
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -56,6 +58,11 @@ class MockPayload
         MockPayload copy = new MockPayload();
         copy.isCopy = true;
         return copy;
+    }
+
+    public ByteBuffer getPayloadBacking()
+    {
+        throw new Error("Unimplemented");
     }
 
     public int getPayloadInterfaceType()

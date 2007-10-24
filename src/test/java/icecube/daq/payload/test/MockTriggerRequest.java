@@ -106,6 +106,11 @@ public class MockTriggerRequest
         return new MockUTCTime(lastTime);
     }
 
+    public ByteBuffer getPayloadBacking()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public int getPayloadInterfaceType()
     {
         throw new Error("Unimplemented");
