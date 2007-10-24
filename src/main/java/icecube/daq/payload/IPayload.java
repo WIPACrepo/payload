@@ -1,7 +1,7 @@
 /*
  * class: IPayload
  *
- * Version $Id: IPayload.java 2125 2007-10-12 18:27:05Z ksb $
+ * Version $Id: IPayload.java 2185 2007-10-24 21:06:30Z dglo $
  *
  * Date: September 17 2004
  *
@@ -12,10 +12,12 @@ package icecube.daq.payload;
 
 import icecube.util.ICopyable;
 
+import java.nio.ByteBuffer;
+
 /**
  * Basic interface defining a trigger primitive payload
  *
- * @version $Id: IPayload.java 2125 2007-10-12 18:27:05Z ksb $
+ * @version $Id: IPayload.java 2185 2007-10-24 21:06:30Z dglo $
  * @author hellwig, dwharton
  */
 public interface IPayload extends ICopyable {
@@ -41,5 +43,12 @@ public interface IPayload extends ICopyable {
      */
     IUTCTime getPayloadTimeUTC();
 
-
+    /**
+     * Returns the ByteBuffer which backs this payload
+     * if it has one.
+     * @return the backing of this payload if it has one.
+     *                        this will be null if it is not 'backed'.
+     * NOTE: dbw: this is for Chuck McParland for testing...
+     */
+    ByteBuffer getPayloadBacking();
 }
