@@ -313,26 +313,28 @@ public class PayloadTest
         pay.dispose();
     }
 
-    public void testCompareTo()
+    public void testCompareSpliceable()
     {
         final long payTime = 97531L;
 
         MyPayload pay = new MyPayload();
         pay.setPayloadTimeUTC(new MockUTCTime(payTime));
 
-        assertEquals("Bad null comparison", 1, pay.compareTo(null));
+        assertEquals("Bad null comparison", 1, pay.compareSpliceable(null));
 
-        assertEquals("Bad bogus comparison", -1, pay.compareTo(new Integer(2)));
-
-        assertEquals("Bad self comparison", 0, pay.compareTo(pay));
+        assertEquals("Bad self comparison", 0, pay.compareSpliceable(pay));
 
         MyPayload empty = (MyPayload) pay.getPoolable();
-        assertEquals("Bad pay<->empty comparison", 1, pay.compareTo(empty));
-        assertEquals("Bad empty<->pay comparison", -1, empty.compareTo(pay));
+        assertEquals("Bad pay<->empty comparison",
+                     1, pay.compareSpliceable(empty));
+        assertEquals("Bad empty<->pay comparison",
+                     -1, empty.compareSpliceable(pay));
 
         pay.dispose();
-        assertEquals("Bad disposed pay comparison", 0, pay.compareTo(empty));
-        assertEquals("Bad disposed empty comparison", 0, empty.compareTo(pay));
+        assertEquals("Bad disposed pay comparison",
+                     0, pay.compareSpliceable(empty));
+        assertEquals("Bad disposed empty comparison",
+                     0, empty.compareSpliceable(pay));
     }
 
     public void testReload()

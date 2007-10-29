@@ -1,7 +1,7 @@
 /*
  * class: Payload
  *
- * Version $Id: Payload.java 2125 2007-10-12 18:27:05Z ksb $
+ * Version $Id: Payload.java 2205 2007-10-29 20:44:05Z dglo $
  *
  * Date: September 21 2004
  *
@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
  * Payload implements the IPayload interface and the Spliceable interface
  * It contains trigger information that is send through the DAQ system
  *
- * @version $Id: Payload.java 2125 2007-10-12 18:27:05Z ksb $
+ * @version $Id: Payload.java 2205 2007-10-29 20:44:05Z dglo $
  * @author hellwig,dwharton
  *
  * 8/24/2005 dbw
@@ -227,28 +227,16 @@ public abstract class Payload extends Poolable
     /**
      * compare Timestamps of two payloads
      */
-    public int compareTo(Object object) {
-        if (object == null) {
+    public int compareSpliceable(Spliceable spl) {
+        if (spl == null) {
             return 1;
         }
 
-        if (!(object instanceof IPayload)) {
-            return getClass().getName().compareTo(object.getClass().getName());
+        if (!(spl instanceof IPayload)) {
+            return getClass().getName().compareTo(spl.getClass().getName());
         }
 
-        return mttime.compareTo(((IPayload) object).getPayloadTimeUTC());
-    }
-
-    /**
-     * Is the specified object equal to this object?
-     *
-     * @param obj object being compared
-     *
-     * @return <tt>true</tt> if the objects are equal
-     */
-    public boolean equals(Object obj)
-    {
-        return compareTo(obj) == 0;
+        return mttime.compareTo(((IPayload) spl).getPayloadTimeUTC());
     }
 
     /**

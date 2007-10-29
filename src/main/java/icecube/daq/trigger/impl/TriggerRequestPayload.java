@@ -37,7 +37,7 @@ import icecube.util.Poolable;
  *
  * @author dwharton,ptoale
  */
-public class TriggerRequestPayload extends AbstractCompositePayload implements ITriggerRequestPayload, IWriteablePayload {
+public class TriggerRequestPayload extends AbstractCompositePayload implements Comparable, ITriggerRequestPayload, IWriteablePayload {
     //-TriggerRequestRecord starts right after PayloadEnvelope
     public static final int OFFSET_TRIGGER_REQUEST_RECORD = OFFSET_PAYLOAD_DATA;
     //-CompositePayloadEnvelope starts right after the end of the TriggerRequestRecord.
@@ -103,6 +103,18 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
         }
 
         return cmpVal;
+    }
+
+    /**
+     * Is the specified object equal to this object?
+     *
+     * @param obj object being compared
+     *
+     * @return <tt>true</tt> if the objects are equal
+     */
+    public boolean equals(Object obj)
+    {
+        return compareTo(obj) == 0;
     }
 
     /**
@@ -175,6 +187,36 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements I
     //--Section for creating Payload outside of ByteBuffer
     //  environment.
     //
+
+    public int hashCode()
+    {
+        int srcId;
+        ISourceID srcObj = getSourceID();
+        if (srcObj == null) {
+            srcId = 0;
+        } else {
+            srcId = srcObj.getSourceID();
+        }
+
+        long[] time = new long[2];
+        for (int i = 0; i < 2; i++) {
+            IUTCTime timeObj;
+            if (i == 0) {
+                timeObj = getFirstTimeUTC();
+            } else {
+                timeObj = getLastTimeUTC();
+            }
+
+            if (timeObj == null) {
+                time[i] = 0L;
+            } else {
+                time[i] = timeObj.getUTCTimeAsLong();
+            }
+        }
+
+        return getUID() + getTriggerType() + getTriggerConfigID() + srcId +
+            (int) time[0] + (int) time[1];
+    }
 
     /**
      * Method to initialize the data values of this payload
