@@ -337,7 +337,12 @@ if (recycled == null) try { throw new Throwable("Originally recycled"); } catch 
         //-If backing then use it..
         if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
-            iBytesWritten =  super.writePayload( bWriteLoaded, iDestOffset, tDestBuffer);
+            try {
+                iBytesWritten =  super.writePayload( bWriteLoaded, iDestOffset, tDestBuffer);
+            } catch (NullPointerException npe) {
+                mtLog.error("Couldn't write RDP " + mtbuffer + " to offset " + iDestOffset + " buf " + tDestBuffer);
+                throw new IOException("Couldn't write RDP due to NullPtrException");
+            }
         } else {
             if (super.mtbuffer != null) {
                 try {
