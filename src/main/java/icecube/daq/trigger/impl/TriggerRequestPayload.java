@@ -55,6 +55,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
         super.mipayloadinterfacetype = PayloadInterfaceRegistry.I_TRIGGER_REQUEST_PAYLOAD;
     }
 
+/*
     private static final int compareObjects(Comparable myCmp,
                                             Comparable otherCmp)
     {
@@ -104,6 +105,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
 
         return cmpVal;
     }
+*/
 
     /**
      * Is the specified object equal to this object?
@@ -112,9 +114,16 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
      *
      * @return <tt>true</tt> if the objects are equal
      */
+/*
     public boolean equals(Object obj)
     {
         return compareTo(obj) == 0;
+    }
+*/
+
+    public int compareTo(Object obj)
+    {
+        return compareSpliceable((icecube.daq.splicer.Spliceable) obj);
     }
 
     /**

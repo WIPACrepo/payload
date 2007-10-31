@@ -299,7 +299,7 @@ public class TriggerRequestPayloadTest
         }
     }
 
-    public void testCompareTo()
+    public void XXXtestCompareTo()
         throws Exception
     {
         final int uid = 34;
