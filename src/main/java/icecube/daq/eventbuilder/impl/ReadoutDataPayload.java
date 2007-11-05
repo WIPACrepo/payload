@@ -34,6 +34,8 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
     private static final Log mtLog =
         LogFactory.getLog(ReadoutDataPayload.class);
 
+    private static final boolean DUMP_RECYCLE_ERRORS = false;
+
     public static final int OFFSET_READOUT_DATA_RECORD = OFFSET_PAYLOAD_ENVELOPE + PayloadEnvelope.SIZE_ENVELOPE;
 
     protected boolean mb_IsReadoutDataRecordLoaded;
@@ -302,9 +304,13 @@ if (recycled == null) try { throw new Throwable("Originally recycled"); } catch 
             try {
                 throw new Throwable("Stack trace");
             } catch (Throwable thr) {
-                mtLog.error("Deep-copying recycled RDP#" + myNum, thr);
-                mtLog.error("Created here", created);
-                mtLog.error("Recycled here", recycled);
+                if (!DUMP_RECYCLE_ERRORS) {
+                    mtLog.error("Deep-copying recycled RDP#" + myNum);
+                } else {
+                    mtLog.error("Deep-copying recycled RDP#" + myNum, thr);
+                    mtLog.error("Created here", created);
+                    mtLog.error("Recycled here", recycled);
+                }
             }
         }
         return super.deepCopy();
@@ -327,9 +333,13 @@ if (recycled == null) try { throw new Throwable("Originally recycled"); } catch 
             try {
                 throw new Throwable("Stack trace");
             } catch (Throwable thr) {
-                mtLog.error("Writing recycled RDP#" + myNum, thr);
-                mtLog.error("Created here", created);
-                mtLog.error("Recycled here", recycled);
+                if (!DUMP_RECYCLE_ERRORS) {
+                    mtLog.error("Writing recycled RDP#" + myNum);
+                } else {
+                    mtLog.error("Writing recycled RDP#" + myNum, thr);
+                    mtLog.error("Created here", created);
+                    mtLog.error("Recycled here", recycled);
+                }
             }
             throw new IOException("Attempted to write recycled RDP");
         }
