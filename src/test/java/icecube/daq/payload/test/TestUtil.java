@@ -126,7 +126,7 @@ public abstract class TestUtil
         if (trigFlags < 0 || trigFlags > 0x1fff) {
             throw new Error("Bad trigger flag value " + trigFlags);
         }
-        if (lcFlags < 1 || lcFlags > 3) {
+        if (lcFlags < 0 || lcFlags > 3) {
             throw new Error("Bad LC flag value " + lcFlags);
         }
         if (atwdSize < 0 || atwdSize > 3) {

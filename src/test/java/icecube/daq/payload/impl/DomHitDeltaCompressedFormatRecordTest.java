@@ -76,6 +76,27 @@ public class DomHitDeltaCompressedFormatRecordTest
         }
     }
 
+    public void testLCModeInByteBuffer()
+        throws Exception
+    {
+        final int offset =
+            DomHitDeltaCompressedFormatRecord.OFFSET_WORD0;
+
+        ByteBuffer buf = ByteBuffer.allocate(offset + 4);
+        buf.putShort(DomHitDeltaCompressedFormatRecord.OFFSET_ORDERCHECK,
+                     (short) 1);
+
+        for (int i = 0; i < 4; i++) {
+            final int expMode = i;
+
+            buf.putInt(offset, (i << 16));
+            final int mode =
+                DomHitDeltaCompressedFormatRecord.getLocalCoincidenceMode(0, buf);
+
+            assertEquals("Bad LC mode #" + i, expMode, mode);
+        }
+    }
+
     public void testCreate()
         throws Exception
     {
@@ -84,7 +105,7 @@ public class DomHitDeltaCompressedFormatRecordTest
         final long domClock = 103254L;
         final boolean isCompressed = true;
         final int trigFlags = 7;
-        final int lcFlags = 2;
+        final int lcFlags = 3;
         final boolean hasFADC = false;
         final boolean hasATWD = true;
         final int atwdSize = 3;
@@ -129,9 +150,13 @@ public class DomHitDeltaCompressedFormatRecordTest
                          dataBytes[i], compressedData[i]);
         }
 
-        assertEquals("Bad triggerMode",
+        assertEquals("Bad trigger mode",
                      TestUtil.getEngFmtTriggerMode(trigFlags),
                      DomHitDeltaCompressedFormatRecord.getTriggerMode(0, buf));
+
+        assertEquals("Bad LC mode",
+                     lcFlags,
+                     DomHitDeltaCompressedFormatRecord.getLocalCoincidenceMode(0, buf));
 
         hitRec.recycle();
         assertFalse("Data should NOT be loaded", hitRec.isDataLoaded());
@@ -190,9 +215,11 @@ public class DomHitDeltaCompressedFormatRecordTest
                          dataBytes[i], compressedData[i]);
         }
 
-        assertEquals("Bad triggerMode",
+        assertEquals("Bad trigger mode",
                      TestUtil.getEngFmtTriggerMode(trigFlags),
                      hitRec.getTriggerMode());
+
+        assertEquals("Bad LC mode", lcFlags, hitRec.getLocalCoincidenceMode());
 
         hitRec.recycle();
         assertFalse("Data should NOT be loaded", hitRec.isDataLoaded());

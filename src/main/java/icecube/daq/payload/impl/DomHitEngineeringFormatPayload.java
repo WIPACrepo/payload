@@ -281,6 +281,14 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
         return iTriggerMode;
     }
 
+    /**
+     * Get local coincidence mode.
+     *
+     * @return mode
+     */
+    public int getLocalCoincidenceMode() {
+        return -1;
+    }
 
     /**
      * Initializes Payload from backing so it can be used as an IPayload.

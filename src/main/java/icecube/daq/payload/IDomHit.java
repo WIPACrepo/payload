@@ -16,6 +16,13 @@ public interface IDomHit
     long getDomId();
 
     /**
+     * Get local coincidence mode.
+     *
+     * @return mode
+     */
+    int getLocalCoincidenceMode();
+
+    /**
      * Get the backing ByteBuffer for this DOM hit.
      *
      * @return ByteBuffer

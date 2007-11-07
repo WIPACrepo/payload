@@ -190,7 +190,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      * the default value of 0x80 is returned here and the test pattern trigger is used.
      */
     public int getTriggerMode() {
-        int iTriggerMode = -1;
+        int iTriggerMode;
         if (mbDeltaPayloadLoaded) {
             iTriggerMode =  mtDomHitDeltaCompressedRecord.getTriggerMode();
         } else {
@@ -199,9 +199,31 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
             } catch ( IOException tException) {
                 //-TODO: Put in logging here
                 System.out.println("DomHitDeltaCompressedPayload.getTriggerMode() IOException="+tException);
+                iTriggerMode = -1;
             }
         }
         return iTriggerMode;
+    }
+
+    /**
+     * Get local coincidence mode.
+     *
+     * @return mode
+     */
+    public int getLocalCoincidenceMode() {
+        int iLCMode;
+        if (mbDeltaPayloadLoaded) {
+            iLCMode =  mtDomHitDeltaCompressedRecord.getLocalCoincidenceMode();
+        } else {
+            try {
+                iLCMode = DomHitDeltaCompressedFormatRecord.getLocalCoincidenceMode(mioffset + OFFSET_REC, mtbuffer);
+            } catch ( IOException tException) {
+                //-TODO: Put in logging here
+                System.out.println("DomHitDeltaCompressedPayload.getLocalCoincidenceMode(),"+tException);
+                iLCMode = -1;
+            }
+        }
+        return iLCMode;
     }
 
     /**

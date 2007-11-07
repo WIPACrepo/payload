@@ -322,7 +322,8 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      * compressed record into the class variables so that it may be
      * quickly accessed.
      *
-     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param iRecordOffset the offset from which to start loading the data
+     *                      from the engine.
      * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @exception IOException if errors are detected reading the record
@@ -515,10 +516,10 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     //-------------------------------------------------------
 
     /**
-     * Pulls out the Trigger Mode of the compressed record This
-     * assumes the ByteBuffer has been set to BIG_ENDIAN.
+     * Pulls out WORD0 of the compressed record.
      *
-     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param iRecordOffset the offset from which to start loading the data
+     *                      from the engine.
      * @param tBuffer ByteBuffer from which to construct the record.
      *
      * @return the Beacon and SPE/MPE bits mapped to their appropriate places
@@ -526,7 +527,9 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      *
      * @exception IOException if errors are detected reading the record
      */
-    public static short getTriggerMode(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
+    public static int getWord0(int iRecordOffset, ByteBuffer tBuffer)
+        throws IOException
+    {
         ByteOrder tOrder = tBuffer.order();
         short chk = tBuffer.getShort(iRecordOffset + OFFSET_ORDERCHECK);
         if (chk != 1) {
@@ -544,6 +547,24 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
         //-restore order
         tBuffer.order(tOrder);
 
+        return word0;
+    }
+
+    /**
+     * Pulls out the Trigger Mode of the compressed record.
+     *
+     * @param iRecordOffset the offset from which to start loading the data
+     *                      from the engine.
+     * @param tBuffer ByteBuffer from which to construct the record.
+     *
+     * @return the Beacon and SPE/MPE bits mapped to their appropriate places
+     *         in the Engineering trigger mode
+     *
+     * @exception IOException if errors are detected reading the record
+     */
+    public static short getTriggerMode(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
+        int word0 = getWord0(iRecordOffset, tBuffer);
+
         int trigInfo = (word0 >> 16) & 0xffff;
         short trigFlags = (short) ((trigInfo >> 2) & TRIGGER_WORD_SHIFTED_MASK);
         return getTriggerMode(trigFlags);
@@ -559,6 +580,26 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     public static short getTriggerMode(short trigFlags) {
             return (short) (((trigFlags & 0x4) == 0 ? 0 : 1) +
                             ((trigFlags & 0x3) == 0 ? 0 : 2));
+    }
+
+    /**
+     * Pulls out the Local Coincidence Mode of the compressed record.
+     *
+     * @param iRecordOffset the offset from which to start loading the data
+     *                      from the engine.
+     * @param tBuffer ByteBuffer from which to construct the record.
+     *
+     * @return the Local Coincidence bits
+     *
+     * @exception IOException if errors are detected reading the record
+     */
+    public static short getLocalCoincidenceMode(int iRecordOffset,
+                                                ByteBuffer tBuffer)
+        throws IOException
+    {
+        int word0 = getWord0(iRecordOffset, tBuffer);
+
+        return (short) ((word0 >> 16) & 0x3);
     }
 
     /**
@@ -627,6 +668,14 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     public int getTriggerMode()
     {
         return getTriggerMode(msiTriggerFlags);
+    }
+
+    /**
+     * Get the local coincidence mode.
+     */
+    public int getLocalCoincidenceMode()
+    {
+        return msi_LC_StateFlags;
     }
 
     /**
