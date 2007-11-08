@@ -578,8 +578,14 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      *         in the Engineering trigger mode
      */
     public static short getTriggerMode(short trigFlags) {
-            return (short) (((trigFlags & 0x4) == 0 ? 0 : 1) +
-                            ((trigFlags & 0x3) == 0 ? 0 : 2));
+	if((trigFlags & 0x10) != 0) return 3;
+	if((trigFlags & 0x03) != 0) return 2;
+	if((trigFlags & 0x04) != 0) return 1;
+	return 0;
+	/* JEJ: this was:
+            return (short) (((trigFlags & 0x4)  == 0 ? 0 : 1) +
+                            ((trigFlags & 0x3)  == 0 ? 0 : 2));
+	*/
     }
 
     /**
