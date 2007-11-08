@@ -837,11 +837,14 @@ public abstract class TestUtil
     public static int getEngFmtTriggerMode(int dcTrigFlags)
     {
         int mode = 0;
+        if ((dcTrigFlags & 0x10) != 0) {
+            return 3;
+        }
         if ((dcTrigFlags & 0x3) != 0) {
-            mode |= 0x2;
+            return 2;
         }
         if ((dcTrigFlags & 0x4) != 0) {
-            mode |= 0x1;
+            return 1;
         }
         return mode;
     }
