@@ -1,7 +1,7 @@
 /*
  * class: PayloadDestinationCollection
  *
- * Version $Id: PayloadDestinationCollection.java 2125 2007-10-12 18:27:05Z ksb $
+ * Version $Id: PayloadDestinationCollection.java 2351 2007-12-03 17:19:40Z dglo $
  *
  * Date: October 19 2005
  *
@@ -22,7 +22,7 @@ import java.io.IOException;
 /**
  * This class is a simple implementation of the IPayloadDestinationCollection interface.
  *
- * @version $Id: PayloadDestinationCollection.java 2125 2007-10-12 18:27:05Z ksb $
+ * @version $Id: PayloadDestinationCollection.java 2351 2007-12-03 17:19:40Z dglo $
  * @author pat
  */
 public class PayloadDestinationCollection implements IPayloadDestinationCollection
@@ -143,6 +143,14 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * Close all PayloadDestinations.
      * @throws IOException if there is a close error from the underlying PayloadDestination
      */
+    public void close() throws IOException {
+        closeAllPayloadDestinations();
+    }
+
+    /**
+     * Close all PayloadDestinations.
+     * @throws IOException if there is a close error from the underlying PayloadDestination
+     */
     public synchronized void closeAllPayloadDestinations() throws IOException {
         Iterator destinationIter = destinationMap.keySet().iterator();
         while (destinationIter.hasNext()) {
@@ -156,6 +164,14 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      */
     public void registerController(IPayloadDestinationCollectionController controller) {
         this.controller = controller;
+    }
+
+    /**
+     * Stop all PayloadDestinations.
+     * @throws IOException
+     */
+    public void stop() throws IOException {
+        stopAllPayloadDestinations();
     }
 
     /**
