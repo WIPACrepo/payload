@@ -488,7 +488,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
 
     public String toString()
     {
-        return "TriggerRequest uid " + mi_UID + " " +
-            mt_triggerRequestRecord.toDataString();
+        return "TriggerRequest[uid " + mi_UID + " " +
+            mt_triggerRequestRecord.toDataString() + "]";
     }
 }

@@ -270,6 +270,6 @@ public class TriggerRequestRecord extends Poolable implements IWriteablePayloadR
 
     public String toString()
     {
-        return "TriggerRequestRecord " + toDataString();
+        return "TriggerRequestRecord[" + toDataString() + "]";
     }
 }

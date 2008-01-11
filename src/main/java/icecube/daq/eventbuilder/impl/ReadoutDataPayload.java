@@ -419,4 +419,9 @@ if (recycled == null) try { throw new Throwable("Originally recycled"); } catch 
         if (tDestination.doLabel()) tDestination.undent().label("<=[ReadoutDataPayload]");
         return iBytesWritten;
     }
+
+    public String toString()
+    {
+        return "ReadoutData[" + mt_ReadoutDataRecord.toDataString() + "]";
+    }
 }

@@ -265,4 +265,14 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
             mt_lastTime     = null;
         }
     }
+    public String toDataString()
+    {
+        return "uid " + mi_UID + " num " + mi_payloadNum +
+            " src " + mt_sourceid + " firstUTC " + mt_firstTime +
+            " lastUTC " + mt_lastTime;
+    }
+    public String toString()
+    {
+        return "ReadoutDataRecord[" + toDataString() + "]";
+    }
 }
