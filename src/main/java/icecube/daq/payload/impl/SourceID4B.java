@@ -1,7 +1,7 @@
 /*
  * class: SourceID4B
  *
- * Version $Id: SourceID4B.java 2125 2007-10-12 18:27:05Z ksb $
+ * Version $Id: SourceID4B.java 2488 2008-01-17 22:01:22Z dglo $
  *
  * Date: September 21 2004
  *
@@ -17,7 +17,7 @@ import icecube.util.Poolable;
 /**
  * Implementation of ISourceID using a 4 byte int
  *
- * @version $Id: SourceID4B.java 2125 2007-10-12 18:27:05Z ksb $
+ * @version $Id: SourceID4B.java 2488 2008-01-17 22:01:22Z dglo $
  * @author hellwig,dwharton
  */
 public class SourceID4B extends Poolable implements ISourceID
@@ -146,11 +146,11 @@ public class SourceID4B extends Poolable implements ISourceID
             return 1;
         }
 
-        if (!(obj instanceof SourceID4B)) {
+        if (!(obj instanceof ISourceID)) {
             return getClass().getName().compareTo(obj.getClass().getName());
         }
 
-        return compareTo((SourceID4B) obj);
+        return compareTo((ISourceID) obj);
     }
 
     /**
@@ -163,7 +163,7 @@ public class SourceID4B extends Poolable implements ISourceID
      *         ID, and <tt>1</tt> if this source ID is 'greater than' the
      *         other source ID
      */
-    public int compareTo(SourceID4B sourceId)
+    public int compareTo(ISourceID sourceId)
     {
         return getSourceID() - sourceId.getSourceID();
     }
