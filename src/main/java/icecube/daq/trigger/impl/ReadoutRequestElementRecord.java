@@ -241,6 +241,39 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
         return new ReadoutRequestElementRecord();
     }
 
+    private static final String getTypeString(int rdoutType)
+    {
+        switch (rdoutType) {
+        case READOUT_TYPE_GLOBAL:
+            return "GLOBAL";
+        case READOUT_TYPE_II_GLOBAL:
+            return  "II_GLOBAL";
+        case READOUT_TYPE_IT_GLOBAL:
+            return "IT_GLOBAL";
+        case READOUT_TYPE_II_STRING:
+            return "II_STRING";
+        case READOUT_TYPE_II_MODULE:
+            return "II_MODULE";
+        case READOUT_TYPE_IT_MODULE:
+            return "IT_MODULE";
+        default:
+            break;
+        }
+
+        return "UNKNOWN";
+    }
+
+    /**
+     * Get readout request element data string.
+     *
+     * @return data string
+     */
+    public String toDataString()
+    {
+        return getTypeString(mi_readoutType) + " [" + mt_firstTime + "-" +
+            mt_lastTime + "] dom " + mt_domId + " src " + mt_sourceId;
+    }
+
     /**
      * Return string description of the object.
      *
@@ -248,34 +281,7 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
      */
     public String toString()
     {
-        String typeStr;
-        switch (mi_readoutType) {
-        case READOUT_TYPE_GLOBAL:
-            typeStr = "GLOBAL";
-            break;
-        case READOUT_TYPE_II_GLOBAL:
-            typeStr = "II_GLOBAL";
-            break;
-        case READOUT_TYPE_IT_GLOBAL:
-            typeStr = "IT_GLOBAL";
-            break;
-        case READOUT_TYPE_II_STRING:
-            typeStr = "II_STRING";
-            break;
-        case READOUT_TYPE_II_MODULE:
-            typeStr = "II_MODULE";
-            break;
-        case READOUT_TYPE_IT_MODULE:
-            typeStr = "IT_MODULE";
-            break;
-        default:
-            typeStr = "UNKNOWN";
-            break;
-        }
-
-        return "ReadoutRequestElementRecord[" + typeStr + " [" + mt_firstTime +
-            "-" + mt_lastTime + "] dom " + mt_domId + " src " +
-            mt_sourceId + "]";
+        return "ReadoutRequestElementRecord[" + toDataString() + "]";
     }
 }
 

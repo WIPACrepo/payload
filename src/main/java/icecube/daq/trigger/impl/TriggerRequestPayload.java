@@ -483,9 +483,15 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
         return iBytesWritten;
     }
 
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
     public String toString()
     {
-        return "TriggerRequest[" +
-            mt_triggerRequestRecord.toDataString() + "]";
+        return "TriggerRequest" +
+            (mt_triggerRequestRecord == null ? "<noRecord>" :
+             "[" + mt_triggerRequestRecord.toDataString() + "]");
     }
 }

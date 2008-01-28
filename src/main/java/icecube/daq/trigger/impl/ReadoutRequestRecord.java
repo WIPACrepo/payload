@@ -336,18 +336,34 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
         dispose();
     }
 
+    /**
+     * Get readout request data string.
+     *
+     * @return data string
+     */
     public String toDataString()
     {
         StringBuffer buf = new StringBuffer();
         buf.append("reqType ").append(msi_RequestType);
         buf.append(" trigUID ").append(mi_TriggerUID);
-        buf.append(" src ").append(mt_SourceID.toString());
-        buf.append(" numElems ").append(mi_numRequestElements);
+        buf.append(" src ").append(mt_SourceID);
+        if (mt_RequestElementVector != null) {
+            for (Object obj : mt_RequestElementVector) {
+                ReadoutRequestElementRecord elem =
+                    (ReadoutRequestElementRecord) obj;
+                buf.append(" [").append(elem.toDataString()).append("]");
+            }
+        }
         return buf.toString();
     }
 
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
     public String toString()
     {
-        return "ReadoutRequestRecord " + toDataString();
+        return "ReadoutRequestRecord[" + toDataString() + "]";
     }
 }

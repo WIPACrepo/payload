@@ -260,14 +260,43 @@ public class TriggerRequestRecord extends Poolable implements IWriteablePayloadR
         mt_readoutRequestRecord  = null;
     }
 
-    public String toDataString()
+    /** List of trigger types */
+    private static String[] trigTypes = new String[] {
+        "SimpMaj", "Calib", "MinBias", "Thruput", "FixedRt", "SyncBrd",
+        "TrigBrd", "AmMFrag20", "AmVol", "AmM18", "AmM24", "AmStr",
+        "AmSpase", "AmRand", "AmCalT0", "AmCalLaser",
+    };
+
+    private static final String getTypeString(int trigType)
     {
-        return "type " + mi_triggerType + " cfgId " + mi_triggerConfigID +
-            " src " + mt_sourceid +
-            " [" + mt_firstTime + "-" + mt_lastTime + "] " +
-            mt_readoutRequestRecord.toDataString();
+        if (trigType >= 0 && trigType < trigTypes.length) {
+            return trigTypes[trigType];
+        } 
+
+        return "unknownTrigType#" + trigType;
     }
 
+    /**
+     * Get readout request data string.
+     *
+     * @return data string
+     */
+    public String toDataString()
+    {
+        return "uid " + mi_UID +
+            " type " + getTypeString(mi_triggerType) +
+            " cfgId " + mi_triggerConfigID +
+            " src " + mt_sourceid +
+            " [" + mt_firstTime + "-" + mt_lastTime + "] rdoutReq" +
+            (mt_readoutRequestRecord == null ? "<noRecord>" :
+             "[" + mt_readoutRequestRecord.toDataString() + "]");
+    }
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
     public String toString()
     {
         return "TriggerRequestRecord[" + toDataString() + "]";
