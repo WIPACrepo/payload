@@ -241,7 +241,7 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
         return new ReadoutRequestElementRecord();
     }
 
-    private static final String getTypeString(int rdoutType)
+    static final String getTypeString(int rdoutType)
     {
         switch (rdoutType) {
         case READOUT_TYPE_GLOBAL:
@@ -260,7 +260,7 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
             break;
         }
 
-        return "UNKNOWN";
+        return "UNKNOWN#" + rdoutType;
     }
 
     /**
