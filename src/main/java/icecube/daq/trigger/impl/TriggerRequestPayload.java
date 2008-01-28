@@ -42,7 +42,6 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
     public static final int OFFSET_TRIGGER_REQUEST_RECORD = OFFSET_PAYLOAD_DATA;
     //-CompositePayloadEnvelope starts right after the end of the TriggerRequestRecord.
 
-    protected int mi_UID = -1;  //-uid for this specific request.
     protected TriggerRequestRecord mt_triggerRequestRecord;
 
     protected int mi_sizeTriggerRequestRecord = -1;
@@ -266,7 +265,6 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
                                     tLastTimeUTC,
                                     tRequest
                                     );
-        mi_UID = iUID;
         //-If we go to write out then will have to assess the size of the record
         // before placing onto stream so can correctly have the data length.
         mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
@@ -396,7 +394,6 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
             mt_triggerRequestRecord.dispose();
             mt_triggerRequestRecord = null;
         }
-        mi_UID = -1;  //-uid for this specific request.
         mi_sizeTriggerRequestRecord = -1;
         //-THIS MUST BE CALLED LAST!!
         super.dispose();
@@ -488,7 +485,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
 
     public String toString()
     {
-        return "TriggerRequest[uid " + mi_UID + " " +
+        return "TriggerRequest[" +
             mt_triggerRequestRecord.toDataString() + "]";
     }
 }
