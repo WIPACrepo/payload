@@ -10,6 +10,7 @@ import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.IWriteablePayloadRecord;
 import icecube.daq.trigger.IReadoutRequest;
+import icecube.daq.trigger.IReadoutRequestElement;
 import icecube.daq.payload.PayloadDestination;
 import icecube.util.Poolable;
 
@@ -349,9 +350,16 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
         buf.append(" src ").append(mt_SourceID);
         if (mt_RequestElementVector != null) {
             for (Object obj : mt_RequestElementVector) {
-                ReadoutRequestElementRecord elem =
-                    (ReadoutRequestElementRecord) obj;
-                buf.append(" [").append(elem.toDataString()).append("]");
+                IReadoutRequestElement elem =
+                    (IReadoutRequestElement) obj;
+                int type = elem.getReadoutType();
+                String typeStr =
+                    ReadoutRequestElementRecord.getTypeString(type);
+                buf.append(" [").append(typeStr);
+                buf.append(" [").append(elem.getFirstTimeUTC()).append("-");
+                buf.append(elem.getLastTimeUTC()).append("] dom ");
+                buf.append(elem.getDomID()).append(" src ");
+                buf.append(elem.getSourceID()).append("]");
             }
         }
         return buf.toString();
