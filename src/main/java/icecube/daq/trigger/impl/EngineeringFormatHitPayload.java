@@ -147,5 +147,4 @@ public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload
         if (tDestination.doLabel()) tDestination.undent().label("<=[EngineeringFormatHitPayload]");
         return iBytesWritten;
     }
-
 }

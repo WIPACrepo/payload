@@ -439,4 +439,18 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
     public IHitDataRecord getHitRecord() throws IOException, DataFormatException {
         return (IHitDataRecord) mt_DeltaFormatRecord;
     }
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
+    public String toString()
+    {
+        return "DeltaHit@" + mttime + "[type " + mi_TriggerType +
+            " cfgId " + mi_TriggerConfigID + " src " + mt_sourceId +
+            " dom " + mt_domID + " " +
+            (mt_DeltaFormatRecord == null ? "<noRecord>" :
+             "[" + mt_DeltaFormatRecord.toDataString() + "]") + "]";
+    }
 }

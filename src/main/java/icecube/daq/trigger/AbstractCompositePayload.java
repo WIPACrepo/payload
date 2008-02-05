@@ -251,4 +251,25 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
         tPayload.mt_MasterPayloadFactory = mt_MasterPayloadFactory;
         return (Poolable) tPayload;
     }
+
+    /**
+     * Get payload data string.
+     *
+     * @return data string
+     */
+    public String toDataString()
+    {
+        if (mt_Payloads == null) {
+            return "<null>";
+        }
+
+        StringBuffer buf = new StringBuffer();
+        buf.append('[');
+        for (Object obj : mt_Payloads) {
+            buf.append('[').append(obj.toString()).append(']');
+        }
+        buf.append(']');
+
+        return buf.toString();
+    }
 }

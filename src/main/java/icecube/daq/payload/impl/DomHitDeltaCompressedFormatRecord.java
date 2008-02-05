@@ -703,5 +703,51 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
     {
         return compressedData;
     }
-}
 
+    private static String toHexString(byte b)
+    {
+        String str = Integer.toHexString((int) b);
+        if (str.length() >= 2) {
+            return str;
+        }
+
+        return '0' + str;
+    }
+
+    /**
+     * Get delta hit data string.
+     *
+     * @return data string
+     */
+    public String toDataString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append("ver ").append(msi_version);
+        buf.append(" ped ").append(msi_pedestal);
+        buf.append(" clk ").append(ml_DOMCLOCK);
+        buf.append(" trigInfo ").append(msi_TRIGGER_INFO);
+        buf.append(" waveHit ").append(msi_WAVEFORM_FLAGS_HIT_SIZE);
+        buf.append(" peak ").append(mi_PEAKINFO_FIELD);
+        if (compressedData != null) {
+            buf.append(" data[");
+            for (int i = 0; i < compressedData.length; i++) {
+                if (i > 0) {
+                    buf.append(' ');
+                }
+                buf.append(toHexString(compressedData[i]));
+            }
+            buf.append(']');
+        }
+        return buf.toString();
+    }
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
+    public String toString()
+    {
+        return "DeltaHitRecord[" + toDataString() + "]";
+    }
+}

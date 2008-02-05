@@ -463,6 +463,26 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
     public long getTimestamp() {
         return mlUTime;
     }
+
+    /**
+     * Get dom hit data string.
+     *
+     * @return data string
+     */
+    public String toDataString()
+    {
+        return "dom " + mlDomId + " " +
+            (mtDomHitEngineeringFormatRecord == null ? "<noRecord>" :
+             "[" + mtDomHitEngineeringFormatRecord.toDataString() + "]");
+    }
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
+    public String toString()
+    {
+        return "EngFmtHit@" + mttime + "[" + toDataString() + "]";
+    }
 }
-
-

@@ -37,14 +37,6 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
     private ReadoutRequestRecord mt_ReadoutRequestRecord;
 
     /**
-     * true if the spliceable information has been loaded into
-     * the container variables associated with the spliceable
-     * nature of this object. False if waiting to laod only the
-     * spliceable information.
-     */
-    public boolean mb_SpliceablePayloadLoaded;
-
-    /**
      * Standard Constructor, empty to accomodate 'pooling'.
      */
     public ReadoutRequestPayload() {
@@ -267,5 +259,17 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
             tID = mt_ReadoutRequestRecord.getSourceID();
         }
         return tID;
+    }
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
+    public String toString()
+    {
+        return "ReadoutRequest" +
+            (mt_ReadoutRequestRecord == null ? "<noRecord>" :
+             "[" + mt_ReadoutRequestRecord.toDataString() + "]");
     }
 }

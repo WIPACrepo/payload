@@ -365,4 +365,16 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     {
         return mtDomHitDeltaCompressedRecord;
     }
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
+    public String toString()
+    {
+        return "DeltaHit@" + mttime + "[dom " + mlDomId + " " +
+            (mtDomHitDeltaCompressedRecord == null ? "<noRecord>" :
+             "[" + mtDomHitDeltaCompressedRecord.toDataString() + "]") + "]";
+    }
 }

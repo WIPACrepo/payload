@@ -489,6 +489,55 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
         throw new IOException("this method is not implemented yet");
     }
+
+    /**
+     * Get engineering format data string.
+     *
+     * @return data string
+     */
+    public String toDataString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append("chip ").append(miAtwdChip);
+        buf.append(" aff ").append(miaAFF[0]).append(',').append(miaAFF[1]);
+        buf.append(" trigMode ").append(miTrigMode);
+        buf.append(" fadc [");
+        for (int i = 0; i < maiFADC.length; i++) {
+            if (i > 0) {
+                buf.append(' ');
+            }
+            buf.append(Integer.toHexString((int) maiFADC[i]));
+        }
+        buf.append(']');
+        buf.append(" atwd [");
+        for (int i = 0; i < maiATWD.length; i++) {
+            if (i > 0) {
+                buf.append(',');
+            }
+            buf.append('[');
+            if (maiATWD[i] != null) {
+                for (int j = 0; j < maiATWD[i].length; j++) {
+                    if (j > 0) {
+                        buf.append(' ');
+                    }
+                    buf.append(Integer.toHexString((int) maiATWD[i][j]));
+                }
+            }
+            buf.append(']');
+        }
+        buf.append(']');
+        return buf.toString();
+    }
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
+    public String toString()
+    {
+        return "DomHitEngineeringFormatRecord[" + toDataString() + "]";
+    }
 }
 
 /**
@@ -526,5 +575,4 @@ class ATWDFormat {
     }
 
     public int numSamples() { return maiStab[miWsel]; }
-
 }

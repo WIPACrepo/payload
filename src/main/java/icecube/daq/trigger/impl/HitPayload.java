@@ -412,7 +412,11 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
         super.dispose();
     }
 
-
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
     public String toString()
     {
         return "HitPayload@" + mttime + "[type " + mi_TriggerType +

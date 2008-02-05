@@ -420,8 +420,16 @@ if (recycled == null) try { throw new Throwable("Originally recycled"); } catch 
         return iBytesWritten;
     }
 
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
     public String toString()
     {
-        return "ReadoutData[" + mt_ReadoutDataRecord.toDataString() + "]";
+        return "ReadoutData" +
+            (mt_ReadoutDataRecord == null ? "<noRecord>" :
+             "[" + mt_ReadoutDataRecord.toDataString() + "]") +
+            super.toDataString();
     }
 }

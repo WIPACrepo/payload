@@ -339,4 +339,17 @@ public class EngineeringFormatTriggerPayload  extends AbstractTriggerPayload {
         super.dispose();
     }
 
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
+    public String toString()
+    {
+        return "EngHit@" + mttime + "[cfgId " + mi_TriggerConfigID +
+            " src " + mt_sourceId +
+            (mt_EngFormatPayload == null ? "<noRecord>" :
+             "[" + mt_EngFormatPayload.toDataString() + "]") + "]";
+    }
 }
