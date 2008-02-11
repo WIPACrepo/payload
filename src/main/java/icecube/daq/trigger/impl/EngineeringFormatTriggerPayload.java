@@ -1,15 +1,10 @@
 package icecube.daq.trigger.impl;
 
-import java.util.zip.DataFormatException;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadInterfaceRegistry;
+import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayloadFactory;
 import icecube.daq.payload.impl.PayloadEnvelope;
@@ -18,6 +13,11 @@ import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.AbstractTriggerPayload;
 import icecube.util.Poolable;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.zip.DataFormatException;
 
 /**
  * This class is an implementation of ITriggerPayload for an EngineeringFormat

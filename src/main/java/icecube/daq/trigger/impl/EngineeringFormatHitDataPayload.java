@@ -1,16 +1,16 @@
 package icecube.daq.trigger.impl;
 
+import icecube.daq.payload.PayloadDestination;
+import icecube.daq.payload.PayloadInterfaceRegistry;
+import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
+import icecube.daq.payload.splicer.Payload;
+import icecube.daq.trigger.IHitDataPayload;
+import icecube.daq.trigger.IHitDataRecord;
+import icecube.util.Poolable;
+
 import java.io.IOException;
 import java.util.zip.DataFormatException;
-
-import icecube.util.Poolable;
-import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
-import icecube.daq.payload.PayloadDestination;
-import icecube.daq.payload.PayloadRegistry;
-import icecube.daq.payload.PayloadInterfaceRegistry;
-import icecube.daq.payload.splicer.Payload;
-import icecube.daq.trigger.IHitDataRecord;
-import icecube.daq.trigger.IHitDataPayload;
 
 /**
  * This object is the implementaion if IHitDataPayload which

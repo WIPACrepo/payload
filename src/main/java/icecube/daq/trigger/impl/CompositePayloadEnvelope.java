@@ -1,13 +1,13 @@
 package icecube.daq.trigger.impl;
 
-import java.nio.ByteOrder;
-import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
-import java.io.IOException;
-
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.IWriteablePayloadRecord;
+import icecube.daq.payload.PayloadDestination;
 import icecube.util.Poolable;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.zip.DataFormatException;
 
 /**
  * This object is an envelope for wrappering the internal composite payload's

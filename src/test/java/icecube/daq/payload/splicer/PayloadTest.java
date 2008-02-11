@@ -1,23 +1,18 @@
 package icecube.daq.payload.splicer;
 
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.IByteBufferCache;
-
+import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockUTCTime;
-
 import icecube.util.Poolable;
 
 import java.io.IOException;
-
 import java.nio.ByteBuffer;
-
 import java.util.zip.DataFormatException;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 class MyPayload

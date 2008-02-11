@@ -1,8 +1,9 @@
 package icecube.daq.eventbuilder;
 
 import icecube.daq.payload.ISourceID;
-import java.util.Vector;
 import icecube.daq.trigger.ICompositePayload;
+
+import java.util.Vector;
 
 /**
  * Objects which implement this interface correspond to

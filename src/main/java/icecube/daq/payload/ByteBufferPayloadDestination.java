@@ -1,8 +1,7 @@
 package icecube.daq.payload;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
-import icecube.daq.payload.splicer.Payload;
 
 /**
  * This object is a PayloadDestination that is able to write a Payload to

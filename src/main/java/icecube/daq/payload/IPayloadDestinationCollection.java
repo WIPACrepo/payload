@@ -1,7 +1,7 @@
 /*
  * interface: IPayloadDestinationCollection
  *
- * Version $Id: IPayloadDestinationCollection.java 2351 2007-12-03 17:19:40Z dglo $
+ * Version $Id: IPayloadDestinationCollection.java 2629 2008-02-11 05:48:36Z dglo $
  *
  * Date: October 19 2005
  *
@@ -10,15 +10,13 @@
 
 package icecube.daq.payload;
 
-import icecube.daq.payload.splicer.Payload;
-
-import java.util.Collection;
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * This interface defines a collection of PayloadDestinations.
  *
- * @version $Id: IPayloadDestinationCollection.java 2351 2007-12-03 17:19:40Z dglo $
+ * @version $Id: IPayloadDestinationCollection.java 2629 2008-02-11 05:48:36Z dglo $
  * @author pat
  */
 public interface IPayloadDestinationCollection

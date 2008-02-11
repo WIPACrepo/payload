@@ -1,14 +1,14 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.splicer.PayloadFactory;
-import icecube.daq.payload.splicer.Payload;
-import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IByteBufferCache;
+import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.splicer.Payload;
+import icecube.daq.payload.splicer.PayloadFactory;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
-import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

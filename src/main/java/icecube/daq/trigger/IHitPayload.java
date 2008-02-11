@@ -10,8 +10,8 @@
 
 package icecube.daq.trigger;
 
-import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IUTCTime;
 
 /**
  * Interface of a payload describing a single hit

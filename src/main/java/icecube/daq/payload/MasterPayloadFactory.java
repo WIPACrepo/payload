@@ -1,13 +1,13 @@
 package icecube.daq.payload;
 
 import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.splicer.Spliceable;
-import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.payload.splicer.Payload;
+import icecube.daq.payload.splicer.PayloadFactory;
+import icecube.daq.splicer.Spliceable;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
-import java.io.IOException;
 
 /**
  * This PayloadFactory is designed to detect Payload's by type

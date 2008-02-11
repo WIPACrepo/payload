@@ -1,19 +1,12 @@
 package icecube.daq.eventbuilder.impl;
 
-//-Java imports
-import java.util.Vector;
-import java.util.zip.DataFormatException;
-import java.io.IOException;
-
-//-icecube imports
 import icecube.daq.eventbuilder.IReadoutDataPayload;
-// import icecube.daq.eventbuilder.impl.EventPayloadFactory;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.trigger.IHitPayload;
 import icecube.daq.trigger.IHitDataPayload;
+import icecube.daq.trigger.IHitPayload;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
 import icecube.daq.trigger.ITriggerRequestPayload;
@@ -22,6 +15,9 @@ import icecube.daq.trigger.impl.HitPayloadFactory;
 import icecube.daq.trigger.impl.TriggerRequestPayload;
 import icecube.daq.trigger.impl.TriggerRequestPayloadFactory;
 
+import java.io.IOException;
+import java.util.Vector;
+import java.util.zip.DataFormatException;
 
 /**
  * This class is meant to provide a simple method

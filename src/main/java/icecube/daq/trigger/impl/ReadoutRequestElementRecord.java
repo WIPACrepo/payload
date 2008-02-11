@@ -1,18 +1,18 @@
 package icecube.daq.trigger.impl;
 
-import java.nio.ByteOrder;
-import java.nio.ByteBuffer;
-import java.io.IOException;
-import java.util.zip.DataFormatException;
-
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.IWriteablePayloadRecord;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.IWriteablePayloadRecord;
+import icecube.daq.payload.PayloadDestination;
+import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.trigger.IReadoutRequestElement;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.zip.DataFormatException;
 
 /**
  * ReadoutRequestElementRecord
@@ -284,4 +284,3 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
         return "ReadoutRequestElementRecord[" + toDataString() + "]";
     }
 }
-

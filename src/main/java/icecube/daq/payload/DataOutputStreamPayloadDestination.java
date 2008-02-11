@@ -1,8 +1,8 @@
 package icecube.daq.payload;
 
-import java.io.OutputStream;
-import java.io.IOException;
 import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 /**
@@ -499,4 +499,3 @@ public class DataOutputStreamPayloadDestination extends PayloadDestination {
     }
 
 }
-

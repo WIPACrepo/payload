@@ -1,18 +1,18 @@
 package icecube.daq.trigger.impl;
 
-import java.util.Vector;
-import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
-import java.io.IOException;
-
 import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.splicer.PayloadFactory;
-import icecube.daq.payload.splicer.Payload;
 import icecube.daq.payload.ISourceID;
+import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.splicer.Payload;
+import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.splicer.Spliceable;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.Vector;
+import java.util.zip.DataFormatException;
 
 /**
  *  This Object is able to produce ReadoutRequestPayload's either
@@ -107,4 +107,3 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
         return tElement;
     }
 }
-

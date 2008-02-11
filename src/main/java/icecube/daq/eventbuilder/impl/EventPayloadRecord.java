@@ -1,19 +1,18 @@
 package icecube.daq.eventbuilder.impl;
 
-import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.payload.PayloadDestination;
-import icecube.util.Poolable;
-
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.impl.UTCTime8B;
-import icecube.daq.payload.impl.SourceID4B;
+import icecube.daq.payload.IWriteablePayloadRecord;
+import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.RecordTypeRegistry;
+import icecube.daq.payload.impl.SourceID4B;
+import icecube.daq.payload.impl.UTCTime8B;
+import icecube.util.Poolable;
 
-import java.nio.ByteOrder;
-import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.zip.DataFormatException;
 
 /**
  * This class forms the minimal record information to distinguish

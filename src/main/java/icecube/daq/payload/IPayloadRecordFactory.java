@@ -1,8 +1,8 @@
 package icecube.daq.payload;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
-import java.io.IOException;
 
 /**
  * Objects which implement this interface are able to construct IPayloadRecords

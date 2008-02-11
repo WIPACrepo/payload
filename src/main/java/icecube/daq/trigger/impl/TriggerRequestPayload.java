@@ -1,10 +1,5 @@
 package icecube.daq.trigger.impl;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Vector;
-import java.util.zip.DataFormatException;
-
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
@@ -18,6 +13,11 @@ import icecube.daq.trigger.AbstractCompositePayload;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.ITriggerRequestPayload;
 import icecube.util.Poolable;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.Vector;
+import java.util.zip.DataFormatException;
 
 /**
  * This payload object represents a Trigger which is produced by either

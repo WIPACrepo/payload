@@ -9,8 +9,9 @@
  */
 
 package icecube.daq.trigger.impl;
-import icecube.util.Poolable;
+
 import icecube.daq.payload.IDOMID;
+import icecube.util.Poolable;
 
 /**
  * Implementation of the DOMID as a 4 byte number

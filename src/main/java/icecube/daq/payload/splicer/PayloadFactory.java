@@ -1,7 +1,7 @@
 /*
  * class: PayloadFactory
  *
- * Version $Id: PayloadFactory.java 2125 2007-10-12 18:27:05Z ksb $
+ * Version $Id: PayloadFactory.java 2629 2008-02-11 05:48:36Z dglo $
  *
  * Date: September 21 2004
  *
@@ -10,6 +10,11 @@
 
 package icecube.daq.payload.splicer;
 
+import icecube.daq.payload.IByteBufferCache;
+import icecube.daq.payload.impl.PayloadEnvelope;
+import icecube.daq.splicer.Spliceable;
+import icecube.daq.splicer.SpliceableFactory;
+import icecube.util.Poolable;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -18,19 +23,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.zip.DataFormatException;
 
-import icecube.daq.payload.IByteBufferCache;
-import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.splicer.Spliceable;
-import icecube.daq.splicer.SpliceableFactory;
-import icecube.util.Poolable;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
  * Interface for the Payload Factory (Trigger primitive)
  *
- * @version $Id: PayloadFactory.java 2125 2007-10-12 18:27:05Z ksb $
+ * @version $Id: PayloadFactory.java 2629 2008-02-11 05:48:36Z dglo $
  * @author hellwig,dwharton
  */
 public abstract class PayloadFactory

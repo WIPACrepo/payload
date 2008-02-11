@@ -1,11 +1,11 @@
 package icecube.daq.trigger.impl;
 
-import icecube.daq.payload.splicer.Payload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
+import icecube.daq.payload.splicer.Payload;
 
-import java.util.zip.DataFormatException;
 import java.io.IOException;
+import java.util.zip.DataFormatException;
 
 /**
  * This Factory class produces EngFormatHitPayload's from

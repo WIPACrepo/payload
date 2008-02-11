@@ -1,17 +1,17 @@
 package icecube.daq.trigger.impl;
 
-import java.io.IOException;
-import java.util.zip.DataFormatException;
-
-import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
+import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadDestination;
-import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.PayloadInterfaceRegistry;
+import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.IHitPayload;
-import icecube.daq.payload.IDOMID;
 import icecube.util.Poolable;
+
+import java.io.IOException;
+import java.util.zip.DataFormatException;
 
 /**
  * This object is the implementation of a single hit

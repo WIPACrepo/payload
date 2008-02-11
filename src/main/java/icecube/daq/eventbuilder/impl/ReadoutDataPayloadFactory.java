@@ -1,11 +1,11 @@
 package icecube.daq.eventbuilder.impl;
 
-import java.util.Vector;
-
 import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.splicer.CompositePayloadFactory;
+
+import java.util.Vector;
 
 /**
  *  This Factory produces IReadoutRequestPayload's from their

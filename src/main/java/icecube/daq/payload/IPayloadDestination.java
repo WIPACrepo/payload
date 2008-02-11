@@ -1,7 +1,5 @@
 package icecube.daq.payload;
 
-import icecube.daq.payload.splicer.Payload;
-
 import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.ByteBuffer;

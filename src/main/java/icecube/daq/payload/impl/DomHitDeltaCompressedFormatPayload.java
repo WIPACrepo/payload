@@ -1,9 +1,5 @@
 package icecube.daq.payload.impl;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
-
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IDomHit;
 import icecube.daq.payload.IUTCTime;
@@ -12,6 +8,10 @@ import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.impl.DOMID8B;
 import icecube.util.Poolable;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.zip.DataFormatException;
 
 /**
  * This object represents a Delta Compressed Hit from a DOM and includes

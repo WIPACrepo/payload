@@ -1,7 +1,7 @@
 /*
  * class: TriggerPayload
  *
- * Version $Id: TriggerPayload.java 2125 2007-10-12 18:27:05Z ksb $
+ * Version $Id: TriggerPayload.java 2629 2008-02-11 05:48:36Z dglo $
  *
  * Date: September 21 2004
  *
@@ -10,14 +10,14 @@
 
 package icecube.daq.trigger.impl;
 
+import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.ITriggerPayload;
-import icecube.daq.payload.ISourceID;
 
 /**
  * Abstract implementation of TriggerPayload
  *
- * @version $Id: TriggerPayload.java 2125 2007-10-12 18:27:05Z ksb $
+ * @version $Id: TriggerPayload.java 2629 2008-02-11 05:48:36Z dglo $
  * @author hellwig, dwharton
  */
 public abstract class TriggerPayload

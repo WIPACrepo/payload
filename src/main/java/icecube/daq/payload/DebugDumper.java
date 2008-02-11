@@ -2,15 +2,9 @@ package icecube.daq.payload;
 
 import icecube.daq.eventbuilder.IEventPayload;
 import icecube.daq.eventbuilder.IReadoutDataPayload;
-
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
-//import icecube.daq.payload.impl.MonitorPayload;
-
 import icecube.daq.payload.splicer.Payload;
-
-//import icecube.daq.stringproc.domhub.IDomHubPacket;
-
 import icecube.daq.trigger.IHitDataPayload;
 import icecube.daq.trigger.IHitDataRecord;
 import icecube.daq.trigger.IHitPayload;
@@ -18,19 +12,15 @@ import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
 import icecube.daq.trigger.ITriggerRequestPayload;
 
-import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
+import java.io.IOException;
 import java.nio.ByteBuffer;
-
 import java.nio.channels.FileChannel;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-
 import java.util.zip.DataFormatException;
 
 class DumpDOMID

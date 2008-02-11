@@ -1,12 +1,7 @@
 package icecube.daq.payload;
 
-//-IceCube imports
-import icecube.daq.payload.splicer.Payload;
-
-
-//-Java imports
-import java.nio.ByteBuffer;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  *  This class is meant to be a null implementation

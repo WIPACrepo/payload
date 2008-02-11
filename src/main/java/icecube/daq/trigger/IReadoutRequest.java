@@ -5,9 +5,9 @@ package icecube.daq.trigger;
  * @author dwharton,mhellwig
  */
 
+import icecube.daq.payload.ISourceID;
 
 import java.util.Vector;
-import icecube.daq.payload.ISourceID;
 
 /**
  * This Interface defines the message the EventBuilder sends

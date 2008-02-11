@@ -1,16 +1,15 @@
 package icecube.daq.payload;
 
-import java.util.zip.DataFormatException;
-import java.io.IOException;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.File;
-
-import java.nio.ByteBuffer;
-
 import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.payload.splicer.Payload;
+import icecube.daq.payload.splicer.PayloadFactory;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.zip.DataFormatException;
 
 /**
  * Simple Class to read sequential payloads which

@@ -1,11 +1,11 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.PayloadDestination;
+import icecube.util.Poolable;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
-
-import icecube.daq.payload.PayloadDestination;
-import icecube.util.Poolable;
 
 /**
  * This Object is a container for the Hardware State Event Monitor record.

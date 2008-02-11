@@ -1,19 +1,17 @@
 package icecube.daq.trigger.impl;
 
-
-
+import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.ISourceID;
+import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.splicer.CompositePayloadFactory;
 import icecube.daq.payload.splicer.Payload;
-import icecube.daq.trigger.IReadoutRequestElement;
 import icecube.daq.trigger.IReadoutRequest;
+import icecube.daq.trigger.IReadoutRequestElement;
 import icecube.daq.trigger.ITriggerRequestPayload;
-import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.IDOMID;
 
+import java.io.IOException;
 import java.util.Vector;
 import java.util.zip.DataFormatException;
-import java.io.IOException;
 
 /**
  *  This Factory produces ITriggerRequestPayloads from their

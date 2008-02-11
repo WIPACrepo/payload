@@ -1,14 +1,13 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IPayloadRecord;
+import icecube.daq.payload.PayloadDestination;
+import icecube.util.Poolable;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
-
-import icecube.daq.payload.IPayloadRecord;
-import icecube.util.Poolable;
-import icecube.daq.payload.PayloadDestination;
-
 
 /**
  * This Object is used as a repository of information

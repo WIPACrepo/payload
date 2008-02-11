@@ -1,20 +1,20 @@
 package icecube.daq.trigger.impl;
 
-import java.util.zip.DataFormatException;
-import java.util.Vector;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-
-import icecube.daq.payload.PayloadDestination;
-import icecube.daq.payload.PayloadRegistry;
-import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.impl.UTCTime8B;
-import icecube.daq.trigger.IReadoutRequest;
-import icecube.daq.payload.splicer.Payload;
-import icecube.util.Poolable;
+import icecube.daq.payload.PayloadDestination;
+import icecube.daq.payload.PayloadInterfaceRegistry;
+import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.PayloadEnvelope;
+import icecube.daq.payload.impl.UTCTime8B;
+import icecube.daq.payload.splicer.Payload;
+import icecube.daq.trigger.IReadoutRequest;
+import icecube.util.Poolable;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.Vector;
+import java.util.zip.DataFormatException;
 
 /**
  * This Payload object encapsulates an IReadoutRequest as a payload.

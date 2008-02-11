@@ -1,22 +1,22 @@
 package icecube.daq.eventbuilder.impl;
 
-import java.util.zip.DataFormatException;
-import java.io.IOException;
-import java.util.Vector;
-import java.nio.ByteBuffer;
-
-import icecube.daq.trigger.ITriggerRequestPayload;
-import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.payload.IUTCTime;
-import icecube.daq.trigger.AbstractCompositePayload;
-import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.eventbuilder.IEventPayload;
-import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.payload.ISourceID;
+import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadInterfaceRegistry;
-import icecube.util.Poolable;
+import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.payload.impl.PayloadEnvelope;
 import icecube.daq.payload.splicer.Payload;
+import icecube.daq.trigger.AbstractCompositePayload;
+import icecube.daq.trigger.ITriggerRequestPayload;
 import icecube.daq.trigger.impl.CompositePayloadEnvelope;
+import icecube.util.Poolable;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.Vector;
+import java.util.zip.DataFormatException;
 
 /**
  * This payload object represents a Event which is produced by when

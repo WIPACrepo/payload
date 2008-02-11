@@ -1,26 +1,27 @@
 package icecube.daq.payload;
-import java.util.Vector;
 
 import icecube.daq.eventbuilder.impl.EventPayloadFactory;
 import icecube.daq.eventbuilder.impl.EventPayload_v2Factory;
 import icecube.daq.eventbuilder.impl.EventPayload_v3Factory;
 import icecube.daq.eventbuilder.impl.ReadoutDataPayloadFactory;
+import icecube.daq.payload.impl.DomHitDeltaCompressedFormatPayloadFactory;
+import icecube.daq.payload.impl.DomHitEngineeringFormatPayloadFactory;
+import icecube.daq.payload.impl.MonitorPayloadFactory;
+import icecube.daq.payload.impl.SuperNovaPayloadFactory;
+import icecube.daq.payload.impl.TimeCalibrationPayloadFactory;
 import icecube.daq.payload.splicer.CompositePayloadFactory;
 import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.splicer.Spliceable;
+import icecube.daq.trigger.impl.BeaconPayloadFactory;
+import icecube.daq.trigger.impl.DeltaCompressedFormatHitDataPayloadFactory;
 import icecube.daq.trigger.impl.EngFormatHitPayloadFactory;
 import icecube.daq.trigger.impl.EngFormatTriggerPayloadFactory;
 import icecube.daq.trigger.impl.EngineeringFormatHitDataPayloadFactory;
 import icecube.daq.trigger.impl.HitPayloadFactory;
 import icecube.daq.trigger.impl.ReadoutRequestPayloadFactory;
 import icecube.daq.trigger.impl.TriggerRequestPayloadFactory;
-import icecube.daq.trigger.impl.BeaconPayloadFactory;
-import icecube.daq.trigger.impl.DeltaCompressedFormatHitDataPayloadFactory;
-import icecube.daq.payload.impl.DomHitEngineeringFormatPayloadFactory;
-import icecube.daq.payload.impl.DomHitDeltaCompressedFormatPayloadFactory;
-import icecube.daq.payload.impl.SuperNovaPayloadFactory;
-import icecube.daq.payload.impl.TimeCalibrationPayloadFactory;
-import icecube.daq.payload.impl.MonitorPayloadFactory;
+
+import java.util.Vector;
 
 /**
  * This object is a singleton object which holds the constants

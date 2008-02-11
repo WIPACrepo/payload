@@ -1,27 +1,26 @@
 package icecube.daq.trigger.impl;
 
-import java.util.zip.DataFormatException;
+import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IDomHit;
+import icecube.daq.payload.ISourceID;
+import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.IWriteablePayload;
+import icecube.daq.payload.PayloadDestination;
+import icecube.daq.payload.PayloadInterfaceRegistry;
+import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.payload.impl.PayloadEnvelope;
+import icecube.daq.payload.impl.SourceID4B;
+import icecube.daq.payload.impl.UTCTime8B;
+import icecube.daq.payload.splicer.Payload;
+import icecube.daq.trigger.AbstractTriggerPayload;
+import icecube.daq.trigger.IHitDataPayload;
+import icecube.daq.trigger.IHitPayload;
+import icecube.util.Poolable;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-import icecube.daq.payload.PayloadDestination;
-import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.IDomHit;
-import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.IWriteablePayload;
-import icecube.daq.payload.impl.UTCTime8B;
-import icecube.daq.payload.PayloadRegistry;
-import icecube.daq.payload.PayloadInterfaceRegistry;
-import icecube.util.Poolable;
-import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.payload.impl.SourceID4B;
-import icecube.daq.payload.splicer.Payload;
-import icecube.daq.trigger.IHitPayload;
-import icecube.daq.trigger.IHitDataPayload;
-import icecube.daq.trigger.AbstractTriggerPayload;
-
+import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

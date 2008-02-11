@@ -9,9 +9,9 @@ package icecube.daq.trigger;
  * (c) 2004 IceCube Collaboration
  */
 
-import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.ISourceID;
+import icecube.daq.payload.IUTCTime;
 
 /**
  * This interface describes a single readout element.

@@ -1,8 +1,10 @@
 package icecube.misc;
+
 import java.io.IOException;
-import java.util.Iterator;
 import java.io.PrintStream;
+import java.util.Iterator;
 import java.util.Stack;
+
 /**
  * This is a utility class that is intended add indenting
  * automatically for a PrintStream.

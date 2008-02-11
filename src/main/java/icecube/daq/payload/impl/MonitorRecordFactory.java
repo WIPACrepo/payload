@@ -1,11 +1,12 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.IPayloadRecordFactory;
 import icecube.daq.payload.IPayloadRecord;
+import icecube.daq.payload.IPayloadRecordFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
+
 /**
  *
  * This Factory Object is for Detecting, Constructing, and Pooling

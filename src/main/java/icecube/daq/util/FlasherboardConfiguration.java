@@ -47,7 +47,7 @@ public class FlasherboardConfiguration
 
     public void setBrightness(int b)
     {
-        brightness = b; 
+        brightness = b;
     }
 
     public int getBrightness()

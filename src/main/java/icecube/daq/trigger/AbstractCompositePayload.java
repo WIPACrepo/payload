@@ -1,20 +1,20 @@
 package icecube.daq.trigger;
 
-import java.util.zip.DataFormatException;
-import java.io.IOException;
-import java.util.Vector;
-import java.nio.ByteBuffer;
-
-import icecube.daq.payload.MasterPayloadFactory;
-import icecube.daq.trigger.impl.CompositePayloadEnvelope;
-import icecube.daq.payload.splicer.PayloadFactory;
-import icecube.daq.payload.PayloadDestination;
-import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IPayload;
+import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
+import icecube.daq.payload.MasterPayloadFactory;
+import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.splicer.Payload;
+import icecube.daq.payload.splicer.PayloadFactory;
+import icecube.daq.trigger.impl.CompositePayloadEnvelope;
 import icecube.util.Poolable;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.Vector;
+import java.util.zip.DataFormatException;
 
 /**
  * This abstract class provides the basic utility and pattern

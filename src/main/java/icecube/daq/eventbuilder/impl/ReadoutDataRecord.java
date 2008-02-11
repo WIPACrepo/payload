@@ -1,17 +1,18 @@
 package icecube.daq.eventbuilder.impl;
 
-import java.nio.ByteOrder;
-import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
-import java.io.IOException;
-
-import icecube.daq.payload.impl.UTCTime8B;
-import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayloadRecord;
 import icecube.daq.payload.PayloadDestination;
+import icecube.daq.payload.impl.SourceID4B;
+import icecube.daq.payload.impl.UTCTime8B;
 import icecube.util.Poolable;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.zip.DataFormatException;
+
 /**
  * This class represents the data associated with
  * and an implementation of the on-the-wire format with

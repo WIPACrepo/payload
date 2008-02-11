@@ -1,7 +1,7 @@
 package icecube.daq.trigger.impl;
 
-import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 import icecube.daq.payload.splicer.Payload;

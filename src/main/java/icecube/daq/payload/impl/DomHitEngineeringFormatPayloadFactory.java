@@ -2,9 +2,9 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.splicer.PayloadFactory;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
-import java.io.IOException;
 
 /**
  * This Factory class produces DomHitEngineeringFormatPayload's from

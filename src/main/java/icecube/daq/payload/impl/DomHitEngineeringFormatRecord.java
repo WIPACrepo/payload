@@ -1,15 +1,15 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IWriteablePayloadRecord;
+import icecube.daq.payload.PayloadDestination;
+import icecube.daq.payload.RecordTypeRegistry;
+import icecube.daq.trigger.IHitDataRecord;
+import icecube.util.Poolable;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
-
-import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.trigger.IHitDataRecord;
-import icecube.daq.payload.RecordTypeRegistry;
-import icecube.daq.payload.PayloadDestination;
-import icecube.util.Poolable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

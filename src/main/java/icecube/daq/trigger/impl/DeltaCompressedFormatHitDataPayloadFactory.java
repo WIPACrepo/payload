@@ -1,12 +1,12 @@
 package icecube.daq.trigger.impl;
 
-import java.io.IOException;
-import java.util.zip.DataFormatException;
-
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.impl.DomHitDeltaCompressedFormatPayload;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.payload.splicer.PayloadFactory;
+
+import java.io.IOException;
+import java.util.zip.DataFormatException;
 
 /**
  * This Factory class produces DeltaCompressedFormatHitDataPayload from
@@ -57,4 +57,3 @@ public class DeltaCompressedFormatHitDataPayloadFactory extends PayloadFactory {
     }
 
 }
-

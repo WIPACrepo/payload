@@ -1,12 +1,12 @@
 package icecube.daq.trigger;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.ISourceID;
+import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.impl.PayloadEnvelope;
 import icecube.daq.payload.splicer.Payload;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * This class is an abstract implementation of ITriggerPayload
@@ -67,4 +67,3 @@ public abstract class AbstractTriggerPayload  extends Payload implements ITrigge
         return writePayload(false, tDestination);
     }
 }
-

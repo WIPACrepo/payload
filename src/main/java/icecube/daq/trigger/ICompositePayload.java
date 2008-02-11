@@ -10,10 +10,10 @@
 
 package icecube.daq.trigger;
 
+import icecube.daq.payload.IUTCTime;
+
 import java.io.IOException;
 import java.util.Vector;
-
-import icecube.daq.payload.IUTCTime;
 import java.util.zip.DataFormatException;
 
 /**

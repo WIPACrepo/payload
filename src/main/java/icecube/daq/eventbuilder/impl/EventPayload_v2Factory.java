@@ -1,16 +1,16 @@
 package icecube.daq.eventbuilder.impl;
 
-import java.util.Vector;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.splicer.CompositePayloadFactory;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.trigger.ITriggerRequestPayload;
+
+import java.util.Vector;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *  This Factory produces IEventPayload's from their

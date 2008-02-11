@@ -1,13 +1,14 @@
 package icecube.daq.eventbuilder.impl;
 
-import java.util.Vector;
-
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.splicer.CompositePayloadFactory;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.ITriggerRequestPayload;
 import icecube.daq.trigger.impl.TriggerRequestPayload;
+
+import java.util.Vector;
+
 /**
  *  This Factory produces IEventPayload's from their
  *  consituent parts, or is able to read/produce them from

@@ -6,8 +6,8 @@
 
 package icecube.daq.trigger;
 
-import java.util.zip.DataFormatException;
 import java.io.IOException;
+import java.util.zip.DataFormatException;
 
 /**
  * Interface of a payload describing a single hit and its associated engineering format

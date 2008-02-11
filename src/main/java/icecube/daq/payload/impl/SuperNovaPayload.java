@@ -1,16 +1,16 @@
 package icecube.daq.payload.impl;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.zip.DataFormatException;
-
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.impl.DOMID8B;
 import icecube.util.Poolable;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.zip.DataFormatException;
 
 /**
  * This object represents a SuperNova Payload.
@@ -244,4 +244,3 @@ public class SuperNovaPayload extends Payload {
         return lDomClock;
     }
 }
-

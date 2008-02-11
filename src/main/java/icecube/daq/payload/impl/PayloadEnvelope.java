@@ -1,14 +1,13 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IWriteablePayloadRecord;
+import icecube.daq.payload.PayloadDestination;
+import icecube.util.Poolable;
 
-import java.util.zip.DataFormatException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-import icecube.util.Poolable;
-import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.payload.PayloadDestination;
+import java.util.zip.DataFormatException;
 
 /**
  * This is a utility Class to assist in the packaging/unpackaging of the TestDAQ
@@ -248,4 +247,3 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
         return iRecLength;
     }
 }
-

@@ -2,9 +2,7 @@ package icecube.daq.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -25,23 +23,21 @@ import org.xml.sax.helpers.DefaultHandler;
 public class DOMRegistry extends DefaultHandler
 {
 	private StringBuffer xmlChars;
-	private boolean isInitialized;
 	private HashMap<String, DeployedDOM> doms;
 	private DeployedDOM currentDOM;
 	private static final String DEFAULT_DOM_GEOMETRY = "default-dom-geometry.xml";
-	
+
 	protected DOMRegistry()
 	{
 		xmlChars = new StringBuffer();
-		isInitialized = false;
 		currentDOM = new DeployedDOM();
 		doms = new HashMap<String, DeployedDOM>();
 	}
-	
-	public static DOMRegistry loadRegistry(String path) throws 
-	ParserConfigurationException, 
+
+	public static DOMRegistry loadRegistry(String path) throws
+	ParserConfigurationException,
 	SAXException, IOException
-	{ 
+	{
 		File file = new File(path, DEFAULT_DOM_GEOMETRY);
 		FileInputStream is = new FileInputStream(file);
 		SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -49,10 +45,9 @@ public class DOMRegistry extends DefaultHandler
 		SAXParser parser = factory.newSAXParser();
 		DOMRegistry reg = new DOMRegistry();
 		parser.parse(is, reg);
-		reg.isInitialized = true;
 		return reg;
-	}	
-	
+	}
+
 	/**
 	 * Lookup DOM Id given mainboard Id
 	 * @param mbid input DOM mainboard id - the 12-char hex
@@ -62,7 +57,7 @@ public class DOMRegistry extends DefaultHandler
 	{
 		return doms.get(mbid).domId;
 	}
-	
+
 	/**
 	 * Lookup Krasberg name of DOM given mainboard Id.
 	 * @param mbid input DOM mainboard id.
@@ -72,12 +67,12 @@ public class DOMRegistry extends DefaultHandler
 	{
 		return doms.get(mbid).name;
 	}
-	
+
 	public int getStringMajor(String mbid)
 	{
 		return doms.get(mbid).getStringMajor();
 	}
-	
+
 	public int getStringMinor(String mbid)
 	{
 		return doms.get(mbid).getStringMinor();
@@ -92,28 +87,28 @@ public class DOMRegistry extends DefaultHandler
 	public ArrayList<DeployedDOM> getDomsOnString(int string)
 	{
 		ArrayList<DeployedDOM> rlist = new ArrayList<DeployedDOM>(60);
-		for (DeployedDOM dom : doms.values()) if (string == dom.string) rlist.add(dom); 
+		for (DeployedDOM dom : doms.values()) if (string == dom.string) rlist.add(dom);
 		return rlist;
 	}
-	
+
 	@Override
-	public void characters(char[] ch, int start, int length) throws SAXException 
+	public void characters(char[] ch, int start, int length) throws SAXException
 	{
 		super.characters(ch, start, length);
 		xmlChars.append(ch, start, length);
 	}
 
 	@Override
-	public void startElement(String uri, String localName, String qName, 
-			Attributes attributes) throws SAXException 
+	public void startElement(String uri, String localName, String qName,
+			Attributes attributes) throws SAXException
 	{
 		super.startElement(uri, localName, qName, attributes);
 		xmlChars.setLength(0);
 	}
 
 	@Override
-	public void endElement(String uri, String localName, String qName) 
-	throws SAXException 
+	public void endElement(String uri, String localName, String qName)
+	throws SAXException
 	{
 		super.endElement(uri, localName, qName);
 		String txt = xmlChars.toString().trim();

@@ -1,10 +1,8 @@
 package icecube.daq.trigger.impl;
 
 import icecube.daq.payload.PayloadRegistry;
-
-import icecube.daq.payload.impl.DomHitDeltaCompressedFormatRecord;
 import icecube.daq.payload.impl.DomHitDeltaCompressedFormatPayload;
-
+import icecube.daq.payload.impl.DomHitDeltaCompressedFormatRecord;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockSourceID;
@@ -15,7 +13,6 @@ import java.nio.ByteOrder;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 public class DeltaCompressedFormatHitDataPayloadTest

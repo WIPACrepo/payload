@@ -1,18 +1,18 @@
 package icecube.daq.trigger.impl;
 
-import java.nio.ByteOrder;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
-import java.util.Vector;
-
 import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.IWriteablePayloadRecord;
+import icecube.daq.payload.PayloadDestination;
+import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
-import icecube.daq.payload.PayloadDestination;
 import icecube.util.Poolable;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Vector;
+import java.util.zip.DataFormatException;
 
 /**
  * This object contains the data representing a single

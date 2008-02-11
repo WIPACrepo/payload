@@ -1,11 +1,11 @@
 package icecube.daq.payload.splicer;
 
+import icecube.daq.payload.ILoadablePayload;
+
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import icecube.daq.payload.ILoadablePayload;
 
 /**
  * This Object extends PayloadFactory to the extent that

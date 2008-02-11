@@ -1,11 +1,5 @@
 package icecube.daq.eventbuilder.impl;
 
-
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.Vector;
-import java.util.zip.DataFormatException;
-
 import icecube.daq.eventbuilder.IReadoutDataPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
@@ -18,6 +12,11 @@ import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.AbstractCompositePayload;
 import icecube.daq.trigger.impl.CompositePayloadEnvelope;
 import icecube.util.Poolable;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.Vector;
+import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

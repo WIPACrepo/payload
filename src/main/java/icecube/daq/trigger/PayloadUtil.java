@@ -14,12 +14,12 @@ import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IPayload;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 
-import java.util.List;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.zip.DataFormatException;
-import java.io.IOException;
 
 /**
  * Payload utility methods.

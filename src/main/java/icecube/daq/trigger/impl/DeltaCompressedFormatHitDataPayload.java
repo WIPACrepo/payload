@@ -1,12 +1,5 @@
 package icecube.daq.trigger.impl;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
@@ -23,6 +16,13 @@ import icecube.daq.trigger.AbstractTriggerPayload;
 import icecube.daq.trigger.IHitDataPayload;
 import icecube.daq.trigger.IHitDataRecord;
 import icecube.util.Poolable;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.zip.DataFormatException;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This object is the implementaion if IHitDataPayload which

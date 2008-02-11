@@ -1,9 +1,10 @@
 package icecube.daq.payload.impl;
 
+import icecube.util.Poolable;
+
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
-import java.io.IOException;
-import icecube.util.Poolable;
 
 /**
  * This Class is a MonitorRecord of the type Generic. This

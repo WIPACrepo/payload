@@ -1,7 +1,7 @@
 /*
  * class: Payload
  *
- * Version $Id: Payload.java 2205 2007-10-29 20:44:05Z dglo $
+ * Version $Id: Payload.java 2629 2008-02-11 05:48:36Z dglo $
  *
  * Date: September 21 2004
  *
@@ -9,20 +9,21 @@
  */
 
 package icecube.daq.payload.splicer;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
 
 import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IPayload;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.impl.PayloadEnvelope;
 import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.splicer.Spliceable;
 import icecube.util.Poolable;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * Payload implements the IPayload interface and the Spliceable interface
  * It contains trigger information that is send through the DAQ system
  *
- * @version $Id: Payload.java 2205 2007-10-29 20:44:05Z dglo $
+ * @version $Id: Payload.java 2629 2008-02-11 05:48:36Z dglo $
  * @author hellwig,dwharton
  *
  * 8/24/2005 dbw
