@@ -11,7 +11,6 @@ import java.util.Vector;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 public class EventPayload_v3FactoryTest

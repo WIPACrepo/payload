@@ -7,15 +7,11 @@ import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
-
 import icecube.daq.trigger.IHitPayload;
-
 import icecube.util.Poolable;
 
 import java.io.IOException;
-
 import java.nio.ByteBuffer;
-
 import java.util.zip.DataFormatException;
 
 public class MockHit

@@ -1,7 +1,7 @@
 /*
  * class: IUTCTime
  *
- * Version $Id: IUTCTime.java 2125 2007-10-12 18:27:05Z ksb $
+ * Version $Id: IUTCTime.java 2631 2008-02-11 06:27:31Z dglo $
  *
  * Date: September 18 2004
  *
@@ -11,12 +11,13 @@
 package icecube.daq.payload;
 
 import icecube.util.ICopyable;
+
 /**
  * This interface defines a UTC timestamp in 1/10 second resolution
  * as defined by the DOR time definition.  Nanosec time difference
  * is available computed as a double.
  *
- * @version $Id: IUTCTime.java 2125 2007-10-12 18:27:05Z ksb $
+ * @version $Id: IUTCTime.java 2631 2008-02-11 06:27:31Z dglo $
  * @author hellwig,dwharton
  */
 public interface IUTCTime extends Comparable, ICopyable {

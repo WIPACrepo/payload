@@ -1,7 +1,6 @@
 package icecube.daq.payload;
 
 import java.io.IOException;
-
 import java.util.zip.DataFormatException;
 
 /**

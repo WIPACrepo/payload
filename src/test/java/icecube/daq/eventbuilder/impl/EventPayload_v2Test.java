@@ -1,7 +1,6 @@
 package icecube.daq.eventbuilder.impl;
 
 import icecube.daq.payload.PayloadRegistry;
-
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockHit;
@@ -12,13 +11,11 @@ import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
 
 import java.nio.ByteBuffer;
-
 import java.util.ArrayList;
 import java.util.Vector;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 public class EventPayload_v2Test

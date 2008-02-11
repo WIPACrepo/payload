@@ -252,4 +252,3 @@ public class DomHitDeltaCompressedFormatUtility {
         return ldomClock;
     }
 }
-

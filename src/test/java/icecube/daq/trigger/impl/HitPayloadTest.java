@@ -4,30 +4,24 @@ import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadDestination;
-
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
 import icecube.daq.payload.impl.SourceID4B;
-
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDOMID;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
-
 import icecube.daq.trigger.IHitDataPayload;
 import icecube.daq.trigger.IHitDataRecord;
 
 import java.io.IOException;
-
 import java.nio.ByteBuffer;
-
 import java.util.zip.DataFormatException;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 class MockHitData

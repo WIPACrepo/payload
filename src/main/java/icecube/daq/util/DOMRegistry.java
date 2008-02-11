@@ -14,7 +14,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-
 /**
  * The DOM registry is a utility class for looking up DOM information.
  * @author krokodil

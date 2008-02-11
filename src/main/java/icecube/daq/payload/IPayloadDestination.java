@@ -4,7 +4,6 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-
 /**
  * Objects which implement this interface act to provide
  * a destination to which Payload's may be written. This

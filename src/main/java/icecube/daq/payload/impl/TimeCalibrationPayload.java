@@ -486,5 +486,3 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
 
     //-TimeCalibRecord implementation end
 }
-
-

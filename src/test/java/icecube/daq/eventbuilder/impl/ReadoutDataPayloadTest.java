@@ -1,25 +1,21 @@
 package icecube.daq.eventbuilder.impl;
 
 import icecube.daq.payload.PayloadRegistry;
-
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockHit;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
-
 import icecube.daq.trigger.IHitPayload;
 
 import java.nio.ByteBuffer;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 public class ReadoutDataPayloadTest

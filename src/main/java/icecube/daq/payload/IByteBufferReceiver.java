@@ -1,4 +1,5 @@
 package icecube.daq.payload;
+
 import java.nio.ByteBuffer;
 
 /**

@@ -8,12 +8,10 @@ import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
 
 import java.nio.ByteBuffer;
-
 import java.util.ArrayList;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 public class ReadoutDataRecordTest

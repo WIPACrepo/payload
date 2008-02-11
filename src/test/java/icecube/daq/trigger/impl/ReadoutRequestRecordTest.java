@@ -6,18 +6,15 @@ import icecube.daq.payload.test.MockReadoutRequest;
 import icecube.daq.payload.test.MockReadoutRequestElement;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.TestUtil;
-
 import icecube.daq.trigger.IReadoutRequestElement;
 
 import java.nio.ByteBuffer;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 public class ReadoutRequestRecordTest

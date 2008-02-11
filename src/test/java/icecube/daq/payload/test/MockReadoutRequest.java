@@ -1,7 +1,6 @@
 package icecube.daq.payload.test;
 
 import icecube.daq.payload.ISourceID;
-
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
 

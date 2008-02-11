@@ -2,17 +2,14 @@ package icecube.daq.payload.test;
 
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.RecordTypeRegistry;
-
 import icecube.daq.trigger.IHitPayload;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
 import icecube.daq.trigger.ITriggerRequestPayload;
 
 import java.lang.reflect.Array;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
 import java.util.ArrayList;
 import java.util.List;
 

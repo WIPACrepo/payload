@@ -31,4 +31,3 @@ public interface ITriggerRequestPayload extends ICompositePayload  {
      */
     IReadoutRequest getReadoutRequest();
 }
-
