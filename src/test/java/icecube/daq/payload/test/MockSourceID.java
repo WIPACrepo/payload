@@ -1,6 +1,7 @@
 package icecube.daq.payload.test;
 
 import icecube.daq.payload.ISourceID;
+import icecube.daq.payload.SourceIdRegistry;
 import icecube.util.Poolable;
 
 public class MockSourceID
@@ -18,9 +19,7 @@ public class MockSourceID
     {
         if (obj == null) {
             return 1;
-        }
-
-        if (!(obj instanceof ISourceID)) {
+        } else if (!(obj instanceof ISourceID)) {
             return getClass().getName().compareTo(obj.getClass().getName());
         }
 
@@ -42,6 +41,11 @@ public class MockSourceID
         // do nothing
     }
 
+    public boolean equals(Object obj)
+    {
+        return compareTo(obj) == 0;
+    }
+
     /**
      * Get an object from the pool in a non-static context.
      *
@@ -57,11 +61,27 @@ public class MockSourceID
         return id;
     }
 
+    public int hashCode()
+    {
+        return id;
+    }
+
     /**
      * Object knows how to recycle itself
      */
     public void recycle()
     {
         // do nothing
+    }
+
+    /**
+     * Get the string representation of this source ID.
+     *
+     * @return DAQName#DAQId
+     */
+    public String toString()
+    {
+        return SourceIdRegistry.getDAQNameFromSourceID(id) + "#" +
+            SourceIdRegistry.getDAQIdFromSourceID(id);
     }
 }
