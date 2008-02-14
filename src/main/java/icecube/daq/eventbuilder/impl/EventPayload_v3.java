@@ -1,8 +1,8 @@
 package icecube.daq.eventbuilder.impl;
 
 import icecube.daq.eventbuilder.IEventPayload;
-import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ILoadablePayload;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadInterfaceRegistry;
