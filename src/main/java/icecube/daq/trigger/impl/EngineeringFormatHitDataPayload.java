@@ -1,6 +1,6 @@
 package icecube.daq.trigger.impl;
 
-import icecube.daq.payload.PayloadDestination;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
@@ -74,7 +74,7 @@ public class EngineeringFormatHitDataPayload extends EngineeringFormatHitPayload
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[EngineeringFormatHitDataPayload]=>").indent();
         iBytesWritten = super.writePayload(bWriteLoaded, tDestination);

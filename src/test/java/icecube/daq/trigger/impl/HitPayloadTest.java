@@ -1,9 +1,9 @@
 package icecube.daq.trigger.impl;
 
 import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
 import icecube.daq.payload.impl.SourceID4B;
@@ -127,7 +127,7 @@ class MockHitData
         throw new Error("Unimplemented");
     }
 
-    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+    public int writePayload(boolean writeLoaded, IPayloadDestination pDest)
         throws IOException
     {
         throw new Error("Unimplemented");

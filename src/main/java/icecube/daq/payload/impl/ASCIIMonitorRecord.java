@@ -1,6 +1,6 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.PayloadDestination;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.util.Poolable;
 
 import java.io.IOException;
@@ -95,7 +95,7 @@ import java.util.zip.DataFormatException;
      *
      * @throws IOException if an erroroccurs during the process
      */
-    public int writeRecord(PayloadDestination tDestination) throws IOException {
+    public int writeRecord(IPayloadDestination tDestination) throws IOException {
         int iBytes = super.writeRecord(tDestination);
         if (tDestination.doLabel()) tDestination.label("[ASCIIMonitorRecord] {").indent();
         iBytes += msASCIIString.length(); tDestination.writeChars(LABEL_ASCII_TEXT,this.msASCIIString);

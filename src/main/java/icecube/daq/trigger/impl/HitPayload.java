@@ -2,10 +2,10 @@ package icecube.daq.trigger.impl;
 
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IDomHit;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.PayloadEnvelope;
@@ -206,7 +206,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[HitPayload]=>").indent();
         //-Check to make sure if this is a payload that has been loaded with backing

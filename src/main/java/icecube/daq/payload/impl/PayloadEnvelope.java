@@ -1,7 +1,7 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.payload.PayloadDestination;
 import icecube.util.Poolable;
 
 import java.io.IOException;
@@ -135,7 +135,7 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
      *
      * @exception IOException if errors are detected writing the record
      */
-    public int writeData(PayloadDestination tDestination) throws IOException {
+    public int writeData(IPayloadDestination tDestination) throws IOException {
         if (tDestination.doLabel()) tDestination.label("[PayloadEnvelope]=>").indent();
         tDestination.writeInt(PAYLOADLEN,  miPayloadLen);
         tDestination.writeInt(PAYLOADTYPE, miPayloadType);

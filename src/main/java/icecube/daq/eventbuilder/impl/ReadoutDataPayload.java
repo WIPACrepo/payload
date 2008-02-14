@@ -1,10 +1,10 @@
 package icecube.daq.eventbuilder.impl;
 
 import icecube.daq.eventbuilder.IReadoutDataPayload;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.PayloadEnvelope;
@@ -387,7 +387,7 @@ if (recycled == null) try { throw new Throwable("Originally recycled"); } catch 
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
         if (tDestination.doLabel()) tDestination.label("[ReadoutDataPayload]=>").indent();
         int iBytesWritten = 0;
         //-If backing then use it..

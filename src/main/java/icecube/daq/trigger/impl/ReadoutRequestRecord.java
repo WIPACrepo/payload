@@ -1,8 +1,8 @@
 package icecube.daq.trigger.impl;
 
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
@@ -128,7 +128,7 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
      * @param tDestination PayloadDestination to which to write this record.
      * @return the number of bytes written.
      */
-    public int writeData(PayloadDestination tDestination) throws IOException {
+    public int writeData(IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = SIZE_HEADER;
         if (tDestination.doLabel()) tDestination.label("[ReadoutRequestRecord]=>").indent();
         //-write request-type (including endianness)

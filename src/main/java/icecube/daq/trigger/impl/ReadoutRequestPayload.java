@@ -1,8 +1,8 @@
 package icecube.daq.trigger.impl;
 
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.PayloadEnvelope;
@@ -144,7 +144,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(PayloadDestination tDestination) throws IOException {
+    public int writePayload(IPayloadDestination tDestination) throws IOException {
         return writePayload(false, tDestination);
     }
 
@@ -187,7 +187,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
         if (tDestination.doLabel()) tDestination.label("[ReadoutRequestPayload]=>").indent();
         int iLength = 0;
         if (mtbuffer != null && !bWriteLoaded ) {

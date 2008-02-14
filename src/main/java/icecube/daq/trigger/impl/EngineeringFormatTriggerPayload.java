@@ -1,8 +1,8 @@
 package icecube.daq.trigger.impl;
 
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
@@ -203,7 +203,7 @@ public class EngineeringFormatTriggerPayload  extends AbstractTriggerPayload {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
         if (tDestination.doLabel()) tDestination.label("[EngineeringFormatTriggerPayload]=>").indent();
         int iBytesWritten = 0;
         //-Check to make sure if this is a payload that has been loaded with backing

@@ -1,9 +1,9 @@
 package icecube.daq.eventbuilder.impl;
 
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.RecordTypeRegistry;
 import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.impl.UTCTime8B;
@@ -221,7 +221,7 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
      * Method to write this record to the payload destination.
      * @param tDestination PayloadDestination to which to write this record.
      */
-    public int writeData(PayloadDestination tDestination) throws IOException {
+    public int writeData(IPayloadDestination tDestination) throws IOException {
         //-eventually will switch to new format
         //if (tDestination.doLabel()) tDestination.group("[EventPayloadRecord_v2]");
         //-use old format for now

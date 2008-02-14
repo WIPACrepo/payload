@@ -1,7 +1,7 @@
 package icecube.daq.payload.splicer;
 
 import icecube.daq.payload.IByteBufferCache;
-import icecube.daq.payload.PayloadDestination;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockUTCTime;
@@ -81,7 +81,7 @@ class MyPayload
         super.loadSpliceablePayload();
     }
 
-    public int writePayload(PayloadDestination dest)
+    public int writePayload(IPayloadDestination dest)
         throws IOException
     {
         throw new Error("Unimplemented");

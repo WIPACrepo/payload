@@ -19,7 +19,7 @@ public interface IWriteablePayloadRecord extends IPayloadRecord {
      * @param tDestination PayloadDestination to which to write this record.
      * @return the number of bytes written to this destination.
      */
-    int writeData(PayloadDestination tDestination) throws IOException;
+    int writeData(IPayloadDestination tDestination) throws IOException;
 
     /**
      * Method to write this record to the payload destination.

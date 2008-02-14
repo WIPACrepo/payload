@@ -1,7 +1,7 @@
 package icecube.daq.trigger;
 
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.impl.PayloadEnvelope;
 import icecube.daq.payload.splicer.Payload;
 
@@ -63,7 +63,7 @@ public abstract class AbstractTriggerPayload  extends Payload implements ITrigge
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(PayloadDestination tDestination) throws IOException {
+    public int writePayload(IPayloadDestination tDestination) throws IOException {
         return writePayload(false, tDestination);
     }
 }

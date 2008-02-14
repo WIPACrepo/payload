@@ -1,7 +1,7 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.PayloadDestination;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.impl.DOMID8B;
@@ -156,7 +156,7 @@ public class MonitorPayload extends Payload {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(PayloadDestination tDestination) throws IOException {
+    public int writePayload(IPayloadDestination tDestination) throws IOException {
         return writePayload(false, tDestination);
     }
     /**
@@ -169,7 +169,7 @@ public class MonitorPayload extends Payload {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[MonitorPayload]=>").indent();
         if (!bWriteLoaded) {
@@ -198,7 +198,7 @@ public class MonitorPayload extends Payload {
      *                      type destinations because normally the byte-buffer backing will be used to write out
      *                      to destinations at a higher level.
      */
-    protected int writeMonitorRecord(PayloadDestination tDestination) throws IOException {
+    protected int writeMonitorRecord(IPayloadDestination tDestination) throws IOException {
         if (mtMonitorRecord != null) {
             return mtMonitorRecord.writeRecord(tDestination);
         } else {

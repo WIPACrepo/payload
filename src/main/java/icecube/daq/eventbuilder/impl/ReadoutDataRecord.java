@@ -1,9 +1,9 @@
 package icecube.daq.eventbuilder.impl;
 
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.impl.UTCTime8B;
 import icecube.util.Poolable;
@@ -213,7 +213,7 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
      * @param tDestination PayloadDestination to which to write this record.
      * @return the number of bytes written.
      */
-    public int writeData(PayloadDestination tDestination) throws IOException {
+    public int writeData(IPayloadDestination tDestination) throws IOException {
         if (tDestination.doLabel()) tDestination.label("[ReadoutDataRecord]=>").indent();
         tDestination.writeShort( REC_TYPE        , msi_RecType                      );
         tDestination.writeInt(   UID             , mi_UID                           );

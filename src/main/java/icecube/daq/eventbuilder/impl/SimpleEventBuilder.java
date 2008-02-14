@@ -28,7 +28,7 @@ import java.util.zip.DataFormatException;
  * input of a Vector of HitDataPayloads from which
  * will be constructed the appropriate TriggerRequestPayloads
  * and ReadoutDataPayloads to construct an EventPayload.
- * This will be written to the givent PayloadDestination.
+ * This will be written to the given destination.
  *
  * @author dwharton
  */

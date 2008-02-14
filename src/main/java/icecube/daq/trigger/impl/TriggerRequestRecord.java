@@ -1,9 +1,9 @@
 package icecube.daq.trigger.impl;
 
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.RecordTypeRegistry;
 import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.impl.UTCTime8B;
@@ -211,7 +211,7 @@ public class TriggerRequestRecord extends Poolable implements IWriteablePayloadR
      * @param tDestination PayloadDestination to which to write this record.
      * @return the number of bytes written.
      */
-    public int writeData(PayloadDestination tDestination) throws IOException {
+    public int writeData(IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = SIZE_HDR_PORTION;
         if (tDestination.doLabel()) tDestination.label("[TriggerRequestRecord]=>").indent();
         tDestination.writeShort(  REC_TYPE           ,       msi_RecType                     );

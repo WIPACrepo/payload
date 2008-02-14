@@ -2,10 +2,10 @@ package icecube.daq.payload.test;
 
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.ILoadablePayload;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.trigger.IHitPayload;
 import icecube.util.Poolable;
@@ -164,7 +164,7 @@ public class MockHit
         failDeepCopy = fail;
     }
 
-    public int writePayload(boolean b0, PayloadDestination x1)
+    public int writePayload(boolean b0, IPayloadDestination x1)
         throws IOException
     {
         throw new Error("Unimplemented");

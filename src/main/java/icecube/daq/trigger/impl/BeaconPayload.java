@@ -1,9 +1,9 @@
 package icecube.daq.trigger.impl;
 
 import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
@@ -137,7 +137,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(PayloadDestination tDestination) throws IOException {
+    public int writePayload(IPayloadDestination tDestination) throws IOException {
         return writePayload(false, tDestination);
     }
 
@@ -195,7 +195,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[BeaconPayload]=>").indent();
         //-Check to make sure if this is a payload that has been loaded with backing

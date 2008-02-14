@@ -1,7 +1,7 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.payload.PayloadDestination;
 import icecube.util.Poolable;
 
 import java.io.IOException;
@@ -240,7 +240,7 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
      *
      * @see IWriteablePayloadRecord
      */
-    public int writeData(PayloadDestination tDestination) throws IOException {
+    public int writeData(IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = 0;
 
         //-delimit the beginning of the record.

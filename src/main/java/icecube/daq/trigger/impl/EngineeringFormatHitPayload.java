@@ -1,8 +1,8 @@
 package icecube.daq.trigger.impl;
 
 import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
@@ -140,7 +140,7 @@ public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[EngineeringFormatHitPayload]=>").indent();
         iBytesWritten = super.writePayload(bWriteLoaded, tDestination);

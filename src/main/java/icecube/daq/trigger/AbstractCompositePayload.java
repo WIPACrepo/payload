@@ -2,10 +2,10 @@ package icecube.daq.trigger;
 
 import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IPayload;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.MasterPayloadFactory;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.trigger.impl.CompositePayloadEnvelope;
@@ -156,7 +156,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
      *
      * @throws IOException if an error occurs during the process
      */
-    protected int writeCompositePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
+    protected int writeCompositePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[writeCompositePayload(bWriteLoaded="+(bWriteLoaded?"true":"false")+")]=>").indent();
         mt_CompositeEnvelope.writeData(tDestination);

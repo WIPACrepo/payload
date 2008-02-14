@@ -2,8 +2,8 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IDomHit;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.impl.DOMID8B;
@@ -177,7 +177,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      *
      * @param tDestination PayloadDestination
      */
-    private int writeTestDaqHdr(PayloadDestination tDestination) throws IOException {
+    private int writeTestDaqHdr(IPayloadDestination tDestination) throws IOException {
         //-read from the current position the data necessary to construct the spliceable.
         //--This might not be necessary
         //synchronized (mtbuffer) {
@@ -414,7 +414,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(PayloadDestination tDestination) throws IOException {
+    public int writePayload(IPayloadDestination tDestination) throws IOException {
         return writePayload(false, tDestination);
     }
     /**
@@ -430,7 +430,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
         int iLength = 0;
         if (tDestination.doLabel()) tDestination.label("[DomHitEngineeringFormatPayload] {").indent();
         if (bWriteLoaded) {

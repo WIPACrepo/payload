@@ -1,7 +1,7 @@
 package icecube.daq.payload.splicer;
 
 import icecube.daq.payload.IByteBufferCache;
-import icecube.daq.payload.PayloadDestination;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.util.Poolable;
 
@@ -41,7 +41,7 @@ class FooPayload
         throw new Error("Unimplemented");
     }
 
-    public int writePayload(PayloadDestination dest)
+    public int writePayload(IPayloadDestination dest)
         throws IOException
     {
         throw new Error("Unimplemented");

@@ -1,7 +1,7 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.RecordTypeRegistry;
 import icecube.daq.trigger.IHitDataRecord;
 import icecube.util.Poolable;
@@ -393,7 +393,7 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
      * @param tDestination PayloadDestination to which to write this record.
      * @return the number of bytes written to this destination.
      */
-    public int writeData(PayloadDestination tDestination) throws IOException {
+    public int writeData(IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[DomHitEngineeringFormatRecord] {").indent();
         //-write the record length

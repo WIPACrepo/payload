@@ -1,7 +1,7 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IPayloadRecord;
-import icecube.daq.payload.PayloadDestination;
 import icecube.util.Poolable;
 
 import java.io.IOException;
@@ -335,7 +335,7 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
      *
      * @throws IOException if an erroroccurs during the process
      */
-    public int writeRecord(PayloadDestination tDestination) throws IOException {
+    public int writeRecord(IPayloadDestination tDestination) throws IOException {
         int iBytes = 0;
         if (tDestination.doLabel()) tDestination.label("[MonitorRecord] {").indent();
         iBytes += 2; tDestination.writeShort(LABEL_RECLEN,(short) this.msiRecLen);

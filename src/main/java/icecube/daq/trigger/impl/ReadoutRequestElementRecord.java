@@ -1,10 +1,10 @@
 package icecube.daq.trigger.impl;
 
 import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.trigger.IReadoutRequestElement;
@@ -126,7 +126,7 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
      * @param tDestination PayloadDestination to which to write this record.
      * @return the number of bytes written.
      */
-    public int writeData(PayloadDestination tDestination) throws IOException {
+    public int writeData(IPayloadDestination tDestination) throws IOException {
         //-write out READOUT_TYPE
         tDestination.writeInt( READOUT_TYPE, mi_readoutType);
         //-write out OFFSET_SOURCEID

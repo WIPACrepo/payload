@@ -325,7 +325,7 @@ class DumpEventV2
         throw new Error("Unimplemented");
     }
 
-    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+    public int writePayload(boolean writeLoaded, IPayloadDestination pDest)
         throws IOException
     {
         throw new Error("Unimplemented");
@@ -482,7 +482,7 @@ class DumpHitSimple
         throw new Error("Unimplemented");
     }
 
-    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+    public int writePayload(boolean writeLoaded, IPayloadDestination pDest)
         throws IOException
     {
         throw new Error("Unimplemented");
@@ -610,7 +610,7 @@ class DumpHitEngFmt
         throw new Error("Unimplemented");
     }
 
-    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+    public int writePayload(boolean writeLoaded, IPayloadDestination pDest)
         throws IOException
     {
         throw new Error("Unimplemented");
@@ -702,7 +702,7 @@ class DumpHitDeltaFmt
         throw new Error("Unimplemented");
     }
 
-    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+    public int writePayload(boolean writeLoaded, IPayloadDestination pDest)
         throws IOException
     {
         throw new Error("Unimplemented");
@@ -1005,7 +1005,7 @@ class DumpReadoutData
         throw new Error("Unimplemented");
     }
 
-    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+    public int writePayload(boolean writeLoaded, IPayloadDestination pDest)
         throws IOException
     {
         throw new Error("Unimplemented");
@@ -1550,7 +1550,7 @@ class DumpTriggerRequest
         throw new Error("Unimplemented");
     }
 
-    public int writePayload(boolean writeLoaded, PayloadDestination pDest)
+    public int writePayload(boolean writeLoaded, IPayloadDestination pDest)
         throws IOException
     {
         throw new Error("Unimplemented");

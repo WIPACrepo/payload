@@ -1,7 +1,7 @@
 /*
  * class: Payload
  *
- * Version $Id: Payload.java 2629 2008-02-11 05:48:36Z dglo $
+ * Version $Id: Payload.java 2647 2008-02-14 16:46:48Z dglo $
  *
  * Date: September 21 2004
  *
@@ -13,9 +13,9 @@ package icecube.daq.payload.splicer;
 import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IPayload;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.impl.PayloadEnvelope;
 import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.splicer.Spliceable;
@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * Payload implements the IPayload interface and the Spliceable interface
  * It contains trigger information that is send through the DAQ system
  *
- * @version $Id: Payload.java 2629 2008-02-11 05:48:36Z dglo $
+ * @version $Id: Payload.java 2647 2008-02-14 16:46:48Z dglo $
  * @author hellwig,dwharton
  *
  * 8/24/2005 dbw
@@ -313,7 +313,7 @@ public abstract class Payload extends Poolable
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
         int iLength = 0;
         if (tDestination.doLabel()) tDestination.label("[Payload]=>").indent();
         if (mtbuffer != null) {
@@ -346,7 +346,7 @@ public abstract class Payload extends Poolable
      *
      * @throws IOException if an error occurs during the process
      */
-    public abstract int writePayload(PayloadDestination tDestination) throws IOException;
+    public abstract int writePayload(IPayloadDestination tDestination) throws IOException;
 
     /**
      * Initializes Payload from backing so it can be used as an IPayload.

@@ -1,10 +1,10 @@
 package icecube.daq.payload.test;
 
 import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.trigger.IReadoutRequestElement;
 
 import java.io.IOException;
@@ -91,7 +91,7 @@ public class MockReadoutRequestElement
      *
      * @return the number of bytes written to this destination.
      */
-    public int writeData(PayloadDestination dest)
+    public int writeData(IPayloadDestination dest)
         throws IOException
     {
         throw new Error("Unimplemented");

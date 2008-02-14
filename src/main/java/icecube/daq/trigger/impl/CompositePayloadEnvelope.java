@@ -1,7 +1,7 @@
 package icecube.daq.trigger.impl;
 
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.payload.PayloadDestination;
 import icecube.util.Poolable;
 
 import java.io.IOException;
@@ -126,7 +126,7 @@ public class CompositePayloadEnvelope extends Poolable implements IWriteablePayl
      * @param tDestination PayloadDestination to which to write this record.
      * @return the number of bytes written.
      */
-    public int writeData(PayloadDestination tDestination) throws IOException {
+    public int writeData(IPayloadDestination tDestination) throws IOException {
         if (tDestination.doLabel()) tDestination.label("[CompositePayloadEnvelope]=>").indent();
         tDestination.writeInt(   COMPOSITE_PAYLOAD_BYTES,       mi_compositePayloadBytes);
         tDestination.writeShort( COMPOSITE_TYPE,                msi_compositeType);
