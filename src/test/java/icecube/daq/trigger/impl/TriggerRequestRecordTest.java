@@ -157,7 +157,7 @@ public class TriggerRequestRecordTest
                      rrLastTime, elem.getLastTimeUTC().getUTCTimeAsLong());
         assertEquals("Bad rrElem DOM ID",
                      rrDomId, (elem.getDomID() == null ? -1L :
-                               elem.getDomID().getDomIDAsLong()));
+                               elem.getDomID().longValue()));
         assertEquals("Bad rrElem source ID",
                      rrSrcId, (elem.getSourceID() == null ? -1 :
                                elem.getSourceID().getSourceID()));
@@ -229,7 +229,7 @@ public class TriggerRequestRecordTest
                      rrLastTime, elem.getLastTimeUTC().getUTCTimeAsLong());
         assertEquals("Bad rrElem DOM ID",
                      rrDomId, (elem.getDomID() == null ? -1L :
-                               elem.getDomID().getDomIDAsLong()));
+                               elem.getDomID().longValue()));
         assertEquals("Bad rrElem source ID",
                      rrSrcId, (elem.getSourceID() == null ? -1 :
                                elem.getSourceID().getSourceID()));

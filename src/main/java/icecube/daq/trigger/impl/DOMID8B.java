@@ -38,22 +38,8 @@ public class DOMID8B extends Poolable implements IDOMID {
     /**
      * Get the DOMID as a long
      */
-    public long getDomIDAsLong() {
+    public long longValue() {
         return ml_DomID;
-    }
-    /**
-     * Convert the domId to hex string
-     * @return 12-character hex string representing the DOM ID.
-     */
-    public String getDomIDAsString() {
-        if (ms_DomID == null) {
-            String hexId = Long.toHexString(this.ml_DomID);
-            while (hexId.length() < 12) {
-                hexId = "0" + hexId;
-            }
-            ms_DomID = hexId;
-        }
-        return ms_DomID;
     }
     /**
      * Get an object from the pool
@@ -101,15 +87,8 @@ public class DOMID8B extends Poolable implements IDOMID {
      * this compares the internal representation of the domid and will
      * compare if the domid's are equal, not the actual object.
      */
-    public boolean isEquals(Object obj) {
-        return (((DOMID8B) obj).getDomIDAsLong() == ml_DomID);
-    }
-    /**
-     * this compares the internal representation of the domid and will
-     * compare if the domid's are equal, not the actual object.
-     */
     public boolean equals(Object obj) {
-        return isEquals(obj);
+        return (((IDOMID) obj).longValue() == ml_DomID);
     }
 
     /**
@@ -129,6 +108,13 @@ public class DOMID8B extends Poolable implements IDOMID {
      */
     public String toString()
     {
-        return getDomIDAsString();
+        if (ms_DomID == null) {
+            String hexId = Long.toHexString(this.ml_DomID);
+            while (hexId.length() < 12) {
+                hexId = "0" + hexId;
+            }
+            ms_DomID = hexId;
+        }
+        return ms_DomID;
     }
 }

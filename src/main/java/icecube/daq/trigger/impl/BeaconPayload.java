@@ -91,7 +91,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
         mb_IsEnvelopeLoaded = true;
         //-This stores the actual reason for the hit, this actually resolves to the same data
         mt_domID = (IDOMID) DOMID8B.getFromPool();
-        ((DOMID8B)mt_domID).initialize( tPayload.getDOMID().getDomIDAsLong() );
+        ((DOMID8B)mt_domID).initialize( tPayload.getDOMID().longValue() );
         mb_IsPayloadLoaded = true;
     }
 
@@ -111,7 +111,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
         mb_IsEnvelopeLoaded = true;
         //-This stores the actual reason for the hit, this actually resolves to the same data
         mt_domID = (IDOMID) DOMID8B.getFromPool();
-        ((DOMID8B)mt_domID).initialize( tDomID.getDomIDAsLong() );
+        ((DOMID8B)mt_domID).initialize( tDomID.longValue() );
         mb_IsPayloadLoaded = true;
     }
 
@@ -176,7 +176,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
             mt_PayloadEnvelope.writeData(iDestOffset, tDestBuffer);
             //-Write out the 'subpayload'
             tDestBuffer.putInt(   iDestOffset + OFFSET_SOURCE_ID         , mt_sourceId.getSourceID() );
-            tDestBuffer.putLong(  iDestOffset + OFFSET_DOM_ID            , mt_domID.getDomIDAsLong() );
+            tDestBuffer.putLong(  iDestOffset + OFFSET_DOM_ID            , mt_domID.longValue() );
             iBytesWritten = mt_PayloadEnvelope.miPayloadLen;
             //-restore the order
             if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
@@ -216,7 +216,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
             mt_PayloadEnvelope.writeData( tDestination );
             //-Write out the 'subpayload'
             tDestination.writeInt(   SOURCE_ID         ,mt_sourceId.getSourceID() );
-            tDestination.writeLong(  DOM_ID            ,mt_domID.getDomIDAsLong() );
+            tDestination.writeLong(  DOM_ID            ,mt_domID.longValue() );
             iBytesWritten = mt_PayloadEnvelope.miPayloadLen;
         }
         if (tDestination.doLabel()) tDestination.undent().label("<=[BeaconPayload] bytes="+iBytesWritten);

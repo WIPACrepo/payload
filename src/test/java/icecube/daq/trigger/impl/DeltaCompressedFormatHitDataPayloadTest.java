@@ -89,7 +89,7 @@ public class DeltaCompressedFormatHitDataPayloadTest
         assertEquals("Bad config ID", configId, hit.getTriggerConfigID());
         assertEquals("Bad trigger type", trigType, hit.getTriggerType());
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());
-        assertEquals("Bad DOM ID", domId, hit.getDOMID().getDomIDAsLong());
+        assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
 
         DomHitDeltaCompressedFormatRecord hitRec = hit.getPayloadRecord();
 
@@ -155,7 +155,7 @@ public class DeltaCompressedFormatHitDataPayloadTest
         assertEquals("Bad config ID", configId, hit.getTriggerConfigID());
         assertEquals("Bad trigger type", -1, hit.getTriggerType());
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());
-        assertEquals("Bad DOM ID", domId, hit.getDOMID().getDomIDAsLong());
+        assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
 
         DomHitDeltaCompressedFormatRecord hitRec = hit.getPayloadRecord();
 

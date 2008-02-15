@@ -490,7 +490,7 @@ public abstract class TestUtil
             final int hitSrc = (hit.getSourceID() == null ? -1 :
                                 hit.getSourceID().getSourceID());
             final long hitDom = (hit.getDOMID() == null ? -1 :
-                                 hit.getDOMID().getDomIDAsLong());
+                                 hit.getDOMID().longValue());
 
             ByteBuffer hitBuf = createSimpleHit(hitTime, hit.getTriggerType(),
                                                 hit.getTriggerConfigID(),
@@ -784,7 +784,7 @@ public abstract class TestUtil
             final int hitSrc = (hit.getSourceID() == null ? -1 :
                                 hit.getSourceID().getSourceID());
             final long hitDom = (hit.getDOMID() == null ? -1 :
-                                 hit.getDOMID().getDomIDAsLong());
+                                 hit.getDOMID().longValue());
 
             ByteBuffer hitBuf = createSimpleHit(hitTime, hit.getTriggerType(),
                                                 hit.getTriggerConfigID(),
@@ -900,7 +900,7 @@ public abstract class TestUtil
         if (elem.getDomID() == null) {
             domId = -1;
         } else {
-            domId = elem.getDomID().getDomIDAsLong();
+            domId = elem.getDomID().longValue();
         }
 
         putReadoutRequestElement(buf, elem.getReadoutType(), srcId, firstTime,

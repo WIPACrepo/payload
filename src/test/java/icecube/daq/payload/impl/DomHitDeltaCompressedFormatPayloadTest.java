@@ -86,7 +86,7 @@ public class DomHitDeltaCompressedFormatPayloadTest
                      TestUtil.getEngFmtTriggerMode(trigFlags),
                      hit.getTriggerMode());
 
-        assertEquals("Bad DOM ID", domId, hit.getDOMID().getDomIDAsLong());
+        assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
         assertEquals("Bad DOM ID value", domId, hit.getDomId());
         assertEquals("Bad hit time",
                      utcTime, hit.getHitTimeUTC().getUTCTimeAsLong());

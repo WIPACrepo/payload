@@ -204,7 +204,7 @@ public class HitPayloadTest
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());
         assertEquals("Bad trigger type", trigType, hit.getTriggerType());
         assertEquals("Bad trigger config ID", cfgId, hit.getTriggerConfigID());
-        assertEquals("Bad DOM ID", domId, hit.getDOMID().getDomIDAsLong());
+        assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
         assertEquals("Bad integrated charge", -1.0, hit.getIntegratedCharge());
         assertEquals("Bad hit time",
                      utcTime, hit.getHitTimeUTC().getUTCTimeAsLong());
@@ -231,7 +231,7 @@ public class HitPayloadTest
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());
         assertEquals("Bad trigger type", trigType, hit.getTriggerType());
         assertEquals("Bad trigger config ID", cfgId, hit.getTriggerConfigID());
-        assertEquals("Bad DOM ID", domId, hit.getDOMID().getDomIDAsLong());
+        assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
         assertEquals("Bad integrated charge", -1.0, hit.getIntegratedCharge());
         assertEquals("Bad hit time",
                      utcTime, hit.getHitTimeUTC().getUTCTimeAsLong());
@@ -265,7 +265,7 @@ public class HitPayloadTest
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());
         assertEquals("Bad trigger type", trigType, hit.getTriggerType());
         assertEquals("Bad trigger config ID", cfgId, hit.getTriggerConfigID());
-        assertEquals("Bad DOM ID", domId, hit.getDOMID().getDomIDAsLong());
+        assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
         assertEquals("Bad integrated charge", -1.0, hit.getIntegratedCharge());
         assertEquals("Bad hit time",
                      utcTime, hit.getHitTimeUTC().getUTCTimeAsLong());

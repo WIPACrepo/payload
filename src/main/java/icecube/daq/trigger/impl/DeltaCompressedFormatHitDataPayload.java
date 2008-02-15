@@ -336,7 +336,7 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
             tDestination.writeInt(   TRIGGER_TYPE      ,mi_TriggerType            );
             tDestination.writeInt(   TRIGGER_CONFIG_ID ,mi_TriggerConfigID        );
             tDestination.writeInt(   SOURCE_ID         ,mt_sourceId.getSourceID() );
-            tDestination.writeLong(  DOM_ID            ,mt_domID.getDomIDAsLong() );
+            tDestination.writeLong(  DOM_ID            ,mt_domID.longValue() );
 
             //-write the DeltaCompressedFormatRecord
             mt_DeltaFormatRecord.writeData(tDestination);
@@ -384,7 +384,7 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
             tDestBuffer.putInt(   iDestOffset + OFFSET_TRIGGER_TYPE , mi_TriggerType        );
             tDestBuffer.putInt(   iDestOffset + OFFSET_TRIGGER_CONFIG_ID , mi_TriggerConfigID        );
             tDestBuffer.putInt(   iDestOffset + OFFSET_SOURCE_ID         , mt_sourceId.getSourceID() );
-            tDestBuffer.putLong(  iDestOffset + OFFSET_DOM_ID         , mt_domID.getDomIDAsLong() );
+            tDestBuffer.putLong(  iDestOffset + OFFSET_DOM_ID         , mt_domID.longValue() );
             //-Write out the 'subpayload'
             mt_DeltaFormatRecord.writeData(
                         (iDestOffset + OFFSET_DOMHIT_DELTACOMPRESSED_RECORD), tDestBuffer);

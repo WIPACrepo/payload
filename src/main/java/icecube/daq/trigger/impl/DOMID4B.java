@@ -98,19 +98,8 @@ public class DOMID4B extends Poolable implements IDOMID
     /**
      *  Get the domid as a long and returns it.
      */
-    public long getDomIDAsLong() {
+    public long longValue() {
         return (long) midomid;
-    }
-    /**
-     * Convert the domId to hex string
-     * @return 12-character hex string representing the DOM ID.
-     */
-    public String getDomIDAsString() {
-        String hexId = Long.toHexString((long)this.midomid);
-        while (hexId.length() < 12) {
-            hexId = "0" + hexId;
-        }
-        return hexId;
     }
     /**
      * Object is able to dispose of itself.
@@ -129,5 +118,19 @@ public class DOMID4B extends Poolable implements IDOMID
         DOMID4B tCopy = (DOMID4B) getPoolable();
         tCopy.initialize(midomid);
         return tCopy;
+    }
+
+    /**
+     * Return string representation.
+     *
+     * @return DOM ID string
+     */
+    public String toString()
+    {
+        String hexId = Long.toHexString((long)this.midomid);
+        while (hexId.length() < 12) {
+            hexId = "0" + hexId;
+        }
+        return hexId;
     }
 }

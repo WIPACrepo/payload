@@ -181,7 +181,7 @@ public class SuperNovaPayload extends Payload {
             }
             super.mt_PayloadEnvelope.writeData(tDestination);
             // long ldomid = mtbuffer.getLong(mioffset + OFFSET_DOMID);
-            tDestination.writeLong(NAME_DOMID, mtDomId.getDomIDAsLong());
+            tDestination.writeLong(NAME_DOMID, mtDomId.longValue());
             iBytesWritten += SIZE_DOMID;
             iBytesWritten += writeSuperNovaRecord(tDestination);
         }
@@ -226,7 +226,7 @@ public class SuperNovaPayload extends Payload {
         //-write the envelope to the correct position in the assigned bufffer.
         tEnvelope.writeData(iPayloadStartOffset, tPayloadBuffer);
         //-write the domid to the correct position (BIG_ENDIAN)
-        tPayloadBuffer.putLong( (iPayloadStartOffset + OFFSET_DOMID), tDomId.getDomIDAsLong() );
+        tPayloadBuffer.putLong( (iPayloadStartOffset + OFFSET_DOMID), tDomId.longValue() );
         if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
             tPayloadBuffer.order( tSaveOrder );
         }

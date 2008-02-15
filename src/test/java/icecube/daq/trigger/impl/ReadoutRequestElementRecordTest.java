@@ -53,7 +53,7 @@ public class ReadoutRequestElementRecordTest
         assertEquals("Bad readout type", type, elemRec.getReadoutType());
         assertNotNull("Null DOM ID", elemRec.getDomID());
         assertEquals("Bad DOM ID",
-                     domId, elemRec.getDomID().getDomIDAsLong());
+                     domId, elemRec.getDomID().longValue());
         assertNotNull("Null first UTC time", elemRec.getFirstTimeUTC());
         assertEquals("Bad first UTC time",
                      firstTime, elemRec.getFirstTimeUTC().getUTCTimeAsLong());
@@ -89,7 +89,7 @@ public class ReadoutRequestElementRecordTest
         assertEquals("Bad readout type", type, elemRec.getReadoutType());
         assertNotNull("Null DOM ID", elemRec.getDomID());
         assertEquals("Bad DOM ID",
-                     domId, elemRec.getDomID().getDomIDAsLong());
+                     domId, elemRec.getDomID().longValue());
         assertNotNull("Null first UTC time", elemRec.getFirstTimeUTC());
         assertEquals("Bad first UTC time",
                      firstTime, elemRec.getFirstTimeUTC().getUTCTimeAsLong());
@@ -126,7 +126,7 @@ public class ReadoutRequestElementRecordTest
         assertEquals("Bad readout type", type, elemRec.getReadoutType());
         assertNotNull("Null DOM ID", elemRec.getDomID());
         assertEquals("Bad DOM ID",
-                     domId, elemRec.getDomID().getDomIDAsLong());
+                     domId, elemRec.getDomID().longValue());
         assertNotNull("Null first UTC time", elemRec.getFirstTimeUTC());
         assertEquals("Bad first UTC time",
                      firstTime, elemRec.getFirstTimeUTC().getUTCTimeAsLong());

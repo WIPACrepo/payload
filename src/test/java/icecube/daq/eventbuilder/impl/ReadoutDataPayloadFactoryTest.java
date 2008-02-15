@@ -108,7 +108,7 @@ public class ReadoutDataPayloadFactoryTest
                          hit.getTriggerType());
             assertEquals("Bad hit DOM ID", (i == 0 ? hitDomId1 : hitDomId2),
                          (hit.getDOMID() == null ? -1L :
-                          hit.getDOMID().getDomIDAsLong()));
+                          hit.getDOMID().longValue()));
             assertEquals("Bad hit source ID", (i == 0 ? hitSrcId1 : hitSrcId2),
                          (hit.getSourceID() == null ? -1 :
                           hit.getSourceID().getSourceID()));

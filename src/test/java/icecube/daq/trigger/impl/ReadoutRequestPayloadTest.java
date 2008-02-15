@@ -88,7 +88,7 @@ public class ReadoutRequestPayloadTest
             assertEquals("Bad element#" + i + " DOM ID",
                          (i == 0 ? domId1 : domId2),
                          (elem.getDomID() == null ? -1L :
-                          elem.getDomID().getDomIDAsLong()));
+                          elem.getDomID().longValue()));
             assertEquals("Bad element#" + i + " source ID",
                          (i == 0 ? srcId1 : srcId2),
                          (elem.getSourceID() == null ? -1 :
@@ -160,7 +160,7 @@ public class ReadoutRequestPayloadTest
             assertEquals("Bad element#" + i + " DOM ID",
                          (i == 0 ? domId1 : domId2),
                          (elem.getDomID() == null ? -1L :
-                          elem.getDomID().getDomIDAsLong()));
+                          elem.getDomID().longValue()));
             assertEquals("Bad element#" + i + " source ID",
                          (i == 0 ? srcId1 : srcId2),
                          (elem.getSourceID() == null ? -1 :

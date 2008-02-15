@@ -115,7 +115,7 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
         // representative of the wall clock time of the TCAL event
         lutctime = tTime.getUTCTimeAsLong();
         if (lutctime <= 0L) {
-            mtLog.error("TCAL: failed-tcal domid="+tDomId.getDomIDAsString()+" domclock="+lutctime);
+            mtLog.error("TCAL: failed-tcal domid="+tDomId+" domclock="+lutctime);
         }
 
         //-allocate the new Payload buffer for the new Payload

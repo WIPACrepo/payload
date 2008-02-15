@@ -17,13 +17,8 @@ public class MockDOMID
         throw new Error("Unimplemented");
     }
 
-    public long getDomIDAsLong()
+    public long longValue()
     {
         return id;
-    }
-
-    public String getDomIDAsString()
-    {
-        throw new Error("Unimplemented");
     }
 }

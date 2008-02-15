@@ -148,7 +148,7 @@ public class TriggerRequestPayloadTest
             assertEquals("Bad element#" + i + " DOM ID",
                          (i == 0 ? domId1 : domId2),
                          (elem.getDomID() == null ? -1L :
-                          elem.getDomID().getDomIDAsLong()));
+                          elem.getDomID().longValue()));
             assertEquals("Bad element#" + i + " source ID",
                          (i == 0 ? srcId1 : srcId2),
                          (elem.getSourceID() == null ? -1 :
@@ -170,7 +170,7 @@ public class TriggerRequestPayloadTest
             assertEquals("Bad hit DOM ID",
                          hitDomId,
                          (hit.getDOMID() == null ? -1L :
-                          hit.getDOMID().getDomIDAsLong()));
+                          hit.getDOMID().longValue()));
             assertEquals("Bad hit source ID",
                          hitSrcId,
                          (hit.getSourceID() == null ? -1 :
@@ -257,7 +257,7 @@ public class TriggerRequestPayloadTest
                      rrLastTime, elem.getLastTimeUTC().getUTCTimeAsLong());
         assertEquals("Bad rrElem DOM ID",
                      rrDomId, (elem.getDomID() == null ? -1L :
-                               elem.getDomID().getDomIDAsLong()));
+                               elem.getDomID().longValue()));
         assertEquals("Bad rrElem source ID",
                      rrSrcId, (elem.getSourceID() == null ? -1 :
                                elem.getSourceID().getSourceID()));
@@ -277,7 +277,7 @@ public class TriggerRequestPayloadTest
             assertEquals("Bad hit DOM ID",
                          hitDomId,
                          (hit.getDOMID() == null ? -1L :
-                          hit.getDOMID().getDomIDAsLong()));
+                          hit.getDOMID().longValue()));
             assertEquals("Bad hit source ID",
                          hitSrcId,
                          (hit.getSourceID() == null ? -1 :

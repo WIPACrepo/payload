@@ -119,7 +119,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
         //-This stores the actual reason for the hit, this actually resolves to the same data
         msi_TriggerMode = (short) tPayload.getTriggerType();
         mt_domID = (IDOMID) DOMID8B.getFromPool();
-        ((DOMID8B)mt_domID).initialize( tPayload.getDOMID().getDomIDAsLong() );
+        ((DOMID8B)mt_domID).initialize( tPayload.getDOMID().longValue() );
         mb_IsHitPayloadLoaded = true;
     }
 
@@ -145,7 +145,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
         //-This stores the actual reason for the hit, this actually resolves to the same data
         msi_TriggerMode = (short) iTriggerMode;
         mt_domID = (IDOMID) DOMID8B.getFromPool();
-        ((DOMID8B)mt_domID).initialize( tDomID.getDomIDAsLong() );
+        ((DOMID8B)mt_domID).initialize( tDomID.longValue() );
         mb_IsHitPayloadLoaded = true;
     }
 
@@ -186,7 +186,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
             tDestBuffer.putInt(   iDestOffset + OFFSET_TRIGGER_TYPE      , mi_TriggerType            );
             tDestBuffer.putInt(   iDestOffset + OFFSET_TRIGGER_CONFIG_ID , mi_TriggerConfigID        );
             tDestBuffer.putInt(   iDestOffset + OFFSET_SOURCE_ID         , mt_sourceId.getSourceID() );
-            tDestBuffer.putLong(  iDestOffset + OFFSET_DOM_ID            , mt_domID.getDomIDAsLong() );
+            tDestBuffer.putLong(  iDestOffset + OFFSET_DOM_ID            , mt_domID.longValue() );
             tDestBuffer.putShort( iDestOffset + OFFSET_TRIGGER_MODE      , msi_TriggerMode           );
             iBytesWritten = mt_PayloadEnvelope.miPayloadLen;
             //-restore the order
@@ -229,7 +229,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
             tDestination.writeInt(   TRIGGER_TYPE      ,mi_TriggerType            );
             tDestination.writeInt(   TRIGGER_CONFIG_ID ,mi_TriggerConfigID        );
             tDestination.writeInt(   SOURCE_ID         ,mt_sourceId.getSourceID() );
-            tDestination.writeLong(  DOM_ID            ,mt_domID.getDomIDAsLong() );
+            tDestination.writeLong(  DOM_ID            ,mt_domID.longValue() );
             tDestination.writeShort( TRIGGER_MODE      ,msi_TriggerMode           );
             iBytesWritten = mt_PayloadEnvelope.miPayloadLen;
         }

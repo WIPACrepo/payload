@@ -140,7 +140,7 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
         //-write the envelope to the correct position in the assigned bufffer.
         tEnvelope.writeData(iPayloadStartOffset, tPayloadBuffer);
         //-write the domid to the correct position (BIG_ENDIAN)
-        tPayloadBuffer.putLong( (iPayloadStartOffset + OFFSET_DOMID), tDomId.getDomIDAsLong() );
+        tPayloadBuffer.putLong( (iPayloadStartOffset + OFFSET_DOMID), tDomId.longValue() );
         if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
             tPayloadBuffer.order(tSaveOrder);
         }

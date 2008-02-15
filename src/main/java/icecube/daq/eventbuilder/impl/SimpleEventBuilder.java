@@ -252,7 +252,7 @@ public class SimpleEventBuilder {
             SourceID4B tSource = (SourceID4B) SourceID4B.getFromPool();
             tSource.initialize(-1);
             DOMID8B tDomID = (DOMID8B) DOMID8B.getFromPool();
-            tDomID.initialize(tHitPayload.getDOMID().getDomIDAsLong());
+            tDomID.initialize(tHitPayload.getDOMID().longValue());
             //-create the element and add it to the vector
             IReadoutRequestElement tElement =
                 mtTriggerRequestPayloadFactory.createReadoutRequestElement( iReadoutType, tFirstTime, tLastTime, tDomID, tSource);

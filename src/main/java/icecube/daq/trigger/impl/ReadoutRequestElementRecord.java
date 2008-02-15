@@ -142,7 +142,7 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
         tDestination.writeLong(LAST_TIME, mt_lastTime.getUTCTimeAsLong());
         //-write out OFFSET_DOMID
         if (mt_domId != null) {
-            tDestination.writeLong(DOMID, mt_domId.getDomIDAsLong());
+            tDestination.writeLong(DOMID, mt_domId.longValue());
         } else {
             //-this indicates no specific dom (ie for a general request)
             tDestination.writeLong(DOMID,-1L);
@@ -172,7 +172,7 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
         tBuffer.putLong(iOffset + OFFSET_LAST_TIME, mt_lastTime.getUTCTimeAsLong());
         //-write out OFFSET_DOMID
         if (mt_domId != null) {
-            tBuffer.putLong(iOffset + OFFSET_DOMID, mt_domId.getDomIDAsLong());
+            tBuffer.putLong(iOffset + OFFSET_DOMID, mt_domId.longValue());
         } else {
             //-this indicates no specific dom (ie for a general request)
             tBuffer.putLong(iOffset + OFFSET_DOMID, -1L);
