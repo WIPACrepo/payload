@@ -89,7 +89,7 @@ public class DomHitDeltaCompressedFormatPayloadTest
         assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
         assertEquals("Bad DOM ID value", domId, hit.getDomId());
         assertEquals("Bad hit time",
-                     utcTime, hit.getHitTimeUTC().getUTCTimeAsLong());
+                     utcTime, hit.getHitTimeUTC().longValue());
         assertEquals("Bad timestamp", utcTime, hit.getTimestamp());
 
         DomHitDeltaCompressedFormatRecord hitRec = hit.getRecord();

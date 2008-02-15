@@ -86,11 +86,11 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
         mt_sourceId = tSourceID;
         mi_TriggerConfigID = iTriggerConfigID;
         mi_TriggerType = iTriggerType;
-        ((UTCTime8B) mttime).initialize(tPayload.getPayloadTimeUTC().getUTCTimeAsLong());
+        ((UTCTime8B) mttime).initialize(tPayload.getPayloadTimeUTC().longValue());
         super.milength = SIZE_HIT_PAYLOAD;
         super.mtbuffer = null;
         mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
-        mt_PayloadEnvelope.initialize( mipayloadtype, milength, mttime.getUTCTimeAsLong() );
+        mt_PayloadEnvelope.initialize( mipayloadtype, milength, mttime.longValue() );
         mb_IsEnvelopeLoaded = true;
         //-This stores the actual reason for the hit
         msi_TriggerMode = (short) tPayload.getTriggerMode();
@@ -110,11 +110,11 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
         // System.out.println("HitPayload.initialize() mt_sourceId="+mt_sourceId);
         mi_TriggerType = tPayload.getTriggerType();
         mi_TriggerConfigID = tPayload.getTriggerConfigID();
-        ((UTCTime8B) mttime).initialize(tPayload.getPayloadTimeUTC().getUTCTimeAsLong());
+        ((UTCTime8B) mttime).initialize(tPayload.getPayloadTimeUTC().longValue());
         super.milength = SIZE_HIT_PAYLOAD;
         super.mtbuffer = null;
         mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
-        mt_PayloadEnvelope.initialize( mipayloadtype, milength, mttime.getUTCTimeAsLong() );
+        mt_PayloadEnvelope.initialize( mipayloadtype, milength, mttime.longValue() );
         mb_IsEnvelopeLoaded = true;
         //-This stores the actual reason for the hit, this actually resolves to the same data
         msi_TriggerMode = (short) tPayload.getTriggerType();
@@ -136,11 +136,11 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
         mt_sourceId = tSourceID;
         mi_TriggerConfigID = iTriggerConfigID;
         mi_TriggerType = iTriggerType;
-        ((UTCTime8B) mttime).initialize(tHitTime.getUTCTimeAsLong());
+        ((UTCTime8B) mttime).initialize(tHitTime.longValue());
         super.milength = SIZE_HIT_PAYLOAD;
         super.mtbuffer = null;
         mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
-        mt_PayloadEnvelope.initialize( mipayloadtype, milength, mttime.getUTCTimeAsLong() );
+        mt_PayloadEnvelope.initialize( mipayloadtype, milength, mttime.longValue() );
         mb_IsEnvelopeLoaded = true;
         //-This stores the actual reason for the hit, this actually resolves to the same data
         msi_TriggerMode = (short) iTriggerMode;

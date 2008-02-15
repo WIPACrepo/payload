@@ -100,7 +100,7 @@ public class SuperNovaPayloadFactory extends PayloadFactory {
 
             //-install the domid and UTC time in the correct place in the new buffer.
             // This will allow the new buffer to be passed to this SuperNovaPayloadFactory to be created.
-            SuperNovaPayload.writePayloadEnvelopeAndID( iTotalPayloadLength, tDomId, tTime.getUTCTimeAsLong() , 0, tNewBuffer);
+            SuperNovaPayload.writePayloadEnvelopeAndID( iTotalPayloadLength, tDomId, tTime.longValue() , 0, tNewBuffer);
 
             //-restore the limit and position
             tReferenceBuffer.position(iSavePosition);

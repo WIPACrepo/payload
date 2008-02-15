@@ -50,10 +50,10 @@ public class ReadoutDataRecordTest
         assertEquals("Bad source ID", srcId, rdRec.mt_sourceid.getSourceID());
         assertNotNull("Null first UTC time", rdRec.mt_firstTime);
         assertEquals("Bad first UTC time",
-                     firstTime, rdRec.mt_firstTime.getUTCTimeAsLong());
+                     firstTime, rdRec.mt_firstTime.longValue());
         assertNotNull("Null last UTC time", rdRec.mt_lastTime);
         assertEquals("Bad last UTC time",
-                     lastTime, rdRec.mt_lastTime.getUTCTimeAsLong());
+                     lastTime, rdRec.mt_lastTime.longValue());
         assertEquals("Bad UID", uid, rdRec.mi_UID);
         assertEquals("Bad payload number", payNum, rdRec.mi_payloadNum);
         assertEquals("Bad isLastPayload value", isLast, rdRec.mb_payloadLast);
@@ -82,10 +82,10 @@ public class ReadoutDataRecordTest
         assertEquals("Bad source ID", srcId, rdRec.mt_sourceid.getSourceID());
         assertNotNull("Null first UTC time", rdRec.mt_firstTime);
         assertEquals("Bad first UTC time",
-                     firstTime, rdRec.mt_firstTime.getUTCTimeAsLong());
+                     firstTime, rdRec.mt_firstTime.longValue());
         assertNotNull("Null last UTC time", rdRec.mt_lastTime);
         assertEquals("Bad last UTC time",
-                     lastTime, rdRec.mt_lastTime.getUTCTimeAsLong());
+                     lastTime, rdRec.mt_lastTime.longValue());
         assertEquals("Bad UID", uid, rdRec.mi_UID);
         assertEquals("Bad payload number", payNum, rdRec.mi_payloadNum);
         assertEquals("Bad isLastPayload value", isLast, rdRec.mb_payloadLast);

@@ -71,14 +71,14 @@ public class EventPayload_v3FactoryTest
                                                     new Vector(hitList));
 
         assertEquals("Bad payload UTC time",
-                     -1, evt.getPayloadTimeUTC().getUTCTimeAsLong());
+                     -1, evt.getPayloadTimeUTC().longValue());
 
         assertEquals("Bad UID", uid, evt.getEventUID());
         assertEquals("Bad source ID", srcId, evt.getSourceID().getSourceID());
         assertEquals("Bad first UTC time",
-                     firstTime, evt.getFirstTimeUTC().getUTCTimeAsLong());
+                     firstTime, evt.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
-                     lastTime, evt.getLastTimeUTC().getUTCTimeAsLong());
+                     lastTime, evt.getLastTimeUTC().longValue());
         assertEquals("Bad event type", evtType, evt.getEventType());
         assertEquals("Bad run number", runNum, evt.getRunNumber());
         assertEquals("Bad subrun number", subrunNum, evt.getSubrunNumber());

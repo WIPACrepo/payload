@@ -207,7 +207,7 @@ public class HitPayloadTest
         assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
         assertEquals("Bad integrated charge", -1.0, hit.getIntegratedCharge());
         assertEquals("Bad hit time",
-                     utcTime, hit.getHitTimeUTC().getUTCTimeAsLong());
+                     utcTime, hit.getHitTimeUTC().longValue());
 
         hit.recycle();
     }
@@ -234,7 +234,7 @@ public class HitPayloadTest
         assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
         assertEquals("Bad integrated charge", -1.0, hit.getIntegratedCharge());
         assertEquals("Bad hit time",
-                     utcTime, hit.getHitTimeUTC().getUTCTimeAsLong());
+                     utcTime, hit.getHitTimeUTC().longValue());
 
         try {
             hit.recycle();
@@ -268,7 +268,7 @@ public class HitPayloadTest
         assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
         assertEquals("Bad integrated charge", -1.0, hit.getIntegratedCharge());
         assertEquals("Bad hit time",
-                     utcTime, hit.getHitTimeUTC().getUTCTimeAsLong());
+                     utcTime, hit.getHitTimeUTC().longValue());
 
         try {
             hit.recycle();

@@ -291,14 +291,14 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
         mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
         mt_DeltaFormatRecord = tPayload.getRecord();
         UTCTime8B tTime = (UTCTime8B) UTCTime8B.getFromPool();
-        tTime.initialize( tPayload.getPayloadTimeUTC().getUTCTimeAsLong() );
+        tTime.initialize( tPayload.getPayloadTimeUTC().longValue() );
         mttime = (IUTCTime) tTime;
         milength = SIZE_WITHOUT_RECORD + mt_DeltaFormatRecord.getRecordLength();
         //-Fill in the envelope data
         mt_PayloadEnvelope.initialize(
             this.getPayloadType(),
             milength,
-            mttime.getUTCTimeAsLong()
+            mttime.longValue()
             );
         //-when initialized in this way the payload has been created.
         super.mbPayloadCreated = true;

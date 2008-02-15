@@ -220,8 +220,8 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
         tDestination.writeShort( PAYLOAD_NUM     , (short) mi_payloadNum            );
         tDestination.writeShort( PAYLOAD_LAST    , (short) (mb_payloadLast ? 1 : 0) );
         tDestination.writeInt(   SOURCE_ID       , mt_sourceid.getSourceID()        );
-        tDestination.writeLong(  FIRST_UTCTIME   , mt_firstTime.getUTCTimeAsLong()  );
-        tDestination.writeLong(  LAST_UTCTIME    , mt_lastTime.getUTCTimeAsLong()   );
+        tDestination.writeLong(  FIRST_UTCTIME   , mt_firstTime.longValue()  );
+        tDestination.writeLong(  LAST_UTCTIME    , mt_lastTime.longValue()   );
         if (tDestination.doLabel()) tDestination.undent().label("<=[ReadoutDataRecord]");
         return SIZE_RECORD;
     }
@@ -237,8 +237,8 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
         tBuffer.putShort( iOffset + OFFSET_PAYLOAD_NUM,   (short) mi_payloadNum           );
         tBuffer.putShort( iOffset + OFFSET_PAYLOAD_LAST,  (short)(mb_payloadLast ? 1 : 0) );
         tBuffer.putInt(   iOffset + OFFSET_SOURCE_ID,     mt_sourceid.getSourceID()       );
-        tBuffer.putLong(  iOffset + OFFSET_FIRST_UTCTIME, mt_firstTime.getUTCTimeAsLong() );
-        tBuffer.putLong(  iOffset + OFFSET_LAST_UTCTIME,  mt_lastTime.getUTCTimeAsLong()  );
+        tBuffer.putLong(  iOffset + OFFSET_FIRST_UTCTIME, mt_firstTime.longValue() );
+        tBuffer.putLong(  iOffset + OFFSET_LAST_UTCTIME,  mt_lastTime.longValue()  );
         return SIZE_RECORD;
     }
 

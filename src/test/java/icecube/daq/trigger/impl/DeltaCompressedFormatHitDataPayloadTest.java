@@ -85,7 +85,7 @@ public class DeltaCompressedFormatHitDataPayloadTest
         hit.loadPayload();
 
         assertEquals("Bad hit time",
-                     utcTime, hit.getHitTimeUTC().getUTCTimeAsLong());
+                     utcTime, hit.getHitTimeUTC().longValue());
         assertEquals("Bad config ID", configId, hit.getTriggerConfigID());
         assertEquals("Bad trigger type", trigType, hit.getTriggerType());
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());
@@ -151,7 +151,7 @@ public class DeltaCompressedFormatHitDataPayloadTest
         hit.loadPayload();
 
         assertEquals("Bad hit time",
-                     utcTime, hit.getHitTimeUTC().getUTCTimeAsLong());
+                     utcTime, hit.getHitTimeUTC().longValue());
         assertEquals("Bad config ID", configId, hit.getTriggerConfigID());
         assertEquals("Bad trigger type", -1, hit.getTriggerType());
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());

@@ -486,7 +486,7 @@ public abstract class TestUtil
         for (Object obj : hitList) {
             IHitPayload hit = (IHitPayload) obj;
 
-            final long hitTime = hit.getHitTimeUTC().getUTCTimeAsLong();
+            final long hitTime = hit.getHitTimeUTC().longValue();
             final int hitSrc = (hit.getSourceID() == null ? -1 :
                                 hit.getSourceID().getSourceID());
             final long hitDom = (hit.getDOMID() == null ? -1 :
@@ -697,14 +697,14 @@ public abstract class TestUtil
 
     public static ByteBuffer createTriggerRequest(ITriggerRequestPayload req)
     {
-        final long firstTime = req.getFirstTimeUTC().getUTCTimeAsLong();
+        final long firstTime = req.getFirstTimeUTC().longValue();
 
         return createTriggerRequest(firstTime, req.getUID(),
                                     req.getTriggerType(),
                                     req.getTriggerConfigID(),
                                     req.getSourceID().getSourceID(),
                                     firstTime,
-                                    req.getLastTimeUTC().getUTCTimeAsLong(),
+                                    req.getLastTimeUTC().longValue(),
                                     req.getHitList(),
                                     req.getReadoutRequest());
     }
@@ -780,7 +780,7 @@ public abstract class TestUtil
         for (Object obj : hitList) {
             IHitPayload hit = (IHitPayload) obj;
 
-            final long hitTime = hit.getHitTimeUTC().getUTCTimeAsLong();
+            final long hitTime = hit.getHitTimeUTC().longValue();
             final int hitSrc = (hit.getSourceID() == null ? -1 :
                                 hit.getSourceID().getSourceID());
             final long hitDom = (hit.getDOMID() == null ? -1 :
@@ -886,14 +886,14 @@ public abstract class TestUtil
         if (elem.getFirstTimeUTC() == null) {
             firstTime = -1L;
         } else {
-            firstTime = elem.getFirstTimeUTC().getUTCTimeAsLong();
+            firstTime = elem.getFirstTimeUTC().longValue();
         }
 
         long lastTime;
         if (elem.getLastTimeUTC() == null) {
             lastTime = -1L;
         } else {
-            lastTime = elem.getLastTimeUTC().getUTCTimeAsLong();
+            lastTime = elem.getLastTimeUTC().longValue();
         }
 
         long domId;

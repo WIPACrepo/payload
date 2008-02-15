@@ -77,7 +77,7 @@ public class ReadoutDataPayloadFactoryTest
                      PayloadRegistry.PAYLOAD_ID_READOUT_DATA,
                      pay.getPayloadType());
         assertEquals("Bad payload UTC time",
-                     firstTime, pay.getPayloadTimeUTC().getUTCTimeAsLong());
+                     firstTime, pay.getPayloadTimeUTC().longValue());
 
         IReadoutDataPayload rdp = (IReadoutDataPayload) pay;
 
@@ -85,9 +85,9 @@ public class ReadoutDataPayloadFactoryTest
         assertEquals("Bad config ID", -1, rdp.getTriggerConfigID());
         assertEquals("Bad source ID", srcId, rdp.getSourceID().getSourceID());
         assertEquals("Bad first UTC time",
-                     firstTime, rdp.getFirstTimeUTC().getUTCTimeAsLong());
+                     firstTime, rdp.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
-                     lastTime, rdp.getLastTimeUTC().getUTCTimeAsLong());
+                     lastTime, rdp.getLastTimeUTC().longValue());
         assertEquals("Bad request UID", uid, rdp.getRequestUID());
         assertEquals("Bad payload number",
                      payNum, rdp.getReadoutDataPayloadNumber());
@@ -103,7 +103,7 @@ public class ReadoutDataPayloadFactoryTest
             IHitPayload hit = (IHitPayload) rdpHits.get(i);
 
             assertEquals("Bad hit time", (i == 0 ? hitTime1 : hitTime2),
-                         hit.getHitTimeUTC().getUTCTimeAsLong());
+                         hit.getHitTimeUTC().longValue());
             assertEquals("Bad hit type", (i == 0 ? hitType1 : hitType2),
                          hit.getTriggerType());
             assertEquals("Bad hit DOM ID", (i == 0 ? hitDomId1 : hitDomId2),

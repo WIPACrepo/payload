@@ -84,7 +84,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      */
     public void initialize(IUTCTime tRequestTime, IReadoutRequest tRequest) {
         UTCTime8B tTime = (UTCTime8B) UTCTime8B.getFromPool();
-        tTime.initialize(tRequestTime.getUTCTimeAsLong());
+        tTime.initialize(tRequestTime.longValue());
         mttime = (IUTCTime) tTime;
         mt_ReadoutRequestRecord = (ReadoutRequestRecord) ReadoutRequestRecord.getFromPool();
         mt_ReadoutRequestRecord.initialize(tRequest.getUID(), tRequest.getSourceID(), tRequest.getReadoutRequestElements());
@@ -94,7 +94,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
         int iLength = PayloadEnvelope.SIZE_ENVELOPE;
         iLength += mt_ReadoutRequestRecord.getTotalRecordSize();
         super.milength = iLength;
-        super.mt_PayloadEnvelope.initialize(PayloadRegistry.PAYLOAD_ID_READOUT_REQUEST, super.milength, mttime.getUTCTimeAsLong());
+        super.mt_PayloadEnvelope.initialize(PayloadRegistry.PAYLOAD_ID_READOUT_REQUEST, super.milength, mttime.longValue());
         super.mb_IsEnvelopeLoaded = true;
         mb_RequestPayloadLoaded = true;
     }

@@ -190,7 +190,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
         //-If we go to write out then will have to assess the size of the record
         // before placing onto stream so can correctly have the data length.
         mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
-        long time = tFirstTimeUTC.getUTCTimeAsLong();
+        long time = tFirstTimeUTC.longValue();
         int iPayloadLength = 0;
         //-sum up payload length
         //--PayloadEnvelope.size

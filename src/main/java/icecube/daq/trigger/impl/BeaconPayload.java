@@ -62,11 +62,11 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
      */
     public void initialize(ISourceID tSourceID, DomHitEngineeringFormatPayload tPayload) {
         mt_sourceId = tSourceID;
-        ((UTCTime8B) mttime).initialize(tPayload.getPayloadTimeUTC().getUTCTimeAsLong());
+        ((UTCTime8B) mttime).initialize(tPayload.getPayloadTimeUTC().longValue());
         super.milength = SIZE_BEACON_PAYLOAD;
         super.mtbuffer = null;
         mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
-        mt_PayloadEnvelope.initialize( mipayloadtype, milength, mttime.getUTCTimeAsLong() );
+        mt_PayloadEnvelope.initialize( mipayloadtype, milength, mttime.longValue() );
         mb_IsEnvelopeLoaded = true;
         //-This stores the actual reason for the hit
         mt_domID = (IDOMID) DOMID8B.getFromPool();
@@ -83,11 +83,11 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     public void initialize(IHitDataPayload tPayload) {
         mt_sourceId = tPayload.getSourceID();
         // System.out.println("HitPayload.initialize() mt_sourceId="+mt_sourceId);
-        ((UTCTime8B) mttime).initialize(tPayload.getPayloadTimeUTC().getUTCTimeAsLong());
+        ((UTCTime8B) mttime).initialize(tPayload.getPayloadTimeUTC().longValue());
         super.milength = SIZE_BEACON_PAYLOAD;
         super.mtbuffer = null;
         mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
-        mt_PayloadEnvelope.initialize( mipayloadtype, milength, mttime.getUTCTimeAsLong() );
+        mt_PayloadEnvelope.initialize( mipayloadtype, milength, mttime.longValue() );
         mb_IsEnvelopeLoaded = true;
         //-This stores the actual reason for the hit, this actually resolves to the same data
         mt_domID = (IDOMID) DOMID8B.getFromPool();
@@ -103,11 +103,11 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
      */
     public void initialize(ISourceID tSourceID, IUTCTime tHitTime, IDOMID tDomID) {
         mt_sourceId = tSourceID;
-        ((UTCTime8B) mttime).initialize(tHitTime.getUTCTimeAsLong());
+        ((UTCTime8B) mttime).initialize(tHitTime.longValue());
         super.milength = SIZE_BEACON_PAYLOAD;
         super.mtbuffer = null;
         mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
-        mt_PayloadEnvelope.initialize( mipayloadtype, milength, mttime.getUTCTimeAsLong() );
+        mt_PayloadEnvelope.initialize( mipayloadtype, milength, mttime.longValue() );
         mb_IsEnvelopeLoaded = true;
         //-This stores the actual reason for the hit, this actually resolves to the same data
         mt_domID = (IDOMID) DOMID8B.getFromPool();

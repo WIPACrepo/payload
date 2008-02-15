@@ -115,14 +115,14 @@ public class TriggerRequestPayloadTest
                      PayloadRegistry.PAYLOAD_ID_TRIGGER_REQUEST,
                      req.getPayloadType());
         assertEquals("Bad payload UTC time",
-                     0L, req.getPayloadTimeUTC().getUTCTimeAsLong());
+                     0L, req.getPayloadTimeUTC().longValue());
         assertEquals("Bad trigger type", trigType, req.getTriggerType());
         assertEquals("Bad config ID", cfgId, req.getTriggerConfigID());
         assertEquals("Bad source ID", srcId, req.getSourceID().getSourceID());
         assertEquals("Bad first UTC time",
-                     firstTime, req.getFirstTimeUTC().getUTCTimeAsLong());
+                     firstTime, req.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
-                     lastTime, req.getLastTimeUTC().getUTCTimeAsLong());
+                     lastTime, req.getLastTimeUTC().longValue());
         assertEquals("Bad UID", uid, req.getUID());
 
         IReadoutRequest rReq = req.getReadoutRequest();
@@ -141,10 +141,10 @@ public class TriggerRequestPayloadTest
                          (i == 0 ? type1 : type2), elem.getReadoutType());
             assertEquals("Bad element#" + i + " first time",
                          (i == 0 ? firstTime1 : firstTime2),
-                         elem.getFirstTimeUTC().getUTCTimeAsLong());
+                         elem.getFirstTimeUTC().longValue());
             assertEquals("Bad element#" + i + " last time",
                          (i == 0 ? lastTime1 : lastTime2),
-                         elem.getLastTimeUTC().getUTCTimeAsLong());
+                         elem.getLastTimeUTC().longValue());
             assertEquals("Bad element#" + i + " DOM ID",
                          (i == 0 ? domId1 : domId2),
                          (elem.getDomID() == null ? -1L :
@@ -164,7 +164,7 @@ public class TriggerRequestPayloadTest
             IHitPayload hit = (IHitPayload) reqHits.get(i);
 
             assertEquals("Bad hit time",
-                         hitTime, hit.getHitTimeUTC().getUTCTimeAsLong());
+                         hitTime, hit.getHitTimeUTC().longValue());
             assertEquals("Bad hit type",
                          hitType, hit.getTriggerType());
             assertEquals("Bad hit DOM ID",
@@ -230,14 +230,14 @@ public class TriggerRequestPayloadTest
                      PayloadRegistry.PAYLOAD_ID_TRIGGER_REQUEST,
                      req.getPayloadType());
         assertEquals("Bad payload UTC time",
-                     firstTime, req.getPayloadTimeUTC().getUTCTimeAsLong());
+                     firstTime, req.getPayloadTimeUTC().longValue());
         assertEquals("Bad trigger type", trigType, req.getTriggerType());
         assertEquals("Bad config ID", cfgId, req.getTriggerConfigID());
         assertEquals("Bad source ID", srcId, req.getSourceID().getSourceID());
         assertEquals("Bad first UTC time",
-                     firstTime, req.getFirstTimeUTC().getUTCTimeAsLong());
+                     firstTime, req.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
-                     lastTime, req.getLastTimeUTC().getUTCTimeAsLong());
+                     lastTime, req.getLastTimeUTC().longValue());
         assertEquals("Bad UID", uid, req.getUID());
 
         IReadoutRequest rReq = req.getReadoutRequest();
@@ -252,9 +252,9 @@ public class TriggerRequestPayloadTest
 
         assertEquals("Bad rrElem type", rrType, elem.getReadoutType());
         assertEquals("Bad rrElem first time",
-                     rrFirstTime, elem.getFirstTimeUTC().getUTCTimeAsLong());
+                     rrFirstTime, elem.getFirstTimeUTC().longValue());
         assertEquals("Bad rrElem last time",
-                     rrLastTime, elem.getLastTimeUTC().getUTCTimeAsLong());
+                     rrLastTime, elem.getLastTimeUTC().longValue());
         assertEquals("Bad rrElem DOM ID",
                      rrDomId, (elem.getDomID() == null ? -1L :
                                elem.getDomID().longValue()));
@@ -271,7 +271,7 @@ public class TriggerRequestPayloadTest
             IHitPayload hit = (IHitPayload) reqHits.get(i);
 
             assertEquals("Bad hit time",
-                         hitTime, hit.getHitTimeUTC().getUTCTimeAsLong());
+                         hitTime, hit.getHitTimeUTC().longValue());
             assertEquals("Bad hit type",
                          hitType, hit.getTriggerType());
             assertEquals("Bad hit DOM ID",

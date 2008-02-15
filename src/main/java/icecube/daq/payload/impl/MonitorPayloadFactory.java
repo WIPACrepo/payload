@@ -97,7 +97,7 @@ public class MonitorPayloadFactory extends PayloadFactory {
 
             //-install the domid and UTC time in the correct place in the new buffer.
             // This will allow the new buffer to be passed to this MonitorPayloadFactory to be created.
-            MonitorPayload.writePayloadEnvelopeAndID(iTotalPayloadLength, tDomId, utcTime.getUTCTimeAsLong() , 0, tNewBuffer);
+            MonitorPayload.writePayloadEnvelopeAndID(iTotalPayloadLength, tDomId, utcTime.longValue() , 0, tNewBuffer);
             //-restore the limit and position
             tReferenceBuffer.position(iSavePosition);
             tReferenceBuffer.limit(iSaveLimit);

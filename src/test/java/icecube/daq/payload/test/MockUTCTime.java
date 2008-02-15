@@ -22,7 +22,7 @@ public class MockUTCTime
             return getClass().getName().compareTo(obj.getClass().getName());
         }
 
-        final long val = ((IUTCTime) obj).getUTCTimeAsLong();
+        final long val = ((IUTCTime) obj).longValue();
         if (time < val) {
             return -1;
         } else if (time > val) {
@@ -67,7 +67,7 @@ public class MockUTCTime
         return new MockSourceID(-1);
     }
 
-    public long getUTCTimeAsLong()
+    public long longValue()
     {
         return time;
     }

@@ -91,9 +91,9 @@ public class TriggerRequestRecordTest
         assertEquals("Bad config ID", cfgId, reqRec.mi_triggerConfigID);
         assertEquals("Bad source ID", srcId, reqRec.mt_sourceid.getSourceID());
         assertEquals("Bad first UTC time",
-                     firstTime, reqRec.mt_firstTime.getUTCTimeAsLong());
+                     firstTime, reqRec.mt_firstTime.longValue());
         assertEquals("Bad last UTC time",
-                     lastTime, reqRec.mt_lastTime.getUTCTimeAsLong());
+                     lastTime, reqRec.mt_lastTime.longValue());
 
         reqRec.recycle();
         assertFalse("Data should not be loaded", reqRec.isDataLoaded());
@@ -136,9 +136,9 @@ public class TriggerRequestRecordTest
         assertEquals("Bad config ID", cfgId, reqRec.mi_triggerConfigID);
         assertEquals("Bad source ID", srcId, reqRec.mt_sourceid.getSourceID());
         assertEquals("Bad first UTC time",
-                     firstTime, reqRec.mt_firstTime.getUTCTimeAsLong());
+                     firstTime, reqRec.mt_firstTime.longValue());
         assertEquals("Bad last UTC time",
-                     lastTime, reqRec.mt_lastTime.getUTCTimeAsLong());
+                     lastTime, reqRec.mt_lastTime.longValue());
 
         IReadoutRequest rReq = reqRec.mt_readoutRequestRecord;
         assertEquals("Bad source ID", srcId, rReq.getSourceID().getSourceID());
@@ -152,9 +152,9 @@ public class TriggerRequestRecordTest
 
         assertEquals("Bad rrElem type", rrType, elem.getReadoutType());
         assertEquals("Bad rrElem first time",
-                     rrFirstTime, elem.getFirstTimeUTC().getUTCTimeAsLong());
+                     rrFirstTime, elem.getFirstTimeUTC().longValue());
         assertEquals("Bad rrElem last time",
-                     rrLastTime, elem.getLastTimeUTC().getUTCTimeAsLong());
+                     rrLastTime, elem.getLastTimeUTC().longValue());
         assertEquals("Bad rrElem DOM ID",
                      rrDomId, (elem.getDomID() == null ? -1L :
                                elem.getDomID().longValue()));
@@ -208,9 +208,9 @@ public class TriggerRequestRecordTest
         assertEquals("Bad config ID", cfgId, reqRec.mi_triggerConfigID);
         assertEquals("Bad source ID", srcId, reqRec.mt_sourceid.getSourceID());
         assertEquals("Bad first UTC time",
-                     firstTime, reqRec.mt_firstTime.getUTCTimeAsLong());
+                     firstTime, reqRec.mt_firstTime.longValue());
         assertEquals("Bad last UTC time",
-                     lastTime, reqRec.mt_lastTime.getUTCTimeAsLong());
+                     lastTime, reqRec.mt_lastTime.longValue());
 
         IReadoutRequest rReq = reqRec.mt_readoutRequestRecord;
         assertEquals("Bad source ID", srcId, rReq.getSourceID().getSourceID());
@@ -224,9 +224,9 @@ public class TriggerRequestRecordTest
 
         assertEquals("Bad rrElem type", rrType, elem.getReadoutType());
         assertEquals("Bad rrElem first time",
-                     rrFirstTime, elem.getFirstTimeUTC().getUTCTimeAsLong());
+                     rrFirstTime, elem.getFirstTimeUTC().longValue());
         assertEquals("Bad rrElem last time",
-                     rrLastTime, elem.getLastTimeUTC().getUTCTimeAsLong());
+                     rrLastTime, elem.getLastTimeUTC().longValue());
         assertEquals("Bad rrElem DOM ID",
                      rrDomId, (elem.getDomID() == null ? -1L :
                                elem.getDomID().longValue()));

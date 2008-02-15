@@ -56,10 +56,10 @@ public class ReadoutRequestElementRecordTest
                      domId, elemRec.getDomID().longValue());
         assertNotNull("Null first UTC time", elemRec.getFirstTimeUTC());
         assertEquals("Bad first UTC time",
-                     firstTime, elemRec.getFirstTimeUTC().getUTCTimeAsLong());
+                     firstTime, elemRec.getFirstTimeUTC().longValue());
         assertNotNull("Null last UTC time", elemRec.getLastTimeUTC());
         assertEquals("Bad last UTC time",
-                     lastTime, elemRec.getLastTimeUTC().getUTCTimeAsLong());
+                     lastTime, elemRec.getLastTimeUTC().longValue());
         assertNotNull("Null source ID", elemRec.getSourceID());
         assertEquals("Bad source ID",
                      srcId, elemRec.getSourceID().getSourceID());
@@ -92,10 +92,10 @@ public class ReadoutRequestElementRecordTest
                      domId, elemRec.getDomID().longValue());
         assertNotNull("Null first UTC time", elemRec.getFirstTimeUTC());
         assertEquals("Bad first UTC time",
-                     firstTime, elemRec.getFirstTimeUTC().getUTCTimeAsLong());
+                     firstTime, elemRec.getFirstTimeUTC().longValue());
         assertNotNull("Null last UTC time", elemRec.getLastTimeUTC());
         assertEquals("Bad last UTC time",
-                     lastTime, elemRec.getLastTimeUTC().getUTCTimeAsLong());
+                     lastTime, elemRec.getLastTimeUTC().longValue());
         assertNotNull("Null source ID", elemRec.getSourceID());
         assertEquals("Bad source ID",
                      srcId, elemRec.getSourceID().getSourceID());
@@ -129,10 +129,10 @@ public class ReadoutRequestElementRecordTest
                      domId, elemRec.getDomID().longValue());
         assertNotNull("Null first UTC time", elemRec.getFirstTimeUTC());
         assertEquals("Bad first UTC time",
-                     firstTime, elemRec.getFirstTimeUTC().getUTCTimeAsLong());
+                     firstTime, elemRec.getFirstTimeUTC().longValue());
         assertNotNull("Null last UTC time", elemRec.getLastTimeUTC());
         assertEquals("Bad last UTC time",
-                     lastTime, elemRec.getLastTimeUTC().getUTCTimeAsLong());
+                     lastTime, elemRec.getLastTimeUTC().longValue());
         assertNotNull("Null source ID", elemRec.getSourceID());
         assertEquals("Bad source ID",
                      srcId, elemRec.getSourceID().getSourceID());

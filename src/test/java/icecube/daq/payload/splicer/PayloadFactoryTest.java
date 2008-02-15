@@ -307,7 +307,7 @@ public class PayloadFactoryTest
                      FooPayload.INTERFACE_FOO, pay.getPayloadInterfaceType());
         assertNotNull("Got null time", pay.getPayloadTimeUTC());
         assertEquals("Got unexpected time",
-                     payTime, pay.getPayloadTimeUTC().getUTCTimeAsLong());
+                     payTime, pay.getPayloadTimeUTC().longValue());
     }
 
     public void testCreateSpliceable()
@@ -344,7 +344,7 @@ public class PayloadFactoryTest
                      FooPayload.INTERFACE_FOO, pay.getPayloadInterfaceType());
         assertNotNull("Got null time", pay.getPayloadTimeUTC());
         assertEquals("Got unexpected time",
-                     payTime, pay.getPayloadTimeUTC().getUTCTimeAsLong());
+                     payTime, pay.getPayloadTimeUTC().longValue());
     }
 
     public void testBadCreateSpliceable()

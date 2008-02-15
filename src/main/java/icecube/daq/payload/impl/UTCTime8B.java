@@ -1,7 +1,7 @@
 /*
  * class: UTCTime8B
  *
- * Version $Id: UTCTime8B.java 2125 2007-10-12 18:27:05Z ksb $
+ * Version $Id: UTCTime8B.java 2657 2008-02-15 23:41:14Z dglo $
  *
  * Date: September 21 2004
  *
@@ -16,7 +16,7 @@ import icecube.util.Poolable;
 /**
  * Implementation of the IUTCTime interface using 64 bit numbers
  *
- * @version $Id: UTCTime8B.java 2125 2007-10-12 18:27:05Z ksb $
+ * @version $Id: UTCTime8B.java 2657 2008-02-15 23:41:14Z dglo $
  * @author hellwig
  */
 public class UTCTime8B extends Poolable implements IUTCTime {
@@ -81,13 +81,13 @@ public class UTCTime8B extends Poolable implements IUTCTime {
      */
     public Object deepCopy() {
         UTCTime8B tCopy = (UTCTime8B) getPoolable();
-        tCopy.initialize(getUTCTimeAsLong());
+        tCopy.initialize(longValue());
         return tCopy;
     }
     /**
      * returns the 8byte long representing the UTCTime
      */
-    public long getUTCTimeAsLong() {
+    public long longValue() {
         return mlutctime;
     }
 
@@ -98,7 +98,7 @@ public class UTCTime8B extends Poolable implements IUTCTime {
      * @return the difference in time in dor card units
      */
     public long timeDiff(IUTCTime tTime) {
-        long lDifference = this.mlutctime - tTime.getUTCTimeAsLong();
+        long lDifference = this.mlutctime - tTime.longValue();
         return lDifference;
     }
 
@@ -109,7 +109,7 @@ public class UTCTime8B extends Poolable implements IUTCTime {
      * @return the difference in time in ns
      */
     public double timeDiff_ns(IUTCTime tTime) {
-        double dDifference = (double)(this.mlutctime - tTime.getUTCTimeAsLong())/ 10.0;
+        double dDifference = (double)(this.mlutctime - tTime.longValue())/ 10.0;
         return dDifference;
     }
     /**
@@ -139,7 +139,7 @@ public class UTCTime8B extends Poolable implements IUTCTime {
             return getClass().getName().compareTo(object.getClass().getName());
         }
 
-        final long val = ((IUTCTime) object).getUTCTimeAsLong();
+        final long val = ((IUTCTime) object).longValue();
         if (this.mlutctime == val) return EQUAL;
         if (this.mlutctime < val) return BEFORE;
         return AFTER;

@@ -65,10 +65,10 @@ public class EventPayloadRecord_v3Test
         assertEquals("Bad source ID", srcId, evtRec.mt_sourceid.getSourceID());
         assertNotNull("Null first time", evtRec.mt_firstTime);
         assertEquals("Bad first time",
-                     firstTime, evtRec.mt_firstTime.getUTCTimeAsLong());
+                     firstTime, evtRec.mt_firstTime.longValue());
         assertNotNull("Null last time", evtRec.mt_lastTime);
         assertEquals("Bad last time",
-                     lastTime, evtRec.mt_lastTime.getUTCTimeAsLong());
+                     lastTime, evtRec.mt_lastTime.longValue());
         assertEquals("Bad event type", type, evtRec.mi_eventType);
         assertEquals("Bad run number", runNum, evtRec.mi_runNumber);
         assertEquals("Bad subrun number", subrunNum, evtRec.mi_subrunNumber);
@@ -103,10 +103,10 @@ public class EventPayloadRecord_v3Test
         assertEquals("Bad source ID", srcId, evtRec.mt_sourceid.getSourceID());
         assertNotNull("Null first time", evtRec.mt_firstTime);
         assertEquals("Bad first time",
-                     firstTime, evtRec.mt_firstTime.getUTCTimeAsLong());
+                     firstTime, evtRec.mt_firstTime.longValue());
         assertNotNull("Null last time", evtRec.mt_lastTime);
         assertEquals("Bad last time",
-                     lastTime, evtRec.mt_lastTime.getUTCTimeAsLong());
+                     lastTime, evtRec.mt_lastTime.longValue());
         assertEquals("Bad event type", type, evtRec.mi_eventType);
         assertEquals("Bad run number", runNum, evtRec.mi_runNumber);
         assertEquals("Bad subrun number", subrunNum, evtRec.mi_subrunNumber);

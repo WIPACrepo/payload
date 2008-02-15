@@ -224,7 +224,7 @@ public class PayloadTest
                      MyPayload.INTERFACE_TYPE, pay.getPayloadInterfaceType());
         assertNotNull("Got null time", pay.getPayloadTimeUTC());
         assertEquals("Got unexpected time",
-                     -1L, pay.getPayloadTimeUTC().getUTCTimeAsLong());
+                     -1L, pay.getPayloadTimeUTC().longValue());
 
         pay.recycle();
     }
@@ -253,7 +253,7 @@ public class PayloadTest
                      MyPayload.INTERFACE_TYPE, pay.getPayloadInterfaceType());
         assertNotNull("Got null time", pay.getPayloadTimeUTC());
         assertEquals("Got unexpected time",
-                     payTime, pay.getPayloadTimeUTC().getUTCTimeAsLong());
+                     payTime, pay.getPayloadTimeUTC().longValue());
 
         pay.dispose();
     }
@@ -303,7 +303,7 @@ public class PayloadTest
 
         assertNotNull("Got null time", pay.getPayloadTimeUTC());
         assertEquals("Got unexpected time",
-                     payTime, pay.getPayloadTimeUTC().getUTCTimeAsLong());
+                     payTime, pay.getPayloadTimeUTC().longValue());
 
         pay.dispose();
     }
@@ -357,7 +357,7 @@ public class PayloadTest
         assertEquals("Got unexpected length", len1, pay.getPayloadLength());
         assertNotNull("Got null time", pay.getPayloadTimeUTC());
         assertEquals("Got unexpected time",
-                     time1, pay.getPayloadTimeUTC().getUTCTimeAsLong());
+                     time1, pay.getPayloadTimeUTC().longValue());
 
         pay.initialize(16, buf, null);
         pay.loadSpliceablePayload();
@@ -366,7 +366,7 @@ public class PayloadTest
         assertEquals("Got unexpected length", len2, pay.getPayloadLength());
         assertNotNull("Got null time", pay.getPayloadTimeUTC());
         assertEquals("Got unexpected time",
-                     time2, pay.getPayloadTimeUTC().getUTCTimeAsLong());
+                     time2, pay.getPayloadTimeUTC().longValue());
 
         pay.shiftOffset(16);
         pay.loadSpliceablePayload();
@@ -375,7 +375,7 @@ public class PayloadTest
         assertEquals("Got unexpected length", len1, pay.getPayloadLength());
         assertNotNull("Got null time", pay.getPayloadTimeUTC());
         assertEquals("Got unexpected time",
-                     time1, pay.getPayloadTimeUTC().getUTCTimeAsLong());
+                     time1, pay.getPayloadTimeUTC().longValue());
 
         pay.recycle();
     }
@@ -470,7 +470,7 @@ public class PayloadTest
                      MyPayload.INTERFACE_TYPE, empty.getPayloadInterfaceType());
         assertNotNull("Got null time", empty.getPayloadTimeUTC());
         assertEquals("Got unexpected time",
-                     payTime, empty.getPayloadTimeUTC().getUTCTimeAsLong());
+                     payTime, empty.getPayloadTimeUTC().longValue());
 
         empty.recycle();
 
@@ -535,7 +535,7 @@ public class PayloadTest
                      MyPayload.INTERFACE_TYPE, empty.getPayloadInterfaceType());
         assertNotNull("Got null time", empty.getPayloadTimeUTC());
         assertEquals("Got unexpected time",
-                     payTime, empty.getPayloadTimeUTC().getUTCTimeAsLong());
+                     payTime, empty.getPayloadTimeUTC().longValue());
 
         empty.recycle();
 

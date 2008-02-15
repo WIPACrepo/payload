@@ -219,8 +219,8 @@ public class TriggerRequestRecord extends Poolable implements IWriteablePayloadR
         tDestination.writeInt(    TRIGGER_TYPE       ,       mi_triggerType                  );
         tDestination.writeInt(    TRIGGER_CONFIG_ID  ,       mi_triggerConfigID              );
         tDestination.writeInt(    SOURCE_ID          ,       mt_sourceid.getSourceID()       );
-        tDestination.writeLong(   FIRST_UTCTIME      ,       mt_firstTime.getUTCTimeAsLong() );
-        tDestination.writeLong(   LAST_UTCTIME       ,       mt_lastTime.getUTCTimeAsLong()  );
+        tDestination.writeLong(   FIRST_UTCTIME      ,       mt_firstTime.longValue() );
+        tDestination.writeLong(   LAST_UTCTIME       ,       mt_lastTime.longValue()  );
         iBytesWritten += mt_readoutRequestRecord.writeData( tDestination );
         if (tDestination.doLabel()) tDestination.undent().label("<=[TriggerRequestRecord]");
         return iBytesWritten;
@@ -238,8 +238,8 @@ public class TriggerRequestRecord extends Poolable implements IWriteablePayloadR
         tBuffer.putInt(                    iOffset + OFFSET_TRIGGER_TYPE,           mi_triggerType                  );
         tBuffer.putInt(                    iOffset + OFFSET_TRIGGER_CONFIG_ID,      mi_triggerConfigID              );
         tBuffer.putInt(                    iOffset + OFFSET_SOURCE_ID,              mt_sourceid.getSourceID()       );
-        tBuffer.putLong(                   iOffset + OFFSET_FIRST_UTCTIME,          mt_firstTime.getUTCTimeAsLong() );
-        tBuffer.putLong(                   iOffset + OFFSET_LAST_UTCTIME,           mt_lastTime.getUTCTimeAsLong()  );
+        tBuffer.putLong(                   iOffset + OFFSET_FIRST_UTCTIME,          mt_firstTime.longValue() );
+        tBuffer.putLong(                   iOffset + OFFSET_LAST_UTCTIME,           mt_lastTime.longValue()  );
         iBytesWritten += mt_readoutRequestRecord.writeData( iOffset + OFFSET_READOUT_REQUEST_RECORD, tBuffer                         );
         return iBytesWritten;
     }

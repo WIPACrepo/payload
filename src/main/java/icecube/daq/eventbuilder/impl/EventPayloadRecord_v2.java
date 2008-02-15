@@ -229,8 +229,8 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
         tDestination.writeShort( RECORD_TYPE    ,        msi_RecType                     );
         tDestination.writeInt(   UID            ,        mi_UID                          );
         tDestination.writeInt(   SOURCE_ID      ,        mt_sourceid.getSourceID()       );
-        tDestination.writeLong(  FIRST_UTCTIME  ,        mt_firstTime.getUTCTimeAsLong() );
-        tDestination.writeLong(  LAST_UTCTIME   ,        mt_lastTime.getUTCTimeAsLong()  );
+        tDestination.writeLong(  FIRST_UTCTIME  ,        mt_firstTime.longValue() );
+        tDestination.writeLong(  LAST_UTCTIME   ,        mt_lastTime.longValue()  );
         tDestination.writeInt(   EVENT_TYPE     ,        mi_eventType                    );
         tDestination.writeInt(   EVENT_CONFIGID ,        mi_eventConfigID                );
         tDestination.writeInt(   RUN_NUMBER     ,        mi_runNumber                    );
@@ -254,8 +254,8 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
         tBuffer.putShort(  iOffset + OFFSET_REC_TYPE,               msi_RecType                     );
         tBuffer.putInt(    iOffset + OFFSET_UID,                    mi_UID                          );
         tBuffer.putInt(    iOffset + OFFSET_SOURCE_ID,              mt_sourceid.getSourceID()       );
-        tBuffer.putLong(   iOffset + OFFSET_FIRST_UTCTIME,          mt_firstTime.getUTCTimeAsLong() );
-        tBuffer.putLong(   iOffset + OFFSET_LAST_UTCTIME,           mt_lastTime.getUTCTimeAsLong()  );
+        tBuffer.putLong(   iOffset + OFFSET_FIRST_UTCTIME,          mt_firstTime.longValue() );
+        tBuffer.putLong(   iOffset + OFFSET_LAST_UTCTIME,           mt_lastTime.longValue()  );
         tBuffer.putInt(    iOffset + OFFSET_EVENT_TYPE,             mi_eventType                    );
         tBuffer.putInt(    iOffset + OFFSET_EVENT_CONFIGID,         mi_eventConfigID                );
         tBuffer.putInt(    iOffset + OFFSET_RUN_NUMBER,             mi_runNumber                    );

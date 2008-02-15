@@ -139,14 +139,14 @@ public class EngineeringFormatTriggerPayload  extends AbstractTriggerPayload {
         mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
         mt_EngFormatPayload = tPayload;
         UTCTime8B tTime = (UTCTime8B) UTCTime8B.getFromPool();
-        tTime.initialize( mt_EngFormatPayload.getPayloadTimeUTC().getUTCTimeAsLong() );
+        tTime.initialize( mt_EngFormatPayload.getPayloadTimeUTC().longValue() );
         mttime = (IUTCTime) tTime;
         milength = PayloadEnvelope.SIZE_ENVELOPE + SIZE_TRIGGER_HDR+ mt_EngFormatPayload.getPayloadLength();
         //-Fill in the envelope data
         mt_PayloadEnvelope.initialize(
             this.getPayloadType(),
             milength,
-            mttime.getUTCTimeAsLong()
+            mttime.longValue()
             );
         //-when initialized in this way the payload has been created.
         super.mbPayloadCreated = true;

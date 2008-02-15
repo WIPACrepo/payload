@@ -78,10 +78,10 @@ public class ReadoutRequestRecordTest
                          (i == 0 ? type1 : type2), elem.getReadoutType());
             assertEquals("Bad element#" + i + " first time",
                          (i == 0 ? firstTime1 : firstTime2),
-                         elem.getFirstTimeUTC().getUTCTimeAsLong());
+                         elem.getFirstTimeUTC().longValue());
             assertEquals("Bad element#" + i + " last time",
                          (i == 0 ? lastTime1 : lastTime2),
-                         elem.getLastTimeUTC().getUTCTimeAsLong());
+                         elem.getLastTimeUTC().longValue());
             assertEquals("Bad element#" + i + " DOM ID",
                          (i == 0 ? domId1 : domId2),
                          (elem.getDomID() == null ? -1L :
@@ -143,10 +143,10 @@ public class ReadoutRequestRecordTest
                          (i == 0 ? type1 : type2), elem.getReadoutType());
             assertEquals("Bad element#" + i + " first time",
                          (i == 0 ? firstTime1 : firstTime2),
-                         elem.getFirstTimeUTC().getUTCTimeAsLong());
+                         elem.getFirstTimeUTC().longValue());
             assertEquals("Bad element#" + i + " last time",
                          (i == 0 ? lastTime1 : lastTime2),
-                         elem.getLastTimeUTC().getUTCTimeAsLong());
+                         elem.getLastTimeUTC().longValue());
             assertEquals("Bad element#" + i + " DOM ID",
                          (i == 0 ? domId1 : domId2),
                          (elem.getDomID() == null ? -1L :
@@ -208,10 +208,10 @@ public class ReadoutRequestRecordTest
                          (i == 0 ? type1 : type2), elem.getReadoutType());
             assertEquals("Bad element#" + i + " first time",
                          (i == 0 ? firstTime1 : firstTime2),
-                         elem.getFirstTimeUTC().getUTCTimeAsLong());
+                         elem.getFirstTimeUTC().longValue());
             assertEquals("Bad element#" + i + " last time",
                          (i == 0 ? lastTime1 : lastTime2),
-                         elem.getLastTimeUTC().getUTCTimeAsLong());
+                         elem.getLastTimeUTC().longValue());
             assertEquals("Bad element#" + i + " DOM ID",
                          (i == 0 ? domId1 : domId2),
                          (elem.getDomID() == null ? -1L :

@@ -143,7 +143,7 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
         //-If we go to write out then will have to assess the size of the record
         // before placing onto stream so can correctly have the data length.
         mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
-        long time = tFirstTimeUTC.getUTCTimeAsLong();
+        long time = tFirstTimeUTC.longValue();
 
         //-set the root payload time
         super.mttime = (IUTCTime) tFirstTimeUTC.deepCopy();

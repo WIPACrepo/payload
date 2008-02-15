@@ -113,7 +113,7 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
 
         // feb-03-2007 kael-dylan-hanson: don't use GPS times - they are not necessarily
         // representative of the wall clock time of the TCAL event
-        lutctime = tTime.getUTCTimeAsLong();
+        lutctime = tTime.longValue();
         if (lutctime <= 0L) {
             mtLog.error("TCAL: failed-tcal domid="+tDomId+" domclock="+lutctime);
         }

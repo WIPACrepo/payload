@@ -137,9 +137,9 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
             tDestination.writeInt(SOURCEID, -1);
         }
         //-write out OFFSET_FIRST_TIME
-        tDestination.writeLong(FIRST_TIME, mt_firstTime.getUTCTimeAsLong());
+        tDestination.writeLong(FIRST_TIME, mt_firstTime.longValue());
         //-write out OFFSET_LAST_TIME
-        tDestination.writeLong(LAST_TIME, mt_lastTime.getUTCTimeAsLong());
+        tDestination.writeLong(LAST_TIME, mt_lastTime.longValue());
         //-write out OFFSET_DOMID
         if (mt_domId != null) {
             tDestination.writeLong(DOMID, mt_domId.longValue());
@@ -167,9 +167,9 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
             tBuffer.putInt(iOffset + OFFSET_SOURCEID, -1);
         }
         //-write out OFFSET_FIRST_TIME
-        tBuffer.putLong(iOffset + OFFSET_FIRST_TIME, mt_firstTime.getUTCTimeAsLong());
+        tBuffer.putLong(iOffset + OFFSET_FIRST_TIME, mt_firstTime.longValue());
         //-write out OFFSET_LAST_TIME
-        tBuffer.putLong(iOffset + OFFSET_LAST_TIME, mt_lastTime.getUTCTimeAsLong());
+        tBuffer.putLong(iOffset + OFFSET_LAST_TIME, mt_lastTime.longValue());
         //-write out OFFSET_DOMID
         if (mt_domId != null) {
             tBuffer.putLong(iOffset + OFFSET_DOMID, mt_domId.longValue());
