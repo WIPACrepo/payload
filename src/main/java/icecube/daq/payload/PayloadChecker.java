@@ -2,6 +2,7 @@ package icecube.daq.payload;
 
 import icecube.daq.eventbuilder.IEventPayload;
 import icecube.daq.eventbuilder.IReadoutDataPayload;
+import icecube.daq.payload.IDomHit;
 import icecube.daq.trigger.IHitDataPayload;
 import icecube.daq.trigger.IHitPayload;
 import icecube.daq.trigger.IReadoutRequest;
@@ -459,6 +460,9 @@ public abstract class PayloadChecker
         } else if (pay instanceof IHitPayload) {
             // hits have nothing to validate
             rtnVal = true;
+        } else if (pay instanceof IDomHit) {
+            // DOM hits have nothing to validate
+            rtnVal = true;
         } else {
             LOG.error("Unknown payload type " + pay.getClass().getName());
             rtnVal = false;
@@ -479,7 +483,7 @@ public abstract class PayloadChecker
                                                      boolean verbose)
     {
         String rdpDesc = getReadoutDataString(rdp);
-        //int rdpCfg = rdp.getTriggerConfigID();
+        int rdpCfg = rdp.getTriggerConfigID();
         ISourceID rdpSrc = rdp.getSourceID();
         IUTCTime rdpFirst = rdp.getFirstTimeUTC();
         IUTCTime rdpLast = rdp.getLastTimeUTC();
@@ -499,6 +503,15 @@ public abstract class PayloadChecker
             }
 
             if (!isSourceEqual(rdpDesc, rdpSrc, hitDesc, hitSrc, verbose)) {
+                return false;
+            }
+
+            if (rdpCfg != -1) {
+                if (verbose) {
+                    LOG.error(rdpDesc + " config ID " + rdpCfg +
+                      " should be -1");
+                }
+
                 return false;
             }
         }
