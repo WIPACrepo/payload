@@ -457,6 +457,9 @@ public abstract class PayloadChecker
         } else if (pay instanceof ITriggerRequestPayload) {
             rtnVal = validateTriggerRequest((ITriggerRequestPayload) pay,
                                             verbose);
+        } else if (pay instanceof IReadoutDataPayload) {
+            rtnVal = validateReadoutDataPayload((IReadoutDataPayload) pay,
+                                                verbose);
         } else if (pay instanceof IHitPayload) {
             // hits have nothing to validate
             rtnVal = true;
