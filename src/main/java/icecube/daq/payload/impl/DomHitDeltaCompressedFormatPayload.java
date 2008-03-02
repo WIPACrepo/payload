@@ -373,7 +373,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      */
     public String toString()
     {
-        return "DeltaHit@" + mttime + "[dom " + mlDomId + " " +
+        return "DeltaHit@" + mttime + "[dom " + Long.toHexString(mlDomId) + " " +
             (mtDomHitDeltaCompressedRecord == null ? "<noRecord>" :
              "[" + mtDomHitDeltaCompressedRecord.toDataString() + "]") + "]";
     }
