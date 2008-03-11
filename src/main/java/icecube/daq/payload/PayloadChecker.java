@@ -149,6 +149,39 @@ public abstract class PayloadChecker
         return src.toString();
     }
 
+    private static List<IHitPayload> getTrigReqHits(ITriggerRequestPayload tr)
+    {
+        return getTrigReqHits(tr, new ArrayList<IHitPayload>());
+    }
+
+    private static List<IHitPayload> getTrigReqHits(ITriggerRequestPayload tr,
+                                                    List<IHitPayload> hitList)
+    {
+        List payList;
+        try {
+            payList = tr.getPayloads();
+        } catch (Exception ex) {
+            LOG.error("Couldn't get list of payloads from " + tr, ex);
+            payList = null;
+        }
+
+        if (payList != null) {
+            for (Object obj : payList) {
+                if (obj instanceof ITriggerRequestPayload) {
+                    getTrigReqHits((ITriggerRequestPayload) obj,
+                                          hitList);
+                } else if (obj instanceof IHitPayload) {
+                    hitList.add((IHitPayload) obj);
+                } else {
+                    LOG.error("Unrecognized payload " + obj +
+                              " in " + tr);
+                }
+            }
+        }
+
+        return hitList;
+    }
+
     /**
      * Get string representation of a trigger request.
      *
@@ -368,7 +401,9 @@ public abstract class PayloadChecker
             return false;
         }
 
-        ArrayList evtHits = new ArrayList();
+        List<IHitPayload> trigHits = getTrigReqHits(trigReq);
+
+        ArrayList<IHitDataPayload> evtHits = new ArrayList<IHitDataPayload>();
         for (Object obj : evt.getReadoutDataPayloads()) {
             IReadoutDataPayload rdp = (IReadoutDataPayload) obj;
             loadPayload(rdp);
@@ -391,7 +426,27 @@ public abstract class PayloadChecker
 
             List rdpHits = rdp.getHitList();
             if (rdpHits != null) {
-                evtHits.addAll(rdpHits);
+                for (Object rh : rdpHits) {
+                    evtHits.add((IHitDataPayload) rh);
+                }
+            }
+        }
+
+        for (IHitPayload tHit : trigHits) {
+            boolean found = false;
+            for (IHitDataPayload eHit : evtHits) {
+                if (tHit.getDOMID().equals(eHit.getDOMID()) &&
+                    tHit.getPayloadTimeUTC().equals(eHit.getPayloadTimeUTC()))
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                System.err.println("Couldn't find trigger hit " + tHit +
+                                   " in readout data hits");
+                return false;
             }
         }
 
