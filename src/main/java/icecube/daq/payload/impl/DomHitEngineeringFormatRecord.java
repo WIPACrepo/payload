@@ -169,6 +169,7 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
         //-Parse the ATWDFormat's and initialize
         miaAFF[0] = (int) (tBuffer.get(iRecordOffset + OFFSET_AFFBYTE0) & 0xff);
         miaAFF[1] = (int) (tBuffer.get(iRecordOffset + OFFSET_AFFBYTE1) & 0xff);
+
         //-initialize ATWDFormat's
         mtaAtwdFormat[0].initialize( (miaAFF[0] & 0x0f) );
         mtaAtwdFormat[1].initialize( (miaAFF[0] >> 4)   );
@@ -506,7 +507,9 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
             if (i > 0) {
                 buf.append(' ');
             }
-            buf.append(Integer.toHexString((int) maiFADC[i]));
+
+            int val = ((int) maiFADC[i]) & 0xffff;
+            buf.append(Integer.toHexString(val));
         }
         buf.append(']');
         buf.append(" atwd [");
@@ -520,7 +523,9 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
                     if (j > 0) {
                         buf.append(' ');
                     }
-                    buf.append(Integer.toHexString((int) maiATWD[i][j]));
+
+                    int val = ((int) maiATWD[i][j]) & 0xffff;
+                    buf.append(Integer.toHexString(val));
                 }
             }
             buf.append(']');
