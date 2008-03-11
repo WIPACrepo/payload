@@ -27,7 +27,7 @@ public interface ITriggerPayload extends ILoadablePayload, IWriteablePayload {
     int getTriggerType();
 
     /**
-     * `returns ID of trigger
+     * returns ID of trigger
      */
     int getTriggerConfigID();
 
