@@ -704,7 +704,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
 
     private static String toHexString(byte b)
     {
-        String str = Integer.toHexString((int) b);
+        String str = Integer.toHexString((int) b & 0xff);
         if (str.length() >= 2) {
             return str;
         }
