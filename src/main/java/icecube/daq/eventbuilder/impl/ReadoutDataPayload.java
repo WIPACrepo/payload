@@ -428,7 +428,6 @@ if (recycled == null) try { throw new Throwable("Originally recycled"); } catch 
     {
         return "ReadoutData" +
             (mt_ReadoutDataRecord == null ? "<noRecord>" :
-             "[" + mt_ReadoutDataRecord.toDataString() + "]") +
-            super.toDataString();
+             "[" + mt_ReadoutDataRecord.toDataString() + "]");
     }
 }
