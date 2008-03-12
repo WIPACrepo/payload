@@ -277,7 +277,7 @@ public class TriggerRequestRecord extends Poolable implements IWriteablePayloadR
     }
 
     /**
-     * Get readout request data string.
+     * Get trigger request data string.
      *
      * @return data string
      */
