@@ -282,4 +282,30 @@ public class EventPayloadRecord_v3 extends Poolable implements IWriteablePayload
         mi_subrunNumber    = -1;
     }
 
+
+    /**
+     * Get event_v3 data string.
+     *
+     * @return data string
+     */
+    public String toDataString()
+    {
+        return "type " + msi_RecType +
+            " uid " + mi_UID +
+            " src " + mt_sourceid +
+            " [" + mt_firstTime + "-" + mt_lastTime + "]" +
+            " evtType " + mi_eventType +
+            " run " + mi_runNumber +
+            (mi_subrunNumber <= 0 ? "" : " subrun " + mi_subrunNumber);
+    }
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
+    public String toString()
+    {
+        return "EventPayloadRecord_v3[" + toDataString() + "]";
+    }
 }

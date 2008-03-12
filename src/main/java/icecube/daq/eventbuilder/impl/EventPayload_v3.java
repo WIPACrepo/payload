@@ -451,4 +451,16 @@ public class EventPayload_v3 extends AbstractCompositePayload implements IEventP
         return iBytesWritten;
     }
 
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
+    public String toString()
+    {
+        return "Event_v3" +
+            (mt_eventRecord == null ? "<noRecord>" :
+             "[" + mt_eventRecord.toDataString() + "]");
+    }
 }
