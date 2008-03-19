@@ -5,9 +5,11 @@ import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.splicer.CompositePayloadFactory;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.ITriggerRequestPayload;
-import icecube.daq.trigger.impl.TriggerRequestPayload;
 
 import java.util.Vector;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  *  This Factory produces IEventPayload's from their
@@ -16,6 +18,12 @@ import java.util.Vector;
  *  @author dwharton,mhellwig
  */
 public class EventPayloadFactory  extends CompositePayloadFactory {
+
+    /**
+     * Log object for this class
+     */
+    private static final Log mtLog = LogFactory.getLog(EventPayloadFactory.class);
+
     /**
      * Standard Constructor.
      */
@@ -51,15 +59,15 @@ public class EventPayloadFactory  extends CompositePayloadFactory {
         boolean bDeepCopyOk = false;
         //-sub-payloads which to copy
         Vector tDataPayloadsCopy =  null;
-        TriggerRequestPayload tTriggerRequestCopy = null;
+        ITriggerRequestPayload tTriggerRequestCopy = null;
         //-the final output
         EventPayload tPayload = null;
         //-make deep copy of input Payloads
         if (tDataPayloads != null) {
             tDataPayloadsCopy = CompositePayloadFactory.deepCopyPayloadVector(tDataPayloads);
             if (tDataPayloadsCopy != null) {
-                tTriggerRequestCopy = (TriggerRequestPayload) ((Payload) tTriggerRequest).deepCopy();
-                bDeepCopyOk = true;
+                tTriggerRequestCopy = (ITriggerRequestPayload) tTriggerRequest.deepCopy();
+                bDeepCopyOk = (tTriggerRequestCopy != null);
             }
             if (!bDeepCopyOk) {
                 //-recycle the possible incomplete vector of copies
@@ -71,6 +79,13 @@ public class EventPayloadFactory  extends CompositePayloadFactory {
                 if (tTriggerRequestCopy != null) {
                     tTriggerRequestCopy.recycle();
                     tTriggerRequestCopy = null;
+                }
+
+                if (mtLog.isErrorEnabled()) {
+                    mtLog.error("Couldn't create event uid " + iUID +
+                                " from source " +
+                                (tSourceID == null ? "NULL" :
+                                 tSourceID.getSourceID()));
                 }
             }
         }
