@@ -40,8 +40,8 @@ public class SimpleEventBuilder {
     protected static TriggerRequestPayloadFactory mtTriggerRequestPayloadFactory = new TriggerRequestPayloadFactory();
     protected static HitPayloadFactory            mtHitPayloadFactory            = new HitPayloadFactory();
     protected static ReadoutDataPayloadFactory    mtReadoutDataPayloadFactory    = new ReadoutDataPayloadFactory();
-    // protected static EventPayloadFactory          mtEventPayloadFactory          = new EventPayloadFactory();
-    protected static EventPayload_v2Factory       mtEventPayload_v2Factory       = new EventPayload_v2Factory();
+    // protected static EventPayload_v1Factory          mtEventPayloadFactory          = new EventPayload_v1Factory();
+    protected static EventPayload_v2Factory       mtEventPayloadFactory       = new EventPayload_v2Factory();
 
     /**
      * Standard Constructor.
@@ -97,7 +97,7 @@ public class SimpleEventBuilder {
         //-only a single entry, but required for the interface.
         tReadoutDataPayloads.add(tReadoutDataPayload);
         //-Create the IEventPayload
-        Payload tEventPayload =  mtEventPayload_v2Factory.createPayload(
+        Payload tEventPayload =  mtEventPayloadFactory.createPayload(
                                 iEventUID, tEventSourceID, tFirstTime, tLastTime,
                                 iEventType, iEventConfigID, iRunNumber,
                                 tTriggerRequestPayload, tReadoutDataPayloads);
@@ -136,7 +136,7 @@ public class SimpleEventBuilder {
         //-only a single entry, but required for the interface.
         tReadoutDataPayloads.add(tReadoutDataPayload);
         //-Create the IEventPayload
-        Payload tEventPayload =  mtEventPayload_v2Factory.createPayload(
+        Payload tEventPayload =  mtEventPayloadFactory.createPayload(
                                 iEventUID, tEventSourceID, tFirstTime, tLastTime,
                                 iEventType, iEventConfigID, iRunNumber,
                                 tTriggerRequestPayload, tReadoutDataPayloads);
@@ -216,7 +216,7 @@ public class SimpleEventBuilder {
 
 
         //-Create the IEventPayload
-        Payload tEventPayload =  mtEventPayload_v2Factory.createPayload(
+        Payload tEventPayload =  mtEventPayloadFactory.createPayload(
                                 iEventUID, tEventSourceID, tFirstTime, tLastTime,
                                 iEventType, iEventConfigID, iRunNumber,
                                 tTriggerRequestPayload, tReadoutDataPayloads);

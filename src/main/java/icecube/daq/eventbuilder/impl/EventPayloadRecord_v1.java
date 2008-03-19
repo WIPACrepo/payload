@@ -1,12 +1,8 @@
 package icecube.daq.eventbuilder.impl;
 
+import icecube.daq.eventbuilder.AbstractEventPayloadRecord;
 import icecube.daq.payload.IPayloadDestination;
-import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.IWriteablePayloadRecord;
 import icecube.daq.payload.RecordTypeRegistry;
-import icecube.daq.payload.impl.SourceID4B;
-import icecube.daq.payload.impl.UTCTime8B;
 import icecube.util.Poolable;
 
 import java.io.IOException;
@@ -24,72 +20,83 @@ import java.util.zip.DataFormatException;
  * @author dwharton
  *
  */
-public class EventPayloadRecord_v1 extends Poolable implements IWriteablePayloadRecord {
-    public static final int REC_TYPE               = RecordTypeRegistry.RECORD_TYPE_EVENT;
-    protected boolean mb_IsDataLoaded;
-
-    public static final int SIZE_REC_TYPE          = 2;
-    public static final int SIZE_UID               = 4;
-    public static final int SIZE_SOURCE_ID         = 4; //-this will use ISourceID.getSourceID() (int) for writing.
-    public static final int SIZE_FIRST_UTCTIME     = 8;
-    public static final int SIZE_LAST_UTCTIME      = 8;
-    public static final int SIZE_TOTAL             = SIZE_REC_TYPE + SIZE_UID + SIZE_SOURCE_ID + SIZE_FIRST_UTCTIME + SIZE_LAST_UTCTIME;
-
-
-    public static final int OFFSET_REC_TYPE                = 0; //-this is for type and endianess
-    public static final int OFFSET_UID                     = OFFSET_REC_TYPE          + SIZE_REC_TYPE;
-    public static final int OFFSET_SOURCE_ID               = OFFSET_UID               + SIZE_SOURCE_ID;
-    public static final int OFFSET_FIRST_UTCTIME           = OFFSET_SOURCE_ID         + SIZE_SOURCE_ID;
-    public static final int OFFSET_LAST_UTCTIME            = OFFSET_FIRST_UTCTIME     + SIZE_FIRST_UTCTIME;
+public class EventPayloadRecord_v1
+    extends AbstractEventPayloadRecord
+{
+    public static final int SIZE_REC_TYPE = 2;
+    public static final int SIZE_UID = 4;
+    public static final int SIZE_SOURCE_ID = 4; //-this will use ISourceID.getSourceID() (int) for writing.
+    public static final int SIZE_FIRST_UTCTIME = 8;
+    public static final int SIZE_LAST_UTCTIME = 8;
+    public static final int SIZE_TOTAL = SIZE_REC_TYPE + SIZE_UID +
+        SIZE_SOURCE_ID + SIZE_FIRST_UTCTIME + SIZE_LAST_UTCTIME;
 
 
-    public static final String RECORD_TYPE   = "RECORD_TYPE";
-    public static final String UID           = "UID";
-    public static final String SOURCE_ID     = "SOURCE_ID";
+    public static final int OFFSET_REC_TYPE = 0; //-this is for type and endianess
+    public static final int OFFSET_UID = OFFSET_REC_TYPE + SIZE_REC_TYPE;
+    public static final int OFFSET_SOURCE_ID = OFFSET_UID + SIZE_SOURCE_ID;
+    public static final int OFFSET_FIRST_UTCTIME =
+        OFFSET_SOURCE_ID + SIZE_SOURCE_ID;
+    public static final int OFFSET_LAST_UTCTIME =
+        OFFSET_FIRST_UTCTIME + SIZE_FIRST_UTCTIME;
+
+    public static final String RECORD_TYPE = "RECORD_TYPE";
+    public static final String UID = "UID";
+    public static final String SOURCE_ID = "SOURCE_ID";
     public static final String FIRST_UTCTIME = "FIRST_UTCTIME";
-    public static final String LAST_UTCTIME  = "LAST_UTCTIME";
+    public static final String LAST_UTCTIME = "LAST_UTCTIME";
 
     //-This is the start of the variable length portion of the Payload
-    public static final int OFFSET_READOUT_REQUEST_RECORD  = OFFSET_LAST_UTCTIME      + SIZE_LAST_UTCTIME;
-
-    public short           msi_RecType        = (short) REC_TYPE;
-    public int             mi_UID             = -1;    //-unique id for this event.
-    public ISourceID       mt_sourceid;  //-the source of this request.
-    public IUTCTime        mt_firstTime;  //-start of the time window
-    public IUTCTime        mt_lastTime;  //-end of the time window
+    public static final int OFFSET_READOUT_REQUEST_RECORD =
+        OFFSET_LAST_UTCTIME + SIZE_LAST_UTCTIME;
 
     /**
      * Standard Constructor.
      */
-    public EventPayloadRecord_v1() {
+    public EventPayloadRecord_v1()
+    {
+        super(RecordTypeRegistry.RECORD_TYPE_EVENT);
     }
 
     /**
-     * create's the data portion of this record form
-     * the contained data.
-     * @param iUID the unique id for this event
-     * @param tSourceID the source id (ie event-builder source-id) which is producing this event-data
-     * @param tFirstTimeUTC the first time in this event-data window
-     * @param tLastTimeUTC the last time in this event-data window
+     * Get the number of bytes required to write this record.
+     * @return byte length
      */
-    public void initialize(
-            int             iUID,
-            ISourceID       tSourceID,
-            IUTCTime        tFirstTimeUTC,
-            IUTCTime        tLastTimeUTC
-        ) {
-        mi_UID             = iUID;
-        mt_sourceid        = tSourceID;
-        mt_firstTime       = tFirstTimeUTC;
-        mt_lastTime        = tLastTimeUTC;
-        mb_IsDataLoaded = true;
+    public int getByteLength()
+    {
+        return SIZE_TOTAL;
     }
+
+    /**
+     * Get the event config id for this event type which acts as
+     * a primary key for looking up the parameters/settings which are specific
+     * to this specific event-type.
+     * @return the event configuration id for this event.
+     * NOTE:a value of -1 indicates that this is not implemented by this object
+     */
+    public int getEventConfigID()
+    {
+        return -1;
+    }
+
+    /**
+     * Get the event type indicating the configuration type which
+     * produced this event.
+     * @return the event-type
+     * NOTE:a value of -1 indicates that this is not implemented by this object
+     */
+    public int getEventType()
+    {
+        return -1;
+    }
+
     /**
      * Pool method to get an object from the pool
      * for reuse.
      * @return a EventPayloadRecord object for reuse.
      */
-    public static Poolable getFromPool() {
+    public static Poolable getFromPool()
+    {
         return (Poolable) new EventPayloadRecord_v1();
     }
 
@@ -97,25 +104,9 @@ public class EventPayloadRecord_v1 extends Poolable implements IWriteablePayload
      * Get an object from the pool in a non-static context.
      * @return object of this type from the object pool.
      */
-    public Poolable getPoolable() {
+    public Poolable getPoolable()
+    {
         return this.getFromPool();
-    }
-
-    /**
-     * Returns an instance of this object so that it can be
-     * recycled, ie returned to the pool.
-     */
-    public void recycle() {
-        //-this is ok to be called here because this is the terminal node of inherited calls
-        // to recycle().
-        dispose();
-    }
-    /**
-     * Determines if this record is loaded with valid data.
-     * @return true if data is loaded, false otherwise.
-     */
-    public boolean isDataLoaded() {
-        return mb_IsDataLoaded;
     }
 
     /**
@@ -126,48 +117,53 @@ public class EventPayloadRecord_v1 extends Poolable implements IWriteablePayload
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
-        mb_IsDataLoaded = false;
+    public void loadData(int iRecordOffset, ByteBuffer tBuffer)
+        throws IOException, DataFormatException
+    {
+        setIsDataLoaded(false);
+
         ByteOrder tSaveOrder = tBuffer.order();
         //-read record-type
         if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
             tBuffer.order(ByteOrder.BIG_ENDIAN);
         }
         // OFFSET_REC_TYPE
-        msi_RecType = tBuffer.getShort(iRecordOffset + OFFSET_REC_TYPE);
+        checkRecordType(tBuffer.getShort(iRecordOffset + OFFSET_REC_TYPE));
 
         //-read uid
         // OFFSET_UID
-        mi_UID = tBuffer.getInt(iRecordOffset + OFFSET_UID);
+        setEventUID(tBuffer.getInt(iRecordOffset + OFFSET_UID));
 
         //-read source-id of requestor
-        // OFFSET_SOURCE_ID
-        mt_sourceid = new SourceID4B(tBuffer.getInt(iRecordOffset + OFFSET_SOURCE_ID));
+        setSourceID(tBuffer.getInt(iRecordOffset + OFFSET_SOURCE_ID));
 
         //-read first time
-        mt_firstTime = new UTCTime8B(tBuffer.getLong(iRecordOffset + OFFSET_FIRST_UTCTIME));
+        setFirstTime(tBuffer.getLong(iRecordOffset + OFFSET_FIRST_UTCTIME));
 
         //-read last time
-        mt_lastTime = new UTCTime8B(tBuffer.getLong(iRecordOffset + OFFSET_LAST_UTCTIME));
+        setLastTime(tBuffer.getLong(iRecordOffset + OFFSET_LAST_UTCTIME));
 
         //-restore order
         if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
             tBuffer.order(tSaveOrder);
         }
-        mb_IsDataLoaded = true;
+
+        setIsDataLoaded(true);
     }
 
     /**
      * Method to write this record to the payload destination.
      * @param tDestination PayloadDestination to which to write this record.
      */
-    public int writeData(IPayloadDestination tDestination) throws IOException {
+    public int writeData(IPayloadDestination tDestination)
+        throws IOException
+    {
         if (tDestination.doLabel()) tDestination.label("[EventPayloadRecord_v1]=>").indent();
-        tDestination.writeShort( RECORD_TYPE    ,        msi_RecType                     );
-        tDestination.writeInt(   UID            ,        mi_UID                          );
-        tDestination.writeInt(   SOURCE_ID      ,        mt_sourceid.getSourceID()       );
-        tDestination.writeLong(  FIRST_UTCTIME  ,        mt_firstTime.longValue() );
-        tDestination.writeLong(  LAST_UTCTIME   ,        mt_lastTime.longValue()  );
+        tDestination.writeShort(RECORD_TYPE, getRecordType());
+        tDestination.writeInt(UID, getEventUID());
+        tDestination.writeInt(SOURCE_ID, getSourceIDInt());
+        tDestination.writeLong(FIRST_UTCTIME, getFirstTimeLong());
+        tDestination.writeLong(LAST_UTCTIME, getLastTimeLong());
         if (tDestination.doLabel()) tDestination.undent().label("<=[EventPayloadRecord_v1]");
         return SIZE_TOTAL;
     }
@@ -176,17 +172,19 @@ public class EventPayloadRecord_v1 extends Poolable implements IWriteablePayload
      * @param iOffset the offset at which to start writing the object.
      * @param tBuffer the ByteBuffer into which to write this payload-record.
      */
-    public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
+    public int writeData(int iOffset, ByteBuffer tBuffer)
+        throws IOException
+    {
         ByteOrder tSaveOrder = tBuffer.order();
         //-switch to BIG_ENDIAN
         if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
             tBuffer.order(ByteOrder.BIG_ENDIAN);
         }
-        tBuffer.putShort(                  iOffset + OFFSET_REC_TYPE,               msi_RecType                     );
-        tBuffer.putInt(                    iOffset + OFFSET_UID,                    mi_UID                          );
-        tBuffer.putInt(                    iOffset + OFFSET_SOURCE_ID,              mt_sourceid.getSourceID()       );
-        tBuffer.putLong(                   iOffset + OFFSET_FIRST_UTCTIME,          mt_firstTime.longValue() );
-        tBuffer.putLong(                   iOffset + OFFSET_LAST_UTCTIME,           mt_lastTime.longValue()  );
+        tBuffer.putShort(iOffset + OFFSET_REC_TYPE, getRecordType());
+        tBuffer.putInt(iOffset + OFFSET_UID, getEventUID());
+        tBuffer.putInt(iOffset + OFFSET_SOURCE_ID, getSourceIDInt());
+        tBuffer.putLong(iOffset + OFFSET_FIRST_UTCTIME, getFirstTimeLong());
+        tBuffer.putLong(iOffset + OFFSET_LAST_UTCTIME, getLastTimeLong());
         //-restore order
         if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
             tBuffer.order(tSaveOrder);
@@ -194,53 +192,13 @@ public class EventPayloadRecord_v1 extends Poolable implements IWriteablePayload
         return SIZE_TOTAL;
     }
 
-
     /**
-     * Method to reset this object for reuse by a pool.
-     * This is called once this Object has been used and is no longer valid.
+     * Return string description of the object.
+     *
+     * @return object description
      */
-    public void dispose() {
-        mb_IsDataLoaded = false;
-        mt_sourceid        = null;
-        mt_firstTime       = null;
-        mt_lastTime        = null;
-    }
-
-    public int getEventUID()
+    public String toString()
     {
-        return mi_UID;
-    }
-
-    public long getFirstTimeLong()
-    {
-        if (mt_firstTime == null) {
-            return Long.MIN_VALUE;
-        }
-
-        return mt_firstTime.longValue();
-    }
-
-    public IUTCTime getFirstTimeUTC()
-    {
-        return mt_firstTime;
-    }
-
-    public long getLastTimeLong()
-    {
-        if (mt_lastTime == null) {
-            return Long.MIN_VALUE;
-        }
-
-        return mt_lastTime.longValue();
-    }
-
-    public IUTCTime getLastTimeUTC()
-    {
-        return mt_lastTime;
-    }
-
-    public ISourceID getSourceID()
-    {
-        return mt_sourceid;
+        return "EventPayloadRecord_v1[" + toDataString() + "]";
     }
 }

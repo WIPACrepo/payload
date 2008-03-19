@@ -18,11 +18,10 @@ import org.apache.commons.logging.LogFactory;
  *  @author dwharton,mhellwig
  */
 public class EventPayload_v1Factory  extends CompositePayloadFactory {
-
     /**
      * Log object for this class
      */
-    private static final Log mtLog = LogFactory.getLog(EventPayload_v1Factory.class);
+    private static final Log mtLog = LogFactory.getLog(EventPayload_v3Factory.class);
 
     /**
      * Standard Constructor.
@@ -54,44 +53,39 @@ public class EventPayload_v1Factory  extends CompositePayloadFactory {
             ITriggerRequestPayload tTriggerRequest,
             Vector          tDataPayloads
     ) {
-        //-variable to check if the deep copy has been
-        // successful.
-        boolean bDeepCopyOk = false;
-        //-sub-payloads which to copy
-        Vector tDataPayloadsCopy =  null;
-        ITriggerRequestPayload tTriggerRequestCopy = null;
-        //-the final output
-        EventPayload_v1 tPayload = null;
-        //-make deep copy of input Payloads
-        if (tDataPayloads != null) {
-            tDataPayloadsCopy = CompositePayloadFactory.deepCopyPayloadVector(tDataPayloads);
-            if (tDataPayloadsCopy != null) {
-                tTriggerRequestCopy = (ITriggerRequestPayload) tTriggerRequest.deepCopy();
-                bDeepCopyOk = (tTriggerRequestCopy != null);
-            }
-            if (!bDeepCopyOk) {
-                //-recycle the possible incomplete vector of copies
-                if (tDataPayloadsCopy != null) {
-                    CompositePayloadFactory.recyclePayloads(tDataPayloadsCopy);
-                    tDataPayloadsCopy = null;
-                }
-                //-recycle the trigger-request if it has been copied.
-                if (tTriggerRequestCopy != null) {
-                    tTriggerRequestCopy.recycle();
-                    tTriggerRequestCopy = null;
-                }
+        //-create the deepCopy of the payloads as part of the composite.
+        Vector tDataPayloadsCopy =
+            CompositePayloadFactory.deepCopyPayloadVector(tDataPayloads);
 
-                if (mtLog.isErrorEnabled()) {
-                    mtLog.error("Couldn't create event uid " + iUID +
-                                " from source " +
-                                (tSourceID == null ? "NULL" :
-                                 tSourceID.getSourceID()));
-                }
-            }
+        //-if list copy succeeded, move onto request
+        ITriggerRequestPayload tTriggerRequestCopy;
+        if (tDataPayloadsCopy == null) {
+            tTriggerRequestCopy = null;
+        } else {
+            //-the deepCopy() comes from ICopyable
+            tTriggerRequestCopy = (ITriggerRequestPayload) tTriggerRequest.deepCopy();
         }
-        //-create the EventPayload if all is well
-        if (bDeepCopyOk) {
-            //tPayload = (EventPayload) EventPayload.getFromPool();
+
+        //-the final output
+        EventPayload_v1 tPayload;
+        //-if deep-copy failed, then recycle the individual payloads that did succeed
+        if (tTriggerRequestCopy == null) {
+            //-recycle the possible incomplete vector of copies
+            if (tDataPayloadsCopy != null) {
+                CompositePayloadFactory.recyclePayloads(tDataPayloadsCopy);
+                tDataPayloadsCopy = null;
+            }
+
+            if (mtLog.isErrorEnabled()) {
+                mtLog.error("Couldn't create event uid " + iUID +
+                            " from source " +
+                            (tSourceID == null ? "NULL" :
+                             tSourceID.getSourceID()));
+            }
+
+            tPayload = null;
+        } else {
+            //tPayload = (EventPayload_v1) EventPayload_v1.getFromPool();
             tPayload = (EventPayload_v1) mt_PoolablePayloadFactory.getPoolable();
             tPayload.initialize(iUID,
                                 (ISourceID) tSourceID.deepCopy(),
@@ -100,8 +94,7 @@ public class EventPayload_v1Factory  extends CompositePayloadFactory {
                                 tTriggerRequestCopy,
                                 tDataPayloadsCopy);
             //-set the MasterPayloadFactory (as a composite)
-            tPayload.setMasterPayloadFactory(getMasterCompositePayloadFactory());
-        }
+            tPayload.setMasterPayloadFactory(getMasterCompositePayloadFactory());        }
         return tPayload;
     }
 
