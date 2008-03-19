@@ -1,6 +1,7 @@
 package icecube.daq.eventbuilder.impl;
 
 import icecube.daq.eventbuilder.IEventPayload;
+import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
@@ -118,6 +119,11 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      */
     public int getTriggerConfigID() {
         if (mt_triggerRequestPayload != null) {
+            try {
+                ((ILoadablePayload) mt_triggerRequestPayload).loadPayload();
+            } catch (Exception ex) {
+                // ignore exceptions
+            }
             return mt_triggerRequestPayload.getTriggerConfigID();
         } else {
             return -1;
@@ -128,6 +134,11 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      */
     public int getTriggerType() {
         if (mt_triggerRequestPayload != null) {
+            try {
+                ((ILoadablePayload) mt_triggerRequestPayload).loadPayload();
+            } catch (Exception ex) {
+                // ignore exceptions
+            }
             return mt_triggerRequestPayload.getTriggerType();
         } else {
             return -1;
@@ -169,6 +180,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
         ITriggerRequestPayload tTriggerRequest,
         Vector                 tDataPayloads
     ) {
+        mt_triggerRequestPayload = tTriggerRequest;
         mt_eventRecord = (EventPayloadRecord) EventPayloadRecord.getFromPool();
         //-Payload portion
         // This is the composite portion of this payload
@@ -310,6 +322,19 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
             mi_CompositeEnvelopeOffset = OFFSET_COMPOSITE_START;
         }
     }
+
+    public void loadCompositePayloads()
+        throws DataFormatException, IOException
+    {
+        super.loadCompositePayloads();
+        if (mt_Payloads == null) {
+            mt_triggerRequestPayload = null;
+        } else {
+            mt_triggerRequestPayload =
+                (ITriggerRequestPayload) mt_Payloads.get(0);
+        }
+    }
+
     /**
      * get timeordered list of all hits contained in Composite, this
      * is the unique list of  Payload's which are IHitPayload's
