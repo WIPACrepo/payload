@@ -24,7 +24,7 @@ import java.util.zip.DataFormatException;
  * @author dwharton
  *
  */
-public class EventPayloadRecord extends Poolable implements IWriteablePayloadRecord {
+public class EventPayloadRecord_v1 extends Poolable implements IWriteablePayloadRecord {
     public static final int REC_TYPE               = RecordTypeRegistry.RECORD_TYPE_EVENT;
     protected boolean mb_IsDataLoaded;
 
@@ -61,7 +61,7 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
     /**
      * Standard Constructor.
      */
-    public EventPayloadRecord() {
+    public EventPayloadRecord_v1() {
     }
 
     /**
@@ -90,7 +90,7 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
      * @return a EventPayloadRecord object for reuse.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new EventPayloadRecord();
+        return (Poolable) new EventPayloadRecord_v1();
     }
 
     /**
@@ -162,13 +162,13 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
      * @param tDestination PayloadDestination to which to write this record.
      */
     public int writeData(IPayloadDestination tDestination) throws IOException {
-        if (tDestination.doLabel()) tDestination.label("[EventPayloadRecord]=>").indent();
+        if (tDestination.doLabel()) tDestination.label("[EventPayloadRecord_v1]=>").indent();
         tDestination.writeShort( RECORD_TYPE    ,        msi_RecType                     );
         tDestination.writeInt(   UID            ,        mi_UID                          );
         tDestination.writeInt(   SOURCE_ID      ,        mt_sourceid.getSourceID()       );
         tDestination.writeLong(  FIRST_UTCTIME  ,        mt_firstTime.longValue() );
         tDestination.writeLong(  LAST_UTCTIME   ,        mt_lastTime.longValue()  );
-        if (tDestination.doLabel()) tDestination.undent().label("<=[EventPayloadRecord]");
+        if (tDestination.doLabel()) tDestination.undent().label("<=[EventPayloadRecord_v1]");
         return SIZE_TOTAL;
     }
     /**

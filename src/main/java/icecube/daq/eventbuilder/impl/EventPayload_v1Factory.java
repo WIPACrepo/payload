@@ -17,18 +17,18 @@ import org.apache.commons.logging.LogFactory;
  *  a ByteBuffer.
  *  @author dwharton,mhellwig
  */
-public class EventPayloadFactory  extends CompositePayloadFactory {
+public class EventPayload_v1Factory  extends CompositePayloadFactory {
 
     /**
      * Log object for this class
      */
-    private static final Log mtLog = LogFactory.getLog(EventPayloadFactory.class);
+    private static final Log mtLog = LogFactory.getLog(EventPayload_v1Factory.class);
 
     /**
      * Standard Constructor.
      */
-    public EventPayloadFactory() {
-        EventPayload tPayloadPoolableFactory = (EventPayload) EventPayload.getFromPool();
+    public EventPayload_v1Factory() {
+        EventPayload_v1 tPayloadPoolableFactory = (EventPayload_v1) EventPayload_v1.getFromPool();
         tPayloadPoolableFactory.mtParentPayloadFactory = this;
         setPoolablePayloadFactory(tPayloadPoolableFactory);
     }
@@ -61,7 +61,7 @@ public class EventPayloadFactory  extends CompositePayloadFactory {
         Vector tDataPayloadsCopy =  null;
         ITriggerRequestPayload tTriggerRequestCopy = null;
         //-the final output
-        EventPayload tPayload = null;
+        EventPayload_v1 tPayload = null;
         //-make deep copy of input Payloads
         if (tDataPayloads != null) {
             tDataPayloadsCopy = CompositePayloadFactory.deepCopyPayloadVector(tDataPayloads);
@@ -92,7 +92,7 @@ public class EventPayloadFactory  extends CompositePayloadFactory {
         //-create the EventPayload if all is well
         if (bDeepCopyOk) {
             //tPayload = (EventPayload) EventPayload.getFromPool();
-            tPayload = (EventPayload) mt_PoolablePayloadFactory.getPoolable();
+            tPayload = (EventPayload_v1) mt_PoolablePayloadFactory.getPoolable();
             tPayload.initialize(iUID,
                                 (ISourceID) tSourceID.deepCopy(),
                                 (IUTCTime) tFirstTimeUTC.deepCopy(),

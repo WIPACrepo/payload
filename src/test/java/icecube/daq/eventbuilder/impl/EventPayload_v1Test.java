@@ -18,7 +18,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-public class EventPayloadTest
+public class EventPayload_v1Test
     extends LoggingCase
 {
     /**
@@ -26,20 +26,20 @@ public class EventPayloadTest
      *
      * @param name the name of the test.
      */
-    public EventPayloadTest(String name)
+    public EventPayload_v1Test(String name)
     {
         super(name);
     }
 
     public static Test suite()
     {
-        return new TestSuite(EventPayloadTest.class);
+        return new TestSuite(EventPayload_v1Test.class);
     }
 
     public void testBasic()
         throws Exception
     {
-        EventPayload evt = new EventPayload();
+        EventPayload_v1 evt = new EventPayload_v1();
         assertEquals("Bad payload type", PayloadRegistry.PAYLOAD_ID_EVENT,
                      evt.getPayloadType());
 
@@ -91,7 +91,7 @@ public class EventPayloadTest
         hitList.add(new MockHit(hitTime1, hitType1, hitCfgId1, hitSrcId1,
                                 hitDomId1, hitMode1));
 
-        EventPayload evt = new EventPayload();
+        EventPayload_v1 evt = new EventPayload_v1();
         evt.initialize(uid, new MockSourceID(srcId),
                        new MockUTCTime(firstTime), new MockUTCTime(lastTime),
                        new MockTriggerRequest(trigType, trigCfgId),
@@ -183,7 +183,7 @@ public class EventPayloadTest
             TestUtil.createEventv1(uid, srcId, firstTime, lastTime, trigReq,
                                    hitList);
 
-        EventPayload evt = new EventPayload();
+        EventPayload_v1 evt = new EventPayload_v1();
         evt.initialize(0, buf, null);
         evt.loadPayload();
 
@@ -273,7 +273,7 @@ public class EventPayloadTest
             TestUtil.createEventv1(uid, srcId, firstTime, lastTime, trigReq,
                                    hitList);
 
-        EventPayload evt = new EventPayload();
+        EventPayload_v1 evt = new EventPayload_v1();
         evt.initialize(0, buf, null);
         evt.loadPayload();
 
@@ -352,7 +352,7 @@ public class EventPayloadTest
             TestUtil.createEventv1(uid, srcId, firstTime, lastTime, trigReq,
                                    hitList);
 
-        EventPayload evt = new EventPayload();
+        EventPayload_v1 evt = new EventPayload_v1();
         evt.initialize(0, buf, null);
         evt.loadPayload();
 

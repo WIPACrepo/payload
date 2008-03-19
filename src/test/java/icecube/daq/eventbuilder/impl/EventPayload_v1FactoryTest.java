@@ -13,7 +13,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-public class EventPayloadFactoryTest
+public class EventPayload_v1FactoryTest
     extends LoggingCase
 {
     /**
@@ -21,14 +21,14 @@ public class EventPayloadFactoryTest
      *
      * @param name the name of the test.
      */
-    public EventPayloadFactoryTest(String name)
+    public EventPayload_v1FactoryTest(String name)
     {
         super(name);
     }
 
     public static Test suite()
     {
-        return new TestSuite(EventPayloadFactoryTest.class);
+        return new TestSuite(EventPayload_v1FactoryTest.class);
     }
 
     public void testCreate()
@@ -56,10 +56,10 @@ public class EventPayloadFactoryTest
         hitList.add(new MockHit(hitTime1, hitType1, hitCfgId1, hitSrcId1,
                                 hitDomId1, hitMode1));
 
-        EventPayloadFactory factory = new EventPayloadFactory();
+        EventPayload_v1Factory factory = new EventPayload_v1Factory();
 
-        EventPayload evt =
-            (EventPayload) factory.createPayload(uid,
+        EventPayload_v1 evt =
+            (EventPayload_v1) factory.createPayload(uid,
                                                     new MockSourceID(srcId),
                                                     new MockUTCTime(firstTime),
                                                     new MockUTCTime(lastTime),
@@ -119,13 +119,13 @@ public class EventPayloadFactoryTest
         ArrayList hitList = new ArrayList();
         hitList.add(badHit);
 
-        EventPayloadFactory factory = new EventPayloadFactory();
+        EventPayload_v1Factory factory = new EventPayload_v1Factory();
 
         assertEquals("Bad number of log messages",
                      0, getNumberOfMessages());
 
-        EventPayload evt =
-            (EventPayload) factory.createPayload(uid,
+        EventPayload_v1 evt =
+            (EventPayload_v1) factory.createPayload(uid,
                                                     new MockSourceID(srcId),
                                                     new MockUTCTime(firstTime),
                                                     new MockUTCTime(lastTime),
@@ -174,13 +174,13 @@ public class EventPayloadFactoryTest
         hitList.add(new MockHit(hitTime1, hitType1, hitCfgId1, hitSrcId1,
                                 hitDomId1, hitMode1));
 
-        EventPayloadFactory factory = new EventPayloadFactory();
+        EventPayload_v1Factory factory = new EventPayload_v1Factory();
 
         assertEquals("Bad number of log messages",
                      0, getNumberOfMessages());
 
-        EventPayload evt =
-            (EventPayload) factory.createPayload(uid,
+        EventPayload_v2 evt =
+            (EventPayload_v2) factory.createPayload(uid,
                                                     new MockSourceID(srcId),
                                                     new MockUTCTime(firstTime),
                                                     new MockUTCTime(lastTime),

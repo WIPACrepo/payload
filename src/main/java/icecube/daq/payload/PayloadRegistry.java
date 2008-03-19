@@ -1,6 +1,6 @@
 package icecube.daq.payload;
 
-import icecube.daq.eventbuilder.impl.EventPayloadFactory;
+import icecube.daq.eventbuilder.impl.EventPayload_v1Factory;
 import icecube.daq.eventbuilder.impl.EventPayload_v2Factory;
 import icecube.daq.eventbuilder.impl.EventPayload_v3Factory;
 import icecube.daq.eventbuilder.impl.ReadoutDataPayloadFactory;
@@ -199,7 +199,7 @@ public final class PayloadRegistry {
         mt_PayloadFactories.setElementAt( new  TriggerRequestPayloadFactory()               , PAYLOAD_ID_TRIGGER_REQUEST        );
         mt_PayloadFactories.setElementAt( new  EngineeringFormatHitDataPayloadFactory()     , PAYLOAD_ID_ENGFORMAT_HIT_DATA     );
         mt_PayloadFactories.setElementAt( new  ReadoutDataPayloadFactory()                  , PAYLOAD_ID_READOUT_DATA           );
-        mt_PayloadFactories.setElementAt( new  EventPayloadFactory()                        , PAYLOAD_ID_EVENT                  );
+        mt_PayloadFactories.setElementAt( new  EventPayload_v1Factory()                        , PAYLOAD_ID_EVENT                  );
         mt_PayloadFactories.setElementAt( new  EventPayload_v2Factory()                     , PAYLOAD_ID_EVENT_V2               );
         mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                       , PAYLOAD_ID_BEACON                 );
         mt_PayloadFactories.setElementAt( new  DomHitDeltaCompressedFormatPayloadFactory() , PAYLOAD_ID_DELTA_HIT    );

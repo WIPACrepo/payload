@@ -12,7 +12,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-public class EventPayloadRecordTest
+public class EventPayloadRecord_v1Test
     extends LoggingCase
 {
     /**
@@ -20,21 +20,21 @@ public class EventPayloadRecordTest
      *
      * @param name the name of the test.
      */
-    public EventPayloadRecordTest(String name)
+    public EventPayloadRecord_v1Test(String name)
     {
         super(name);
     }
 
     public static Test suite()
     {
-        return new TestSuite(EventPayloadRecordTest.class);
+        return new TestSuite(EventPayloadRecord_v1Test.class);
     }
 
     public void testBasic()
         throws Exception
     {
-        EventPayloadRecord hitRec =
-            new EventPayloadRecord();
+        EventPayloadRecord_v1 hitRec =
+            new EventPayloadRecord_v1();
         assertFalse("Data should NOT be loaded", hitRec.isDataLoaded());
     }
 
@@ -49,8 +49,8 @@ public class EventPayloadRecordTest
         ByteBuffer buf = TestUtil.createEventRecordv1(uid, srcId, firstTime,
                                                       lastTime);
 
-        EventPayloadRecord evtRec =
-            new EventPayloadRecord();
+        EventPayloadRecord_v1 evtRec =
+            new EventPayloadRecord_v1();
         assertFalse("Data should NOT be loaded", evtRec.isDataLoaded());
 
         evtRec.loadData(0, buf);
@@ -78,8 +78,8 @@ public class EventPayloadRecordTest
         final long firstTime = 333L;
         final long lastTime = 444L;
 
-        EventPayloadRecord evtRec =
-            new EventPayloadRecord();
+        EventPayloadRecord_v1 evtRec =
+            new EventPayloadRecord_v1();
         assertFalse("Data should NOT be loaded", evtRec.isDataLoaded());
 
         evtRec.initialize(uid, new MockSourceID(srcId),
@@ -113,8 +113,8 @@ public class EventPayloadRecordTest
         ByteBuffer buf = TestUtil.createEventRecordv1(uid, srcId, firstTime,
                                                       lastTime);
 
-        EventPayloadRecord evtRec =
-            new EventPayloadRecord();
+        EventPayloadRecord_v1 evtRec =
+            new EventPayloadRecord_v1();
         assertFalse("Data should NOT be loaded", evtRec.isDataLoaded());
 
         evtRec.loadData(0, buf);
@@ -141,8 +141,8 @@ public class EventPayloadRecordTest
         ByteBuffer buf = TestUtil.createEventRecordv1(uid, srcId, firstTime,
                                                       lastTime);
 
-        EventPayloadRecord evtRec =
-            new EventPayloadRecord();
+        EventPayloadRecord_v1 evtRec =
+            new EventPayloadRecord_v1();
         assertFalse("Data should NOT be loaded", evtRec.isDataLoaded());
 
         evtRec.loadData(0, buf);

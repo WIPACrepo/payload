@@ -37,12 +37,12 @@ import java.util.zip.DataFormatException;
  *
  * @author dwharton, mhellwig
  */
-public class EventPayload extends AbstractCompositePayload implements IEventPayload {
+public class EventPayload_v1 extends AbstractCompositePayload implements IEventPayload {
     //-TriggerRequestRecord starts right after PayloadEnvelope
     public static final int OFFSET_EVENT_RECORD = OFFSET_PAYLOAD_DATA;
-    public static final int OFFSET_COMPOSITE_START = OFFSET_EVENT_RECORD + EventPayloadRecord.SIZE_TOTAL;
+    public static final int OFFSET_COMPOSITE_START = OFFSET_EVENT_RECORD + EventPayloadRecord_v1.SIZE_TOTAL;
     //-CompositePayloadEnvelope starts right after the end of the EventPayloadRecord.
-    protected EventPayloadRecord mt_eventRecord;
+    protected EventPayloadRecord_v1 mt_eventRecord;
     protected ITriggerRequestPayload mt_triggerRequestPayload;
     protected Vector mt_readoutDataPayloads;
 
@@ -83,7 +83,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
     /**
      * standare Constructory which can be pooled.
      */
-    public EventPayload() {
+    public EventPayload_v1() {
         super.mipayloadtype = PayloadRegistry.PAYLOAD_ID_EVENT;
         super.mipayloadinterfacetype = PayloadInterfaceRegistry.I_EVENT_PAYLOAD;
     }
@@ -181,7 +181,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
         Vector                 tDataPayloads
     ) {
         mt_triggerRequestPayload = tTriggerRequest;
-        mt_eventRecord = (EventPayloadRecord) EventPayloadRecord.getFromPool();
+        mt_eventRecord = (EventPayloadRecord_v1) EventPayloadRecord_v1.getFromPool();
         //-Payload portion
         // This is the composite portion of this payload
         super.mt_Payloads = new Vector();
@@ -208,7 +208,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
         //--PayloadEnvelope.size
         iPayloadLength += PayloadEnvelope.SIZE_ENVELOPE;
         //-Add the size of the EventPayloadRecord
-        iPayloadLength += EventPayloadRecord.SIZE_TOTAL;
+        iPayloadLength += EventPayloadRecord_v1.SIZE_TOTAL;
         //--For each Payload in composite
         int iCompositePayloadlength = getTotalLengthOfCompositePayloads();
         iPayloadLength +=iCompositePayloadlength + CompositePayloadEnvelope.SIZE_COMPOSITE_ENVELOPE;
@@ -275,7 +275,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      * @return an object which is ready for reuse.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new EventPayload();
+        return (Poolable) new EventPayload_v1();
     }
 
     /**
@@ -315,7 +315,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      */
     protected void loadEventRecord() throws IOException, DataFormatException {
         if (mtbuffer != null && mt_eventRecord == null) {
-            mt_eventRecord = (EventPayloadRecord) EventPayloadRecord.getFromPool();
+            mt_eventRecord = (EventPayloadRecord_v1) EventPayloadRecord_v1.getFromPool();
             mt_eventRecord.loadData(mioffset + OFFSET_EVENT_RECORD, mtbuffer);
             //-compute the composite offset so the super-class can load the
             // composite-payload correctly.
@@ -391,7 +391,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
                 iBytesWritten += PayloadEnvelope.SIZE_ENVELOPE;
                 //-write the trigger-request-record
                 mt_eventRecord.writeData(iDestOffset + OFFSET_EVENT_RECORD, tDestBuffer);
-                iBytesWritten += EventPayloadRecord.SIZE_TOTAL;
+                iBytesWritten += EventPayloadRecord_v1.SIZE_TOTAL;
                 //-write the composite payload portion
                 iBytesWritten += writeCompositePayload(bWriteLoaded, (iDestOffset + mi_CompositeEnvelopeOffset), tDestBuffer);
             }
@@ -410,7 +410,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      * @throws IOException if an error occurs during the process
      */
     public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
-        if (tDestination.doLabel()) tDestination.label("[EventPayload]=>").indent();
+        if (tDestination.doLabel()) tDestination.label("[EventPayload_v1]=>").indent();
         int iBytesWritten = 0;
         //-If backing then use it..
         if (mtbuffer != null && !bWriteLoaded) {
@@ -431,12 +431,12 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
                 mt_PayloadEnvelope.writeData(tDestination);
                 iBytesWritten += PayloadEnvelope.SIZE_ENVELOPE;
                 mt_eventRecord.writeData(tDestination);
-                iBytesWritten += EventPayloadRecord.SIZE_TOTAL;
+                iBytesWritten += EventPayloadRecord_v1.SIZE_TOTAL;
                 //-write the composite payload portion
                 iBytesWritten += writeCompositePayload(bWriteLoaded, tDestination);
             }
         }
-        if (tDestination.doLabel()) tDestination.undent().label("<=[EventPayload]");
+        if (tDestination.doLabel()) tDestination.undent().label("<=[EventPayload_v1]");
         return iBytesWritten;
     }
 
@@ -445,7 +445,7 @@ public class EventPayload extends AbstractCompositePayload implements IEventPayl
      */
     public String toString() {
         StringBuffer sbBuff = new StringBuffer();
-        sbBuff.append("EventPayload(");
+        sbBuff.append("EventPayload_v1(");
         sbBuff.append(", getFirstTimeUTC()="+getFirstTimeUTC());
         sbBuff.append(", getLastTimeUTC()="+getLastTimeUTC());
         sbBuff.append(", getTriggerConfigID()="+getTriggerConfigID());
