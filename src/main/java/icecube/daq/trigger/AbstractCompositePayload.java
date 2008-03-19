@@ -112,7 +112,10 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
         int iLength = 0;
         if (mt_Payloads != null) {
             for (int ii=0; ii < mt_Payloads.size(); ii++) {
-                iLength += ((IPayload) mt_Payloads.get(ii)).getPayloadLength();
+                IPayload pay = (IPayload) mt_Payloads.get(ii);
+                if (pay != null) {
+                    iLength += pay.getPayloadLength();
+                }
             }
         }
         return iLength;
