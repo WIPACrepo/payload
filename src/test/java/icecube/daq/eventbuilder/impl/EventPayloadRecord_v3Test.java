@@ -60,18 +60,18 @@ public class EventPayloadRecord_v3Test
         evtRec.loadData(0, buf);
         assertTrue("Data should be loaded", evtRec.isDataLoaded());
 
-        assertEquals("Bad UID", uid, evtRec.mi_UID);
-        assertNotNull("Null source ID", evtRec.mt_sourceid);
-        assertEquals("Bad source ID", srcId, evtRec.mt_sourceid.getSourceID());
-        assertNotNull("Null first time", evtRec.mt_firstTime);
+        assertEquals("Bad UID", uid, evtRec.getEventUID());
+        assertNotNull("Null source ID", evtRec.getSourceID());
+        assertEquals("Bad source ID", srcId, evtRec.getSourceIDInt());
+        assertNotNull("Null first time", evtRec.getFirstTimeUTC());
         assertEquals("Bad first time",
-                     firstTime, evtRec.mt_firstTime.longValue());
-        assertNotNull("Null last time", evtRec.mt_lastTime);
+                     firstTime, evtRec.getFirstTimeLong());
+        assertNotNull("Null last time", evtRec.getLastTimeUTC());
         assertEquals("Bad last time",
-                     lastTime, evtRec.mt_lastTime.longValue());
-        assertEquals("Bad event type", type, evtRec.mi_eventType);
-        assertEquals("Bad run number", runNum, evtRec.mi_runNumber);
-        assertEquals("Bad subrun number", subrunNum, evtRec.mi_subrunNumber);
+                     lastTime, evtRec.getLastTimeLong());
+        assertEquals("Bad event type", type, evtRec.getEventType());
+        assertEquals("Bad run number", runNum, evtRec.getRunNumber());
+        assertEquals("Bad subrun number", subrunNum, evtRec.getSubrunNumber());
 
         evtRec.dispose();
         assertFalse("Data should NOT be loaded", evtRec.isDataLoaded());
@@ -98,18 +98,18 @@ public class EventPayloadRecord_v3Test
 
         assertTrue("Data should be loaded", evtRec.isDataLoaded());
 
-        assertEquals("Bad UID", uid, evtRec.mi_UID);
-        assertNotNull("Null source ID", evtRec.mt_sourceid);
-        assertEquals("Bad source ID", srcId, evtRec.mt_sourceid.getSourceID());
-        assertNotNull("Null first time", evtRec.mt_firstTime);
+        assertEquals("Bad UID", uid, evtRec.getEventUID());
+        assertNotNull("Null source ID", evtRec.getSourceID());
+        assertEquals("Bad source ID", srcId, evtRec.getSourceIDInt());
+        assertNotNull("Null first time", evtRec.getFirstTimeUTC());
         assertEquals("Bad first time",
-                     firstTime, evtRec.mt_firstTime.longValue());
-        assertNotNull("Null last time", evtRec.mt_lastTime);
+                     firstTime, evtRec.getFirstTimeLong());
+        assertNotNull("Null last time", evtRec.getLastTimeUTC());
         assertEquals("Bad last time",
-                     lastTime, evtRec.mt_lastTime.longValue());
-        assertEquals("Bad event type", type, evtRec.mi_eventType);
-        assertEquals("Bad run number", runNum, evtRec.mi_runNumber);
-        assertEquals("Bad subrun number", subrunNum, evtRec.mi_subrunNumber);
+                     lastTime, evtRec.getLastTimeLong());
+        assertEquals("Bad event type", type, evtRec.getEventType());
+        assertEquals("Bad run number", runNum, evtRec.getRunNumber());
+        assertEquals("Bad subrun number", subrunNum, evtRec.getSubrunNumber());
 
         evtRec.recycle();
         assertFalse("Data should NOT be loaded", evtRec.isDataLoaded());
