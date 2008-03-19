@@ -338,6 +338,44 @@ public abstract class TestUtil
         return buf;
     }
 
+    public static ByteBuffer createEventv1(int uid, int srcId, long firstTime,
+                                           long lastTime,
+                                           ITriggerRequestPayload trigReq,
+                                           List hitList)
+    {
+        ByteBuffer recBuf = createEventRecordv1(uid, srcId, firstTime,
+                                                lastTime);
+
+        ByteBuffer trBuf = createTriggerRequest(trigReq);
+
+        ByteBuffer rdBuf =
+            createReadoutDataPayload(uid, 1, true, srcId, firstTime, lastTime,
+                                     hitList);
+
+        final int bufListBytes = trBuf.limit() + rdBuf.limit();
+        final int compLen = 8 + bufListBytes;
+        final int bufLen = 16 + recBuf.limit() + compLen;
+
+        ByteBuffer buf = ByteBuffer.allocate(bufLen);
+        putPayloadEnvelope(buf, bufLen, PayloadRegistry.PAYLOAD_ID_EVENT,
+                           firstTime);
+        buf.put(recBuf);
+
+        putCompositeEnvelope(buf, bufListBytes,
+                             PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT, 2);
+        buf.put(trBuf);
+        buf.put(rdBuf);
+
+        buf.flip();
+
+        if (buf.limit() != buf.capacity()) {
+            throw new Error("Expected payload length is " + buf.capacity() +
+                            ", actual length is " + buf.limit());
+        }
+
+        return buf;
+    }
+
     public static ByteBuffer createEventv2(int uid, int srcId, long firstTime,
                                            long lastTime, int type, int cfgId,
                                            int runNum,
@@ -405,6 +443,28 @@ public abstract class TestUtil
                              PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT, 2);
         buf.put(trBuf);
         buf.put(rdBuf);
+
+        buf.flip();
+
+        if (buf.limit() != buf.capacity()) {
+            throw new Error("Expected payload length is " + buf.capacity() +
+                            ", actual length is " + buf.limit());
+        }
+
+        return buf;
+    }
+
+    public static ByteBuffer createEventRecordv1(int uid, int srcId,
+                                                 long firstTime, long lastTime)
+    {
+        final int bufLen = 26;
+
+        ByteBuffer buf = ByteBuffer.allocate(bufLen);
+        buf.putShort((short) RecordTypeRegistry.RECORD_TYPE_EVENT);
+        buf.putInt(uid);
+        buf.putInt(srcId);
+        buf.putLong(firstTime);
+        buf.putLong(lastTime);
 
         buf.flip();
 
