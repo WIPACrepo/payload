@@ -2,7 +2,6 @@ package icecube.daq.payload;
 
 import icecube.daq.eventbuilder.IEventPayload;
 import icecube.daq.eventbuilder.IReadoutDataPayload;
-import icecube.daq.payload.IDomHit;
 import icecube.daq.trigger.IHitDataPayload;
 import icecube.daq.trigger.IHitPayload;
 import icecube.daq.trigger.IReadoutRequest;
@@ -99,8 +98,8 @@ public abstract class PayloadChecker
         String srcStr = getSourceString(elem.getSourceID());
 
         return "rrElem[" + getReadoutType(elem.getReadoutType()) +
-            (domStr == "" ? "" : " dom " + domStr) +
-            (srcStr == "" ? "" : " src " + srcStr) +
+            (domStr.length() == 0 ? "" : " dom " + domStr) +
+            (srcStr.length() == 0 ? "" : " src " + srcStr) +
             "]";
     }
 
