@@ -179,8 +179,8 @@ public class EventPayload_v1FactoryTest
         assertEquals("Bad number of log messages",
                      0, getNumberOfMessages());
 
-        EventPayload_v2 evt =
-            (EventPayload_v2) factory.createPayload(uid,
+        EventPayload_v1 evt =
+            (EventPayload_v1) factory.createPayload(uid,
                                                     new MockSourceID(srcId),
                                                     new MockUTCTime(firstTime),
                                                     new MockUTCTime(lastTime),
