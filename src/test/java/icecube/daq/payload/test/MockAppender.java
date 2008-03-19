@@ -18,6 +18,8 @@ public class MockAppender
 {
     /** minimum level of log messages which will be print. */
     private Level minLevel;
+    /** <tt>true</tt> if messages should be printed as well as cached. */
+    private boolean verbose;
 
     private ArrayList<LoggingEvent> eventList;
 
@@ -84,6 +86,19 @@ public class MockAppender
     {
         if (evt.getLevel().toInt() >= minLevel.toInt()) {
             eventList.add(evt);
+
+            if (verbose) {
+                LocationInfo loc = evt.getLocationInformation();
+
+                System.out.println(evt.getLoggerName() + " " + evt.getLevel() +
+                                   " [" + loc.fullInfo + "] " +
+                                   evt.getMessage());
+
+                String[] stack = evt.getThrowableStrRep();
+                for (int i = 0; stack != null && i < stack.length; i++) {
+                    System.out.println("> " + stack[i]);
+                }
+            }
         }
     }
 
@@ -184,5 +199,17 @@ public class MockAppender
     public void setName(String s0)
     {
         throw new Error("Unimplemented");
+    }
+
+    /**
+     * Set verbosity.
+     *
+     * @param val <tt>true</tt> if log messages should be printed
+     */
+    public MockAppender setVerbose(boolean val)
+    {
+        verbose = val;
+
+        return this;
     }
 }
