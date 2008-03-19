@@ -383,7 +383,7 @@ public abstract class TestUtil
                                            ITriggerRequestPayload trigReq,
                                            List hitList)
     {
-        ByteBuffer recBuf = createEventRecordv2(uid, srcId, firstTime, lastTime,
+        ByteBuffer recBuf = createEventRecordv3(uid, srcId, firstTime, lastTime,
                                                 type, runNum, subrunNum);
 
         ByteBuffer trBuf = createTriggerRequest(trigReq);
