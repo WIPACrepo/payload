@@ -292,4 +292,56 @@ public class EventPayloadRecord_v2 extends Poolable implements IWriteablePayload
         mi_runNumber       = -1;
     }
 
+    public int getEventConfigID()
+    {
+        return mi_eventConfigID;
+    }
+
+    public int getEventType()
+    {
+        return mi_eventType;
+    }
+
+    public int getEventUID()
+    {
+        return mi_UID;
+    }
+
+    public long getFirstTimeLong()
+    {
+        if (mt_firstTime == null) {
+            return Long.MIN_VALUE;
+        }
+
+        return mt_firstTime.longValue();
+    }
+
+    public IUTCTime getFirstTimeUTC()
+    {
+        return mt_firstTime;
+    }
+
+    public long getLastTimeLong()
+    {
+        if (mt_lastTime == null) {
+            return Long.MIN_VALUE;
+        }
+
+        return mt_lastTime.longValue();
+    }
+
+    public IUTCTime getLastTimeUTC()
+    {
+        return mt_lastTime;
+    }
+
+    public int getRunNumber()
+    {
+        return mi_runNumber;
+    }
+
+    public ISourceID getSourceID()
+    {
+        return mt_sourceid;
+    }
 }

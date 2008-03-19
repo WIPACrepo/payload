@@ -118,8 +118,6 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
         return mb_IsDataLoaded;
     }
 
-
-
     /**
      * Loads the data from the buffer into the container record.
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
@@ -208,4 +206,41 @@ public class EventPayloadRecord extends Poolable implements IWriteablePayloadRec
         mt_lastTime        = null;
     }
 
+    public int getEventUID()
+    {
+        return mi_UID;
+    }
+
+    public long getFirstTimeLong()
+    {
+        if (mt_firstTime == null) {
+            return Long.MIN_VALUE;
+        }
+
+        return mt_firstTime.longValue();
+    }
+
+    public IUTCTime getFirstTimeUTC()
+    {
+        return mt_firstTime;
+    }
+
+    public long getLastTimeLong()
+    {
+        if (mt_lastTime == null) {
+            return Long.MIN_VALUE;
+        }
+
+        return mt_lastTime.longValue();
+    }
+
+    public IUTCTime getLastTimeUTC()
+    {
+        return mt_lastTime;
+    }
+
+    public ISourceID getSourceID()
+    {
+        return mt_sourceid;
+    }
 }
