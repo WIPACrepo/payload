@@ -545,31 +545,34 @@ public abstract class PayloadChecker
         IUTCTime rdpFirst = rdp.getFirstTimeUTC();
         IUTCTime rdpLast = rdp.getLastTimeUTC();
 
-        for (Object obj : rdp.getDataPayloads()) {
-            IHitDataPayload hit = (IHitDataPayload) obj;
-            loadPayload(hit);
+        List dataList = rdp.getDataPayloads();
+        if (dataList != null) {
+            for (Object obj : dataList) {
+                IHitDataPayload hit = (IHitDataPayload) obj;
+                loadPayload(hit);
 
-            ISourceID hitSrc = hit.getSourceID();
-            String hitDesc = getHitString(hit);
-            IUTCTime time = hit.getHitTimeUTC();
+                ISourceID hitSrc = hit.getSourceID();
+                String hitDesc = getHitString(hit);
+                IUTCTime time = hit.getHitTimeUTC();
 
-            if (!isIntervalContained(rdpDesc, rdpFirst, rdpLast,
-                                     hitDesc, time, time, verbose))
-            {
-                return false;
-            }
-
-            if (!isSourceEqual(rdpDesc, rdpSrc, hitDesc, hitSrc, verbose)) {
-                return false;
-            }
-
-            if (rdpCfg != -1) {
-                if (verbose) {
-                    LOG.error(rdpDesc + " config ID " + rdpCfg +
-                      " should be -1");
+                if (!isIntervalContained(rdpDesc, rdpFirst, rdpLast,
+                                         hitDesc, time, time, verbose))
+                {
+                    return false;
                 }
 
-                return false;
+                if (!isSourceEqual(rdpDesc, rdpSrc, hitDesc, hitSrc, verbose)) {
+                    return false;
+                }
+
+                if (rdpCfg != -1) {
+                    if (verbose) {
+                        LOG.error(rdpDesc + " config ID " + rdpCfg +
+                                  " should be -1");
+                    }
+
+                    return false;
+                }
             }
         }
 
