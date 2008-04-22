@@ -30,7 +30,7 @@ public class GenericMonitorRecord extends MonitorRecord {
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new GenericMonitorRecord();
+        return new GenericMonitorRecord();
     }
     /**
      * This method is designed to be overridden by derived classes whic load more than just header data.

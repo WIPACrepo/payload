@@ -43,7 +43,7 @@ import java.util.zip.DataFormatException;
  *
  *
  */
-public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
+public class SuperNovaRecord implements IPayloadRecord, Poolable {
 
     //-Size of the individual fields; in the order in which they appear in the record
     public static final int SIZE_BLOCK_LEN  = 2;
@@ -203,7 +203,7 @@ public class SuperNovaRecord extends Poolable implements IPayloadRecord  {
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new SuperNovaRecord();
+        return new SuperNovaRecord();
     }
 
     /**

@@ -51,7 +51,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      * @return ReadoutRequestPayload cast as Object.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new ReadoutRequestPayload();
+        return new ReadoutRequestPayload();
     }
 
     /**
@@ -61,7 +61,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
     public Poolable getPoolable() {
         Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
-        return (Poolable) tPayload;
+        return tPayload;
     }
     /**
      * Returns an instance of this object so that it can be

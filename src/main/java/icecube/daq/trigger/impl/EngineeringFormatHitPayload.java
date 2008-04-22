@@ -36,7 +36,7 @@ public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new EngineeringFormatHitPayload();
+        return new EngineeringFormatHitPayload();
     }
 
     /**
@@ -46,7 +46,7 @@ public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload
     public Poolable getPoolable() {
         Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
-        return (Poolable) tPayload;
+        return tPayload;
     }
 
     /**

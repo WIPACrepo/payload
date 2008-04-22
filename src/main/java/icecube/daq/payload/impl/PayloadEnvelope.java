@@ -27,7 +27,7 @@ import java.util.zip.DataFormatException;
  *
  * @author dwharton
  */
-public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord {
+public class PayloadEnvelope implements IWriteablePayloadRecord, Poolable {
 
     public static final ByteOrder ENVELOPE_BYTEORDER = ByteOrder.BIG_ENDIAN;
     //-changing type and order for fixed payload-envelope endian-ness
@@ -155,7 +155,7 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
      * Method to get from pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new PayloadEnvelope();
+        return new PayloadEnvelope();
     }
 
     /**

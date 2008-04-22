@@ -97,7 +97,7 @@ public class EventPayloadRecord_v1
      */
     public static Poolable getFromPool()
     {
-        return (Poolable) new EventPayloadRecord_v1();
+        return new EventPayloadRecord_v1();
     }
 
     /**

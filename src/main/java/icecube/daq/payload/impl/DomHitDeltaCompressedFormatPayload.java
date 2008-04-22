@@ -263,8 +263,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        Payload tPayload = (Payload) new DomHitDeltaCompressedFormatPayload();
-        return (Poolable) tPayload;
+        return new DomHitDeltaCompressedFormatPayload();
     }
 
     /**
@@ -272,7 +271,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      * @return an object which is ready for reuse.
      */
     public Poolable getPoolable() {
-        return (Poolable) getFromPool();
+        return getFromPool();
     }
     /**
      * Returns an instance of this object so that it can be

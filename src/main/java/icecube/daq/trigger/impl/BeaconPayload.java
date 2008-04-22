@@ -308,11 +308,11 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     public Poolable getPoolable() {
         Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
-        return (Poolable) tPayload;
+        return tPayload;
     }
 
     public static Poolable getFromPool() {
-        return(Poolable) new BeaconPayload();
+        return new BeaconPayload();
     }
 
     /**

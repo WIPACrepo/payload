@@ -15,8 +15,7 @@ import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
 public class MockHit
-    extends Poolable
-    implements IHitPayload, ILoadablePayload, IWriteablePayload
+    implements IHitPayload, ILoadablePayload, IWriteablePayload, Poolable
 {
     private long utcTime;
     private IUTCTime utcObj;

@@ -257,7 +257,7 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new ReadoutDataPayload();
+        return new ReadoutDataPayload();
     }
 
     /**
@@ -267,7 +267,7 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
     public Poolable getPoolable() {
         Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
-        return (Poolable) tPayload;
+        return tPayload;
     }
     /**
      * Returns an instance of this object so that it can be

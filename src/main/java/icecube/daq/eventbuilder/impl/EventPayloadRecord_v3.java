@@ -136,7 +136,7 @@ public class EventPayloadRecord_v3
      */
     public static Poolable getFromPool()
     {
-        return (Poolable) new EventPayloadRecord_v3();
+        return new EventPayloadRecord_v3();
     }
 
     /**

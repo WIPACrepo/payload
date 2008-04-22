@@ -276,7 +276,7 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new TimeCalibrationPayload();
+        return new TimeCalibrationPayload();
     }
 
     /**
@@ -284,7 +284,7 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      * @return an object which is ready for reuse.
      */
     public Poolable getPoolable() {
-        return (Poolable) getFromPool();
+        return getFromPool();
     }
 
     /**

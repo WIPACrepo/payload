@@ -44,14 +44,12 @@ public class EngineeringFormatHitDataPayload extends EngineeringFormatHitPayload
         return (IHitDataRecord) tRecord;
     }
 
-    //--[Poolable]-----
-
     /**
      * Get an object from the pool
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new EngineeringFormatHitDataPayload();
+        return new EngineeringFormatHitDataPayload();
     }
 
     /**
@@ -61,7 +59,7 @@ public class EngineeringFormatHitDataPayload extends EngineeringFormatHitPayload
     public Poolable getPoolable() {
         Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
-        return (Poolable) tPayload;
+        return tPayload;
     }
 
     /**

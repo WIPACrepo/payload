@@ -315,7 +315,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
      * @return an TriggerRequestPayload object which is ready for reuse.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new TriggerRequestPayload();
+        return new TriggerRequestPayload();
     }
 
     /**
@@ -325,7 +325,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
     public Poolable getPoolable() {
         Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
-        return (Poolable) tPayload;
+        return tPayload;
     }
 
     /**

@@ -46,7 +46,7 @@ public class EventPayload_v1
      */
     public static Poolable getFromPool()
     {
-        return (Poolable) new EventPayload_v1();
+        return new EventPayload_v1();
     }
 
     /**
@@ -57,7 +57,7 @@ public class EventPayload_v1
     {
         Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
-        return (Poolable) tPayload;
+        return tPayload;
     }
 
     /**

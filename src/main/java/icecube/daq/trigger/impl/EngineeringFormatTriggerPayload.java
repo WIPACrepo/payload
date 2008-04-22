@@ -97,7 +97,7 @@ public class EngineeringFormatTriggerPayload  extends AbstractTriggerPayload {
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new EngineeringFormatTriggerPayload();
+        return new EngineeringFormatTriggerPayload();
     }
 
     /**
@@ -107,7 +107,7 @@ public class EngineeringFormatTriggerPayload  extends AbstractTriggerPayload {
     public Poolable getPoolable() {
         Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
-        return (Poolable) tPayload;
+        return tPayload;
     }
 
     /**

@@ -25,7 +25,7 @@ import java.util.zip.DataFormatException;
  *
  * @author dwharton
  */
-public class ReadoutDataRecord extends Poolable implements IWriteablePayloadRecord {
+public class ReadoutDataRecord implements IWriteablePayloadRecord, Poolable {
 
     protected boolean mb_IsDataLoaded;
 
@@ -116,7 +116,7 @@ public class ReadoutDataRecord extends Poolable implements IWriteablePayloadReco
      * @return a TriggerRequestRecord object for reuse.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new ReadoutDataRecord();
+        return new ReadoutDataRecord();
     }
 
     /**

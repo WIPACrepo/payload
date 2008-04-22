@@ -256,7 +256,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
         if (mt_MasterPayloadFactory == null) mt_MasterPayloadFactory = mt_DefaultMasterPayloadFactory;
         //-set the master payload factory for the composite payload.
         tPayload.mt_MasterPayloadFactory = mt_MasterPayloadFactory;
-        return (Poolable) tPayload;
+        return tPayload;
     }
 
     /**

@@ -367,11 +367,11 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     public Poolable getPoolable() {
         Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
-        return (Poolable) tPayload;
+        return tPayload;
     }
 
     public static Poolable getFromPool() {
-        return(Poolable) new HitPayload();
+        return new HitPayload();
     }
 
     /**
@@ -381,11 +381,11 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     public void recycle() {
         //-all recycling is done here
         if (mt_domID != null) {
-            ((Poolable)mt_domID).recycle();
+            ((Poolable) mt_domID).recycle();
             mt_domID = null;
         }
         if (mt_sourceId != null) {
-            ((Poolable)mt_sourceId).recycle();
+            ((Poolable) mt_sourceId).recycle();
             mt_sourceId = null;
         }
         //-this must be called LAST!! - dipsose() is eventually called by the based class Payload

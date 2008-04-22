@@ -358,8 +358,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        Payload tPayload = (Payload) new DomHitEngineeringFormatPayload();
-        return (Poolable) tPayload;
+        return new DomHitEngineeringFormatPayload();
     }
 
     /**
@@ -367,7 +366,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      * @return an object which is ready for reuse.
      */
     public Poolable getPoolable() {
-        return (Poolable) getFromPool();
+        return getFromPool();
     }
     /**
      * Returns an instance of this object so that it can be

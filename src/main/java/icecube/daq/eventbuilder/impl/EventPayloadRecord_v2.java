@@ -140,7 +140,7 @@ public class EventPayloadRecord_v2
      */
     public static Poolable getFromPool()
     {
-        return (Poolable) new EventPayloadRecord_v2();
+        return new EventPayloadRecord_v2();
     }
 
     /**

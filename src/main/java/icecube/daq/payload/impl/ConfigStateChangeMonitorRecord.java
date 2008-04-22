@@ -123,7 +123,7 @@ import java.util.zip.DataFormatException;
       * @return object of this type from the object pool.
       */
      public static Poolable getFromPool() {
-         return (Poolable) new ConfigStateChangeMonitorRecord();
+         return new ConfigStateChangeMonitorRecord();
      }
      /**
       * Method to reset this object for reuse by a pool.

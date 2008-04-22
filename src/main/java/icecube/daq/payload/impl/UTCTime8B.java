@@ -1,7 +1,7 @@
 /*
  * class: UTCTime8B
  *
- * Version $Id: UTCTime8B.java 2657 2008-02-15 23:41:14Z dglo $
+ * Version $Id: UTCTime8B.java 2962 2008-04-22 04:18:17Z dglo $
  *
  * Date: September 21 2004
  *
@@ -16,10 +16,10 @@ import icecube.util.Poolable;
 /**
  * Implementation of the IUTCTime interface using 64 bit numbers
  *
- * @version $Id: UTCTime8B.java 2657 2008-02-15 23:41:14Z dglo $
+ * @version $Id: UTCTime8B.java 2962 2008-04-22 04:18:17Z dglo $
  * @author hellwig
  */
-public class UTCTime8B extends Poolable implements IUTCTime {
+public class UTCTime8B implements IUTCTime, Poolable {
 
     private long mlutctime;
 
@@ -35,7 +35,7 @@ public class UTCTime8B extends Poolable implements IUTCTime {
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new UTCTime8B();
+        return new UTCTime8B();
     }
 
     /**

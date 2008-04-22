@@ -22,7 +22,7 @@ import java.util.zip.DataFormatException;
  *
  * @author dwharton
  */
-public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadRecord, IReadoutRequest {
+public class ReadoutRequestRecord implements IWriteablePayloadRecord, IReadoutRequest, Poolable {
     public static final int DEFAULT_REC_TYPE = 1;
     //
     //-Static's defining location and size of data within a ByteBuffer
@@ -310,17 +310,15 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
      * @return the useable record, from a pool (TODO)
      */
     public static ReadoutRequestElementRecord getUseableReadoutRequestElementRecord() {
-        //-TODO: implement pooling
         return new ReadoutRequestElementRecord();
     }
 
     /**
      * Allows this object to know how to pool itself.
      * @return  ReadoutRequestRecord from the pool
-     * TODO: implement pooling!!!!!
      */
     public static Poolable getFromPool() {
-        return(Poolable) new ReadoutRequestRecord();
+        return new ReadoutRequestRecord();
     }
 
     /**

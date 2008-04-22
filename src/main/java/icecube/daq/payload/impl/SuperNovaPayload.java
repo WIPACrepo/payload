@@ -19,7 +19,6 @@ import java.util.zip.DataFormatException;
  *
  * NOTE: These objects can be pooled, so that they do not
  *       need to be created/garbage collected needlessly.
- * TODO: implement Poolable!
  *
  * @author Dan Wharton
  */
@@ -98,7 +97,7 @@ public class SuperNovaPayload extends Payload {
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new SuperNovaPayload();
+        return new SuperNovaPayload();
     }
 
     /**
@@ -106,7 +105,7 @@ public class SuperNovaPayload extends Payload {
      * @return an object which is ready for reuse.
      */
     public Poolable getPoolable() {
-        return (Poolable) getFromPool();
+        return getFromPool();
     }
     /**
      * Returns an instance of this object so that it can be

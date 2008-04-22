@@ -30,7 +30,7 @@ import java.util.zip.DataFormatException;
  *
  * @author dwharton
  */
-public class CompositePayloadEnvelope extends Poolable implements IWriteablePayloadRecord {
+public class CompositePayloadEnvelope implements IWriteablePayloadRecord, Poolable {
     public static final ByteOrder ENVELOPE_ORDER = ByteOrder.BIG_ENDIAN;
     public static final short DEFAULT_COMPOSITE_TYPE = (short) 1;
     /**

@@ -8,8 +8,7 @@ import icecube.daq.payload.impl.UTCTime8B;
 import icecube.util.Poolable;
 
 public abstract class AbstractEventPayloadRecord
-    extends Poolable
-    implements IWriteablePayloadRecord
+    implements IWriteablePayloadRecord, Poolable
 {
     /** Record type. */
     private short recType;

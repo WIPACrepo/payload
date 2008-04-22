@@ -1,7 +1,7 @@
 /*
  * class: Payload
  *
- * Version $Id: Payload.java 2647 2008-02-14 16:46:48Z dglo $
+ * Version $Id: Payload.java 2962 2008-04-22 04:18:17Z dglo $
  *
  * Date: September 21 2004
  *
@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * Payload implements the IPayload interface and the Spliceable interface
  * It contains trigger information that is send through the DAQ system
  *
- * @version $Id: Payload.java 2647 2008-02-14 16:46:48Z dglo $
+ * @version $Id: Payload.java 2962 2008-04-22 04:18:17Z dglo $
  * @author hellwig,dwharton
  *
  * 8/24/2005 dbw
@@ -40,8 +40,8 @@ import org.apache.commons.logging.LogFactory;
  *   that Payload's who are the 'root-owner' of a ByteBuffer can return it
  *   to the source for reuse. See below for criterion for 'ownership'.
  */
-public abstract class Payload extends Poolable
-    implements ILoadablePayload, IWriteablePayload, Spliceable
+public abstract class Payload
+    implements ILoadablePayload, IWriteablePayload, Poolable, Spliceable
 {
     /**
      * Log object for this class
@@ -365,7 +365,7 @@ public abstract class Payload extends Poolable
             mt_PayloadEnvelope = null;
         }
         if (mttime != null && !mttime.equals(mt_NULLTIME)) {
-            ((Poolable)mttime).dispose();
+            ((Poolable) mttime).dispose();
             mttime = mt_NULLTIME;
         }
         if (mtbuffer != null) {
@@ -390,7 +390,7 @@ public abstract class Payload extends Poolable
      * Object know's how to recycle itself
      */
     public synchronized void recycle() {
-        //-recylce the backing if appropriate.
+        //-recycle the backing if appropriate.
         recycleByteBuffer();
         //-this will null out the rest of the components
         dispose();
@@ -508,6 +508,10 @@ public abstract class Payload extends Poolable
             }
         }
         return tPayloadCopy;
+    }
+
+    public static Poolable getFromPool() {
+        throw new Error("Unimplemented");
     }
 
     /**

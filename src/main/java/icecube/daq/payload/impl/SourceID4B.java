@@ -1,7 +1,7 @@
 /*
  * class: SourceID4B
  *
- * Version $Id: SourceID4B.java 2488 2008-01-17 22:01:22Z dglo $
+ * Version $Id: SourceID4B.java 2962 2008-04-22 04:18:17Z dglo $
  *
  * Date: September 21 2004
  *
@@ -17,10 +17,10 @@ import icecube.util.Poolable;
 /**
  * Implementation of ISourceID using a 4 byte int
  *
- * @version $Id: SourceID4B.java 2488 2008-01-17 22:01:22Z dglo $
+ * @version $Id: SourceID4B.java 2962 2008-04-22 04:18:17Z dglo $
  * @author hellwig,dwharton
  */
-public class SourceID4B extends Poolable implements ISourceID
+public class SourceID4B implements ISourceID, Poolable
 {
     public static final int SIZE = 4;
     private int misource = -1;
@@ -94,7 +94,7 @@ public class SourceID4B extends Poolable implements ISourceID
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new SourceID4B();
+        return new SourceID4B();
     }
 
     /**

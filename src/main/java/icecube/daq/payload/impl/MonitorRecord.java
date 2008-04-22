@@ -29,7 +29,7 @@ import java.util.zip.DataFormatException;
  *
  * @author dwharton
  */
-public class MonitorRecord extends Poolable implements IPayloadRecord {
+public class MonitorRecord implements IPayloadRecord, Poolable {
 
     /**
      * All of the types of monitor records.
@@ -304,7 +304,7 @@ public class MonitorRecord extends Poolable implements IPayloadRecord {
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new MonitorRecord();
+        return new MonitorRecord();
     }
 
     /**

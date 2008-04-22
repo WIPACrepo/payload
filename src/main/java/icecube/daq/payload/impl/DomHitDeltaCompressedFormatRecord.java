@@ -154,7 +154,7 @@ import java.util.zip.DataFormatException;
  *
  * @author dwharton
  */
-public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopyable, IWriteablePayloadRecord, IHitDataRecord {
+public class DomHitDeltaCompressedFormatRecord implements ICopyable, IWriteablePayloadRecord, IHitDataRecord, Poolable {
 
     //-Mux Record Header
     public static final int SIZE_ORDERCHECK              = 2;
@@ -619,7 +619,7 @@ public class DomHitDeltaCompressedFormatRecord extends Poolable implements ICopy
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new DomHitDeltaCompressedFormatRecord();
+        return new DomHitDeltaCompressedFormatRecord();
     }
 
     /**

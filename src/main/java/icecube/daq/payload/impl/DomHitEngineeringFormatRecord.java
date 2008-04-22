@@ -20,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
  * is enveloped inside a Payload.
  * @author dwharton
  */
-public class DomHitEngineeringFormatRecord extends Poolable implements IWriteablePayloadRecord, IHitDataRecord {
+public class DomHitEngineeringFormatRecord implements IWriteablePayloadRecord, IHitDataRecord, Poolable {
 
     private static Log mtLog = LogFactory.getLog(DomHitEngineeringFormatRecord.class);
     public static final int NUM_ATWDFORMATS    = 4;
@@ -107,7 +107,7 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new DomHitEngineeringFormatRecord();
+        return new DomHitEngineeringFormatRecord();
     }
 
     /**

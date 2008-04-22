@@ -26,13 +26,13 @@ class FooPayload
     }
 
     public static Poolable getFromPool() {
-        return (Poolable) new FooPayload();
+        return new FooPayload();
     }
 
     public Poolable getPoolable() {
         FooPayload pay = (FooPayload) getFromPool();
         pay.mtParentPayloadFactory = mtParentPayloadFactory;
-        return (Poolable) pay;
+        return pay;
     }
 
     public void loadPayload()

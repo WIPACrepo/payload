@@ -21,7 +21,7 @@ import icecube.util.Poolable;
  * NOTE: After realizing that domid's are just long's and made as serial numbers
  *       from the main-boards, this class is not used.
  */
-public class DOMID4B extends Poolable implements IDOMID
+public class DOMID4B implements IDOMID, Poolable
 {
     private int midomid;
 
@@ -53,7 +53,7 @@ public class DOMID4B extends Poolable implements IDOMID
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new DOMID4B();
+        return new DOMID4B();
     }
 
     /**

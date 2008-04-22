@@ -10,7 +10,7 @@ import icecube.util.Poolable;
  * NOTE: This class is probably not needed except as a placeholder
  *       class for the primitive domid.
  */
-public class DOMID8B extends Poolable implements IDOMID {
+public class DOMID8B implements IDOMID, Poolable {
 
     private long ml_DomID;
     private String ms_DomID;
@@ -46,7 +46,7 @@ public class DOMID8B extends Poolable implements IDOMID {
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new DOMID8B();
+        return new DOMID8B();
     }
 
     /**

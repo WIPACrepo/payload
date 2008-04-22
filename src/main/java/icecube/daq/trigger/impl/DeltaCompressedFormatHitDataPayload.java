@@ -217,14 +217,12 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
         return mt_sourceId;
     }
 
-    //--[Poolable]-----
-
     /**
      * Get an object from the pool
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new DeltaCompressedFormatHitDataPayload();
+        return new DeltaCompressedFormatHitDataPayload();
     }
 
     /**
@@ -234,7 +232,7 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
     public Poolable getPoolable() {
         Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
-        return (Poolable) tPayload;
+        return tPayload;
     }
 
     /**

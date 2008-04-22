@@ -18,7 +18,7 @@ import java.util.zip.DataFormatException;
  * @author dwharton
  *
  */
-public class TimeCalibrationRecord extends Poolable implements IWriteablePayloadRecord {
+public class TimeCalibrationRecord implements IWriteablePayloadRecord, Poolable {
 
     //-Static positions of data within the record
     public static final int SIZE_PACKET_LEN    = 4;
@@ -75,7 +75,7 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
      * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new TimeCalibrationRecord();
+        return new TimeCalibrationRecord();
     }
 
     /**
