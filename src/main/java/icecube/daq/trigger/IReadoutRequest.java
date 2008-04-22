@@ -7,7 +7,7 @@ package icecube.daq.trigger;
 
 import icecube.daq.payload.ISourceID;
 
-import java.util.Vector;
+import java.util.List;
 
 /**
  * This Interface defines the message the EventBuilder sends
@@ -19,11 +19,11 @@ import java.util.Vector;
 public interface IReadoutRequest {
     /**
      * getReadoutSPRequestElements()
-     * returns a Vector of IReadoutRequestElement's describing the
+     * returns a list of IReadoutRequestElement's describing the
      * readout request for a single ISourceID (ie String)
-     * @return Vector Vector of IReadoutRequestElement
+     * @return list of IReadoutRequestElement
      */
-    Vector getReadoutRequestElements();
+    List getReadoutRequestElements();
 
     /**
      * getUID()

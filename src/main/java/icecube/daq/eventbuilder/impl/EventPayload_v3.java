@@ -9,7 +9,7 @@ import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.ITriggerRequestPayload;
 import icecube.util.Poolable;
 
-import java.util.Vector;
+import java.util.List;
 
 /**
  * This payload object represents a Event which is produced by when
@@ -29,7 +29,7 @@ import java.util.Vector;
  * 2.3 EventType - indicating a configuration type which cause this event
  *                     this event-type was configured.
  * 3. ITriggerRequestPayload fromt he GlobalTrigger whic caused the creation of this event.
- * 4. Vector of IReadoutDataPayload's representing the data as queried from the list
+ * 4. list of IReadoutDataPayload's representing the data as queried from the list
  *    of StringProcessor's and IceTopDataHandler's as specified in the ITriggerRequestPayload.
  *
  * @author dwharton, mhellwig
@@ -126,17 +126,17 @@ public class EventPayload_v3
      * @param iRunNumber the run-number in which this event occured.
      * @param iSubrunNumber the subrun number in which this event occured.
      * @param tTriggerRequest ITriggerRequestPayload which caused this event to be constructed.
-     * @param tDataPayloads Vector of IReadoutDataPayload's which constitute the data as returned from
+     * @param tDataPayloads list of IReadoutDataPayload's which constitute the data as returned from
      *                               the StringProcessor's/IceTopDataHandler's
-     *                               NOTE: This Vector should be cleared after this method has been called
-     *                               because a new Vector is created to contain these items.
+     *                               NOTE: This list should be cleared after this method has been called
+     *                               because a new list is created to contain these items.
      *
      */
     public void initialize(int iUID, ISourceID tSourceID,
                            IUTCTime tFirstTimeUTC, IUTCTime tLastTimeUTC,
                            int iEventType, int iRunNumber, int iSubrunNumber,
                            ITriggerRequestPayload tTriggerRequest,
-                           Vector tDataPayloads)
+                           List tDataPayloads)
     {
         // build record
         EventPayloadRecord_v3 rec =

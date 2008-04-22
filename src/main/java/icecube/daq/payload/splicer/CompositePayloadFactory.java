@@ -2,6 +2,7 @@ package icecube.daq.payload.splicer;
 
 import icecube.daq.payload.ILoadablePayload;
 
+import java.util.List;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
@@ -43,13 +44,13 @@ public class CompositePayloadFactory extends PayloadFactory {
     }
 
     /**
-     * This deep copies a vector of Payloads to a new Vector.
-     * @param tPayloads Vector of Payloads which to make 'deep-copies'
-     * @return Vector containing the same ordered list of 'deep-copied' payloads.
+     * This deep copies a list of Payloads to a new list.
+     * @param tPayloads list of Payloads which to make 'deep-copies'
+     * @return list containing the same ordered list of 'deep-copied' payloads.
      */
-    public static Vector deepCopyPayloadVector(Vector tPayloads) {
+    public static List deepCopyPayloadList(List tPayloads) {
         boolean bDeepCopyOK = false;
-        Vector tPayloadsCopy = null;
+        List tPayloadsCopy = null;
         if (tPayloads != null) {
             tPayloadsCopy = new Vector();
             bDeepCopyOK = true;
@@ -88,7 +89,7 @@ public class CompositePayloadFactory extends PayloadFactory {
      * of payloads.
      * @param tPayloads a non-null vector of Payloads which will be recycled.
      */
-    public static void recyclePayloads(Vector tPayloads) {
+    public static void recyclePayloads(List tPayloads) {
         for (int ii=0; ii < tPayloads.size(); ii++) {
             ILoadablePayload tPay = (ILoadablePayload) tPayloads.get(ii);
             if (tPay != null) {

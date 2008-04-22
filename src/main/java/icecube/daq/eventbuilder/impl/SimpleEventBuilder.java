@@ -16,6 +16,7 @@ import icecube.daq.trigger.impl.TriggerRequestPayload;
 import icecube.daq.trigger.impl.TriggerRequestPayloadFactory;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Vector;
 import java.util.zip.DataFormatException;
 
@@ -25,7 +26,7 @@ import java.util.zip.DataFormatException;
  * specifically for use with the Monolith program to
  * transform TestDAQ data into events.
  * The assumptions for constructing the event are an
- * input of a Vector of HitDataPayloads from which
+ * input of a list of HitDataPayloads from which
  * will be constructed the appropriate TriggerRequestPayloads
  * and ReadoutDataPayloads to construct an EventPayload.
  * This will be written to the given destination.
@@ -50,7 +51,7 @@ public class SimpleEventBuilder {
     }
 
     /**
-     * Main method to constuct and EventPayload from a Vector of EngineeringFormatHitDataPayload.
+     * Main method to constuct and EventPayload from a list of EngineeringFormatHitDataPayload.
      * @param iReadoutType readout type for this simple EB, either
      *                               IReadoutRequestElement.READOUT_TYPE_II_MODULE, or
      *                               IReadoutRequestElement.READOUT_TYPE_IT_MODULE
@@ -64,9 +65,9 @@ public class SimpleEventBuilder {
      * @param iTriggerType the id of the trigger-type producing the trigger/event
      * @param iTriggerConfigID the id of the parameters which are specific to this trigger type
      * @param tTriggerSourceID source ID of the GT which produced this trigger
-     * @param tHitDataPayloads Vector of IHitDataPayloads which will constitute this event.
+     * @param tHitDataPayloads list of IHitDataPayloads which will constitute this event.
      *
-     * @return Payload IEventPayload constructed from the simple hit vector and parameters.
+     * @return Payload IEventPayload constructed from the simple hit list and parameters.
      */
     public Payload createPayload(
                                 int iReadoutType,
@@ -80,14 +81,14 @@ public class SimpleEventBuilder {
                                 int iTriggerType,
                                 int iTriggerConfigID,
                                 ISourceID tTriggerSourceID,
-                                Vector tHitDataPayloads) {
+                                List tHitDataPayloads) {
         //-Create HitPayloads from the HitDataPayloads
-        Vector tHitPayloads = createHitPayloads(tHitDataPayloads);
+        List tHitPayloads = createHitPayloads(tHitDataPayloads);
         //-Create TriggerRequestPayload from the
         ITriggerRequestPayload tTriggerRequestPayload = createTriggerRequest(iReadoutType, iTriggerUID, iTriggerType, iTriggerConfigID,
                                                                         tTriggerSourceID, tHitPayloads);
         //-Create the IReadoutDataPayloads
-        Vector tReadoutDataPayloads = new Vector();
+        List tReadoutDataPayloads = new Vector();
         //-Set first and last time to reflect the first and last hit times
         // It is assumed that they are time-ordered in this list.
         IUTCTime tFirstTime = ((IHitDataPayload)tHitDataPayloads.get(0)).getPayloadTimeUTC();
@@ -105,7 +106,7 @@ public class SimpleEventBuilder {
     }
 
     /**
-     * Main method to constuct and EventPayload from a Vector of EngineeringFormatHitDataPayload.
+     * Main method to constuct and EventPayload from a list of EngineeringFormatHitDataPayload.
      * @param tTriggerRequestPayload TriggerRequestPayload from trigger
      * @param tSPSourceID id of the StringProcessor (fake) providing this data
      * @param iEventUID global UID for this event
@@ -113,9 +114,9 @@ public class SimpleEventBuilder {
      * @param iEventConfigID unique config-id for this type of event
      * @param iRunNumber run number; instrument context for this event. (v2)
      * @param tEventSourceID id of the event-builder generating this event
-     * @param tHitDataPayloads Vector of IHitDataPayloads which will constitute this event.
+     * @param tHitDataPayloads list of IHitDataPayloads which will constitute this event.
      *
-     * @return IEventPayload constructed from the simple hit vector and parameters.
+     * @return IEventPayload constructed from the simple hit list and parameters.
      */
     public Payload createPayload( TriggerRequestPayload tTriggerRequestPayload,
                                  ISourceID tSPSourceID,
@@ -124,9 +125,9 @@ public class SimpleEventBuilder {
                                  int iEventConfigID,
                                  int iRunNumber,
                                  ISourceID tEventSourceID,
-                                 Vector tHitDataPayloads) {
+                                 List tHitDataPayloads) {
         //-Create the IReadoutDataPayloads
-        Vector tReadoutDataPayloads = new Vector();
+        List tReadoutDataPayloads = new Vector();
         //-Set first and last time to reflect the first and last hit times
         // It is assumed that they are time-ordered in this list.
         IUTCTime tFirstTime = ((IHitDataPayload)tHitDataPayloads.get(0)).getPayloadTimeUTC();
@@ -158,7 +159,7 @@ public class SimpleEventBuilder {
      * @param iRunNumber the run-number which keys the instrument configuration for this event.
      * @param tEventSourceID id of the event-builder generating this event
      *
-     * @return Payload IEventPayload constructed from the simple hit vector and parameters.
+     * @return Payload IEventPayload constructed from the simple hit list and parameters.
      */
     public Payload convertToEventPayload(TriggerRequestPayload tTriggerRequestPayload,
                                  ISourceID tSPSourceID,
@@ -169,7 +170,7 @@ public class SimpleEventBuilder {
                                  ISourceID tEventSourceID
                                  ) {
         //-Create the IReadoutDataPayloads
-        Vector tReadoutDataPayloads = new Vector();
+        List tReadoutDataPayloads = new Vector();
 
 
 
@@ -181,7 +182,7 @@ public class SimpleEventBuilder {
         IUTCTime tFirstTime                 = tTriggerRequestPayload.getFirstTimeUTC();
         IUTCTime tLastTime                  = tTriggerRequestPayload.getLastTimeUTC();
         //-by definition these are masqerading as IHitPayload's in this trigger request
-        Vector tHitDataPayloads             = null;
+        List tHitDataPayloads             = null;
         try {
             tHitDataPayloads                = tTriggerRequestPayload.getPayloads();
         } catch (DataFormatException tException) {
@@ -194,7 +195,7 @@ public class SimpleEventBuilder {
             return null;
         }
         //-Convert IHitDataPayloads -> IHitPayloads...
-        Vector tHitPayloads                 = createHitPayloads(tHitDataPayloads);
+        List tHitPayloads                 = createHitPayloads(tHitDataPayloads);
         IReadoutRequest tReadoutRequest     = tTriggerRequestPayload.getReadoutRequest();
         //-reinitialize the TriggerRequestPayload with the new hit-payloads
         tTriggerRequestPayload.initialize(
@@ -223,7 +224,7 @@ public class SimpleEventBuilder {
         return tEventPayload;
     }
     /**
-     * Creats TriggerRequestPayload from IHitDataPayload vector.
+     * Creats TriggerRequestPayload from IHitDataPayload list.
      * @param iReadoutType readout type for this simple EB, either
      * @param iReadoutType readout type for this simple EB, either
      *                               IReadoutRequestElement.READOUT_TYPE_II_MODULE, or
@@ -233,12 +234,12 @@ public class SimpleEventBuilder {
      * @param iTriggerConfigID unique id corresponding to the trigger configuration for
      *                               the above iTriggerType.
      * @param tSourceID the source of this event.
-     * @param tHitPayloads Vector of IHitPayloads for use in creating the Trigger Request.
+     * @param tHitPayloads list of IHitPayloads for use in creating the Trigger Request.
      */
     public ITriggerRequestPayload createTriggerRequest( int iReadoutType,
                             int iTriggerUID, int iTriggerType, int iTriggerConfigID,
-                            ISourceID tSourceID, Vector tHitPayloads) {
-        Vector tRequestElements = new Vector();
+                            ISourceID tSourceID, List tHitPayloads) {
+        List tRequestElements = new Vector();
         ITriggerRequestPayload tTriggerRequestPayload = null;
         IUTCTime tFirstTime = null;
         IUTCTime tLastTime = null;
@@ -253,7 +254,7 @@ public class SimpleEventBuilder {
             tSource.initialize(-1);
             DOMID8B tDomID = (DOMID8B) DOMID8B.getFromPool();
             tDomID.initialize(tHitPayload.getDOMID().longValue());
-            //-create the element and add it to the vector
+            //-create the element and add it to the list
             IReadoutRequestElement tElement =
                 mtTriggerRequestPayloadFactory.createReadoutRequestElement( iReadoutType, tFirstTime, tLastTime, tDomID, tSource);
             tRequestElements.add( tElement );
@@ -275,10 +276,10 @@ public class SimpleEventBuilder {
      * Method to convert existing IHitDataPayloads into new IHitPayloads based
      * on contained information.
      *
-     * @param tHitDataPayloads Vector of IHitDataPayloads from which to create the IHitPayloads.
+     * @param tHitDataPayloads list of IHitDataPayloads from which to create the IHitPayloads.
      */
-    public Vector createHitPayloads(Vector tHitDataPayloads) {
-        Vector tHitPayloads = new Vector();
+    public List createHitPayloads(List tHitDataPayloads) {
+        List tHitPayloads = new Vector();
         for (int ii=0; ii < tHitDataPayloads.size(); ii++) {
             IHitPayload tHitPayload = (IHitPayload) mtHitPayloadFactory.createPayload((IHitDataPayload) tHitDataPayloads.get(ii));
             tHitPayloads.add( tHitPayload);

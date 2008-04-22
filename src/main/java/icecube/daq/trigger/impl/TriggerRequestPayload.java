@@ -16,7 +16,7 @@ import icecube.util.Poolable;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Vector;
+import java.util.List;
 import java.util.zip.DataFormatException;
 
 /**
@@ -237,7 +237,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
      * @param tRequestorSourceID the ISourceID of the source which is constructing this trigger request.
      * @param tFirstTimeUTC IUTCTime of the start of this time window
      * @param tLastTimeUTC IUTCTime of the end of this time window
-     * @param tPayloads Vector of IPayload's which have contributed to this trigger.
+     * @param tPayloads list of IPayload's which have contributed to this trigger.
      * @param tRequest IReadoutRequest which has been constructed for this payload.
      *
      */
@@ -248,7 +248,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
         ISourceID       tRequestorSourceID,
         IUTCTime        tFirstTimeUTC,
         IUTCTime        tLastTimeUTC,
-        Vector          tPayloads,
+        List            tPayloads,
         IReadoutRequest tRequest
     ) {
         mt_triggerRequestRecord = (TriggerRequestRecord) TriggerRequestRecord.getFromPool();
@@ -370,7 +370,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
      * get timeordered list of all hits contained in Composite, this
      * is the unique list of  Payload's which are IHitPayload's
      */
-    public Vector getHitList() {
+    public List getHitList() {
         return null;
     }
     /**

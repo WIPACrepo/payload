@@ -7,7 +7,7 @@ import icecube.daq.payload.splicer.Payload;
 import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.trigger.ITriggerRequestPayload;
 
-import java.util.Vector;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,7 +48,7 @@ public class EventPayload_v3Factory  extends PayloadFactory {
      *  @param iRunNumber the run-number associated with this event which keys the instrument configuration when
      *                               this event was created.
      *  @param tTriggerRequest ITriggerRequestPayload which is the trigger causing the collection of this event.
-     *  @param tDataPayloads Vector of IReadoutDataPayload's which constitute this event.
+     *  @param tDataPayloads list of IReadoutDataPayload's which constitute this event.
      *
      *  @return the Payload object specific to this class which is
      *                     specific to the class which is derived from PayloadFactory.
@@ -62,11 +62,11 @@ public class EventPayload_v3Factory  extends PayloadFactory {
             int             iRunNumber,
             int             iSubrunNumber,
             ITriggerRequestPayload tTriggerRequest,
-            Vector          tDataPayloads
+            List            tDataPayloads
     ) {
         //-create the deepCopy of the payloads as part of the composite.
-        Vector tDataPayloadsCopy =
-            CompositePayloadFactory.deepCopyPayloadVector(tDataPayloads);
+        List tDataPayloadsCopy =
+            CompositePayloadFactory.deepCopyPayloadList(tDataPayloads);
 
         //-if list copy succeeded, move onto request
         ITriggerRequestPayload tTriggerRequestCopy;
@@ -81,7 +81,7 @@ public class EventPayload_v3Factory  extends PayloadFactory {
         EventPayload_v3 tPayload;
         //-if deep-copy failed, then recycle the individual payloads that did succeed
         if (tTriggerRequestCopy == null) {
-            //-recycle the possible incomplete vector of copies
+            //-recycle the possible incomplete list of copies
             if (tDataPayloadsCopy != null) {
                 CompositePayloadFactory.recyclePayloads(tDataPayloadsCopy);
                 tDataPayloadsCopy = null;

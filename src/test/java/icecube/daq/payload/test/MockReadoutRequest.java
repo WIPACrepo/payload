@@ -5,7 +5,7 @@ import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
 
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.List;
 
 public class MockReadoutRequest
     implements IReadoutRequest
@@ -33,10 +33,9 @@ public class MockReadoutRequest
                                                  domId, srcId));
     }
 
-    // XXX this should return a List, not a Vector
-    public Vector getReadoutRequestElements()
+    public List getReadoutRequestElements()
     {
-        return new Vector(elemList);
+        return elemList;
     }
 
     public ISourceID getSourceID()

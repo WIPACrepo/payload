@@ -11,7 +11,7 @@ import icecube.daq.trigger.IReadoutRequestElement;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Vector;
+import java.util.List;
 import java.util.zip.DataFormatException;
 
 /**
@@ -80,7 +80,7 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
      *                              subsequently 'owned' by the output IReadoutRequest.
      * @return the output request
      */
-    public static IReadoutRequest createReadoutRequest(ISourceID tSourceID, int iTriggerUID, Vector tRequestElements) {
+    public static IReadoutRequest createReadoutRequest(ISourceID tSourceID, int iTriggerUID, List tRequestElements) {
         ReadoutRequestRecord tRequest = (ReadoutRequestRecord) ReadoutRequestRecord.getFromPool();
         tRequest.initialize(iTriggerUID,(ISourceID) tSourceID.deepCopy(),tRequestElements);
         return tRequest;

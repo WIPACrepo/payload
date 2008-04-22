@@ -3,7 +3,7 @@ package icecube.daq.eventbuilder;
 import icecube.daq.trigger.ICompositePayload;
 import icecube.daq.trigger.ITriggerRequestPayload;
 
-import java.util.Vector;
+import java.util.List;
 
 /**
  * Objects which implement this interface provide information
@@ -18,7 +18,7 @@ import java.util.Vector;
  * 2.3 EventConfigID - indicating as a primary key the unique configuration with which
  *                     this event-type was configured.
  * 3. ITriggerRequestPayload fromt he GlobalTrigger whic caused the creation of this event.
- * 4. Vector of IReadoutDataPayload's representing the data as queried from the list
+ * 4. list of IReadoutDataPayload's representing the data as queried from the list
  *    of StringProcessor's and IceTopDataHandler's as specified in the ITriggerRequestPayload.
  * @author dwharton
  * NOTE: This interface reflects changes which are implemented in the
@@ -71,9 +71,9 @@ public interface IEventPayload extends ICompositePayload {
     /**
      * Returns the IReadoutDataPayload's which represent the actual data associated
      * with the event.
-     * @return Vector of IReadoutDataPayload's which can be queried for IHitDataPayload's
+     * @return list of IReadoutDataPayload's which can be queried for IHitDataPayload's
      */
-    Vector getReadoutDataPayloads();
+    List getReadoutDataPayloads();
 
     /**
      * Get the number of the active subrun for this event.

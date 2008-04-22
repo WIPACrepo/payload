@@ -9,7 +9,7 @@ import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.ITriggerRequestPayload;
 import icecube.util.Poolable;
 
-import java.util.Vector;
+import java.util.List;
 
 /**
  * This payload object represents a Event which is produced by when
@@ -24,7 +24,7 @@ import java.util.Vector;
  * 1. EventID - unique for this triggered event (from the global trigger)
  * 2. Timewindow - for this event-data.
  * 3. ITriggerRequestPayload fromt he GlobalTrigger which caused the creation of this event.
- * 4. Vector of IReadoutDataPayload's representing the data as queried from the list
+ * 4. list of IReadoutDataPayload's representing the data as queried from the list
  *    of StringProcessor's and IceTopDataHandler's as specified in the ITriggerRequestPayload.
  *
  * @author dwharton, mhellwig
@@ -107,7 +107,7 @@ public class EventPayload_v1
     public void initialize(int iUID, ISourceID tSourceID,
                            IUTCTime tFirstTimeUTC, IUTCTime tLastTimeUTC,
                            ITriggerRequestPayload tTriggerRequest,
-                           Vector tDataPayloads)
+                           List tDataPayloads)
     {
         // build record
         EventPayloadRecord_v1 rec =

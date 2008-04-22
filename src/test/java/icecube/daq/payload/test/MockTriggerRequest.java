@@ -12,7 +12,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 import java.util.zip.DataFormatException;
 
 public class MockTriggerRequest
@@ -88,13 +87,13 @@ public class MockTriggerRequest
         return new MockUTCTime(firstTime);
     }
 
-    public Vector getHitList()
+    public List getHitList()
     {
         if (hitList == null) {
             return null;
         }
 
-        return new Vector(hitList);
+        return hitList;
     }
 
     public IUTCTime getLastTimeUTC()
@@ -150,7 +149,7 @@ public class MockTriggerRequest
         throw new Error("Unimplemented");
     }
 
-    public Vector getPayloads()
+    public List getPayloads()
         throws IOException, DataFormatException
     {
         throw new Error("Unimplemented");

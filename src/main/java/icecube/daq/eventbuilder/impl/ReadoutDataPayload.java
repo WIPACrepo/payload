@@ -15,7 +15,7 @@ import icecube.util.Poolable;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Vector;
+import java.util.List;
 import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
@@ -122,7 +122,7 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
      * @param tSourceid the ISourceID of the component producing this data.
      * @param tFirstTimeUTC IUTCTime of the start of this time window
      * @param tLastTimeUTC IUTCTime of the end of this time window
-     * @param tPayloads Vector of IPayload's which have contributed to this trigger.
+     * @param tPayloads list of IPayload's which have contributed to this trigger.
      *
      */
     public void initialize(
@@ -132,7 +132,7 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
         ISourceID       tRequestorSourceID,
         IUTCTime        tFirstTimeUTC,
         IUTCTime        tLastTimeUTC,
-        Vector          tPayloads
+        List            tPayloads
     ) {
         mt_ReadoutDataRecord = (ReadoutDataRecord) ReadoutDataRecord.getFromPool();
         //-Payload portion
@@ -172,7 +172,7 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
      * get timeordered list of all hits contained in Composite, this
      * is the unique list of  Payload's which are IHitPayload's
      */
-    public Vector getHitList() {
+    public List getHitList() {
         return this.getDataPayloads();
     }
     /**
@@ -209,11 +209,11 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
         }
     }
     /**
-     * A Vector of the IHitDataPayload's which correspond
+     * A list of the IHitDataPayload's which correspond
      * to the hit-data that has been requested.
-     * @return a vector of IHitDataPayload's which contain the desired data.
+     * @return a list of IHitDataPayload's which contain the desired data.
      */
-    public Vector getDataPayloads() {
+    public List getDataPayloads() {
         return super.mt_Payloads;
     }
     /**

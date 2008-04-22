@@ -10,7 +10,7 @@ import icecube.daq.trigger.IReadoutRequestElement;
 import icecube.daq.trigger.ITriggerRequestPayload;
 
 import java.io.IOException;
-import java.util.Vector;
+import java.util.List;
 import java.util.zip.DataFormatException;
 
 /**
@@ -41,7 +41,7 @@ public class TriggerRequestPayloadFactory extends CompositePayloadFactory {
      *  @param tRequestorSourceID the ISourceID of the source which is constructing this trigger request.
      *  @param tFirstTimeUTC IUTCTime of the start of this time window
      *  @param tLastTimeUTC IUTCTime of the end of this time window
-     *  @param tPayloads Vector of IPayload's which have contributed to this trigger.
+     *  @param tPayloads list of IPayload's which have contributed to this trigger.
      *  @param tRequest IReadoutRequest which has been constructed for this payload,
      *                            this is subsiquently owned by the output Payload.
      *  @return the Payload object specific to this class which is
@@ -54,12 +54,12 @@ public class TriggerRequestPayloadFactory extends CompositePayloadFactory {
             ISourceID       tRequestorSourceID,
             IUTCTime        tFirstTimeUTC,
             IUTCTime        tLastTimeUTC,
-            Vector          tPayloads,
+            List            tPayloads,
             IReadoutRequest tRequest
     ) {
         TriggerRequestPayload tTriggerRequestPayload = null;
-        Vector tPayloadsCopy = null;
-        tPayloadsCopy = CompositePayloadFactory.deepCopyPayloadVector(tPayloads);
+        List tPayloadsCopy =
+            CompositePayloadFactory.deepCopyPayloadList(tPayloads);
         if (tPayloadsCopy != null) {
             tTriggerRequestPayload = (TriggerRequestPayload) mt_PoolablePayloadFactory.getPoolable();
             tTriggerRequestPayload.initialize( iUID, iTriggerType, iTriggerConfigID,
@@ -85,7 +85,7 @@ public class TriggerRequestPayloadFactory extends CompositePayloadFactory {
      * @param iTriggerUID the unique id of the generated trigger.
      * @param tRequestElements the consituent readout-request-elements
      */
-    public static IReadoutRequest createReadoutRequest(ISourceID tSourceID, int iTriggerUID, Vector tRequestElements) {
+    public static IReadoutRequest createReadoutRequest(ISourceID tSourceID, int iTriggerUID, List tRequestElements) {
         return ReadoutRequestPayloadFactory.createReadoutRequest(tSourceID, iTriggerUID, tRequestElements);
     }
 

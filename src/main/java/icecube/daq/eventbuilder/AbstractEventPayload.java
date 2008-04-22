@@ -13,6 +13,7 @@ import icecube.util.Poolable;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.Vector;
 import java.util.zip.DataFormatException;
 
@@ -119,7 +120,7 @@ public abstract class AbstractEventPayload
      * get timeordered list of all hits contained in Composite, this
      * is the unique list of  Payload's which are IHitPayload's
      */
-    public Vector getHitList()
+    public List getHitList()
     {
         return null;
     }
@@ -148,7 +149,7 @@ public abstract class AbstractEventPayload
      * @return list of IReadoutDataPayloads which can be queried for
      *         IHitDataPayloads
      */
-    public Vector getReadoutDataPayloads()
+    public List getReadoutDataPayloads()
     {
         Vector tDataPayloads = new Vector();
         // start from 1 to skip initial ITriggerRequestPayload
@@ -248,23 +249,22 @@ public abstract class AbstractEventPayload
      * @param rec initialized event record
      * @param payloads list of IReadoutDataPayloads which constitute the data
      *                 as returned from the StringHubs
-     * NOTE: This Vector should be cleared after this method has been called
-     *       because a new Vector is created to contain these items.
+     * NOTE: This list should be cleared after this method has been called
+     *       because a new list is created to contain these items.
      */
     public void initialize(AbstractEventPayloadRecord rec,
                            IUTCTime tFirstTimeUTC,
                            ITriggerRequestPayload tTriggerRequest,
-                           Vector tDataPayloads)
+                           List tDataPayloads)
     {
         //-Payload portion
         // This is the composite portion of this payload
-        super.mt_Payloads = new Vector();
-        super.mt_Payloads.setSize(tDataPayloads.size() +1);
+        super.mt_Payloads = new Vector(tDataPayloads.size() + 1);
         //-First element of composite is always the ITriggerRequestPayload
-        mt_Payloads.setElementAt(tTriggerRequest, 0);
+        mt_Payloads.add(tTriggerRequest);
         //-add the rest of the payloads
         for (int ii=0; ii < tDataPayloads.size(); ii++) {
-            mt_Payloads.setElementAt(tDataPayloads.get(ii), ii+1);
+            mt_Payloads.add(tDataPayloads.get(ii));
         }
 
         //-Record portion

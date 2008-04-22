@@ -13,7 +13,7 @@ import icecube.util.Poolable;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Vector;
+import java.util.List;
 import java.util.zip.DataFormatException;
 
 /**
@@ -221,16 +221,16 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
     }
     /**
      * getReadoutRequestElements()
-     * returns a Vector of IReadoutRequestElement's describing the
+     * returns a list of IReadoutRequestElement's describing the
      * readout request for a single ISourceID (ie String)
-     * @return Vector Vector of IReadoutRequestElement
+     * @return list of IReadoutRequestElement
      */
-    public Vector getReadoutRequestElements() {
-        Vector tElements = null;
-        if (mt_ReadoutRequestRecord != null) {
-            tElements = mt_ReadoutRequestRecord.getReadoutRequestElements();
+    public List getReadoutRequestElements() {
+        if (mt_ReadoutRequestRecord == null) {
+            return null;
         }
-        return tElements;
+
+        return mt_ReadoutRequestRecord.getReadoutRequestElements();
     }
     /**
      * getUID()

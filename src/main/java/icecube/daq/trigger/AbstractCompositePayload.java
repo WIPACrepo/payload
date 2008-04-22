@@ -13,6 +13,7 @@ import icecube.util.Poolable;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.Vector;
 import java.util.zip.DataFormatException;
 
@@ -23,7 +24,7 @@ import java.util.zip.DataFormatException;
  * @author dwharton
  */
 public abstract class AbstractCompositePayload extends AbstractTriggerPayload implements ICompositePayload {
-    protected Vector mt_Payloads;    //-the payloads as part of the composite
+    protected List mt_Payloads;    //-the payloads as part of the composite
     //protected IUTCTime mt_firstTime = null;
     //protected IUTCTime mt_lastTime = null;
     protected CompositePayloadEnvelope mt_CompositeEnvelope;
@@ -91,14 +92,17 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
     protected void loadCompositePayloads() throws IOException, DataFormatException {
         if (mtbuffer != null && mt_Payloads == null) {
             loadCompositeEnvelope(mi_CompositeEnvelopeOffset);
-            mt_Payloads = new Vector();
-            mt_Payloads.setSize(mt_CompositeEnvelope.msi_numPayloads);
+            mt_Payloads = new Vector(mt_CompositeEnvelope.msi_numPayloads);
             int iCurrOffset = mioffset + mi_CompositeEnvelopeOffset + CompositePayloadEnvelope.SIZE_COMPOSITE_ENVELOPE;
             for (int ii=0; ii < mt_CompositeEnvelope.msi_numPayloads; ii++) {
                 //-this assumes that the process of createPayload() fills in the payload length..in loadSpliceablePayload()
                 if (mt_MasterPayloadFactory == null) mt_MasterPayloadFactory = mt_DefaultMasterPayloadFactory;
                 Payload tPayload = mt_MasterPayloadFactory.createPayload(iCurrOffset, mtbuffer);
-                mt_Payloads.set(ii, tPayload);
+                if (mt_Payloads.size() == ii) {
+                    mt_Payloads.add(tPayload);
+                } else {
+                    mt_Payloads.set(ii, tPayload);
+                }
                 iCurrOffset += tPayload.getPayloadLength();
             }
         }
@@ -181,7 +185,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
      * get timeordered list of all hits contained in Composite, this
      * is the unique list of  Payload's which are IHitPayload's
      */
-    public abstract Vector getHitList();
+    public abstract List getHitList();
 
     /**
      * shift offset of object inside buffer (called by PayloadFactory)
@@ -234,10 +238,10 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
     }
 
     /**
-     * get vector of Payloads.
-     * @return Vector of Payloads contained in the composite.
+     * get list of Payloads.
+     * @return list of Payloads contained in the composite.
      */
-    public Vector getPayloads() throws IOException, DataFormatException {
+    public List getPayloads() throws IOException, DataFormatException {
         if (mt_Payloads == null) loadCompositePayloads();
         return mt_Payloads;
     }

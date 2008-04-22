@@ -5,7 +5,7 @@ import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.splicer.CompositePayloadFactory;
 
-import java.util.Vector;
+import java.util.List;
 
 /**
  *  This Factory produces IReadoutRequestPayload's from their
@@ -33,7 +33,7 @@ public class ReadoutDataPayloadFactory extends CompositePayloadFactory {
      * @param tSourceid the ISourceID of the component producing this data.
      * @param tFirstTimeUTC IUTCTime of the start of this time window
      * @param tLastTimeUTC IUTCTime of the end of this time window
-     * @param tPayloads Vector of IPayload's which have contributed to this composite.
+     * @param tPayloads list of IPayload's which have contributed to this composite.
      */
     public IPayload createPayload(
         int             iUID,
@@ -42,14 +42,14 @@ public class ReadoutDataPayloadFactory extends CompositePayloadFactory {
         ISourceID       tSourceID,
         IUTCTime        tFirstTimeUTC,
         IUTCTime        tLastTimeUTC,
-        Vector          tDataPayloads
+        List            tDataPayloads
     ) {
         ReadoutDataPayload tPayload = null;
         boolean bDeepCopyOk = true;
-        Vector tDataPayloadsCopy =  null;
+        List tDataPayloadsCopy =  null;
         //-make deep copy of input Payloads
         if (tDataPayloads != null) {
-            tDataPayloadsCopy = CompositePayloadFactory.deepCopyPayloadVector(tDataPayloads);
+            tDataPayloadsCopy = CompositePayloadFactory.deepCopyPayloadList(tDataPayloads);
             if (tDataPayloadsCopy == null) {
                 bDeepCopyOk = false;
             }

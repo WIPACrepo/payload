@@ -3,7 +3,7 @@ package icecube.daq.eventbuilder;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.trigger.ICompositePayload;
 
-import java.util.Vector;
+import java.util.List;
 
 /**
  * Objects which implement this interface correspond to
@@ -29,11 +29,11 @@ public interface IReadoutDataPayload extends ICompositePayload {
     int getRequestUID();
 
     /**
-     * A Vector of the IHitDataPayload's which correspond
+     * A list of the IHitDataPayload's which correspond
      * to the hit-data that has been requested.
-     * @return a vector of IHitDataPayload's which contain the desired data.
+     * @return a list of IHitDataPayload's which contain the desired data.
      */
-    Vector getDataPayloads();
+    List getDataPayloads();
     /**
      * The order number of this payload in the group of payload's
      * which have been sent in the group corresponding to the getRequestUID()
