@@ -1,7 +1,7 @@
 /*
  * class: SourceIdRegistry
  *
- * Version $Id: SourceIdRegistry.java 2125 2007-10-12 18:27:05Z ksb $
+ * Version $Id: SourceIdRegistry.java 3095 2008-05-28 18:41:52Z dglo $
  *
  * Date: January 13 2005
  *
@@ -17,7 +17,7 @@ import icecube.daq.payload.impl.SourceID4B;
  * Source ID registry and associated methods.
  *
  * @author pat
- * @version $Id: SourceIdRegistry.java 2125 2007-10-12 18:27:05Z ksb $
+ * @version $Id: SourceIdRegistry.java 3095 2008-05-28 18:41:52Z dglo $
  */
 public final class SourceIdRegistry {
 
@@ -45,6 +45,10 @@ public final class SourceIdRegistry {
      * @return integer source id
      */
     public static int getSourceIDFromNameAndId(String name, int id) {
+
+        if (id < 0 || id >= 1000) {
+            throw new Error("Bad " + name + " component ID " + id);
+        }
 
         if (name.compareTo(DAQCmdInterface.DAQ_DOMHUB) == 0) {
             return DOMHUB_SOURCE_ID + id;
