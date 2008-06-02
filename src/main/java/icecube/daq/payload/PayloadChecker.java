@@ -431,6 +431,7 @@ public abstract class PayloadChecker
             }
         }
 
+        boolean valid = true;
         for (IHitPayload tHit : trigHits) {
             boolean found = false;
             for (IHitDataPayload eHit : evtHits) {
@@ -445,17 +446,17 @@ public abstract class PayloadChecker
             if (!found) {
                 System.err.println("Couldn't find trigger hit " + tHit +
                                    " in readout data hits");
-                return false;
+                valid = false;
             }
         }
 
         if (hasSMTTrigger(trigReq) && evtHits.size() < 8) {
             LOG.error(getEventString(evt) + " contains " + evtHits.size() +
                       " hits, but should have at least 8");
-            return false;
+            valid = false;
         }
 
-        return true;
+        return valid;
     }
 
     /**
