@@ -1,7 +1,7 @@
 /*
  * class: SourceIdRegistry
  *
- * Version $Id: SourceIdRegistry.java 3095 2008-05-28 18:41:52Z dglo $
+ * Version $Id: SourceIdRegistry.java 3201 2008-06-18 17:02:59Z dglo $
  *
  * Date: January 13 2005
  *
@@ -17,7 +17,7 @@ import icecube.daq.payload.impl.SourceID4B;
  * Source ID registry and associated methods.
  *
  * @author pat
- * @version $Id: SourceIdRegistry.java 3095 2008-05-28 18:41:52Z dglo $
+ * @version $Id: SourceIdRegistry.java 3201 2008-06-18 17:02:59Z dglo $
  */
 public final class SourceIdRegistry {
 
@@ -72,7 +72,9 @@ public final class SourceIdRegistry {
             return AMANDA_TRIGGER_SOURCE_ID + id;
         } else if (name.compareTo(DAQCmdInterface.DAQ_SNBUILDER) == 0) {
             return SNBUILDER_SOURCE_ID + id;
-        } else if (name.compareTo(DAQCmdInterface.DAQ_STRING_HUB) == 0) {
+        } else if (name.compareTo(DAQCmdInterface.DAQ_STRING_HUB) == 0 ||
+                   name.compareTo(DAQCmdInterface.DAQ_REPLAY_HUB) == 0)
+        {
             return STRING_HUB_SOURCE_ID + (id % 1000);
         }
 
