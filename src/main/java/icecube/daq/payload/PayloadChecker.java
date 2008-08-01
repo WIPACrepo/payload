@@ -165,12 +165,21 @@ public abstract class PayloadChecker
         }
 
         if (payList != null) {
+            long trigStart = tr.getFirstTimeUTC().longValue();
+            long trigFinish = tr.getLastTimeUTC().longValue();
+
             for (Object obj : payList) {
                 if (obj instanceof ITriggerRequestPayload) {
                     getTrigReqHits((ITriggerRequestPayload) obj,
                                           hitList);
                 } else if (obj instanceof IHitPayload) {
-                    hitList.add((IHitPayload) obj);
+                    long hitTime =
+                        ((IHitPayload) obj).getHitTimeUTC().longValue();
+                    if (hitTime >= trigStart && hitTime <= trigFinish) {
+                        hitList.add((IHitPayload) obj);
+                    } else {
+                        LOG.error("Trigger contains bogus hit " + obj);
+                    }
                 } else {
                     LOG.error("Unrecognized payload " + obj +
                               " in " + tr);
