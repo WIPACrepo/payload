@@ -9,11 +9,310 @@ import icecube.daq.trigger.IReadoutRequestElement;
 import icecube.daq.trigger.ITriggerRequestPayload;
 import icecube.daq.trigger.TriggerRegistry;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.dom4j.Branch;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Node;
+import org.dom4j.io.SAXReader;
+
+abstract class XMLConfig
+{
+    static int getNodeInteger(Branch branch)
+    {
+        return Integer.parseInt(getNodeText(branch));
+    }
+
+    static String getNodeText(Branch branch)
+    {
+        StringBuilder str = new StringBuilder();
+
+        for (Iterator iter = branch.nodeIterator(); iter.hasNext(); ) {
+            Node node = (Node) iter.next();
+
+            if (node.getNodeType() != Node.TEXT_NODE) {
+                continue;
+            }
+
+            str.append(node.getText());
+        }
+
+        return str.toString().trim();
+    }
+}
+
+class RunConfig
+    extends XMLConfig
+{
+    private String trigCfg;
+
+    RunConfig(String configName, Branch doc)
+    {
+        List cfgNodes = doc.selectNodes("runConfig/triggerConfig");
+        if (cfgNodes.size() == 0) {
+            throw new Error("No trigger configuration found in " + configName);
+        } else if (cfgNodes.size() > 1) {
+            throw new Error("Multiple trigger configurations found in " +
+                            configName);
+        }
+
+        trigCfg = getNodeText((Branch) cfgNodes.get(0));
+    }
+
+    String getTriggerConfig()
+    {
+        return trigCfg;
+    }
+}
+
+class TriggerConfigEntry
+    extends XMLConfig
+{
+    /** Log object. */
+    private static final Log LOG =
+        LogFactory.getLog(TriggerConfigEntry.class);
+
+    private int type = -1;
+    private int id = -1;
+    private int srcId = -1;
+    private String name;
+    private HashMap<String, Integer> params = new HashMap<String, Integer>();
+
+    TriggerConfigEntry(Branch top)
+    {
+        for (Iterator iter = top.nodeIterator(); iter.hasNext(); ) {
+            Node node = (Node) iter.next();
+
+            if (node.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            Branch branch = (Branch) node;
+            final String brName = branch.getName();
+
+            if (brName.equals("triggerType")) {
+                type = getNodeInteger(branch);
+            } else if (brName.equals("triggerConfigId")) {
+                id = getNodeInteger(branch);
+            } else if (brName.equals("sourceId")) {
+                srcId = getNodeInteger(branch);
+            } else if (brName.equals("triggerName")) {
+                name = getNodeText(branch);
+            } else if (brName.equals("parameterConfig")) {
+                parseTriggerParameter(branch);
+            } else if (!brName.equals("readoutConfig")) {
+                throw new Error("Unknown trigger " +
+                                (name != null ? name + " " :
+                                 (id != 0 ? "#" + id + " " :
+                                  "")) + " attribute \"" + brName + "\"");
+            }
+        }
+
+        validate();
+    }
+
+    private void parseTriggerParameter(Branch top)
+    {
+        String pName = null;
+        int pVal = 0;
+
+        for (Iterator iter = top.nodeIterator(); iter.hasNext(); ) {
+            Node node = (Node) iter.next();
+
+            if (node.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            Branch branch = (Branch) node;
+            final String brName = branch.getName();
+
+            if (brName.equals("parameterName")) {
+                pName = getNodeText(branch);
+            } else if (brName.equals("parameterValue")) {
+                pVal = getNodeInteger(branch);
+            }
+        }
+
+        params.put(pName, pVal);
+    }
+
+    int getId()
+    {
+        return id;
+    }
+
+    String getName()
+    {
+        return name;
+    }
+
+    int getParameter(String key)
+    {
+        if (!params.containsKey(key)) {
+            return -1;
+        }
+
+        return params.get(key);
+    }
+
+    int getSourceID()
+    {
+        return srcId;
+    }
+
+    int getType()
+    {
+        return type;
+    }
+
+    boolean isType(int type)
+    {
+        return type == this.type;
+    }
+
+    private static final HashMap<String, String[]> triggerParams =
+        new HashMap<String, String[]>() {
+            {
+                put("AmandaM18Trigger", new String[0]);
+                put("AmandaM24Trigger", new String[0]);
+                put("AmandaMFrag20Trigger", new String[0]);
+                put("AmandaRandomTrigger", new String[0]);
+                put("AmandaStringTrigger", new String[0]);
+                put("AmandaVolumeTrigger", new String[0]);
+                put("CalibrationTrigger", new String[] { "hitType" });
+                put("ClusterTrigger",
+                    new String[] {
+                        "coherenceLength", "multiplicity","timeWindow"
+                    });
+                put("MinBiasTrigger", new String[] { "prescale" });
+                put("MultiplicityStringTrigger",
+                    new String[] {
+                        "maxLength", "numberOfVetoTopDoms", "string",
+                        "threshold","timeWindow"
+                    });
+                put("PhysicsMinBiasTrigger",
+                    new String[] { "deadtime", "prescale" });
+                put("SimpleMajorityTrigger",
+                    new String[] { "threshold", "timeWindow" });
+                put("ThroughputTrigger", new String[0]);
+                put("TrigBoardTrigger", new String[] { "prescale" });
+            }
+        };
+
+    private static final String[] bogusTypeList = new String[] {
+        "AmandaRandomTrigger",
+        "ClusterTrigger",
+        "MultiplicityStringTrigger",
+        "PhysicsMinBiasTrigger",
+    };
+
+    void validate()
+    {
+        if (name == null || srcId < 0 || type < 0) {
+            throw new Error("Trigger configuration \"" + toString() +
+                            " was not properly initialized");
+        }
+
+        if (id < 0 && srcId != SourceIdRegistry.GLOBAL_TRIGGER_SOURCE_ID) {
+            throw new Error("Trigger configuration \"" + toString() +
+                            " ID should be set for source " +
+                            SourceIdRegistry.getDAQNameFromSourceID(srcId));
+        }
+
+        boolean isBogusType = false;
+        for (String b : bogusTypeList) {
+            if (name.equals(b)) {
+                isBogusType = true;
+                break;
+            }
+        }
+
+        int expType = TriggerRegistry.getTriggerType(name);
+        if (type != expType) {
+            String errMsg = "Trigger \"" + name + "\" should have type #" +
+                expType + ", not #" + type;
+
+            if (!isBogusType) {
+                throw new Error(errMsg);
+            }
+
+            LOG.error(errMsg);
+        }
+
+        if (!triggerParams.containsKey(name)) {
+            throw new Error("Trigger \"" + name + "\" has no parameter entry");
+        }
+
+        String[] expParams = triggerParams.get(name);
+        if (expParams.length != params.size()) {
+            throw new Error("Trigger \"" + name + "\" should have " +
+                            expParams.length + " parameters, not " +
+                            params.size());
+        }
+
+        for (String p : expParams) {
+            if (!params.containsKey(p)) {
+                throw new Error("Trigger \"" + name + "\" does not contain" +
+                                " expected parameter \"" + p + "\"");
+            }
+        }
+    }
+
+    public String toString()
+    {
+        StringBuilder buf = new StringBuilder(name);
+        buf.append('#').append(id);
+        buf.append('@').append(srcId);
+        buf.append('*').append(type);
+
+        if (params.size() > 0) {
+            buf.append("{");
+            boolean needComma = false;
+            for (String pName : params.keySet()) {
+                if (needComma) {
+                    buf.append(',');
+                } else {
+                    needComma = true;
+                }
+                buf.append(pName).append(':').append(params.get(pName));
+            }
+            buf.append('}');
+        }
+
+        return buf.toString();
+    }
+}
+
+class TriggerConfig
+{
+    private String name;
+    private List<TriggerConfigEntry> entries =
+        new ArrayList<TriggerConfigEntry>();
+
+    TriggerConfig(String name)
+    {
+        this.name = name;
+    }
+
+    void add(TriggerConfigEntry entry)
+    {
+        entries.add(entry);
+    }
+
+    List<TriggerConfigEntry> entries()
+    {
+        return entries;
+    }
+}
 
 /**
  * Check that payload contents are valid.
@@ -32,6 +331,27 @@ public abstract class PayloadChecker
      * request bounds in non-global trigger request?
      */
     private static final boolean IGNORE_NONGLOBAL_RREQS = true;
+
+    /** Trigger configuration data. */
+    private static TriggerConfig triggerConfig;
+
+    /**
+     * Load trigger configuration data.
+     *
+     * @param configDir directory holding run configuration files
+     * @param configName name of run configuration file
+     */
+    public static void configure(File configDir, String configName)
+    {
+        SAXReader xmlRdr = new SAXReader();
+
+        String trigCfgName =
+            getTriggerConfigName(xmlRdr, configDir, configName);
+
+        File trigCfgDir = new File(configDir, "trigger");
+
+        triggerConfig = loadTriggerConfig(xmlRdr, trigCfgDir, trigCfgName);
+    }
 
     /**
      * Get string representation of a DOM ID.
@@ -133,6 +453,39 @@ public abstract class PayloadChecker
     }
 
     /**
+     * Get the threshold for this SimpleMajorityTrigger trigger request?
+     *
+     * @param tr trigger request
+     *
+     * @return threshold value
+     */
+    private static int getSMTThreshold(ITriggerRequestPayload tr)
+    {
+        loadPayload(tr);
+
+        if (triggerConfig == null) {
+            if (tr.getSourceID().getSourceID() ==
+                SourceIdRegistry.INICE_TRIGGER_SOURCE_ID &&
+                tr.getTriggerType() == SMT_TYPE)
+            {
+                return 8;
+            }
+        } else {
+            for (TriggerConfigEntry cfg : triggerConfig.entries()) {
+                if (cfg.getId() == tr.getTriggerConfigID() &&
+                    cfg.getType() == tr.getTriggerType() &&
+                    cfg.getSourceID() == tr.getSourceID().getSourceID() &&
+                    cfg.getName().equals("SimpleMajorityTrigger"))
+                {
+                    return cfg.getParameter("threshold");
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    /**
      * Get string representation of a source ID.
      *
      * @param src source ID
@@ -164,6 +517,8 @@ public abstract class PayloadChecker
             payList = null;
         }
 
+        int numHits = 0;
+
         if (payList != null) {
             long trigStart = tr.getFirstTimeUTC().longValue();
             long trigFinish = tr.getLastTimeUTC().longValue();
@@ -177,6 +532,7 @@ public abstract class PayloadChecker
                         ((IHitPayload) obj).getHitTimeUTC().longValue();
                     if (hitTime >= trigStart && hitTime <= trigFinish) {
                         hitList.add((IHitPayload) obj);
+                        numHits++;
                     } else {
                         LOG.error("Trigger contains bogus hit " + obj);
                     }
@@ -187,7 +543,33 @@ public abstract class PayloadChecker
             }
         }
 
+        if (isSimpleMajorityTrigger(tr)) {
+            final int threshold = getSMTThreshold(tr);
+
+            if (numHits < threshold) {
+                LOG.error(getTriggerRequestString(tr) + " contains " + numHits +
+                          " hits, but should have at least " + threshold);
+            }
+        }
+
         return hitList;
+    }
+
+    /**
+     * Read the trigger configuration file name from the run configuration file.
+     *
+     * @param xmlRdr SAX reader
+     * @param configDir directory holding run configuration files
+     * @param runConfig name of run configuration file
+     *
+     * @return name of trigger configuration file
+     */
+    public static String getTriggerConfigName(SAXReader xmlRdr, File configDir,
+                                              String runConfig)
+    {
+        Document doc = readConfigFile(xmlRdr, configDir, runConfig);
+        RunConfig runCfg = new RunConfig(runConfig, doc);
+        return runCfg.getTriggerConfig();
     }
 
     /**
@@ -221,49 +603,17 @@ public abstract class PayloadChecker
      */
     private static String getTriggerTypeString(int trigType)
     {
-        if (trigType >= 0 && trigType < trigTypes.length) {
+        if (triggerConfig != null) {
+            for (TriggerConfigEntry cfg : triggerConfig.entries()) {
+                if (cfg.isType(trigType)) {
+                    return cfg.getName();
+                }
+            }
+        } else if (trigType >= 0 && trigType < trigTypes.length) {
             return trigTypes[trigType];
         }
 
         return "unknownTrigType#" + trigType;
-    }
-
-    /**
-     * Is there a SimpleMajorityTrigger inside the trigger request?
-     *
-     * @param tr trigger request
-     *
-     * @return <tt>true</tt> if the trigger request contains a
-     *         SimpleMajorityTrigger
-     */
-    private static boolean hasSMTTrigger(ITriggerRequestPayload tr)
-    {
-        loadPayload(tr);
-
-        if (tr.getSourceID().getSourceID() ==
-            SourceIdRegistry.INICE_TRIGGER_SOURCE_ID &&
-            tr.getTriggerType() == SMT_TYPE)
-        {
-            return true;
-        }
-
-        List payList;
-        try {
-            payList = tr.getPayloads();
-        } catch (Exception ex) {
-            LOG.error("Couldn't fetch payloads for " + tr, ex);
-            return false;
-        }
-
-        for (Object obj : payList) {
-            if (obj instanceof ITriggerRequestPayload) {
-                if (hasSMTTrigger((ITriggerRequestPayload) obj)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -302,6 +652,36 @@ public abstract class PayloadChecker
         }
 
         return isContained;
+    }
+
+    /**
+     * Is this a SimpleMajorityTrigger trigger request?
+     *
+     * @param tr trigger request
+     *
+     * @return <tt>true</tt> if the trigger request is a SimpleMajorityTrigger
+     */
+    private static boolean isSimpleMajorityTrigger(ITriggerRequestPayload tr)
+    {
+        loadPayload(tr);
+
+        if (triggerConfig == null) {
+            return (tr.getSourceID().getSourceID() ==
+                    SourceIdRegistry.INICE_TRIGGER_SOURCE_ID &&
+                    tr.getTriggerType() == SMT_TYPE);
+        }
+
+        for (TriggerConfigEntry cfg : triggerConfig.entries()) {
+            if (cfg.getId() == tr.getTriggerConfigID() &&
+                cfg.getType() == tr.getTriggerType() &&
+                cfg.getSourceID() == tr.getSourceID().getSourceID() &&
+                cfg.getName().equals("SimpleMajorityTrigger"))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -346,6 +726,46 @@ public abstract class PayloadChecker
         }
 
         return true;
+    }
+
+    /**
+     * Read individual trigger configuration entries
+     * from trigger configuration file.
+     *
+     * @param xmlRdr SAX reader
+     * @param trigCfgDir directory holding trigger configuration files
+     * @param trigConfig name of trigger configuration file
+     */
+    public static TriggerConfig loadTriggerConfig(SAXReader xmlRdr,
+                                                  File trigCfgDir,
+                                                  String trigConfig)
+    {
+        Document doc = readConfigFile(xmlRdr, trigCfgDir, trigConfig);
+
+        TriggerConfig tmpConfig = new TriggerConfig(trigConfig);
+
+        for (Object obj : doc.selectNodes("activeTriggers/triggerConfig")) {
+            tmpConfig.add(new TriggerConfigEntry((Branch) obj));
+        }
+
+        return tmpConfig;
+    }
+
+    private static Document readConfigFile(SAXReader xmlRdr, File configDir,
+                                           String configName)
+    {
+        File cfgFile;
+        if (configName.endsWith(".xml")) {
+            cfgFile = new File(configDir, configName);
+        } else {
+            cfgFile = new File(configDir, configName + ".xml");
+        }
+
+        try {
+            return xmlRdr.read(cfgFile);
+        } catch (DocumentException de) {
+            throw new Error("Cannot read " + cfgFile, de);
+        }
     }
 
     /**
@@ -453,16 +873,10 @@ public abstract class PayloadChecker
             }
 
             if (!found) {
-                System.err.println("Couldn't find trigger hit " + tHit +
-                                   " in readout data hits");
+                LOG.error("Couldn't find trigger hit " + tHit +
+                          " in readout data hits");
                 valid = false;
             }
-        }
-
-        if (hasSMTTrigger(trigReq) && evtHits.size() < 8) {
-            LOG.error(getEventString(evt) + " contains " + evtHits.size() +
-                      " hits, but should have at least 8");
-            valid = false;
         }
 
         return valid;
