@@ -115,7 +115,7 @@ public class TriggerRequestPayloadTest
                      PayloadRegistry.PAYLOAD_ID_TRIGGER_REQUEST,
                      req.getPayloadType());
         assertEquals("Bad payload UTC time",
-                     0L, req.getPayloadTimeUTC().longValue());
+                     firstTime, req.getPayloadTimeUTC().longValue());
         assertEquals("Bad trigger type", trigType, req.getTriggerType());
         assertEquals("Bad config ID", cfgId, req.getTriggerConfigID());
         assertEquals("Bad source ID", srcId, req.getSourceID().getSourceID());

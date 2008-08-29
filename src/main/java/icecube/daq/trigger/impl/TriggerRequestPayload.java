@@ -272,7 +272,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
         //-init the payload time
         mttime = (IUTCTime) UTCTime8B.getFromPool();
 
-        ((UTCTime8B)mttime).initialize(mt_PayloadEnvelope.mlUTime);
+        ((UTCTime8B)mttime).initialize(time);
         int iPayloadLength = 0;
         //-sum up payload length
         //--PayloadEnvelope.size
