@@ -70,7 +70,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
      * (given) position in the buffer stream.
      * @param iEnvelopeOffset the offset of the CompositePayloadEnvelope
      */
-    protected void loadCompositeEnvelope(int iEnvelopeOffset) throws IOException, DataFormatException {
+    protected void loadCompositeEnvelope(int iEnvelopeOffset) throws DataFormatException {
         if (!mb_IsCompositeEnvelopeLoaded) {
             if (mtbuffer != null ) {
                 if (mt_CompositeEnvelope == null) {
@@ -89,7 +89,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
      * NOTE: This only load's the top-level payloads of the composite, it does not recurse
      *       into the internal payload's.
      */
-    protected void loadCompositePayloads() throws IOException, DataFormatException {
+    protected void loadCompositePayloads() throws DataFormatException {
         if (mtbuffer != null && mt_Payloads == null) {
             loadCompositeEnvelope(mi_CompositeEnvelopeOffset);
             mt_Payloads = new Vector(mt_CompositeEnvelope.msi_numPayloads);
@@ -241,7 +241,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
      * get list of Payloads.
      * @return list of Payloads contained in the composite.
      */
-    public List getPayloads() throws IOException, DataFormatException {
+    public List getPayloads() throws DataFormatException {
         if (mt_Payloads == null) loadCompositePayloads();
         return mt_Payloads;
     }

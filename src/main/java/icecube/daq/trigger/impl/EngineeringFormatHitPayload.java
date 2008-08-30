@@ -55,7 +55,7 @@ public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload
      * has the domid etal loaded os all the interfaces are available without
      * doing a recursive loadData() to get at the top level data.
      */
-    public void loadSpliceablePayload() throws IOException, DataFormatException {
+    public void loadSpliceablePayload() throws DataFormatException {
         loadEnvelope();
         loadEngSpliceable();
         loadTriggerPayload();
@@ -64,7 +64,7 @@ public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload
     /**
      * Loads the DomHitEngineeringFormatPayload if not already loaded
      */
-    protected void loadEngSpliceable() throws IOException, DataFormatException {
+    protected void loadEngSpliceable() {
         if (super.mtbuffer != null) {
             if (mt_EngFormatPayload == null) {
                 try {

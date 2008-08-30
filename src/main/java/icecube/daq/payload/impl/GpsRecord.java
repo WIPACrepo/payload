@@ -1,6 +1,5 @@
 package icecube.daq.payload.impl;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.CharBuffer;
@@ -81,9 +80,6 @@ public class GpsRecord {
     public byte mbyGpsQualityByte = (byte) 0x00;
     public long mlDorGpsSyncTime = -1;
 
-    // set up logging channel for this component
-    private static Log mtLog = LogFactory.getLog(GpsRecord.class);
-
     //-decoding variables
     private static Charset mtCharset = Charset.forName("US-ASCII");
     private static CharsetDecoder mtDecoder = mtCharset.newDecoder();
@@ -94,7 +90,7 @@ public class GpsRecord {
      * @param iOffset the offset into the input ByteBuffer at which the gps record begins.
      * @param tBuffer the input buffer from which to extract the gps record.
      */
-    public GpsRecord(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public GpsRecord(int iOffset, ByteBuffer tBuffer) throws DataFormatException {
         loadData(iOffset, tBuffer);
     }
 
@@ -127,8 +123,10 @@ public class GpsRecord {
      * into it's internal record for reading and validation.
      * @param iOffset the offset into the buffer for the beginning of the gps record.
      * @param tBuffer ByteBuffer which contains the gps record starting at iOffset.
+     *
+     * @exception DataFormatException if the record is not of the correct format.
      */
-    public void loadData(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public void loadData(int iOffset, ByteBuffer tBuffer) throws DataFormatException {
         mbValid = true;
         mbHasBeenValidated = true;
 
@@ -168,7 +166,6 @@ public class GpsRecord {
             lvalue = Long.parseLong( tCharBuffer.toString() );
         } catch (Exception tException) {
             String sMsg ="Error decoding "+sDataTypeName+" exception="+tException;
-            mtLog.error(sMsg);
             throw new DataFormatException(sMsg);
         } finally {
             tBuffer.limit(iSaveLimit);

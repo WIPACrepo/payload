@@ -111,7 +111,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      *                   within the ByteBuffer backing.
      * @param tBackingBuffer the backing buffer for this object.
      */
-    public void initialize(int iOffset, ByteBuffer tBackingBuffer) throws IOException, DataFormatException {
+    public void initialize(int iOffset, ByteBuffer tBackingBuffer) throws DataFormatException {
         super.mioffset = iOffset;
         super.mtbuffer = tBackingBuffer;
         //-NOTE: this will initialize the payload length
@@ -153,7 +153,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      * Initializes Payload from backing so it can be used as a Spliceable.
      * This extracts the envelope which holds the actual engineering record.
      */
-    public void loadSpliceablePayload() throws IOException, DataFormatException {
+    public void loadSpliceablePayload() {
         //-read from the current position the data necessary to construct the spliceable.
         //--This might not be necessary
         //synchronized (mtbuffer) {
@@ -207,11 +207,10 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      * @param tBuffer ByteBuffer from which to extract the length of the payload
      * @return the length of the payload if it can be extracted, otherwise -1
      *
-     * @exception IOException if there is trouble reading the Payload length
      * @exception DataFormatException if there is something wrong with the payload and the
      *                                   length cannot be read.
      */
-    public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws DataFormatException {
         int iRecLength = -1;
         //-NOTE: This pulls out the length from the TestDAQ header and not from the HIT -- this will
         //       have to change as we move to multiplexed DomHub data, that can contain multiple hits!!
@@ -268,15 +267,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
         if (mbEngineeringPayloadLoaded) {
             iTriggerMode =  mtDomHitEngineeringFormatRecord.miTrigMode;
         } else {
-            try {
-                iTriggerMode = DomHitEngineeringFormatRecord.getTriggerMode(mioffset + OFFSET_ENGREC, mtbuffer);
-            } catch ( DataFormatException tException) {
-                //-TODO: Put in logging here
-                System.out.println("DomHitEngineeringFormatPayload.getTriggerMode() DataFormatException="+tException);
-            } catch ( IOException tException) {
-                //-TODO: Put in logging here
-                System.out.println("DomHitEngineeringFormatPayload.getTriggerMode() IOException="+tException);
-            }
+            iTriggerMode = DomHitEngineeringFormatRecord.getTriggerMode(mioffset + OFFSET_ENGREC, mtbuffer);
         }
         return iTriggerMode;
     }
@@ -293,7 +284,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
-    public void loadPayload()  throws IOException, DataFormatException {
+    public void loadPayload() throws DataFormatException {
         if (mtbuffer != null) {
             //-Spliceable payload is also filled in by loadData()...
             if (!mbSpliceablePayloadLoaded) {
@@ -312,7 +303,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      * it has already been loaded. This is meant for testing the ability
      * to read from the backing buffer after it has been shifted.
      */
-    public void reloadPayload()  throws IOException, DataFormatException {
+    public void reloadPayload() throws DataFormatException {
         mbEngineeringPayloadLoaded = false;
         loadPayload();
     }
@@ -386,7 +377,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
     /**
      * Loads the PayloadEnvelope if not already loaded
      */
-    protected void loadEnvelope() throws IOException, DataFormatException {
+    protected void loadEnvelope() {
         //-This is handled by loadSpliceable
         // in fact this must be here to prevent standard envelope loading because
         // this Payload is non-standard.

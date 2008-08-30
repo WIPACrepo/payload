@@ -1,7 +1,7 @@
 /*
  * class: PayloadFactory
  *
- * Version $Id: PayloadFactory.java 2629 2008-02-11 05:48:36Z dglo $
+ * Version $Id: PayloadFactory.java 3431 2008-08-30 04:30:36Z dglo $
  *
  * Date: September 21 2004
  *
@@ -16,7 +16,6 @@ import icecube.daq.splicer.Spliceable;
 import icecube.daq.splicer.SpliceableFactory;
 import icecube.util.Poolable;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Iterator;
@@ -29,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Interface for the Payload Factory (Trigger primitive)
  *
- * @version $Id: PayloadFactory.java 2629 2008-02-11 05:48:36Z dglo $
+ * @version $Id: PayloadFactory.java 3431 2008-08-30 04:30:36Z dglo $
  * @author hellwig,dwharton
  */
 public abstract class PayloadFactory
@@ -133,9 +132,6 @@ public abstract class PayloadFactory
             // Create a new Payload from the position before the skip.
             tSpliceable =  (Spliceable) createPayload(iCurrentSpliceableOffset, tBuffer);
 
-        } catch ( IOException tIOException) {
-            LOG.error("Couldn't create a spliceable", tIOException);
-            tSpliceable = null;
         } catch ( DataFormatException tDataFormatException) {
             LOG.error("Couldn't create a spliceable", tDataFormatException);
             tSpliceable = null;
@@ -177,10 +173,6 @@ public abstract class PayloadFactory
         try {
             //-Read the length of the spliceable/payload
             iSpliceableLength = readSpliceableLength(iBegin, tBuffer);
-        } catch ( IOException tIOException) {
-            //-log the error here
-            LOG.error("Couldn't get spliceable length", tIOException);
-            return false;
         } catch ( DataFormatException tDataFormatException) {
             //-log the error here
             LOG.error("Couldn't get spliceable length", tDataFormatException);
@@ -210,11 +202,9 @@ public abstract class PayloadFactory
      *
      * @return the length of this spliceable
      *
-     * @exception IOException if there is an error reading the ByteBuffer
-     *                                    to pull out the length of the spliceable.
      * @exception DataFormatException if there is an error in the format of the payload
      */
-    public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws DataFormatException {
         int iLength;
         if (iOffset + 4 > tBuffer.limit()) {
             iLength = -1;
@@ -239,11 +229,9 @@ public abstract class PayloadFactory
      *
      * @return the length of this payload
      *
-     * @exception IOException if there is an error reading the ByteBuffer
-     *                                    to pull out the length of the spliceable.
      * @exception DataFormatException if there is an error in the format of the payload
      */
-    public int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws DataFormatException {
         return readSpliceableLength(iOffset, tBuffer);
     }
 
@@ -256,10 +244,9 @@ public abstract class PayloadFactory
      *                           which implements BOTH IPayload and Spliceable
      *  @return the Payload object specific to this class which is
      *                     an EngineeringFormatHitDataPayload.
-     * @exception IOException if there is an error reading the ByteBuffer
      * @exception DataFormatException...is thrown if the format of the data is incorrect.
      */
-    public Payload createPayload(int iOffset, ByteBuffer tPayloadBuffer)  throws IOException, DataFormatException {
+    public Payload createPayload(int iOffset, ByteBuffer tPayloadBuffer) throws DataFormatException {
         // Payload tPayload = (Payload) mt_PoolablePayloadFactory.getFromPool();
         Payload tPayload = (Payload) mt_PoolablePayloadFactory.getPoolable();
         tPayload.initialize(iOffset, tPayloadBuffer, this);

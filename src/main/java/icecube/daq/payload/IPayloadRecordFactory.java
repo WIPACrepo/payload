@@ -21,7 +21,7 @@ public interface IPayloadRecordFactory {
      * @exception DataFormatException if the record is not of the correct format.
      *
      */
-    IPayloadRecord createPayloadRecord(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException;
+    IPayloadRecord createPayloadRecord(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException;
 
     /**
      * This record returns the payload record to the record source (or pool)

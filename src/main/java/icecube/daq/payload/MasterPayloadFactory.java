@@ -5,7 +5,6 @@ import icecube.daq.payload.splicer.Payload;
 import icecube.daq.payload.splicer.PayloadFactory;
 import icecube.daq.splicer.Spliceable;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
@@ -93,7 +92,7 @@ public class MasterPayloadFactory extends PayloadFactory {
      *  @return the Payload object specific to this class which is
      *                     specific to the class which is derived from PayloadFactory.
      */
-    public Payload createPayload(int iOffset, ByteBuffer tPayloadBuffer) throws IOException,DataFormatException {
+    public Payload createPayload(int iOffset, ByteBuffer tPayloadBuffer) throws DataFormatException {
         //-just call the create routine using the internal setting
         return createPayload(iOffset,tPayloadBuffer, mbCreateSeperateBuffers);
     }
@@ -113,7 +112,7 @@ public class MasterPayloadFactory extends PayloadFactory {
      *  @return the Payload object specific to this class which is
      *                     specific to the class which is derived from PayloadFactory.
      */
-    public Payload createPayload(int iOffset, ByteBuffer tPayloadBuffer, boolean bCreateSeperateBuffers) throws IOException,DataFormatException {
+    public Payload createPayload(int iOffset, ByteBuffer tPayloadBuffer, boolean bCreateSeperateBuffers) throws DataFormatException {
         Payload tPayload = null;
         int pType =
             PayloadEnvelope.readPayloadType(iOffset, tPayloadBuffer);
@@ -172,11 +171,9 @@ public class MasterPayloadFactory extends PayloadFactory {
      *
      * @return the length of this spliceable
      *
-     * @exception IOException if there is an error reading the ByteBuffer
-     *                                    to pull out the length of the spliceable.
      * @exception DataFormatException if there is an error in the format of the payload
      */
-    public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws IOException,DataFormatException {
+    public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws DataFormatException {
         return PayloadEnvelope.readPayloadLength(iOffset, tBuffer);
     }
 }

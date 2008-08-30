@@ -143,10 +143,9 @@ public class DomHitEngineeringFormatRecord implements IWriteablePayloadRecord, I
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
      *
-     * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         //-Set to false to start to start with just in case there is an error
         mbLoaded = false;
         //-Fill in the internal data
@@ -230,11 +229,8 @@ public class DomHitEngineeringFormatRecord implements IWriteablePayloadRecord, I
      * Pulls out the Trigger Mode if not already loaded
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      */
-    public static int getTriggerMode(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public static int getTriggerMode(int iRecordOffset, ByteBuffer tBuffer) {
         int iTrigMode = tBuffer.get(iRecordOffset + OFFSET_TRIGGERMODE);
         return iTrigMode;
     }
@@ -247,10 +243,9 @@ public class DomHitEngineeringFormatRecord implements IWriteablePayloadRecord, I
      * @param tBuffer ByteBuffer from which to construct the record.
      * @return the correct ByteOrder for this buffer which is now set for subsiquent reads.
      *
-     * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    protected  ByteOrder setCorrectByteOrder(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    protected  ByteOrder setCorrectByteOrder(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         ByteOrder tCurrentOrder = tBuffer.order();
         ByteOrder tCorrectOrder = tCurrentOrder;
         miFormatID = tBuffer.getShort(iRecordOffset + OFFSET_FORMATID);
@@ -278,10 +273,9 @@ public class DomHitEngineeringFormatRecord implements IWriteablePayloadRecord, I
      * @param tBuffer ByteBuffer from which to construct the record.
      * @return the correct ByteOrder for this buffer which is now set for subsiquent reads.
      *
-     * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    protected static ByteOrder getCorrectByteOrder(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    protected static ByteOrder getCorrectByteOrder(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         ByteOrder tCurrentOrder = tBuffer.order();
         ByteOrder tCorrectOrder = tCurrentOrder;
         int iFormatID = tBuffer.getShort(iRecordOffset + OFFSET_FORMATID);
@@ -306,10 +300,8 @@ public class DomHitEngineeringFormatRecord implements IWriteablePayloadRecord, I
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
      * @return representing the dom clock value.
-     *
-     * @exception IOException if errors are detected reading the record
      */
-    public long getDomClockValue(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
+    public long getDomClockValue(int iRecordOffset, ByteBuffer tBuffer) {
         //-Check to see if DomClock has been loaded alread and used cached value if already loaded
         if (!mbDomClockLoaded) {
             mlDomClock = extractDomClockValue(iRecordOffset, tBuffer);
@@ -322,11 +314,10 @@ public class DomHitEngineeringFormatRecord implements IWriteablePayloadRecord, I
      * This is a utility function to extract the value of the DomClock without creating an intermediate value.
      * @param iRecordOffset the offset from which to start loading the data for the engin. format rec.
      * @param tBuffer ByteBuffer from which to construct the record.
-     * @exception IOException if errors are detected reading the record
      *
      * @return the value of the DomClock stored in a long
      */
-    public static final long extractDomClockValue(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
+    public static final long extractDomClockValue(int iRecordOffset, ByteBuffer tBuffer) {
         long ldomClock = 0L;
         for (int ii = 0; ii < SIZE_DOMCLOCK; ii++) {
             ldomClock = (ldomClock << 8) | (tBuffer.get(iRecordOffset + OFFSET_DOMCLOCK + ii) & 0xffL);
@@ -341,16 +332,12 @@ public class DomHitEngineeringFormatRecord implements IWriteablePayloadRecord, I
      *
      * @return the record length.
      */
-    public static final int extractRecordLength(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
+    public static final int extractRecordLength(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         int iRecLen = 0;
         //-Determine the ByteOrder of this record by the formatid which should always
         // be read out as '1' if the correct ording has been used.
         ByteOrder tSaveOrder = tBuffer.order();
-        try {
-            getCorrectByteOrder(iRecordOffset, tBuffer);
-        } catch (DataFormatException tException) {
-            throw new IOException("DataFormatException caught in reading ByteOrder");
-        }
+        getCorrectByteOrder(iRecordOffset, tBuffer);
         //-Read in the data using the corrected byte order (if an exception hasn't been thrown
         //.
         //-Load the record length
@@ -487,8 +474,8 @@ public class DomHitEngineeringFormatRecord implements IWriteablePayloadRecord, I
      * @param tBuffer the ByteBuffer into which to write this payload-record.
      * @return the number of bytes written to this destination.
      */
-    public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
-        throw new IOException("this method is not implemented yet");
+    public int writeData(int iOffset, ByteBuffer tBuffer) {
+        throw new Error("this method is not implemented yet");
     }
 
     /**

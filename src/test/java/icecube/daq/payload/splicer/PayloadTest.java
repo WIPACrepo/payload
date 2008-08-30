@@ -22,7 +22,6 @@ class MyPayload
     public static final int INTERFACE_TYPE = 456;
 
     private DataFormatException dfe;
-    private IOException ioe;
 
     MyPayload()
     {
@@ -37,13 +36,6 @@ class MyPayload
         this.dfe = dfe;
     }
 
-    MyPayload(IOException ioe)
-    {
-        this();
-
-        this.ioe = ioe;
-    }
-
     public static Poolable getFromPool() {
         return new MyPayload();
     }
@@ -54,28 +46,22 @@ class MyPayload
 
         if (dfe != null) {
             pay.dfe = dfe;
-        } else if (ioe != null) {
-            pay.ioe = ioe;
         }
 
         return pay;
     }
 
     public void loadPayload()
-        throws IOException, DataFormatException
+        throws DataFormatException
     {
         throw new Error("Unimplemented");
     }
 
     public void loadSpliceablePayload()
-        throws IOException, DataFormatException
+        throws DataFormatException
     {
         if (dfe != null) {
             throw dfe;
-        }
-
-        if (ioe != null) {
-            throw ioe;
         }
 
         super.loadSpliceablePayload();
@@ -184,12 +170,6 @@ class MyFactory
     MyFactory(DataFormatException dfe)
     {
         setPoolablePayloadFactory(new MyPayload(dfe));
-        setByteBufferCache(new MyCache());
-    }
-
-    MyFactory(IOException ioe)
-    {
-        setPoolablePayloadFactory(new MyPayload(ioe));
         setByteBufferCache(new MyCache());
     }
 }
@@ -557,38 +537,6 @@ public class PayloadTest
 
         MyPayload pay = new MyPayload();
         pay.initialize(0, buf, new MyFactory(new DataFormatException("Test")));
-        pay.loadSpliceablePayload();
-
-        assertEquals("Bad number of log messages",
-                     0, getNumberOfMessages());
-
-        MyPayload empty = (MyPayload) pay.deepCopy();
-        assertNull("Did not expect deepCopy to return payload", empty);
-
-        assertEquals("Bad number of log messages",
-                     1, getNumberOfMessages());
-        assertEquals("Unexpected log message",
-                     "Couldn't make deep copy", getMessage(0));
-        clearMessages();
-
-        pay.recycle();
-    }
-
-    public void testDeepCopyIOException()
-        throws Exception
-    {
-        final int payLen = 20;
-        final long payTime = 67890L;
-        final int payExtra = 1;
-
-        ByteBuffer buf = ByteBuffer.allocate(payLen);
-        buf.putInt(payLen);
-        buf.putInt(MyPayload.PAYLOAD_TYPE);
-        buf.putLong(payTime);
-        buf.putInt(payExtra);
-
-        MyPayload pay = new MyPayload();
-        pay.initialize(0, buf, new MyFactory(new IOException("Test")));
         pay.loadSpliceablePayload();
 
         assertEquals("Bad number of log messages",

@@ -107,7 +107,7 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
      *                   within the ByteBuffer backing.
      * @param tBackingBuffer the backing buffer for this object.
      */
-    public void initialize(int iOffset, ByteBuffer tBackingBuffer) throws IOException, DataFormatException {
+    public void initialize(int iOffset, ByteBuffer tBackingBuffer) {
         super.mioffset = iOffset;
         super.mtbuffer = tBackingBuffer;
     }
@@ -118,7 +118,7 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
      * @return DomHitDeltaCompressedFormatRecord which contains the information in the
      *         delta-compressed hit without the waveforms.
      */
-    public DomHitDeltaCompressedFormatRecord getPayloadRecord() throws IOException, DataFormatException {
+    public DomHitDeltaCompressedFormatRecord getPayloadRecord() throws DataFormatException {
         //-This will load everything including the delta compressed record.
         loadPayload();
         //-return the populated the DomHitDeltaCompressedFormatRecord
@@ -151,8 +151,6 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
         try {
             //-Load the payload so it can be accessed
             loadPayload();
-        } catch ( IOException tIOException ) {
-            mtLog.error("Load error", tIOException);
         } catch ( DataFormatException tDataFormatException ) {
             mtLog.error("Load error", tDataFormatException);
         }
@@ -276,7 +274,7 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
     /**
      * Initialize the hit information from a test-daq payload.
      */
-    public void initialize(ISourceID tSourceID, int iTriggerConfigID, DomHitDeltaCompressedFormatPayload tPayload) throws IOException, DataFormatException {
+    public void initialize(ISourceID tSourceID, int iTriggerConfigID, DomHitDeltaCompressedFormatPayload tPayload) {
         SourceID4B sourceId = (SourceID4B) SourceID4B.getFromPool();
         sourceId.initialize(tSourceID.getSourceID());
         mt_sourceId = sourceId;
@@ -396,12 +394,10 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
      * contained payload is loaded into internal variables and made accessable.
      * If the Payload does not have a backing, this is not an error.
      *
-     * @throws IOException when there is a problem with reading from the current backing
-     *                     although if there is no backing, this is not an error condition.
      * @throws DataFormatException when an error in format is detected in the backing when
      *                     initializaiton is attempted.
      */
-    public void loadPayload() throws IOException,DataFormatException {
+    public void loadPayload() throws DataFormatException {
         if (mb_DeltaPayloadLoaded) return;
         //-make sure there is backing for the Payload, but it is not an
         if (mtbuffer != null) {
@@ -434,7 +430,7 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
     /**
      * Get access to the underlying data for a delta compressed hit
      */
-    public IHitDataRecord getHitRecord() throws IOException, DataFormatException {
+    public IHitDataRecord getHitRecord() {
         return (IHitDataRecord) mt_DeltaFormatRecord;
     }
 

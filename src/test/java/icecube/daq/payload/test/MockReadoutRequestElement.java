@@ -79,7 +79,6 @@ public class MockReadoutRequestElement
      * @exception DataFormatException if the record is not of the correct format
      */
     public void loadData(int offset, ByteBuffer buffer)
-        throws IOException, DataFormatException
     {
         throw new Error("Unimplemented");
     }

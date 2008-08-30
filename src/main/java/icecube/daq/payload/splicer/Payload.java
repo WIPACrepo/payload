@@ -1,7 +1,7 @@
 /*
  * class: Payload
  *
- * Version $Id: Payload.java 2962 2008-04-22 04:18:17Z dglo $
+ * Version $Id: Payload.java 3431 2008-08-30 04:30:36Z dglo $
  *
  * Date: September 21 2004
  *
@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * Payload implements the IPayload interface and the Spliceable interface
  * It contains trigger information that is send through the DAQ system
  *
- * @version $Id: Payload.java 2962 2008-04-22 04:18:17Z dglo $
+ * @version $Id: Payload.java 3431 2008-08-30 04:30:36Z dglo $
  * @author hellwig,dwharton
  *
  * 8/24/2005 dbw
@@ -131,7 +131,7 @@ public abstract class Payload
      * @param tBackingBuffer the backing buffer for this object.
      * @param tFactory PayloadFactory which was used to create this Payload
      */
-    public void initialize(int iOffset, ByteBuffer tBackingBuffer, PayloadFactory tFactory) throws IOException, DataFormatException {
+    public void initialize(int iOffset, ByteBuffer tBackingBuffer, PayloadFactory tFactory) {
         //-set the parent factory for use with recycle/pooling
         mtParentPayloadFactory = tFactory;
         setPayloadBuffer(iOffset, tBackingBuffer);
@@ -140,7 +140,7 @@ public abstract class Payload
     /**
      * Loads the PayloadEnvelope if not already loaded
      */
-    protected void loadEnvelope() throws IOException, DataFormatException {
+    protected void loadEnvelope() throws DataFormatException {
         if (!mb_IsEnvelopeLoaded && mtbuffer != null) {
             //-Load envelope
             mt_PayloadEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
@@ -163,11 +163,9 @@ public abstract class Payload
      * the input stream to determine when a complete data element is available.
      * @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable
      * @param tBuffer ByteBuffer from which to detect a spliceable.
-     * @exception IOException if there is an error reading the ByteBuffer
-     *                                  to pull out the length of the spliceable.
      * @exception DataFormatException if the format of the data is incorrect.
      */
-    public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws DataFormatException {
         return readPayloadLength(iOffset, tBuffer);
     }
     /**
@@ -178,11 +176,10 @@ public abstract class Payload
      * @param tBuffer ByteBuffer from which to extract the length of the payload
      * @return the length of the payload if it can be extracted, otherwise -1
      *
-     * @exception IOException if there is trouble reading the Payload length
      * @exception DataFormatException if there is something wrong with the payload and the
      *                                   length cannot be read.
      */
-    public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws DataFormatException {
         int iRecLength = -1;
         //-The Payload Envelope has been defined to always be BIG_ENDIAN
         iRecLength = PayloadEnvelope.readPayloadLength(iOffset, tBuffer);
@@ -264,7 +261,7 @@ public abstract class Payload
      * @param iOffset the offset into the ByteBuffer of this objects Payload
      * @param tPayloadBuffer the backing buffer for this payload.
      */
-    public void setPayloadBuffer(int iOffset, ByteBuffer tPayloadBuffer) throws IOException, DataFormatException {
+    public void setPayloadBuffer(int iOffset, ByteBuffer tPayloadBuffer) {
         if (mb_IsEnvelopeLoaded) recycle();
         mioffset = iOffset;
         mtbuffer = tPayloadBuffer;
@@ -351,7 +348,7 @@ public abstract class Payload
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
-    abstract public void loadPayload() throws IOException, DataFormatException;
+    public abstract void loadPayload() throws DataFormatException;
 
     /**
      * This method de-initializes this object in preparation for reuse.
@@ -379,7 +376,7 @@ public abstract class Payload
     /**
      * Initializes Payload from backing so it can be used as a Spliceable.
      */
-    public void loadSpliceablePayload() throws IOException, DataFormatException {
+    public void loadSpliceablePayload() throws DataFormatException {
         loadEnvelope();
     }
 
@@ -434,9 +431,7 @@ public abstract class Payload
      * This is especially.
      *
      * @return Payload which is a deep copy of this Payload
-     * @throws IOException if an error occurs during the copy.
      */
-    // public Payload deepCopy() throws DataFormatException, IOException {
     public Object deepCopy() {
         IByteBufferCache tBBCache = (mtParentPayloadFactory != null ? mtParentPayloadFactory.getByteBufferCache() : null);
         //-get the length for copy to ByteBuffer

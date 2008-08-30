@@ -324,10 +324,9 @@ public class DomHitDeltaCompressedFormatRecord implements ICopyable, IWriteableP
      *                      from the engine.
      * @param tBuffer ByteBuffer from which to construct the record.
      *
-     * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         if (!mbLoaded) {
             ByteOrder tOrder = tBuffer.order();
             short chk = tBuffer.getShort(iRecordOffset + OFFSET_ORDERCHECK);
@@ -523,10 +522,10 @@ public class DomHitDeltaCompressedFormatRecord implements ICopyable, IWriteableP
      * @return the Beacon and SPE/MPE bits mapped to their appropriate places
      *         in the Engineering trigger mode
      *
-     * @exception IOException if errors are detected reading the record
+     * @exception DataFormatException if errors are detected reading the record
      */
     public static int getWord0(int iRecordOffset, ByteBuffer tBuffer)
-        throws IOException
+        throws DataFormatException
     {
         ByteOrder tOrder = tBuffer.order();
         short chk = tBuffer.getShort(iRecordOffset + OFFSET_ORDERCHECK);
@@ -537,7 +536,7 @@ public class DomHitDeltaCompressedFormatRecord implements ICopyable, IWriteableP
             tBuffer.order(tReadOrder);
             chk = tBuffer.getShort(iRecordOffset + OFFSET_ORDERCHECK);
             if (chk != 1) {
-                throw new IOException("Not a delta compressed record");
+                throw new DataFormatException("Not a delta compressed record");
             }
         }
         int word0 = tBuffer.getInt(iRecordOffset + OFFSET_WORD0);
@@ -558,9 +557,9 @@ public class DomHitDeltaCompressedFormatRecord implements ICopyable, IWriteableP
      * @return the Beacon and SPE/MPE bits mapped to their appropriate places
      *         in the Engineering trigger mode
      *
-     * @exception IOException if errors are detected reading the record
+     * @exception DataFormatException if errors are detected reading the record
      */
-    public static short getTriggerMode(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
+    public static short getTriggerMode(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         int word0 = getWord0(iRecordOffset, tBuffer);
 
         int trigInfo = (word0 >> 16) & 0xffff;
@@ -600,11 +599,11 @@ public class DomHitDeltaCompressedFormatRecord implements ICopyable, IWriteableP
      *
      * @return the Local Coincidence bits
      *
-     * @exception IOException if errors are detected reading the record
+     * @exception DataFormatException if errors are detected reading the record
      */
     public static short getLocalCoincidenceMode(int iRecordOffset,
                                                 ByteBuffer tBuffer)
-        throws IOException
+        throws DataFormatException
     {
         int word0 = getWord0(iRecordOffset, tBuffer);
 

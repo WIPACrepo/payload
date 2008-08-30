@@ -227,7 +227,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     /**
      * Loads the DomHitEngineeringFormatPayload if not already loaded
      */
-    protected void loadHitPayload() throws IOException, DataFormatException {
+    protected void loadHitPayload() {
         if ( !mb_IsPayloadLoaded ) {
             if ( super.mtbuffer != null ) {
                 //-extract the order, so can switch to BIG_ENDIAN for reading the payload
@@ -252,7 +252,7 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
-    public void loadPayload() throws IOException, DataFormatException {
+    public void loadPayload() throws DataFormatException {
         loadEnvelope();
         loadHitPayload();
     }
@@ -263,36 +263,16 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
      */
     public ISourceID getSourceID() {
         if ( !mb_IsPayloadLoaded ) {
-            try {
-                //-Load the engineering payload so it can be accessed
-                loadHitPayload();
-            } catch ( IOException tIOException ) {
-                //-TODO log the error here
-                System.out.println("Class("+this.getClass().getName()+"):BeaconPayload.getSourceID() IOException="+tIOException);
-                tIOException.printStackTrace();
-            } catch ( DataFormatException tDataFormatException ) {
-                //-TODO log the error here
-                System.out.println("Class("+this.getClass().getName()+"):BeaconPayload.getSourceID() DataFormatException="+tDataFormatException);
-                tDataFormatException.printStackTrace();
-            }
+            //-Load the engineering payload so it can be accessed
+            loadHitPayload();
         }
         return mt_sourceId;
     }
 
     public IDOMID getDOMID() {
         if ( !mb_IsPayloadLoaded ) {
-            try {
-                //-Load the engineering payload so it can be accessed
-                loadHitPayload();
-            } catch ( IOException tIOException ) {
-                //-TODO log the error here
-                System.out.println("Class("+this.getClass().getName()+"):BeaconPayload.getDOMID() IOException="+tIOException);
-                tIOException.printStackTrace();
-            } catch ( DataFormatException tDataFormatException ) {
-                //-TODO log the error here
-                System.out.println("Class("+this.getClass().getName()+"):BeaconPayload.getDOMID() DataFormatException="+tDataFormatException);
-                tDataFormatException.printStackTrace();
-            }
+            //-Load the engineering payload so it can be accessed
+            loadHitPayload();
         }
         return mt_domID;
     }

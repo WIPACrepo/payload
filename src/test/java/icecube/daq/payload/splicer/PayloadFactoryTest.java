@@ -36,7 +36,7 @@ class FooPayload
     }
 
     public void loadPayload()
-        throws IOException, DataFormatException
+        throws DataFormatException
     {
         throw new Error("Unimplemented");
     }

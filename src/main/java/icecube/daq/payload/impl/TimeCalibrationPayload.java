@@ -128,7 +128,7 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      * @param tPayloadBuffer - ByteBuffer, the buffer into which the values are to be written.
      *
      */
-    public static void writePayloadEnvelopeAndID(IDOMID tDomId, long lUTCTime, int iPayloadStartOffset, ByteBuffer tPayloadBuffer)  throws IOException {
+    public static void writePayloadEnvelopeAndID(IDOMID tDomId, long lUTCTime, int iPayloadStartOffset, ByteBuffer tPayloadBuffer) {
         ByteOrder tSaveOrder = tPayloadBuffer.order();
         if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
             tPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
@@ -180,7 +180,7 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
-    public void loadPayload()  throws IOException, DataFormatException {
+    public void loadPayload() throws DataFormatException {
         //-Payload Envelope
         loadEnvelope();
         //-Domid
@@ -195,7 +195,7 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      * Loads the domid from the position just after the PayloadEnvelope
      * and before the TimeCalibrationRecord.
      */
-    protected void loadGpsRecord()  throws IOException, DataFormatException {
+    protected void loadGpsRecord() throws DataFormatException {
         if (!super.mbPayloadCreated ) {
             if (mtGpsRecord == null) {
                 mtGpsRecord = new GpsRecord(mioffset + OFFSET_DOMHUB_SYNCGPS_RECORD , mtbuffer);
@@ -206,7 +206,7 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      * Loads the domid from the position just after the PayloadEnvelope
      * and before the TimeCalibrationRecord.
      */
-    protected void loadDomId()  throws IOException, DataFormatException {
+    protected void loadDomId() throws DataFormatException {
         if (!super.mbPayloadCreated ) {
             mlDomId = mtbuffer.getLong(mioffset + OFFSET_DOMID);
             msDomId = domIdAsString(mlDomId);
@@ -219,7 +219,7 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      * is stored.
      *
      */
-    protected void loadTimeCalibrationRecord()  throws IOException, DataFormatException {
+    protected void loadTimeCalibrationRecord() {
         if (!super.mbPayloadCreated ) {
             //-load the header data, (and anything else necessary for implementation
             // of Spliceable ie - needed for compareTo() ).
@@ -247,7 +247,7 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      * it has already been loaded. This is meant for testing the ability
      * to read from the backing buffer after it has been shifted.
      */
-    public void reloadPayload()  throws IOException, DataFormatException {
+    public void reloadPayload() throws DataFormatException {
         super.mbPayloadCreated = false;
         loadPayload();
     }
@@ -262,11 +262,10 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      * @param tBuffer ByteBuffer from which to extract the length of the payload
      * @return the length of the payload if it can be extracted, otherwise -1
      *
-     * @exception IOException if there is trouble reading the Payload length
      * @exception DataFormatException if there is something wrong with the payload and the
      *                                   length cannot be read.
      */
-    public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws DataFormatException {
         //-TCAL's are fixed length.
         return SIZE_TOTAL;
     }

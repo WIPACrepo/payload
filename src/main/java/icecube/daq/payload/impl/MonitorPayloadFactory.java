@@ -5,9 +5,7 @@ import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.splicer.PayloadFactory;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,19 +48,14 @@ public class MonitorPayloadFactory extends PayloadFactory {
             int iOffset,
             ByteBuffer tReferenceBuffer,
             IUTCTime utcTime
-            ) throws IOException {
+            ) {
         int iRecordLength =-1;
         //MonitorRecord tRecord = (MonitorRecord) MonitorRecord.getFromPool();
 
         //-pull out the record length.
-        try {
-            //-initialize the monitor record from the contained internal data in the buffer at the
-            // offset of the beginning of the monitor record.
-            iRecordLength = MonitorRecord.readRecordLength(iOffset, tReferenceBuffer);
-        } catch (DataFormatException tDataFormatException) {
-            mtLog.error("Error loading MonitorRecord header information.");
-            return null;
-        }
+        //-initialize the monitor record from the contained internal data in the buffer at the
+        // offset of the beginning of the monitor record.
+        iRecordLength = MonitorRecord.readRecordLength(iOffset, tReferenceBuffer);
 
         //-allocate the new Payload buffer for the new Payload which whose length
         // is the length of the individual monitor record plus the payload envelope

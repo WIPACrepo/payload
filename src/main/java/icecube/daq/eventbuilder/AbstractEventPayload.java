@@ -299,7 +299,7 @@ public abstract class AbstractEventPayload
      * load's the request record from the backing.
      */
     private void loadEventRecord()
-        throws IOException, DataFormatException
+        throws DataFormatException
     {
         if (mtbuffer != null && record == null) {
             record = getRecordFromPool();
@@ -315,7 +315,7 @@ public abstract class AbstractEventPayload
      * Initializes Payload from backing so it can be used as an IPayload.
      */
     public void loadPayload()
-        throws IOException,DataFormatException
+        throws DataFormatException
     {
         loadEnvelope();
         loadEventRecord();

@@ -77,10 +77,9 @@ public class PayloadEnvelope implements IWriteablePayloadRecord, Poolable {
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
      *
-     * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         mb_IsLoaded = false;
         if (tBuffer.limit() < iRecordOffset + OFFSET_UTIME + SIZE_UTIME) {
             throw new DataFormatException("Cannot read payload envelope;" +
@@ -112,10 +111,8 @@ public class PayloadEnvelope implements IWriteablePayloadRecord, Poolable {
      *  Writes the contents of the PayloadEnvelope to the specified position.
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
-     *
-     * @exception IOException if errors are detected writing the record
      */
-    public int writeData(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
+    public int writeData(int iRecordOffset, ByteBuffer tBuffer) {
         ByteOrder tSaveOrder = tBuffer.order();
         if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
             tBuffer.order(ByteOrder.BIG_ENDIAN);
@@ -183,12 +180,11 @@ public class PayloadEnvelope implements IWriteablePayloadRecord, Poolable {
      * @param tBuffer ByteBuffer from which to extract the length of the payload
      * @return the payload type if it can be extracted, otherwise -1
      *
-     * @exception IOException if there is trouble reading the Payload type
      * @exception DataFormatException if there is something wrong with the
      *                                payload and the type cannot be read.
      */
     public static int readPayloadType(int iOffset, ByteBuffer tBuffer)
-        throws IOException, DataFormatException
+        throws DataFormatException
     {
         if (tBuffer.limit() < iOffset + OFFSET_PAYLOADTYPE + SIZE_PAYLOADTYPE) {
             throw new DataFormatException("Cannot read payload type;" +
@@ -220,11 +216,10 @@ public class PayloadEnvelope implements IWriteablePayloadRecord, Poolable {
      * @param tBuffer ByteBuffer from which to extract the length of the payload
      * @return the length of the payload if it can be extracted, otherwise -1
      *
-     * @exception IOException if there is trouble reading the Payload length
      * @exception DataFormatException if there is something wrong with the payload and the
      *                                   length cannot be read.
      */
-    public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws DataFormatException {
         if (tBuffer.limit() < iOffset + OFFSET_PAYLOADLEN + SIZE_PAYLOADLEN) {
             throw new DataFormatException("Cannot read payload length;" +
                                           " need " +

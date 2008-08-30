@@ -6,7 +6,6 @@
 
 package icecube.daq.trigger;
 
-import java.io.IOException;
 import java.util.zip.DataFormatException;
 
 /**
@@ -19,5 +18,5 @@ public interface IHitDataPayload extends IHitPayload {
     /**
      * Get access to the underlying data for an engineering hit
      */
-    IHitDataRecord getHitRecord() throws IOException, DataFormatException;
+    IHitDataRecord getHitRecord() throws DataFormatException;
 }

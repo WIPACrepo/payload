@@ -178,7 +178,7 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
-    public void loadPayload() throws IOException,DataFormatException {
+    public void loadPayload() throws DataFormatException {
         if (mtbuffer != null) {
             loadEnvelope();
             loadRecord();
@@ -189,7 +189,7 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
     /**
      * convenience method to load the ReadoutDataRecord.
      */
-    protected void loadRecord() throws IOException, DataFormatException {
+    protected void loadRecord() {
         if (!mb_IsReadoutDataRecordLoaded) {
             if (mt_ReadoutDataRecord == null) {
                 mt_ReadoutDataRecord = (ReadoutDataRecord) ReadoutDataRecord.getFromPool();

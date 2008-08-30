@@ -115,10 +115,9 @@ public class MonitorRecord implements IPayloadRecord, Poolable {
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
      *
-     * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    public final void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public final void loadData(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         ByteOrder tSaveOrder = tBuffer.order();
         //-Set to false to start to start with just in case there is an error
         mbLoaded = false;
@@ -140,11 +139,8 @@ public class MonitorRecord implements IPayloadRecord, Poolable {
     /**
      * Reads the record type and byte order for use in reading the remainder of this
      * record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      */
-    public void loadTypeAndByteOrder(int iRecordOffset, ByteBuffer tBuffer, ByteOrder tSaveOrder) throws IOException, DataFormatException {
+    public void loadTypeAndByteOrder(int iRecordOffset, ByteBuffer tBuffer, ByteOrder tSaveOrder) {
         short iReadRecType = getRecordType(iRecordOffset, tBuffer);
         msiRecType = correctRecordType(iReadRecType);
         mtRecordOrder = detectByteOrder(iReadRecType, msiRecType, tSaveOrder);
@@ -152,11 +148,8 @@ public class MonitorRecord implements IPayloadRecord, Poolable {
 
     /**
      * Reads the byte order from the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      */
-    public static ByteOrder readByteOrder(int iRecordOffset, ByteBuffer tBuffer, ByteOrder tSaveOrder) throws IOException, DataFormatException {
+    public static ByteOrder readByteOrder(int iRecordOffset, ByteBuffer tBuffer, ByteOrder tSaveOrder) {
         ByteOrder tRecordOrder = tSaveOrder;
         short iReadRecType = getRecordType(iRecordOffset, tBuffer);
         short siRecType = correctRecordType(iReadRecType);
@@ -171,7 +164,7 @@ public class MonitorRecord implements IPayloadRecord, Poolable {
      * @param tBuffer ByteBuffer containing the MonitorRecord.
      * @return the NON-ENDIAN-CORRECTED type.
      */
-    public static short getRecordType(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public static short getRecordType(int iRecordOffset, ByteBuffer tBuffer) {
         return tBuffer.getShort(iRecordOffset + OFFSET_RECTYPE);
     }
 
@@ -180,11 +173,8 @@ public class MonitorRecord implements IPayloadRecord, Poolable {
      * returns the length.
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      */
-    public static final int readRecordLength(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public static final int readRecordLength(int iRecordOffset, ByteBuffer tBuffer) {
         int iRecordLength = -1;
         ByteOrder tSaveOrder = tBuffer.order();
         //-Load type and ByteOrder (mtRecordOrder is filled in allong with record type)
@@ -207,7 +197,7 @@ public class MonitorRecord implements IPayloadRecord, Poolable {
      * @param iRecordOffset the start of the record in the ByteBuffer
      * @param tBuffer ByteBuffer containing the MonitorRecord.
      */
-    public void loadHeaderData( int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public void loadHeaderData( int iRecordOffset, ByteBuffer tBuffer) {
 
         //-Get the record length (using correct endian-ness)
         msiRecLen = tBuffer.getShort(iRecordOffset + OFFSET_RECLEN);
@@ -223,11 +213,8 @@ public class MonitorRecord implements IPayloadRecord, Poolable {
      * @param tBuffer ByteBuffer from which to construct the record.
      *
      * NOTE: This is usefull when constructing spliceables which depend on time ordering.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      */
-    public static long readDomClock(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public static long readDomClock(int iRecordOffset, ByteBuffer tBuffer) {
         long lDomClock = 0;
         //-Get the dom-clock
         for (int ii=0; ii < SIZE_DOMCLOCK; ii++) {
@@ -241,10 +228,9 @@ public class MonitorRecord implements IPayloadRecord, Poolable {
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
      *
-     * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    protected void loadExtendedData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    protected void loadExtendedData(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         //-None needed for this record
     }
 
@@ -290,11 +276,8 @@ public class MonitorRecord implements IPayloadRecord, Poolable {
      *
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      */
-    public static short readCorrectedRecordType(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public static short readCorrectedRecordType(int iRecordOffset, ByteBuffer tBuffer) {
         short iRecType = tBuffer.getShort(iRecordOffset + OFFSET_RECTYPE);
         iRecType = correctRecordType(iRecType);
         return iRecType;

@@ -5,9 +5,6 @@ import icecube.daq.payload.impl.DomHitDeltaCompressedFormatPayload;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.payload.splicer.PayloadFactory;
 
-import java.io.IOException;
-import java.util.zip.DataFormatException;
-
 /**
  * This Factory class produces DeltaCompressedFormatHitDataPayload from
  * the supported backing buffer.
@@ -40,15 +37,13 @@ public class DeltaCompressedFormatHitDataPayloadFactory extends PayloadFactory {
      *  @return the Payload object specific to this class which is
      *                     a DeltaCompressedFormatHitDataPayload.
      *
-     * @exception IOException if there is an error reading the ByteBuffer
-     * @exception DataFormatException...is thrown if the format of the data is incorrect.
      * NOTE: This input is the result of another factory, I have included this for use
      *       for the translation of DomHub or TestDAQ data into Trigger payloads.
      *       -dwharton
      * NOTE2: deep-copy is NOT used on this payload, because this is the final destination
      *        of the 'external payload' of the DomHitDeltaCompressedFormatPayload.
      */
-    public Payload createPayload(ISourceID tSourceID, int iTriggerConfigID, DomHitDeltaCompressedFormatPayload tPayload) throws IOException, DataFormatException  {
+    public Payload createPayload(ISourceID tSourceID, int iTriggerConfigID, DomHitDeltaCompressedFormatPayload tPayload) {
         //-note: DomHitDeltaCompressedFormatPayload is not deepCopy'd but is contained
         DeltaCompressedFormatHitDataPayload tNewPayload = (DeltaCompressedFormatHitDataPayload) mt_PoolablePayloadFactory.getPoolable();
         tNewPayload.initialize((ISourceID) tSourceID.deepCopy(),

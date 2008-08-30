@@ -6,7 +6,6 @@ import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.payload.splicer.PayloadFactory;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
@@ -39,11 +38,10 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
      * @param tBuffer ByteBuffer from which to extract the length of the payload
      * @return the length of the payload if it can be extracted, otherwise -1
      *
-     * @exception IOException if there is trouble reading the Payload length
      * @exception DataFormatException if there is something wrong with the payload and the
      *                                   length cannot be read.
      */
-    public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws DataFormatException {
         return TimeCalibrationPayload.readPayloadLength(iOffset, tBuffer);
     }
 
@@ -65,7 +63,7 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
      *
      */
     public Payload createPayload(IDOMID tDomId, int iDomHubRecOffset, ByteBuffer tDomHubRecBuffer, IUTCTime tTime)
-        throws IOException {
+    {
         ByteBuffer tNewPayloadBuffer = null;
         Payload tNewPayload = null;
         //-get the cache for use in creating the new buffer
@@ -107,7 +105,7 @@ public class TimeCalibrationPayloadFactory extends PayloadFactory {
                                                                    IDOMID tDomId, int iOffset,
                                                                    ByteBuffer tReferenceBuffer,
                                                                    IUTCTime tTime)
-        throws IOException {
+    {
 
         long lutctime = 0L;
 

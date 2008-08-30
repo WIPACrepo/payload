@@ -48,7 +48,7 @@ public class SuperNovaPayload extends Payload {
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
-    public void loadPayload() throws IOException, DataFormatException {
+    public void loadPayload() throws DataFormatException {
         loadSpliceablePayload();
         if (super.mtbuffer != null) {
             if (mtDomId == null) {
@@ -213,7 +213,7 @@ public class SuperNovaPayload extends Payload {
      * @param tPayloadBuffer - ByteBuffer, the buffer into which the values are to be written.
      *
      */
-    public static void writePayloadEnvelopeAndID(int iPayloadLength, IDOMID tDomId, long lUTCTime, int iPayloadStartOffset, ByteBuffer tPayloadBuffer)  throws IOException {
+    public static void writePayloadEnvelopeAndID(int iPayloadLength, IDOMID tDomId, long lUTCTime, int iPayloadStartOffset, ByteBuffer tPayloadBuffer) {
         ByteOrder tSaveOrder = tPayloadBuffer.order();
         if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
             tPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
@@ -236,7 +236,7 @@ public class SuperNovaPayload extends Payload {
      * beginning of the raw record *not* the beginning of the
      * payload.
      */
-    public static long getRawDomClockValue(int iRawOffset, ByteBuffer tBuffer) throws IOException {
+    public static long getRawDomClockValue(int iRawOffset, ByteBuffer tBuffer) {
         long lDomClock = -1L;
         //-TODO: fill in the value
         lDomClock = SuperNovaRecord.readDomClock(iRawOffset,tBuffer);

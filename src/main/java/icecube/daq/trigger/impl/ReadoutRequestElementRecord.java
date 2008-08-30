@@ -12,7 +12,6 @@ import icecube.daq.trigger.IReadoutRequestElement;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.zip.DataFormatException;
 
 /**
  * ReadoutRequestElementRecord
@@ -88,11 +87,8 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
      * Loads the data from the buffer into the container record.
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      */
-    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public void loadData(int iRecordOffset, ByteBuffer tBuffer) {
         mb_IsLoaded = false;
         //-read type and determine endian order
         ByteOrder tSaveOrder = tBuffer.order();

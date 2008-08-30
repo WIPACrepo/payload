@@ -189,10 +189,6 @@ public class SimpleEventBuilder {
             //-TODO: convert to loging
             System.out.println("Error!: DataFormatException during convertToEventPayload() extracting payloads from TriggerRequestPayload");
             return null;
-        } catch (IOException tException) {
-            //-TODO: convert to loging
-            System.out.println("Error!: IOException during convertToEventPayload() extracting payloads from TriggerRequestPayload");
-            return null;
         }
         //-Convert IHitDataPayloads -> IHitPayloads...
         List tHitPayloads                 = createHitPayloads(tHitDataPayloads);

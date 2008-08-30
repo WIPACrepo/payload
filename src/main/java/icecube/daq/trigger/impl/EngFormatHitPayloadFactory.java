@@ -4,9 +4,6 @@ import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 import icecube.daq.payload.splicer.Payload;
 
-import java.io.IOException;
-import java.util.zip.DataFormatException;
-
 /**
  * This Factory class produces EngFormatHitPayload's from
  * the supported backing buffer.
@@ -41,9 +38,6 @@ public class EngFormatHitPayloadFactory extends EngFormatTriggerPayloadFactory {
      *  @return the Payload object specific to this class which is
      *                     a EngineeringFormatTriggerPayload.
      *
-     *
-     * @exception IOException if there is an error reading the ByteBuffer
-     * @exception DataFormatException...is thrown if the format of the data is incorrect.
      * NOTE: This input is the result of another factory, I have included this for use
      *       for the translation of DomHub or TestDAQ data into Trigger payloads.
      *       -dwharton
@@ -51,7 +45,7 @@ public class EngFormatHitPayloadFactory extends EngFormatTriggerPayloadFactory {
      *          be OWNED by the trigger payload that has been created, it will take care
      *          of anything for this payload from then on!
      */
-    public Payload createPayload(ISourceID tSourceID, int iTriggerType, int iTriggerConfigID, DomHitEngineeringFormatPayload tPayload) throws IOException, DataFormatException {
+    public Payload createPayload(ISourceID tSourceID, int iTriggerType, int iTriggerConfigID, DomHitEngineeringFormatPayload tPayload) {
         EngineeringFormatHitPayload tNewPayload = (EngineeringFormatHitPayload) EngineeringFormatHitPayload.getFromPool();
         tNewPayload.initialize((ISourceID) tSourceID.deepCopy(),
                                iTriggerType, iTriggerConfigID,

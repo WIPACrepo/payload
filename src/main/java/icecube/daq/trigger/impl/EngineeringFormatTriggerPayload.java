@@ -132,7 +132,7 @@ public class EngineeringFormatTriggerPayload  extends AbstractTriggerPayload {
     /**
      * Initialize the hit information from a test-daq payload.
      */
-    public void initialize(ISourceID tSourceID, int iTriggerType, int iTriggerConfigID, DomHitEngineeringFormatPayload tPayload) throws IOException, DataFormatException {
+    public void initialize(ISourceID tSourceID, int iTriggerType, int iTriggerConfigID, DomHitEngineeringFormatPayload tPayload) {
         mt_sourceId = (ISourceID) SourceID4B.getFromPool();
         ((SourceID4B)mt_sourceId).initialize(tSourceID.getSourceID());
         mi_TriggerConfigID = iTriggerConfigID;
@@ -240,7 +240,7 @@ public class EngineeringFormatTriggerPayload  extends AbstractTriggerPayload {
     /**
      * Loads the DomHitEngineeringFormatPayload if not already loaded
      */
-    protected void loadEngPayload() throws IOException, DataFormatException {
+    protected void loadEngPayload() throws DataFormatException {
         if (!mb_IsEngPayloadLoaded) {
             if (super.mtbuffer != null) {
                 mt_EngFormatPayload = (DomHitEngineeringFormatPayload) mt_EngFormtPayloadFact.createPayload(mioffset + OFFSET_ENGFORM_PAYLOAD, mtbuffer);
@@ -252,7 +252,7 @@ public class EngineeringFormatTriggerPayload  extends AbstractTriggerPayload {
     /**
      * Loads the TriggerData if not already loaded
      */
-    protected void loadTriggerPayload() throws IOException, DataFormatException {
+    protected void loadTriggerPayload() {
         if (!mb_IsTriggerPayloadLoaded) {
             if (super.mtbuffer != null) {
                 //-extract the order, so can switch to BIG_ENDIAN for reading the payload
@@ -275,7 +275,7 @@ public class EngineeringFormatTriggerPayload  extends AbstractTriggerPayload {
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
-    public void loadPayload() throws IOException, DataFormatException {
+    public void loadPayload() throws DataFormatException {
         loadEnvelope();
         loadTriggerPayload();
         loadEngPayload();
@@ -300,10 +300,6 @@ public class EngineeringFormatTriggerPayload  extends AbstractTriggerPayload {
             try {
                 //-Load the engineering payload so it can be accessed
                 loadEngPayload();
-            } catch ( IOException tIOException) {
-                //-TODO log the error here
-                System.out.println("Class("+this.getClass().getName()+"):EngineeringFormatTriggerPayload.getTriggerType() IOException="+tIOException);
-                tIOException.printStackTrace();
             } catch ( DataFormatException tDataFormatException) {
                 //-TODO log the error here
                 System.out.println("Class("+this.getClass().getName()+"):EngineeringFormatTriggerPayload.getTriggerType() DataFormatException="+tDataFormatException);

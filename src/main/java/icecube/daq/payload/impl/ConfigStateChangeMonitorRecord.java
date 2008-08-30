@@ -139,10 +139,9 @@ import java.util.zip.DataFormatException;
       * @param iRecordOffset the offset from which to start loading the data fro the engin.
       * @param tBuffer ByteBuffer from which to construct the record.
       *
-      * @exception IOException if errors are detected reading the record
       * @exception DataFormatException if the record is not of the correct format.
       */
-     protected void loadExtendedData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+     protected void loadExtendedData(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
          mbConfigStateChangeMonitorRecordLoaded = false;
          //-read event code
          mby_EVENT_CODE = tBuffer.get( iRecordOffset + OFFSET_EVENT_CODE );

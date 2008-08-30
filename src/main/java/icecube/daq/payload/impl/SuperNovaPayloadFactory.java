@@ -5,9 +5,7 @@ import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.splicer.PayloadFactory;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -56,17 +54,12 @@ public class SuperNovaPayloadFactory extends PayloadFactory {
             IDOMID tDomId,
             int iOffset,
             ByteBuffer tReferenceBuffer,
-            IUTCTime tTime) throws IOException {
+            IUTCTime tTime) {
         //-variables
         int iBlockLength = -1;
         //-pull out the record length and dom-clock.
-        try {
-            SuperNovaRecord.readDomClock(iOffset, tReferenceBuffer);
-            iBlockLength = SuperNovaRecord.readBlockLength(iOffset, tReferenceBuffer);
-        } catch (DataFormatException tDataFormatException) {
-            mtLog.error("Error loading SuperNovaRecord header information.");
-            return null;
-        }
+        SuperNovaRecord.readDomClock(iOffset, tReferenceBuffer);
+        iBlockLength = SuperNovaRecord.readBlockLength(iOffset, tReferenceBuffer);
 
         //-allocate the new Payload buffer for the new Payload which whose length
         // is the length of the individual monitor record plus the payload envelope

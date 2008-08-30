@@ -350,7 +350,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
-    public void loadPayload() throws IOException,DataFormatException {
+    public void loadPayload() throws DataFormatException {
         loadEnvelope();
         loadRequestRecord();
         loadCompositePayloads();
@@ -358,7 +358,7 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
     /**
      * load's the request record from the backing.
      */
-    protected void loadRequestRecord() throws IOException, DataFormatException {
+    protected void loadRequestRecord() {
         if (mtbuffer != null && mt_triggerRequestRecord == null) {
             mt_triggerRequestRecord = (TriggerRequestRecord) TriggerRequestRecord.getFromPool();
             mt_triggerRequestRecord.loadData(mioffset + OFFSET_TRIGGER_REQUEST_RECORD, mtbuffer);

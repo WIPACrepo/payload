@@ -1,6 +1,5 @@
 package icecube.daq.payload.impl;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -109,7 +108,7 @@ import java.nio.ByteOrder;
  *       DataCollector.java code (revision 666) I am reverse engineering the code.
  * Prior to this code: (assuming BIG_ENDIAN?)
  *
- *    private void dataProcess(ByteBuffer in) throws IOException
+ *    private void dataProcess(ByteBuffer in)
  *  {
  *      // TODO - I created a number of less-than-elegant hacks to
  *      // keep performance at acceptable level such as minimal
@@ -180,7 +179,7 @@ public class DomHitDeltaCompressedFormatUtility {
      * @return long the lower 16bits are filled the the 16 most significant bits of the
      *              DOM clock.
      */
-    public static final long extractDomClock_MSB16(int iMUXHeaderOffset, ByteBuffer tBuffer) throws IOException {
+    public static final long extractDomClock_MSB16(int iMUXHeaderOffset, ByteBuffer tBuffer) {
         //-exctract the current order to save
         ByteOrder tSaveOrder = tBuffer.order();
         //-change to LITTLE_ENDIAN for reading the MSB short
@@ -225,7 +224,7 @@ public class DomHitDeltaCompressedFormatUtility {
      *              }
      *
      */
-    public static final int extractTriggerAndLC_15bits(int iWORDOffset, ByteBuffer tBuffer) throws IOException {
+    public static final int extractTriggerAndLC_15bits(int iWORDOffset, ByteBuffer tBuffer) {
         return (tBuffer.getShort(iWORDOffset) & 0x7FFF);
     }
 
@@ -234,11 +233,10 @@ public class DomHitDeltaCompressedFormatUtility {
      * an individual delta compressed record.
      * @param iWORD0Offset offset in the Bytebuffer of WORD0 as received by
      * @param tBuffer ByteBuffer from which to construct the record.
-     * @exception IOException if errors are detected reading the record
      *
      * @return the value of the DomClock stored in a long
      */
-    public static final long extractDomClock_LSB32(int iWORD0Offset, ByteBuffer tBuffer) throws IOException {
+    public static final long extractDomClock_LSB32(int iWORD0Offset, ByteBuffer tBuffer) {
         long ldomClock = 0L;
         //-save the byte order and pull out the data
         ByteOrder tSaveOrder = tBuffer.order();

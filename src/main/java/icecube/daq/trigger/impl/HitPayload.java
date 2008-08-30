@@ -34,9 +34,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, IWriteablePayload {
 
-    //-Specific log for this class
-    private static Log mtLog = LogFactory.getLog(HitPayload.class);
-
     public static final int SIZE_TRIGGER_TYPE      = 4;
     public static final int SIZE_TRIGGER_CONFIG_ID = 4;
     public static final int SIZE_SOURCE_ID         = 4;
@@ -241,7 +238,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     /**
      * Loads the DomHitEngineeringFormatPayload if not already loaded
      */
-    protected void loadHitPayload() throws IOException, DataFormatException {
+    protected void loadHitPayload() {
         if ( !mb_IsHitPayloadLoaded ) {
             if ( super.mtbuffer != null ) {
                 //-extract the order, so can switch to BIG_ENDIAN for reading the payload
@@ -269,7 +266,7 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
-    public void loadPayload() throws IOException, DataFormatException {
+    public void loadPayload() throws DataFormatException {
         loadEnvelope();
         loadHitPayload();
     }
@@ -279,16 +276,8 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      */
     public int getTriggerConfigID() {
         if ( !mb_IsHitPayloadLoaded ) {
-            try {
-                //-Load the engineering payload so it can be accessed
-                loadHitPayload();
-            } catch ( IOException tIOException ) {
-                //-dbw: added appropriate logging
-                mtLog.error("Class("+this.getClass().getName()+"):HitPayload.getTriggerConfigID()", tIOException);
-            } catch ( DataFormatException tDataFormatException ) {
-                //-dbw: added appropriate logging
-                mtLog.error("Class("+this.getClass().getName()+"):HitPayload.getTriggerConfigID()", tDataFormatException);
-            }
+            //-Load the engineering payload so it can be accessed
+            loadHitPayload();
         }
         return mi_TriggerConfigID;
     }
@@ -297,16 +286,8 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      */
     public int getTriggerType() {
         if ( !mb_IsHitPayloadLoaded ) {
-            try {
-                //-Load the engineering payload so it can be accessed
-                loadHitPayload();
-            } catch ( IOException tIOException ) {
-                //-dbw: added proper logging
-                mtLog.error("Class("+this.getClass().getName()+"):HitPayload.getTriggerType()", tIOException);
-            } catch ( DataFormatException tDataFormatException ) {
-                //-dbw: added proper logging
-                mtLog.error("Class("+this.getClass().getName()+"):HitPayload.getTriggerType()", tDataFormatException);
-            }
+            //-Load the engineering payload so it can be accessed
+            loadHitPayload();
         }
 
         return mi_TriggerType;
@@ -318,16 +299,8 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      */
     public ISourceID getSourceID() {
         if ( !mb_IsHitPayloadLoaded ) {
-            try {
-                //-Load the engineering payload so it can be accessed
-                loadHitPayload();
-            } catch ( IOException tIOException ) {
-                //-dbw: added appropriate logging
-                mtLog.error("Class("+this.getClass().getName()+"):HitPayload.getSourceID()", tIOException);
-            } catch ( DataFormatException tDataFormatException ) {
-                //-dbw: added appropriate logging
-                mtLog.error("Class("+this.getClass().getName()+"):HitPayload.getSourceID()", tDataFormatException);
-            }
+            //-Load the engineering payload so it can be accessed
+            loadHitPayload();
         }
         return mt_sourceId;
     }
@@ -337,18 +310,8 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      */
     public IDOMID getDOMID() {
         if ( !mb_IsHitPayloadLoaded ) {
-            try {
-                //-Load the engineering payload so it can be accessed
-                loadHitPayload();
-            } catch ( IOException tIOException ) {
-                //-TODO log the error here
-                System.out.println("Class("+this.getClass().getName()+"):HitPayload.getTriggerType() IOException="+tIOException);
-                tIOException.printStackTrace();
-            } catch ( DataFormatException tDataFormatException ) {
-                //-TODO log the error here
-                System.out.println("Class("+this.getClass().getName()+"):HitPayload.getTriggerType() DataFormatException="+tDataFormatException);
-                tDataFormatException.printStackTrace();
-            }
+            //-Load the engineering payload so it can be accessed
+            loadHitPayload();
         }
         return mt_domID;
     }

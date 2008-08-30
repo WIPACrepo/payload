@@ -58,7 +58,7 @@ class MockHitData
     }
 
     public IHitDataRecord getHitRecord()
-        throws IOException, DataFormatException
+        throws DataFormatException
     {
         throw new Error("Unimplemented");
     }

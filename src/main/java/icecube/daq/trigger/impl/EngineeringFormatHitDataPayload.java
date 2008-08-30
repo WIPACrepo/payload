@@ -36,7 +36,7 @@ public class EngineeringFormatHitDataPayload extends EngineeringFormatHitPayload
     /**
      * Get access to the underlying data for an engineering hit
      */
-    public IHitDataRecord getHitRecord() throws IOException, DataFormatException {
+    public IHitDataRecord getHitRecord() throws DataFormatException {
         //-This will load everything including the engineering record.
         loadPayload();
         //-extract the DomHitEngineeringFormatRecord from the parent EngineeringFormatTriggerPayload class

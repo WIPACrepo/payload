@@ -2,9 +2,7 @@ package icecube.daq.payload.impl;
 
 import icecube.util.Poolable;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
 
 /**
  * This Class is a MonitorRecord of the type Generic. This
@@ -37,11 +35,8 @@ public class GenericMonitorRecord extends MonitorRecord {
      * reads the GenericData portion of the GenericMonitorRecord.
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      */
-    protected void loadExtendedData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    protected void loadExtendedData(int iRecordOffset, ByteBuffer tBuffer) {
         int iStart = iRecordOffset + OFFSET_GENERIC_BYTES;
         //-Read in the data
         miGenericDataLength = (int) msiRecLen - SIZE_HEADER;

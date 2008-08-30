@@ -49,7 +49,7 @@ public class MonitorPayload extends Payload {
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
-    public void loadPayload() throws IOException, DataFormatException {
+    public void loadPayload() throws DataFormatException {
         loadSpliceablePayload();
         if (super.mtbuffer != null) {
             if (mtDomId == null) {
@@ -216,7 +216,7 @@ public class MonitorPayload extends Payload {
      * @param tPayloadBuffer - ByteBuffer, the buffer into which the values are to be written.
      *
      */
-    public static void writePayloadEnvelopeAndID(int iPayloadLength, IDOMID tDomId, long lUTCTime, int iPayloadStartOffset, ByteBuffer tPayloadBuffer)  throws IOException {
+    public static void writePayloadEnvelopeAndID(int iPayloadLength, IDOMID tDomId, long lUTCTime, int iPayloadStartOffset, ByteBuffer tPayloadBuffer) {
         ByteOrder tSaveOrder = tPayloadBuffer.order();
         if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
             tPayloadBuffer.order(ByteOrder.BIG_ENDIAN);

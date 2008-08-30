@@ -7,7 +7,6 @@ import icecube.util.Poolable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.zip.DataFormatException;
 
 /**
  * This Object is used as a repository of information
@@ -93,11 +92,9 @@ public class SuperNovaRecord implements IPayloadRecord, Poolable {
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
      *
-     * NOTE: This is usefull when constructing spliceables which depend on time ordering.
-     *
-     * @exception IOException if errors are detected reading the record
+     * NOTE: This is useful when constructing spliceables which depend on time ordering.
      */
-    public static long readDomClock(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
+    public static long readDomClock(int iRecordOffset, ByteBuffer tBuffer) {
         long lDomClock = 0;
         //-Get the dom-clock
         for (int ii=0; ii < SIZE_DOMCLOCK; ii++) {
@@ -111,11 +108,8 @@ public class SuperNovaRecord implements IPayloadRecord, Poolable {
      * returns the length.
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      */
-    public static final int readBlockLength(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public static final int readBlockLength(int iRecordOffset, ByteBuffer tBuffer) {
         int iBlockLen = -1;
         ByteOrder tSaveOrder = tBuffer.order();
         //-Defined as BIG_ENDIAN
@@ -140,11 +134,8 @@ public class SuperNovaRecord implements IPayloadRecord, Poolable {
      * Reads the SuperNova record information from the ByteBuffer containing the MonitorRecord.
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      */
-    public final void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public final void loadData(int iRecordOffset, ByteBuffer tBuffer) {
         //-make sure that this isn't loaded twice.
         if (mbLoaded) return;
         //-US Big-Endian block-length

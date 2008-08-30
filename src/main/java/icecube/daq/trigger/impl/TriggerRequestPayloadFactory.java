@@ -72,7 +72,7 @@ public class TriggerRequestPayloadFactory extends CompositePayloadFactory {
         return tTriggerRequestPayload;
     }
 
-    public Payload createPayload(ITriggerRequestPayload payload) throws IOException, DataFormatException {
+    public Payload createPayload(ITriggerRequestPayload payload) throws DataFormatException {
         return createPayload(payload.getUID(), payload.getTriggerType(), payload.getTriggerConfigID(),
                 payload.getSourceID(), payload.getFirstTimeUTC(), payload.getLastTimeUTC(),
                 payload.getPayloads(), payload.getReadoutRequest());

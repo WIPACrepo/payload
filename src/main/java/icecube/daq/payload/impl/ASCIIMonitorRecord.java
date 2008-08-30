@@ -47,7 +47,7 @@ import java.util.zip.DataFormatException;
      * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    protected void loadExtendedData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    protected void loadExtendedData(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         //-Load the record specific data for this record
         loadASCIIData(iRecordOffset, tBuffer);
     }
@@ -56,10 +56,9 @@ import java.util.zip.DataFormatException;
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
      *
-     * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    public void loadASCIIData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public void loadASCIIData(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         int iStart = iRecordOffset + OFFSET_NONHEADER_DATA;
         mbASCIIRecLoaded = false;
         miASCIIDataLength = (int) msiRecLen - SIZE_HEADER;
@@ -68,7 +67,11 @@ import java.util.zip.DataFormatException;
             mabASCIIBytes[ii] =  tBuffer.get(iStart + ii);
         }
         //-convert bytes to ASCII string.
-        msASCIIString = new String(mabASCIIBytes, 0, miASCIIDataLength, ASCII_CHAR_SET_NAME);
+        try {
+            msASCIIString = new String(mabASCIIBytes, 0, miASCIIDataLength, ASCII_CHAR_SET_NAME);
+        } catch (IOException ioe) {
+            throw new DataFormatException("Cannot encode ASCII data: " + ioe.getMessage());
+        }
         mbASCIIRecLoaded = true;
     }
     /**

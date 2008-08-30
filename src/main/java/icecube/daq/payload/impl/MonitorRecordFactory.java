@@ -3,7 +3,6 @@ package icecube.daq.payload.impl;
 import icecube.daq.payload.IPayloadRecord;
 import icecube.daq.payload.IPayloadRecordFactory;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
@@ -44,10 +43,9 @@ public final class MonitorRecordFactory implements IPayloadRecordFactory {
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
      *
-     * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    public IPayloadRecord createPayloadRecord(int iRecordOffset, ByteBuffer tBuffer) throws IOException,DataFormatException {
+    public IPayloadRecord createPayloadRecord(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         int iRecordType = MonitorRecord.readCorrectedRecordType(iRecordOffset, tBuffer);
         IPayloadRecord tRecord = getUsablePayloadRecord(iRecordType);
         tRecord.loadData(iRecordOffset, tBuffer);

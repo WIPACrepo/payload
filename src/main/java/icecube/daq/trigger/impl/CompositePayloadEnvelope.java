@@ -7,7 +7,6 @@ import icecube.util.Poolable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.zip.DataFormatException;
 
 /**
  * This object is an envelope for wrappering the internal composite payload's
@@ -141,7 +140,7 @@ public class CompositePayloadEnvelope implements IWriteablePayloadRecord, Poolab
      * @param tBuffer the ByteBuffer into which to write this payload-record.
      * @return the number of bytes written.
      */
-    public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
+    public int writeData(int iOffset, ByteBuffer tBuffer) {
         tBuffer.putInt(iOffset + OFFSET_COMPOSITE_PAYLOAD_BYTES, mi_compositePayloadBytes);
         tBuffer.putShort(iOffset + OFFSET_COMPOSITE_TYPE, msi_compositeType);
         tBuffer.putShort(iOffset + OFFSET_NUM_PAYLOADS, msi_numPayloads);
@@ -163,11 +162,8 @@ public class CompositePayloadEnvelope implements IWriteablePayloadRecord, Poolab
      * @param tBuffer ByteBuffer from which to construct the record.
      *
      * NOTE: DBW- changed so that the envelope is ALWAYS BIG_ENDIAN
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      */
-    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public void loadData(int iRecordOffset, ByteBuffer tBuffer) {
         ByteOrder tSaveOrder = tBuffer.order();
         if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
             tBuffer.order(ByteOrder.BIG_ENDIAN);

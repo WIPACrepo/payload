@@ -13,7 +13,6 @@ import icecube.util.Poolable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.zip.DataFormatException;
 
 /**
  * This class represents the data associated with
@@ -153,11 +152,8 @@ public class TriggerRequestRecord implements IWriteablePayloadRecord, Poolable {
      * Loads the data from the buffer into the container record.
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      */
-    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public void loadData(int iRecordOffset, ByteBuffer tBuffer) {
         ByteOrder tSaveOrder = tBuffer.order();
         ByteOrder tReadOrder = tSaveOrder;
         mb_IsDataLoaded = false;
@@ -267,7 +263,7 @@ public class TriggerRequestRecord implements IWriteablePayloadRecord, Poolable {
         "AmSpase", "AmRand", "AmCalT0", "AmCalLaser",
     };
 
-    private static final String getTypeString(int trigType)
+    private static String getTypeString(int trigType)
     {
         if (trigType >= 0 && trigType < trigTypes.length) {
             return trigTypes[trigType];

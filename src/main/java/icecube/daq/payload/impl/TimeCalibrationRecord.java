@@ -7,7 +7,6 @@ import icecube.util.Poolable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.zip.DataFormatException;
 
 /**
  * TimeCalibrationRecord
@@ -133,11 +132,9 @@ public class TimeCalibrationRecord implements IWriteablePayloadRecord, Poolable 
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
      *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      * @see icecube.daq.payload.IPayloadRecord
      */
-    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public void loadData(int iRecordOffset, ByteBuffer tBuffer) {
         //-Set to false to start to start with just in case there is an error
         mbLoaded = false;
         //-Fill in the internal data

@@ -103,7 +103,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
     /**
      * Initializes Payload from backing so it can be used as a Spliceable.
      */
-    public void loadSpliceablePayload() throws IOException,DataFormatException {
+    public void loadSpliceablePayload() throws DataFormatException {
         if (mtbuffer != null) {
             loadEnvelope();
         }
@@ -111,7 +111,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
-    public void loadPayload() throws IOException,DataFormatException {
+    public void loadPayload() throws DataFormatException {
         if (mtbuffer != null) {
             if (!mb_IsEnvelopeLoaded) {
                 loadEnvelope();

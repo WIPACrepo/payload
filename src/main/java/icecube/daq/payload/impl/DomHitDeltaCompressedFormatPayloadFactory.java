@@ -2,7 +2,6 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.splicer.PayloadFactory;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
@@ -29,12 +28,12 @@ public class DomHitDeltaCompressedFormatPayloadFactory extends PayloadFactory {
      * the input stream to determine when a complete data element is available.
      * @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable
      * @param tBuffer ByteBuffer from which to detect a spliceable.
-     * @exception IOException if there is an error reading the ByteBuffer
+     * @exception DataFormatException if there is an error reading the ByteBuffer
      *                            to pull out the length of the spliceable.
      * NOTE: This method is overridden because these payload's are from DomHUB and do not have the
      *       same PayloadEnvelope that the rest of the post-StringProcessor payloads.
      */
-    public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public int readSpliceableLength(int iOffset, ByteBuffer tBuffer) throws DataFormatException {
         return DomHitDeltaCompressedFormatPayload.readPayloadLength(iOffset, tBuffer);
     }
 

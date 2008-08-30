@@ -96,7 +96,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      *                   within the ByteBuffer backing.
      * @param tBackingBuffer the backing buffer for this object.
      */
-    public void initialize(int iOffset, ByteBuffer tBackingBuffer) throws IOException, DataFormatException {
+    public void initialize(int iOffset, ByteBuffer tBackingBuffer) {
         super.mioffset = iOffset;
         super.mtbuffer = tBackingBuffer;
     }
@@ -136,7 +136,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      * Initializes Payload from backing so it can be used as a Spliceable.
      * This extracts the envelope which holds the actual engineering record.
      */
-    public void loadSpliceablePayload() throws IOException, DataFormatException {
+    public void loadSpliceablePayload() {
         //-read from the current position the data necessary to construct the spliceable.
         //--This might not be necessary
         //synchronized (mtbuffer) {
@@ -196,7 +196,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
         } else {
             try {
                 iTriggerMode = DomHitDeltaCompressedFormatRecord.getTriggerMode(mioffset + OFFSET_REC, mtbuffer);
-            } catch ( IOException tException) {
+            } catch ( DataFormatException tException) {
                 //-TODO: Put in logging here
                 System.out.println("DomHitDeltaCompressedPayload.getTriggerMode() IOException="+tException);
                 iTriggerMode = -1;
@@ -217,7 +217,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
         } else {
             try {
                 iLCMode = DomHitDeltaCompressedFormatRecord.getLocalCoincidenceMode(mioffset + OFFSET_REC, mtbuffer);
-            } catch ( IOException tException) {
+            } catch ( DataFormatException tException) {
                 //-TODO: Put in logging here
                 System.out.println("DomHitDeltaCompressedPayload.getLocalCoincidenceMode(),"+tException);
                 iLCMode = -1;
@@ -229,7 +229,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
-    public void loadPayload()  throws IOException, DataFormatException {
+    public void loadPayload() throws DataFormatException {
         if (mtbuffer != null) {
             //-Spliceable payload is also filled in by loadData()...
             if (!mbSpliceablePayloadLoaded) {

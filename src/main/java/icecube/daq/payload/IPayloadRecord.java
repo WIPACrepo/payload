@@ -1,6 +1,5 @@
 package icecube.daq.payload;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
@@ -22,8 +21,7 @@ public interface IPayloadRecord {
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
      *
-     * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException;
+    void loadData(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException;
 }

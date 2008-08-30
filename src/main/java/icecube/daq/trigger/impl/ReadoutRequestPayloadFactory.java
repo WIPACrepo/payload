@@ -9,7 +9,6 @@ import icecube.daq.splicer.Spliceable;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.zip.DataFormatException;
@@ -53,7 +52,7 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
      *  @return the Payload object specific to this class which is
      *                     specific to the class which is derived from PayloadFactory.
      */
-    public Payload createPayload(int iOffset, ByteBuffer tPayloadBuffer) throws IOException,DataFormatException {
+    public Payload createPayload(int iOffset, ByteBuffer tPayloadBuffer) throws DataFormatException {
         ReadoutRequestPayload tPayload = (ReadoutRequestPayload) mt_PoolablePayloadFactory.getPoolable();
         tPayload.initialize(iOffset, tPayloadBuffer, this);
         return tPayload;
@@ -64,7 +63,7 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
      * @param tReadoutRequest IReadoutRequest which is used to construct the payload.
      * @return the ReadoutRequestPayload constructed from the IReadoutRequest.
      */
-    public Payload createPayload(IUTCTime tTime, IReadoutRequest tReadoutRequest) throws IOException, DataFormatException {
+    public Payload createPayload(IUTCTime tTime, IReadoutRequest tReadoutRequest) throws DataFormatException {
         // ReadoutRequestPayload tPayload = (ReadoutRequestPayload) ReadoutRequestPayload.getFromPool();
         ReadoutRequestPayload tPayload = (ReadoutRequestPayload) mt_PoolablePayloadFactory.getPoolable();
         tPayload.initialize((IUTCTime) tTime.deepCopy(), tReadoutRequest);

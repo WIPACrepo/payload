@@ -36,7 +36,7 @@ public interface ICompositePayload extends ITriggerPayload {
     /**
      * get list of Payload's.
      */
-    List getPayloads() throws IOException, DataFormatException;
+    List getPayloads() throws DataFormatException;
 
     /**
      * implement getPayloadTimeUTC from IPayload

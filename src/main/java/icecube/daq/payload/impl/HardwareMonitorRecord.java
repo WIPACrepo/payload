@@ -5,7 +5,6 @@ import icecube.util.Poolable;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
 
 /**
  * This Object is a container for the Hardware State Event Monitor record.
@@ -138,11 +137,8 @@ import java.util.zip.DataFormatException;
      * This method is designed to be overridden by derived classes whic load more than just header data.
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      */
-    protected void loadExtendedData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    protected void loadExtendedData(int iRecordOffset, ByteBuffer tBuffer) {
 
         //-set to false just in case there are some errors.
         mbHardwareRecLoaded = false;
@@ -190,12 +186,8 @@ import java.util.zip.DataFormatException;
      * NOTE: This would be assumed to be a version of the HardwareMonitorRecord.
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
-     *
      */
-    public static byte readRecordVersion(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public static byte readRecordVersion(int iRecordOffset, ByteBuffer tBuffer) {
         return tBuffer.get(iRecordOffset + OFFSET_StateEventVersion );
     }
     /**

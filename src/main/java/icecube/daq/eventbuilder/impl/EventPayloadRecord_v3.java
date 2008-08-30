@@ -10,7 +10,6 @@ import icecube.util.Poolable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.zip.DataFormatException;
 
 /**
  * This class forms the minimal record information to distinguish
@@ -193,12 +192,8 @@ public class EventPayloadRecord_v3
      * Loads the data from the buffer into the container record.
      * @param iRecordOffset the offset from which to start loading the data fro the engin.
      * @param tBuffer ByteBuffer from which to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      */
     public void loadData(int iRecordOffset, ByteBuffer tBuffer)
-        throws IOException, DataFormatException
     {
         setIsDataLoaded(false);
 
@@ -266,7 +261,6 @@ public class EventPayloadRecord_v3
      * @param tBuffer the ByteBuffer into which to write this payload-record.
      */
     public int writeData(int iOffset, ByteBuffer tBuffer)
-        throws IOException
     {
         ByteOrder tSaveOrder = tBuffer.order();
         //-switch to BIG_ENDIAN
