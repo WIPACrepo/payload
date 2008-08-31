@@ -76,7 +76,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
                 if (mt_CompositeEnvelope == null) {
                     mt_CompositeEnvelope = (CompositePayloadEnvelope) CompositePayloadEnvelope.getFromPool();
                 }
-                mt_CompositeEnvelope.loadData((super.mioffset + iEnvelopeOffset), super.mtbuffer);
+                mt_CompositeEnvelope.loadData((mioffset + iEnvelopeOffset), mtbuffer);
                 mb_IsCompositeEnvelopeLoaded = true;
             } else {
                 throw new DataFormatException("AbstractCompositePayload.loadCompositeEnvelope() called with invalid offset");
