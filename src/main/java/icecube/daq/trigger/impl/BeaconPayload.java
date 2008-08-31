@@ -82,7 +82,6 @@ public class BeaconPayload  extends Payload implements IBeaconPayload {
      */
     public void initialize(IHitDataPayload tPayload) {
         mt_sourceId = tPayload.getSourceID();
-        // System.out.println("HitPayload.initialize() mt_sourceId="+mt_sourceId);
         ((UTCTime8B) mttime).initialize(tPayload.getPayloadTimeUTC().longValue());
         super.milength = SIZE_BEACON_PAYLOAD;
         super.mtbuffer = null;

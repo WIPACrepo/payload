@@ -104,7 +104,6 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      */
     public void initialize(IHitDataPayload tPayload) {
         mt_sourceId = tPayload.getSourceID();
-        // System.out.println("HitPayload.initialize() mt_sourceId="+mt_sourceId);
         mi_TriggerType = tPayload.getTriggerType();
         mi_TriggerConfigID = tPayload.getTriggerConfigID();
         ((UTCTime8B) mttime).initialize(tPayload.getPayloadTimeUTC().longValue());

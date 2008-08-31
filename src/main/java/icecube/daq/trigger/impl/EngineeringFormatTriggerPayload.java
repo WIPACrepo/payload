@@ -19,6 +19,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This class is an implementation of ITriggerPayload for an EngineeringFormat
  * hit record.
@@ -32,6 +35,8 @@ import java.util.zip.DataFormatException;
  * @author dwharton
  */
 public class EngineeringFormatTriggerPayload  extends AbstractTriggerPayload {
+    private static Log LOG =
+        LogFactory.getLog(EngineeringFormatTriggerPayload.class);
 
     public static final int SIZE_TRIGGER_CONFIG_ID = 4;
     public static final int SIZE_SOURCE_ID         = 4;
@@ -300,10 +305,8 @@ public class EngineeringFormatTriggerPayload  extends AbstractTriggerPayload {
             try {
                 //-Load the engineering payload so it can be accessed
                 loadEngPayload();
-            } catch ( DataFormatException tDataFormatException) {
-                //-TODO log the error here
-                System.out.println("Class("+this.getClass().getName()+"):EngineeringFormatTriggerPayload.getTriggerType() DataFormatException="+tDataFormatException);
-                tDataFormatException.printStackTrace();
+            } catch (DataFormatException dfe) {
+                LOG.error("Cannot load engineering payload", dfe);
             }
 
         }

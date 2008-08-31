@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This object represents a Delta Compressed Hit from a DOM and includes
  * the waveform data. It carries both the header information and the data
@@ -31,6 +34,9 @@ import java.util.zip.DataFormatException;
 
 public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomHit
 {
+    private static Log LOG =
+        LogFactory.getLog(DomHitDeltaCompressedFormatPayload.class);
+
     /**
      * true if payload information has been filled in from
      * the payload source into the container variables. False
@@ -197,8 +203,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
             try {
                 iTriggerMode = DomHitDeltaCompressedFormatRecord.getTriggerMode(mioffset + OFFSET_REC, mtbuffer);
             } catch ( DataFormatException tException) {
-                //-TODO: Put in logging here
-                System.out.println("DomHitDeltaCompressedPayload.getTriggerMode() IOException="+tException);
+                LOG.error("Cannot get trigger mode", tException);
                 iTriggerMode = -1;
             }
         }
@@ -218,8 +223,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
             try {
                 iLCMode = DomHitDeltaCompressedFormatRecord.getLocalCoincidenceMode(mioffset + OFFSET_REC, mtbuffer);
             } catch ( DataFormatException tException) {
-                //-TODO: Put in logging here
-                System.out.println("DomHitDeltaCompressedPayload.getLocalCoincidenceMode(),"+tException);
+                LOG.error("Cannot get LC mode", tException);
                 iLCMode = -1;
             }
         }

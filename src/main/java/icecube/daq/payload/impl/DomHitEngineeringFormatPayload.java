@@ -15,6 +15,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This object represents a DOMHit in EngineeringFormat.
  * This is meant to be more of a structure than an object
@@ -42,6 +45,9 @@ import java.util.zip.DataFormatException;
  *  @see icecube.daq.trigger.impl.EngineeringFormatHitDataPayload
  */
 public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
+    private static Log LOG =
+        LogFactory.getLog(DomHitEngineeringFormatPayload.class);
+
     /**
      * true if payload information has been filled in from
      * the payload source into the container variables. False
@@ -319,11 +325,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
             loadPayload();
             return mtDomHitEngineeringFormatRecord;
         } catch (Exception tException) {
-            //-This returns null if cannot read the record
-            // into the container object for the information.
-            //-TODO: put logging information here
-            System.out.println("DomHitEngineeringPayload.getPayloadRecord():Exception ="+tException);
-            tException.printStackTrace();
+            LOG.error("Cannot load payload", tException);
             return null;
         }
     }

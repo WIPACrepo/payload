@@ -13,6 +13,9 @@ import icecube.util.Poolable;
 import java.io.IOException;
 import java.util.zip.DataFormatException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This object is the implementation of a single hit
  * which is the encapsulation of an engineering event.
@@ -20,6 +23,9 @@ import java.util.zip.DataFormatException;
  * @author dwharton
  */
 public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload implements IHitPayload {
+    private static Log LOG =
+        LogFactory.getLog(EngineeringFormatHitPayload.class);
+
     protected DOMID8B mt_DomID;
     /**
      * Standard Constructor, enabling pooling
@@ -75,7 +81,7 @@ public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload
                             mt_DomID.initialize(mt_EngFormatPayload.getDomId());
                         }
                 } catch ( Exception tException) {
-                    System.out.println("EngineeringFormatHitPayload.loadEngSpliceable() has thrown exception="+tException);
+                    LOG.error("Cannot load spliceable", tException);
                 }
             }
         }
@@ -96,7 +102,7 @@ public class EngineeringFormatHitPayload extends EngineeringFormatTriggerPayload
                 mt_DomID = (DOMID8B) DOMID8B.getFromPool();
                 mt_DomID.initialize(mt_EngFormatPayload.getDomId());
             } catch ( Exception tException) {
-                System.out.println("EngineeringFormatHitPayload.getDOMID() has thrown exception="+tException);
+                LOG.error("Cannot get DOMID", tException);
             }
         }
         return mt_DomID;
