@@ -1,7 +1,7 @@
 /*
  * class: PayloadFactory
  *
- * Version $Id: PayloadFactory.java 3431 2008-08-30 04:30:36Z dglo $
+ * Version $Id: PayloadFactory.java 3439 2008-09-02 17:08:41Z dglo $
  *
  * Date: September 21 2004
  *
@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Interface for the Payload Factory (Trigger primitive)
  *
- * @version $Id: PayloadFactory.java 3431 2008-08-30 04:30:36Z dglo $
+ * @version $Id: PayloadFactory.java 3439 2008-09-02 17:08:41Z dglo $
  * @author hellwig,dwharton
  */
 public abstract class PayloadFactory
@@ -186,8 +186,10 @@ public abstract class PayloadFactory
         // Check that the Spliceable is fully contained.
         final int iNextSpliceableBegin = iBegin + iSpliceableLength;
         if (iNextSpliceableBegin > tBuffer.limit()) {
-            LOG.info("Next spliceable position " + iNextSpliceableBegin +
-                     " is past buffer limit " + tBuffer.limit());
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Next spliceable position " + iNextSpliceableBegin +
+                         " is past buffer limit " + tBuffer.limit());
+            }
             return false;
         }
         tBuffer.position(iNextSpliceableBegin);
