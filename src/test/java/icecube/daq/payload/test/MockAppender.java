@@ -20,6 +20,8 @@ public class MockAppender
     private Level minLevel;
     /** <tt>true</tt> if messages should be printed as well as cached. */
     private boolean verbose;
+    /** <tt>true</tt> if messages are not kept. */
+    private boolean flushMsgs;
 
     private ArrayList<LoggingEvent> eventList;
 
@@ -85,7 +87,9 @@ public class MockAppender
     public void doAppend(LoggingEvent evt)
     {
         if (evt.getLevel().toInt() >= minLevel.toInt()) {
-            eventList.add(evt);
+            if (!flushMsgs) {
+                eventList.add(evt);
+            }
 
             if (verbose) {
                 LocationInfo loc = evt.getLocationInformation();
@@ -141,6 +145,16 @@ public class MockAppender
         throw new Error("Unimplemented");
     }
 
+    /**
+     * Get logging level.
+     *
+     * @return logging level
+     */
+    public Level getLevel()
+    {
+        return minLevel;
+    }
+
     public Object getMessage(int idx)
     {
         return getEvent(idx).getMessage();
@@ -182,6 +196,16 @@ public class MockAppender
     }
 
     /**
+     * Should log messages be flushed?
+     *
+     * @param val <tt>false</tt> if log messages should be saved
+     */
+    public void setFlushMessages(boolean val)
+    {
+        flushMsgs = val;
+    }
+
+    /**
      * Unimplemented.
      *
      * @param x0 ???
@@ -189,6 +213,18 @@ public class MockAppender
     public void setLayout(Layout x0)
     {
         throw new Error("Unimplemented");
+    }
+
+    /**
+     * Set logging level.
+     *
+     * @param lvl logging level
+     */
+    public MockAppender setLevel(Level lvl)
+    {
+        minLevel = lvl;
+
+        return this;
     }
 
     /**
