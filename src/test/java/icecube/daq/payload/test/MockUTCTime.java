@@ -51,9 +51,9 @@ public class MockUTCTime
         return compareTo(obj) == 0;
     }
 
-    public IUTCTime getOffsetUTCTime(double x0)
+    public IUTCTime getOffsetUTCTime(double nanoSec)
     {
-        throw new Error("Unimplemented");
+        return new MockUTCTime(time + (long) (nanoSec * 10.0));
     }
 
     /**
@@ -63,12 +63,22 @@ public class MockUTCTime
      */
     public Poolable getPoolable()
     {
-        return new MockSourceID(-1);
+        return new MockUTCTime(-1);
     }
 
     public long longValue()
     {
         return time;
+    }
+
+    public int hashCode()
+    {
+        final long modValue = Integer.MAX_VALUE / 256;
+
+        final long topTwo = time / modValue;
+
+        return (int) (topTwo / modValue) + (int) (topTwo % modValue) +
+            (int) (time % modValue);
     }
 
     /**
@@ -79,13 +89,18 @@ public class MockUTCTime
         // do nothing
     }
 
-    public long timeDiff(IUTCTime x0)
+    public long timeDiff(IUTCTime otherTime)
     {
         throw new Error("Unimplemented");
     }
 
-    public double timeDiff_ns(IUTCTime x0)
+    public double timeDiff_ns(IUTCTime otherTime)
     {
-        throw new Error("Unimplemented");
+        return (double) (time - otherTime.longValue());
+    }
+
+    public String toString()
+    {
+        return Long.toString(time);
     }
 }
