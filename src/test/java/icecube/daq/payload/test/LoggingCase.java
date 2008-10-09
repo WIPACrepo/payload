@@ -24,6 +24,11 @@ public class LoggingCase
         appender.clear();
     }
 
+    public MockAppender getAppender()
+    {
+        return appender;
+    }
+
     public Object getMessage(int idx)
     {
         return appender.getMessage(idx);
