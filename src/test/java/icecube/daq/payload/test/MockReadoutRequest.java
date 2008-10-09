@@ -12,17 +12,42 @@ public class MockReadoutRequest
 {
     private int uid;
     private ISourceID srcId;
-    private ArrayList elemList;
+    private List elemList;
+
+    public MockReadoutRequest()
+    {
+        this(-1, -1, null);
+    }
+
+    public MockReadoutRequest(IReadoutRequest rReq)
+    {
+        this(rReq.getUID(), rReq.getSourceID(),
+             rReq.getReadoutRequestElements());
+    }
 
     public MockReadoutRequest(int uid, int srcId)
     {
+        this(uid, new MockSourceID(srcId), null);
+    }
+
+    public MockReadoutRequest(int uid, int srcId, List elemList)
+    {
+        this(uid, new MockSourceID(srcId), elemList);
+    }
+
+    public MockReadoutRequest(int uid, ISourceID srcId, List elemList)
+    {
         this.uid = uid;
-        this.srcId = new MockSourceID(srcId);
-        this.elemList = new ArrayList();
+        this.srcId = srcId;
+        this.elemList = elemList;
     }
 
     public void addElement(IReadoutRequestElement elem)
     {
+        if (elemList == null) {
+            elemList = new ArrayList();
+        }
+
         elemList.add(elem);
     }
 
@@ -35,6 +60,10 @@ public class MockReadoutRequest
 
     public List getReadoutRequestElements()
     {
+        if (elemList == null) {
+            elemList = new ArrayList();
+        }
+
         return elemList;
     }
 
