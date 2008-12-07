@@ -11,6 +11,7 @@ import icecube.daq.trigger.TriggerRegistry;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -324,6 +325,13 @@ public abstract class PayloadChecker
 
     private static final int SMT_TYPE =
         TriggerRegistry.getTriggerType("SimpleMajorityTrigger");
+
+    private static short year;
+
+    static {
+        GregorianCalendar cal = new GregorianCalendar(); 
+        year = (short) cal.get(GregorianCalendar.YEAR);
+    };
 
     /**
      * Should we ignore readout request elements which fall outside the
@@ -808,6 +816,10 @@ public abstract class PayloadChecker
             return false;
         }
 
+        if (!validateEventYear(evt.getPayloadType(), evt.getYear(), verbose)) {
+            return false;
+        }
+
         ITriggerRequestPayload trigReq = evt.getTriggerRequestPayload();
         loadPayload(trigReq);
 
@@ -879,6 +891,37 @@ public abstract class PayloadChecker
         }
 
         return valid;
+    }
+
+    /**
+     * Validate the year value for this event.
+     *
+     * @param payloadType events before version 4 do not have a year value
+     * @param evtYear year value for this event
+     * @param verbose <tt>true</tt> if errors should be logged
+     *
+     * @return <tt>true</tt> if event year is valid
+     */
+    public static boolean validateEventYear(int payloadType, short evtYear,
+                                            boolean verbose)
+    {
+        short expYear;
+        if (payloadType == PayloadRegistry.PAYLOAD_ID_EVENT_V4) {
+            expYear = year;
+        } else {
+            expYear = (short) -1;
+        }
+
+        if (evtYear != year) {
+            if (verbose) {
+                LOG.error("Expected event year to be " + year + ", not " +
+                          evtYear);
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     /**

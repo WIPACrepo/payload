@@ -242,6 +242,15 @@ public abstract class AbstractEventPayload
     }
 
     /**
+     * Events before version 4 do not return the year.
+     * @return -1 before EventPayload_v4
+     */
+    public short getYear()
+    {
+        return -1;
+    }
+
+    /**
      * Method to initialize the data values of this payload
      * independently of a ByteBuffer with the representative container
      * objects themselves.

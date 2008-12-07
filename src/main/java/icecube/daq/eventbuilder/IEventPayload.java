@@ -81,4 +81,10 @@ public interface IEventPayload extends ICompositePayload {
      *  NOTE:a value of 0 indicates that no subrun is active
      */
     int getSubrunNumber();
+
+    /**
+     * Get the year in which this event occurred.
+     * @return the event year, or -1 if it has not been set
+     */
+    short getYear();
 }

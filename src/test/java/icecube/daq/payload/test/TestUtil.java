@@ -454,6 +454,45 @@ public abstract class TestUtil
         return buf;
     }
 
+    public static ByteBuffer createEventv4(int uid, int srcId, long firstTime,
+                                           long lastTime, short year,
+                                           int runNum, int subrunNum,
+                                           ITriggerRequestPayload trigReq,
+                                           List hitList)
+    {
+        ByteBuffer recBuf = createEventRecordv4(uid, srcId, firstTime, lastTime,
+                                                year, runNum, subrunNum);
+
+        ByteBuffer trBuf = createTriggerRequest(trigReq);
+
+        ByteBuffer rdBuf =
+            createReadoutDataPayload(uid, 1, true, srcId, firstTime, lastTime,
+                                     hitList);
+
+        final int bufListBytes = trBuf.limit() + rdBuf.limit();
+        final int compLen = 8 + bufListBytes;
+        final int bufLen = 16 + recBuf.limit() + compLen;
+
+        ByteBuffer buf = ByteBuffer.allocate(bufLen);
+        putPayloadEnvelope(buf, bufLen, PayloadRegistry.PAYLOAD_ID_EVENT_V4,
+                           firstTime);
+        buf.put(recBuf);
+
+        putCompositeEnvelope(buf, bufListBytes,
+                             PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT, 2);
+        buf.put(trBuf);
+        buf.put(rdBuf);
+
+        buf.flip();
+
+        if (buf.limit() != buf.capacity()) {
+            throw new Error("Expected payload length is " + buf.capacity() +
+                            ", actual length is " + buf.limit());
+        }
+
+        return buf;
+    }
+
     public static ByteBuffer createEventRecordv1(int uid, int srcId,
                                                  long firstTime, long lastTime)
     {
@@ -517,6 +556,34 @@ public abstract class TestUtil
         buf.putLong(firstTime);
         buf.putLong(lastTime);
         buf.putInt(type);
+        buf.putInt(cfgId);
+        buf.putInt(runNum);
+
+        buf.flip();
+
+        if (buf.limit() != buf.capacity()) {
+            throw new Error("Expected payload length is " + buf.capacity() +
+                            ", actual length is " + buf.limit());
+        }
+
+        return buf;
+    }
+
+    public static ByteBuffer createEventRecordv4(int uid, int srcId,
+                                                 long firstTime, long lastTime,
+                                                 short year, int cfgId,
+                                                 int runNum)
+    {
+        final int bufLen = 38;
+
+        ByteBuffer buf = ByteBuffer.allocate(bufLen);
+        buf.putShort((short) RecordTypeRegistry.RECORD_TYPE_EVENT_V4);
+        buf.putInt(uid);
+        buf.putInt(srcId);
+        buf.putLong(firstTime);
+        buf.putLong(lastTime);
+        buf.putShort(year);
+        buf.putShort((short) -1);
         buf.putInt(cfgId);
         buf.putInt(runNum);
 

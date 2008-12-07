@@ -3,6 +3,7 @@ package icecube.daq.payload;
 import icecube.daq.eventbuilder.impl.EventPayload_v1Factory;
 import icecube.daq.eventbuilder.impl.EventPayload_v2Factory;
 import icecube.daq.eventbuilder.impl.EventPayload_v3Factory;
+import icecube.daq.eventbuilder.impl.EventPayload_v4Factory;
 import icecube.daq.eventbuilder.impl.ReadoutDataPayloadFactory;
 import icecube.daq.payload.impl.DomHitDeltaCompressedFormatPayloadFactory;
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayloadFactory;
@@ -56,7 +57,8 @@ public final class PayloadRegistry {
     public static final int PAYLOAD_ID_DELTA_HIT             = 17; // DomHitDeltaCompressedFormatPayload
     public static final int PAYLOAD_ID_COMPRESSED_HIT_DATA   = 18;  // delta and SLC hits including the compressed waveform data
     public static final int PAYLOAD_ID_EVENT_V3              = 19;
-    public static final int PAYLOAD_ID_LASTVALID             = PAYLOAD_ID_EVENT_V3;
+    public static final int PAYLOAD_ID_EVENT_V4              = 20;
+    public static final int PAYLOAD_ID_LASTVALID             = PAYLOAD_ID_EVENT_V4;
 
     //-dbw: if this value is non-null then it will be installed into all
     //      the managed PayloadFactory's and subsiquently all the Payload's which
@@ -206,6 +208,7 @@ public final class PayloadRegistry {
         mt_PayloadFactories.setElementAt( new  DeltaCompressedFormatHitDataPayloadFactory() , PAYLOAD_ID_COMPRESSED_HIT_DATA    );
         mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                       , PAYLOAD_ID_BEACON                 );
         mt_PayloadFactories.setElementAt( new  EventPayload_v3Factory()                     , PAYLOAD_ID_EVENT_V3               );
+        mt_PayloadFactories.setElementAt( new  EventPayload_v4Factory()                     , PAYLOAD_ID_EVENT_V4               );
         //-Install the recycler if present
         if (mtBufferCache != null) {
             for (int ii=0; ii < mt_PayloadFactories.size(); ii++) {
