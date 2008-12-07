@@ -57,9 +57,9 @@ public class EventPayloadRecord_v3
     public static final int OFFSET_EVENT_TYPE =
         OFFSET_LAST_UTCTIME + SIZE_LAST_UTCTIME;
     public static final int OFFSET_RUN_NUMBER =
-        OFFSET_EVENT_TYPE + SIZE_RUN_NUMBER;
+        OFFSET_EVENT_TYPE + SIZE_EVENT_TYPE;
     public static final int OFFSET_SUBRUN_NUMBER =
-        OFFSET_RUN_NUMBER + SIZE_SUBRUN_NUMBER;
+        OFFSET_RUN_NUMBER + SIZE_RUN_NUMBER;
 
     public static final String RECORD_TYPE = "RECORD_TYPE";
     public static final String UID = "UID";

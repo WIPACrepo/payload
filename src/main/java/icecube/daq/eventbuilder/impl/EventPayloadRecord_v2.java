@@ -53,7 +53,7 @@ public class EventPayloadRecord_v2
 
     public static final int OFFSET_REC_TYPE = 0; //-this is for type and endianess
     public static final int OFFSET_UID = OFFSET_REC_TYPE + SIZE_REC_TYPE;
-    public static final int OFFSET_SOURCE_ID = OFFSET_UID + SIZE_SOURCE_ID;
+    public static final int OFFSET_SOURCE_ID = OFFSET_UID + SIZE_UID;
     public static final int OFFSET_FIRST_UTCTIME =
         OFFSET_SOURCE_ID + SIZE_SOURCE_ID;
     public static final int OFFSET_LAST_UTCTIME =
