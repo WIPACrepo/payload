@@ -912,9 +912,9 @@ public abstract class PayloadChecker
             expYear = (short) -1;
         }
 
-        if (evtYear != year) {
+        if (evtYear != expYear) {
             if (verbose) {
-                LOG.error("Expected event year to be " + year + ", not " +
+                LOG.error("Expected event year to be " + expYear + ", not " +
                           evtYear);
             }
 
