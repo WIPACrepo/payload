@@ -108,13 +108,7 @@ public class DOMID8B implements IDOMID, Poolable {
      */
     public String toString()
     {
-        if (ms_DomID == null) {
-            String hexId = Long.toHexString(this.ml_DomID);
-            while (hexId.length() < 12) {
-                hexId = "0" + hexId;
-            }
-            ms_DomID = hexId;
-        }
+        if (ms_DomID == null) ms_DomID = String.format("%012x", ml_DomID);
         return ms_DomID;
     }
 }
