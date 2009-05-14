@@ -1,7 +1,7 @@
 /*
  * class: SourceIdRegistry
  *
- * Version $Id: SourceIdRegistry.java 3201 2008-06-18 17:02:59Z dglo $
+ * Version $Id: SourceIdRegistry.java 4149 2009-05-14 21:06:40Z kael $
  *
  * Date: January 13 2005
  *
@@ -17,7 +17,7 @@ import icecube.daq.payload.impl.SourceID4B;
  * Source ID registry and associated methods.
  *
  * @author pat
- * @version $Id: SourceIdRegistry.java 3201 2008-06-18 17:02:59Z dglo $
+ * @version $Id: SourceIdRegistry.java 4149 2009-05-14 21:06:40Z kael $
  */
 public final class SourceIdRegistry {
 
@@ -221,9 +221,7 @@ public final class SourceIdRegistry {
             return false;
         }
 
-        int daqId = srcId % 1000;
-
-        return daqId == 0;
+        return srcId == 12000 || srcId == 13000;
     }
 
     /**
@@ -276,11 +274,8 @@ public final class SourceIdRegistry {
             return false;
         }
 
-        int daqId = srcId % 1000;
-
-        return daqId > DAQCmdInterface.DAQ_MAX_NUM_STRINGS &&
-            daqId <= (DAQCmdInterface.DAQ_MAX_NUM_STRINGS +
-                      DAQCmdInterface.DAQ_MAX_NUM_IDH);
+        int daqId = srcId - STRING_HUB_SOURCE_ID;
+        return daqId >= 200 && daqId <= 210;
     }
 
     /**
@@ -308,7 +303,7 @@ public final class SourceIdRegistry {
             return false;
         }
 
-        int daqId = srcId % 1000;
+        int daqId = srcId - STRING_HUB_SOURCE_ID;
 
         return daqId > 0 && daqId <= DAQCmdInterface.DAQ_MAX_NUM_STRINGS;
     }
