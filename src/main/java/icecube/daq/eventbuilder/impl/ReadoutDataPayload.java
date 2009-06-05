@@ -40,18 +40,12 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
     protected boolean mb_IsReadoutDataRecordLoaded;
     protected ReadoutDataRecord mt_ReadoutDataRecord;
 
-    private static int nextNum = 1;
-    private int myNum = nextNum++;
-    private Throwable created;
-    private Throwable recycled;
-
     /**
      * Standard Constructor.
      */
     public ReadoutDataPayload() {
         super.mipayloadtype = PayloadRegistry.PAYLOAD_ID_READOUT_DATA;
         super.mipayloadinterfacetype = PayloadInterfaceRegistry.I_READOUT_DATA_PAYLOAD;
-try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
     }
 
     /**
@@ -281,7 +275,6 @@ try { throw new Throwable("Created"); } catch (Throwable t) { created = t; }
         //-CALL THIS LAST! The based class Payload.recycle() takes care of calling .dispose() after
         // all the recycling has been done.
         super.recycle();
-if (recycled == null) try { throw new Throwable("Originally recycled"); } catch (Throwable t) { recycled = t; }
     }
 
     /**
@@ -298,23 +291,6 @@ if (recycled == null) try { throw new Throwable("Originally recycled"); } catch 
         super.dispose();
     }
 
-    public Object deepCopy() {
-        if (recycled != null) {
-            try {
-                throw new Throwable("Stack trace");
-            } catch (Throwable thr) {
-                if (!DUMP_RECYCLE_ERRORS) {
-                    mtLog.error("Deep-copying recycled RDP#" + myNum);
-                } else {
-                    mtLog.error("Deep-copying recycled RDP#" + myNum, thr);
-                    mtLog.error("Created here", created);
-                    mtLog.error("Recycled here", recycled);
-                }
-            }
-        }
-        return super.deepCopy();
-    }
-
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
@@ -328,20 +304,6 @@ if (recycled == null) try { throw new Throwable("Originally recycled"); } catch 
      * @throws IOException if an error occurs during the process
      */
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
-        if (recycled != null) {
-            try {
-                throw new Throwable("Stack trace");
-            } catch (Throwable thr) {
-                if (!DUMP_RECYCLE_ERRORS) {
-                    mtLog.error("Writing recycled RDP#" + myNum);
-                } else {
-                    mtLog.error("Writing recycled RDP#" + myNum, thr);
-                    mtLog.error("Created here", created);
-                    mtLog.error("Recycled here", recycled);
-                }
-            }
-            throw new IOException("Attempted to write recycled RDP");
-        }
         int iBytesWritten = 0;
         //-If backing then use it..
         if (mtbuffer != null && !bWriteLoaded) {
