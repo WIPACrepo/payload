@@ -167,13 +167,6 @@ public class ReadoutRequestPayloadTest
                           elem.getSourceID().getSourceID()));
         }
 
-        try {
-            req.recycle();
-        } catch (ClassCastException cce) {
-            // XXX get rid of this
-            System.err.println("Ignoring implementation bug");
-            cce.printStackTrace();
-        }
         req.recycle();
     }
 
