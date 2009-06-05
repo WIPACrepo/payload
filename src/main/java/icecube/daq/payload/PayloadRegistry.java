@@ -238,15 +238,4 @@ public final class PayloadRegistry {
         Object tFactory = mt_PayloadFactories.get(iPayloadType);
         return (PayloadFactory) tFactory;
     }
-    /**
-     * Returns an empty Spliceable object representing the current place in the
-     * order of Spliceable objects.
-     *  Abstract function which must be implemented by the specific
-     *  factory.
-     *
-     * @return A new object representing the current place.
-     */
-    public Spliceable createCurrentPlaceSpliceable() {
-        return (Spliceable) ((PayloadFactory) mt_PayloadFactories.get(PAYLOAD_ID_ENGFORMAT_TRIGGER)).createCurrentPlaceSpliceable();
-    }
 }

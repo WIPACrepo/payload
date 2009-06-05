@@ -70,20 +70,6 @@ public class MasterPayloadFactory extends PayloadFactory {
 
 
     /**
-     * Returns an empty Spliceable object representing the current place in the
-     * order of Spliceable objects.
-     *  Abstract function which must be implemented by the specific
-     *  factory.
-     *
-     * @return A new object representing the current place.
-     */
-    public Spliceable createCurrentPlaceSpliceable() {
-        //-Since this is a placeholder, just create an empty spliceable of
-        // the default type.
-        return mtPayloadRegistry.createCurrentPlaceSpliceable();
-    }
-
-    /**
      *  This method must be implemented by the non-abstract class
      *  to create the specific payload.
      *  @param iOffset The offset in the ByteBuffer from which to create the payload/spliceable

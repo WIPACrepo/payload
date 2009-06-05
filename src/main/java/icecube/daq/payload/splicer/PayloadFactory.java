@@ -1,7 +1,7 @@
 /*
  * class: PayloadFactory
  *
- * Version $Id: PayloadFactory.java 3439 2008-09-02 17:08:41Z dglo $
+ * Version $Id: PayloadFactory.java 4265 2009-06-05 18:46:19Z dglo $
  *
  * Date: September 21 2004
  *
@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Interface for the Payload Factory (Trigger primitive)
  *
- * @version $Id: PayloadFactory.java 3439 2008-09-02 17:08:41Z dglo $
+ * @version $Id: PayloadFactory.java 4265 2009-06-05 18:46:19Z dglo $
  * @author hellwig,dwharton
  */
 public abstract class PayloadFactory
@@ -91,19 +91,6 @@ public abstract class PayloadFactory
                 payload.shiftOffset(shift);
             }
         }
-    }
-
-    /**
-     * Returns an empty Spliceable object representing the current place in the
-     * order of Spliceable objects.
-     *  Abstract function which must be implemented by the specific
-     *  factory.
-     *
-     * @return A new object representing the current place.
-     */
-    public Spliceable createCurrentPlaceSpliceable() {
-        // XXX this doesn't seem to be used anywhere
-        return (Spliceable) mt_PoolablePayloadFactory.getPoolable();
     }
 
     /**
