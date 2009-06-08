@@ -10,19 +10,21 @@ import java.nio.ByteBuffer;
  */
 public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCacheMBean
 {
+    private String name;
     private int acquiredBufferCount;
     private long acquiredBytes;
     private int returnedBuffers;
     private int totalBufferCount;
     private long maxAcquiredBytes;
 
-    public VitreousBufferCache()
+    public VitreousBufferCache(String name)
     {
-        this(Long.MIN_VALUE);
+        this(name, Long.MIN_VALUE);
     }
 
-    public VitreousBufferCache(long maxAcquiredBytes)
+    public VitreousBufferCache(String name, long maxAcquiredBytes)
     {
+        this.name = name;
         this.maxAcquiredBytes = maxAcquiredBytes;
         acquiredBufferCount = 0;
         acquiredBytes = 0L;
@@ -112,5 +114,12 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
     public long getMaxAquiredBytes()
     {
         return maxAcquiredBytes;
+    }
+
+    public String toString()
+    {
+        return "VitreousBufferCache[" + name + ",buf=" + acquiredBufferCount +
+            ",byt=" + acquiredBytes + "(max=" + maxAcquiredBytes +
+            "),totBuf=" + totalBufferCount + "]";
     }
 }
