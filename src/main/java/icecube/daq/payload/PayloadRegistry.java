@@ -39,7 +39,8 @@ public final class PayloadRegistry {
      */
     public static final int PAYLOAD_ID_UNKNOWN               = 0;
     public static final int PAYLOAD_ID_SIMPLE_HIT            = 1;
-    public static final int PAYLOAD_ID_MULTI_HIT             = 2;
+    private static final int PAYLOAD_ID_MULTI_HIT            = 2;
+    public static final int PAYLOAD_ID_DEAD_2                = 2;
     public static final int PAYLOAD_ID_ENGFORMAT_HIT         = 3; // DomHitEngineeringFormatPayload
     public static final int PAYLOAD_ID_TCAL                  = 4;
     public static final int PAYLOAD_ID_MON                   = 5;
@@ -51,7 +52,8 @@ public final class PayloadRegistry {
     public static final int PAYLOAD_ID_READOUT_DATA          = 11;
     public static final int PAYLOAD_ID_EVENT                 = 12;
     public static final int PAYLOAD_ID_EVENT_V2              = 13;
-    public static final int PAYLOAD_ID_MUX_ENGFORMAT_HIT     = 14;  //-hit created from dom-hub muxed data in eng format.
+    private static final int PAYLOAD_ID_MUX_ENGFORMAT_HIT    = 14;  //-hit created from dom-hub muxed data in eng format.
+    public static final int PAYLOAD_ID_DEAD_14               = 14;
     public static final int PAYLOAD_ID_BEACON                = 15;  // yea, becons
     public static final int PAYLOAD_ID_SN                    = 16;  //-SuperNovaPayload
     public static final int PAYLOAD_ID_DELTA_HIT             = 17; // DomHitDeltaCompressedFormatPayload
@@ -121,15 +123,15 @@ public final class PayloadRegistry {
      * @see icecube.daq.payload.PayloadInterfaceRegistry
      */
     public static int getPayloadInterfaceType(int iPayloadID) {
-        int iPayloadInterfaceType = 0;
+        int iPayloadInterfaceType;
         switch (iPayloadID) {
             case PAYLOAD_ID_UNKNOWN :
+            case PAYLOAD_ID_MULTI_HIT :
+            case PAYLOAD_ID_MUX_ENGFORMAT_HIT :
                 iPayloadInterfaceType = PayloadInterfaceRegistry.I_UNKNOWN_PAYLOAD;
                 break;
             case PAYLOAD_ID_SIMPLE_HIT :
-            case PAYLOAD_ID_MULTI_HIT :
             case PAYLOAD_ID_ENGFORMAT_HIT :
-            case PAYLOAD_ID_MUX_ENGFORMAT_HIT :
             case PAYLOAD_ID_TCAL :
             case PAYLOAD_ID_MON :
             case PAYLOAD_ID_DELTA_HIT :
@@ -190,7 +192,7 @@ public final class PayloadRegistry {
 
         mt_PayloadFactories.setElementAt( null                                              , PAYLOAD_ID_UNKNOWN                );
         mt_PayloadFactories.setElementAt( new  HitPayloadFactory()                          , PAYLOAD_ID_SIMPLE_HIT             );
-        mt_PayloadFactories.setElementAt( null                                              , PAYLOAD_ID_MULTI_HIT              );
+        //mt_PayloadFactories.setElementAt( null                                              , PAYLOAD_ID_MULTI_HIT              );
         mt_PayloadFactories.setElementAt( new  DomHitEngineeringFormatPayloadFactory()      , PAYLOAD_ID_ENGFORMAT_HIT          );
         mt_PayloadFactories.setElementAt( new  TimeCalibrationPayloadFactory()              , PAYLOAD_ID_TCAL                   );
         mt_PayloadFactories.setElementAt( new  MonitorPayloadFactory()                      , PAYLOAD_ID_MON                    );
