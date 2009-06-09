@@ -132,6 +132,7 @@ public final class PayloadRegistry {
             case PAYLOAD_ID_MUX_ENGFORMAT_HIT :
             case PAYLOAD_ID_TCAL :
             case PAYLOAD_ID_MON :
+            case PAYLOAD_ID_DELTA_HIT :
                 iPayloadInterfaceType = PayloadInterfaceRegistry.I_PAYLOAD;
                 break;
             case PAYLOAD_ID_ENGFORMAT_TRIGGER :
