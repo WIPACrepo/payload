@@ -164,6 +164,7 @@ public final class PayloadRegistry {
         case PAYLOAD_ID_EVENT:
         case PAYLOAD_ID_EVENT_V2:
         case PAYLOAD_ID_EVENT_V3:
+        case PAYLOAD_ID_EVENT_V4:
             iPayloadInterfaceType = PayloadInterfaceRegistry.I_EVENT_PAYLOAD;
             break;
         case PAYLOAD_ID_BEACON:
@@ -190,7 +191,7 @@ public final class PayloadRegistry {
         factoryList = new ArrayList<PayloadFactory>(numElems);
 
 
-        for (int i = 0; i < PayloadRegistry.PAYLOAD_ID_LASTVALID; i++) {
+        for (int i = 0; i <= PayloadRegistry.PAYLOAD_ID_LASTVALID; i++) {
             PayloadFactory factory;
             switch (i) {
             case PAYLOAD_ID_UNKNOWN:

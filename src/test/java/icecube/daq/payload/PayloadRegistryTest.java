@@ -27,7 +27,7 @@ public class PayloadRegistryTest
 
     public void testIfaceType()
     {
-        for (int i = 0; i < PayloadRegistry.PAYLOAD_ID_LASTVALID; i++) {
+        for (int i = 0; i <= PayloadRegistry.PAYLOAD_ID_LASTVALID; i++) {
             int itype = PayloadRegistry.getPayloadInterfaceType(i);
 
             if (i == PayloadRegistry.PAYLOAD_ID_UNKNOWN ||
@@ -45,7 +45,7 @@ public class PayloadRegistryTest
     public void testGetFactory()
     {
         PayloadRegistry reg = new PayloadRegistry();
-        for (int i = 0; i < PayloadRegistry.PAYLOAD_ID_LASTVALID; i++) {
+        for (int i = 0; i <= PayloadRegistry.PAYLOAD_ID_LASTVALID; i++) {
             PayloadFactory factory = reg.getPayloadFactory(i);
             if (i == PayloadRegistry.PAYLOAD_ID_UNKNOWN ||
                 i == PayloadRegistry.PAYLOAD_ID_DEAD_2 ||
