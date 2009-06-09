@@ -2,20 +2,27 @@ package icecube.daq.payload;
 
 import java.nio.ByteBuffer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This buffer cache simply allocates buffers directly from the heap.
  * It does not cache the buffers in any way.
  * @author kael
  *
  */
-public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCacheMBean
+public class VitreousBufferCache
+    implements IByteBufferCache, VitreousBufferCacheMBean
 {
+    private static final Log LOG = LogFactory.getLog(VitreousBufferCache.class);
+
     private String name;
     private int acquiredBufferCount;
     private long acquiredBytes;
     private int returnedBuffers;
     private int totalBufferCount;
     private long maxAcquiredBytes;
+    private long errorCount;
 
     public VitreousBufferCache(String name)
     {
@@ -82,6 +89,20 @@ public class VitreousBufferCache implements IByteBufferCache, VitreousBufferCach
         acquiredBufferCount--;
         acquiredBytes -= tByteBuffer.capacity();
         returnedBuffers++;
+        if (acquiredBufferCount < 0 || acquiredBytes < 0) {
+            if ((errorCount % 1000) == 0) {
+                String payType;
+                if (tByteBuffer.capacity() <= 8){
+                    payType = "";
+                } else {
+                    payType = " (type#" + tByteBuffer.getInt(4) + ")";
+                }
+
+                LOG.error("ByteBuffer underflow for " + tByteBuffer.capacity() +
+                          "-byte buffer" + payType + ": " + toString());
+            }
+            errorCount++;
+        }
     }
 
     public void destinationClosed() { }
