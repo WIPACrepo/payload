@@ -22,7 +22,7 @@ import icecube.daq.trigger.impl.HitPayloadFactory;
 import icecube.daq.trigger.impl.ReadoutRequestPayloadFactory;
 import icecube.daq.trigger.impl.TriggerRequestPayloadFactory;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * This object is a singleton object which holds the constants
@@ -41,39 +41,40 @@ public final class PayloadRegistry {
     public static final int PAYLOAD_ID_SIMPLE_HIT            = 1;
     private static final int PAYLOAD_ID_MULTI_HIT            = 2;
     public static final int PAYLOAD_ID_DEAD_2                = 2;
-    public static final int PAYLOAD_ID_ENGFORMAT_HIT         = 3; // DomHitEngineeringFormatPayload
+    public static final int PAYLOAD_ID_ENGFORMAT_HIT         = 3;
     public static final int PAYLOAD_ID_TCAL                  = 4;
     public static final int PAYLOAD_ID_MON                   = 5;
-    public static final int PAYLOAD_ID_ENGFORMAT_TRIGGER     = 6; // EngineeringFormatTriggerPayload
+    public static final int PAYLOAD_ID_ENGFORMAT_TRIGGER     = 6;
     public static final int PAYLOAD_ID_ENGFORMAT_HIT_TRIGGER = 7;
-    public static final int PAYLOAD_ID_READOUT_REQUEST       = 8; // Readout Request (accumulated by triggers) NOT USED...
-    public static final int PAYLOAD_ID_TRIGGER_REQUEST       = 9; // this is derived from ICompositePayload
+    public static final int PAYLOAD_ID_READOUT_REQUEST       = 8;
+    public static final int PAYLOAD_ID_TRIGGER_REQUEST       = 9;
     public static final int PAYLOAD_ID_ENGFORMAT_HIT_DATA    = 10;
     public static final int PAYLOAD_ID_READOUT_DATA          = 11;
     public static final int PAYLOAD_ID_EVENT                 = 12;
     public static final int PAYLOAD_ID_EVENT_V2              = 13;
-    private static final int PAYLOAD_ID_MUX_ENGFORMAT_HIT    = 14;  //-hit created from dom-hub muxed data in eng format.
+    private static final int PAYLOAD_ID_MUX_ENGFORMAT_HIT    = 14;
     public static final int PAYLOAD_ID_DEAD_14               = 14;
-    public static final int PAYLOAD_ID_BEACON                = 15;  // yea, becons
-    public static final int PAYLOAD_ID_SN                    = 16;  //-SuperNovaPayload
-    public static final int PAYLOAD_ID_DELTA_HIT             = 17; // DomHitDeltaCompressedFormatPayload
-    public static final int PAYLOAD_ID_COMPRESSED_HIT_DATA   = 18;  // delta and SLC hits including the compressed waveform data
+    public static final int PAYLOAD_ID_BEACON                = 15;
+    public static final int PAYLOAD_ID_SN                    = 16;
+    public static final int PAYLOAD_ID_DELTA_HIT             = 17;
+    public static final int PAYLOAD_ID_COMPRESSED_HIT_DATA   = 18;
     public static final int PAYLOAD_ID_EVENT_V3              = 19;
     public static final int PAYLOAD_ID_EVENT_V4              = 20;
-    public static final int PAYLOAD_ID_LASTVALID             = PAYLOAD_ID_EVENT_V4;
+    public static final int PAYLOAD_ID_LASTVALID             =
+        PAYLOAD_ID_EVENT_V4;
 
     //-dbw: if this value is non-null then it will be installed into all
-    //      the managed PayloadFactory's and subsiquently all the Payload's which
-    //      they produce. In this way a consistent management of the ByteBuffer's which
-    //      form the optional support of the of the Payload.
+    //      the managed PayloadFactory's and subsequently all the Payload's
+    //      which they produce. In this way a consistent management of the
+    //      ByteBuffer's which form the optional support of the of the Payload.
     private IByteBufferCache mtBufferCache;
 
-    //-dbw: This factory is used by all implementations of AbstractCompositePayload so that
-    //      a consistenty parent-factory/IByteBufferCache system can be maintained for all.
-    //private CompositePayloadFactory mtMasterCompositePayloadFactory = null;
+    //-dbw: This factory is used by all implementations of
+    //      AbstractCompositePayload so that a consistent
+    //      parent-factory/IByteBufferCache system can be maintained for all.
     private PayloadFactory mtMasterCompositePayloadFactory;
 
-    private Vector mt_PayloadFactories;
+    private ArrayList<PayloadFactory> factoryList;
 
     /**
      * Standard Constructor
@@ -83,13 +84,14 @@ public final class PayloadRegistry {
     }
 
     /**
-     * Constructor which Specifies the byte-buffer cache and the PayloadFactory for
-     * all CompositePayload's to use for generating their sub-payloads.
+     * Constructor which Specifies the byte-buffer cache and the PayloadFactory
+     * for all CompositePayload's to use for generating their sub-payloads.
      * @param  tBufferCache IByteBufferCache
-     * @param  tMasterCompositePayloadFactory CompositePayloadFactory used for generating sub-payloads of composite
-     *         payloads.
+     * @param  tMasterCompositePayloadFactory CompositePayloadFactory used for
+     *         generating sub-payloads of composite payloads.
      */
-    public PayloadRegistry(IByteBufferCache tBufferCache, PayloadFactory tMasterCompositePayloadFactory) {
+    public PayloadRegistry(IByteBufferCache tBufferCache,
+                           PayloadFactory tMasterCompositePayloadFactory) {
         mtBufferCache = tBufferCache;
         mtMasterCompositePayloadFactory = tMasterCompositePayloadFactory;
         initializeDefaultPayloadFactoryBindings();
@@ -125,58 +127,55 @@ public final class PayloadRegistry {
     public static int getPayloadInterfaceType(int iPayloadID) {
         int iPayloadInterfaceType;
         switch (iPayloadID) {
-            case PAYLOAD_ID_UNKNOWN :
-            case PAYLOAD_ID_MULTI_HIT :
-            case PAYLOAD_ID_MUX_ENGFORMAT_HIT :
-                iPayloadInterfaceType = PayloadInterfaceRegistry.I_UNKNOWN_PAYLOAD;
-                break;
-            case PAYLOAD_ID_SIMPLE_HIT :
-            case PAYLOAD_ID_ENGFORMAT_HIT :
-            case PAYLOAD_ID_TCAL :
-            case PAYLOAD_ID_MON :
-            case PAYLOAD_ID_DELTA_HIT :
-                iPayloadInterfaceType = PayloadInterfaceRegistry.I_PAYLOAD;
-                break;
-            case PAYLOAD_ID_ENGFORMAT_TRIGGER :
-                iPayloadInterfaceType = PayloadInterfaceRegistry.I_TRIGGER_PAYLOAD;
-                break;
-            case PAYLOAD_ID_ENGFORMAT_HIT_TRIGGER :
-                iPayloadInterfaceType = PayloadInterfaceRegistry.I_HIT_PAYLOAD;
-                break;
-            case PAYLOAD_ID_READOUT_REQUEST :
-                iPayloadInterfaceType = PayloadInterfaceRegistry.I_READOUT_REQUEST_PAYLOAD;
-                break;
-            case PAYLOAD_ID_TRIGGER_REQUEST :
-                iPayloadInterfaceType = PayloadInterfaceRegistry.I_TRIGGER_REQUEST_PAYLOAD;
-                break;
-            case PAYLOAD_ID_ENGFORMAT_HIT_DATA :
-                iPayloadInterfaceType = PayloadInterfaceRegistry.I_HIT_DATA_PAYLOAD;
-                break;
-            case PAYLOAD_ID_READOUT_DATA :
-                iPayloadInterfaceType = PayloadInterfaceRegistry.I_READOUT_DATA_PAYLOAD;
-                break;
-            case PAYLOAD_ID_EVENT :
-            case PAYLOAD_ID_EVENT_V2 :
-            case PAYLOAD_ID_EVENT_V3 :
-                iPayloadInterfaceType = PayloadInterfaceRegistry.I_EVENT_PAYLOAD;
-                break;
-            case PAYLOAD_ID_BEACON :
-                iPayloadInterfaceType = PayloadInterfaceRegistry.I_BEACON_PAYLOAD;
-                break;
-            case PAYLOAD_ID_SN :
-                iPayloadInterfaceType = PayloadInterfaceRegistry.I_SUPER_NOVA_PAYLOAD;
-                break;
-            case PAYLOAD_ID_COMPRESSED_HIT_DATA :
-                //-dbw: This new payload implements the IHitDataPayload interface
-                //      Note: will have to make sure that the factory which creates
-                //      the IHitPayload from the IHitDataPayload (actual hard objects)
-                //      uses the interface to create it's 'reduced' IHitPayload which
-                //      will be sent on to the trigger.
-                iPayloadInterfaceType = PayloadInterfaceRegistry.I_HIT_DATA_PAYLOAD;
-                break;
-            default:
-                iPayloadInterfaceType = PayloadInterfaceRegistry.I_UNKNOWN_PAYLOAD;
-                break;
+        case PAYLOAD_ID_UNKNOWN:
+        case PAYLOAD_ID_MULTI_HIT:
+        case PAYLOAD_ID_MUX_ENGFORMAT_HIT:
+            iPayloadInterfaceType = PayloadInterfaceRegistry.I_UNKNOWN_PAYLOAD;
+            break;
+        case PAYLOAD_ID_SIMPLE_HIT:
+        case PAYLOAD_ID_ENGFORMAT_HIT:
+        case PAYLOAD_ID_TCAL:
+        case PAYLOAD_ID_MON:
+        case PAYLOAD_ID_DELTA_HIT:
+            iPayloadInterfaceType = PayloadInterfaceRegistry.I_PAYLOAD;
+            break;
+        case PAYLOAD_ID_ENGFORMAT_TRIGGER:
+            iPayloadInterfaceType = PayloadInterfaceRegistry.I_TRIGGER_PAYLOAD;
+            break;
+        case PAYLOAD_ID_ENGFORMAT_HIT_TRIGGER:
+            iPayloadInterfaceType = PayloadInterfaceRegistry.I_HIT_PAYLOAD;
+            break;
+        case PAYLOAD_ID_READOUT_REQUEST:
+            iPayloadInterfaceType =
+                PayloadInterfaceRegistry.I_READOUT_REQUEST_PAYLOAD;
+            break;
+        case PAYLOAD_ID_TRIGGER_REQUEST:
+            iPayloadInterfaceType =
+                PayloadInterfaceRegistry.I_TRIGGER_REQUEST_PAYLOAD;
+            break;
+        case PAYLOAD_ID_ENGFORMAT_HIT_DATA:
+        case PAYLOAD_ID_COMPRESSED_HIT_DATA:
+            iPayloadInterfaceType = PayloadInterfaceRegistry.I_HIT_DATA_PAYLOAD;
+            break;
+        case PAYLOAD_ID_READOUT_DATA:
+            iPayloadInterfaceType =
+                PayloadInterfaceRegistry.I_READOUT_DATA_PAYLOAD;
+            break;
+        case PAYLOAD_ID_EVENT:
+        case PAYLOAD_ID_EVENT_V2:
+        case PAYLOAD_ID_EVENT_V3:
+            iPayloadInterfaceType = PayloadInterfaceRegistry.I_EVENT_PAYLOAD;
+            break;
+        case PAYLOAD_ID_BEACON:
+            iPayloadInterfaceType = PayloadInterfaceRegistry.I_BEACON_PAYLOAD;
+            break;
+        case PAYLOAD_ID_SN:
+            iPayloadInterfaceType =
+                PayloadInterfaceRegistry.I_SUPER_NOVA_PAYLOAD;
+            break;
+        default:
+            iPayloadInterfaceType = PayloadInterfaceRegistry.I_UNKNOWN_PAYLOAD;
+            break;
         }
         return iPayloadInterfaceType;
     }
@@ -187,40 +186,92 @@ public final class PayloadRegistry {
      * with the PayloadTypes.
      */
     private void initializeDefaultPayloadFactoryBindings() {
-        mt_PayloadFactories = new Vector();
-        mt_PayloadFactories.setSize(PayloadRegistry.PAYLOAD_ID_LASTVALID +1);
+        final int numElems = PayloadRegistry.PAYLOAD_ID_LASTVALID + 1;
+        factoryList = new ArrayList<PayloadFactory>(numElems);
 
-        mt_PayloadFactories.setElementAt( null                                              , PAYLOAD_ID_UNKNOWN                );
-        mt_PayloadFactories.setElementAt( new  HitPayloadFactory()                          , PAYLOAD_ID_SIMPLE_HIT             );
-        //mt_PayloadFactories.setElementAt( null                                              , PAYLOAD_ID_MULTI_HIT              );
-        mt_PayloadFactories.setElementAt( new  DomHitEngineeringFormatPayloadFactory()      , PAYLOAD_ID_ENGFORMAT_HIT          );
-        mt_PayloadFactories.setElementAt( new  TimeCalibrationPayloadFactory()              , PAYLOAD_ID_TCAL                   );
-        mt_PayloadFactories.setElementAt( new  MonitorPayloadFactory()                      , PAYLOAD_ID_MON                    );
-        // mt_PayloadFactories.setElementAt( new  MuxDomHitEngineeringFormatPayloadFactory()   , PAYLOAD_ID_MUX_ENGFORMAT_HIT      );
-        mt_PayloadFactories.setElementAt( new  SuperNovaPayloadFactory()                    , PAYLOAD_ID_SN                     );
-        mt_PayloadFactories.setElementAt( new  EngFormatTriggerPayloadFactory()             , PAYLOAD_ID_ENGFORMAT_TRIGGER      );
-        mt_PayloadFactories.setElementAt( new  EngFormatHitPayloadFactory()                 , PAYLOAD_ID_ENGFORMAT_HIT_TRIGGER  );
-        mt_PayloadFactories.setElementAt( new  ReadoutRequestPayloadFactory()               , PAYLOAD_ID_READOUT_REQUEST        );
-        mt_PayloadFactories.setElementAt( new  TriggerRequestPayloadFactory()               , PAYLOAD_ID_TRIGGER_REQUEST        );
-        mt_PayloadFactories.setElementAt( new  EngineeringFormatHitDataPayloadFactory()     , PAYLOAD_ID_ENGFORMAT_HIT_DATA     );
-        mt_PayloadFactories.setElementAt( new  ReadoutDataPayloadFactory()                  , PAYLOAD_ID_READOUT_DATA           );
-        mt_PayloadFactories.setElementAt( new  EventPayload_v1Factory()                        , PAYLOAD_ID_EVENT                  );
-        mt_PayloadFactories.setElementAt( new  EventPayload_v2Factory()                     , PAYLOAD_ID_EVENT_V2               );
-        mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                       , PAYLOAD_ID_BEACON                 );
-        mt_PayloadFactories.setElementAt( new  DomHitDeltaCompressedFormatPayloadFactory() , PAYLOAD_ID_DELTA_HIT    );
-        mt_PayloadFactories.setElementAt( new  DeltaCompressedFormatHitDataPayloadFactory() , PAYLOAD_ID_COMPRESSED_HIT_DATA    );
-        mt_PayloadFactories.setElementAt( new  BeaconPayloadFactory()                       , PAYLOAD_ID_BEACON                 );
-        mt_PayloadFactories.setElementAt( new  EventPayload_v3Factory()                     , PAYLOAD_ID_EVENT_V3               );
-        mt_PayloadFactories.setElementAt( new  EventPayload_v4Factory()                     , PAYLOAD_ID_EVENT_V4               );
+
+        for (int i = 0; i < PayloadRegistry.PAYLOAD_ID_LASTVALID; i++) {
+            PayloadFactory factory;
+            switch (i) {
+            case PAYLOAD_ID_UNKNOWN:
+                factory = null;
+                break;
+            case PAYLOAD_ID_SIMPLE_HIT:
+                factory = new HitPayloadFactory();
+                break;
+            case PAYLOAD_ID_MULTI_HIT:
+                factory = null;
+                break;
+            case PAYLOAD_ID_ENGFORMAT_HIT:
+                factory = new DomHitEngineeringFormatPayloadFactory();
+                break;
+            case PAYLOAD_ID_TCAL:
+                factory = new TimeCalibrationPayloadFactory();
+                break;
+            case PAYLOAD_ID_MON:
+                factory = new MonitorPayloadFactory();
+                break;
+            case PAYLOAD_ID_MUX_ENGFORMAT_HIT:
+                factory = null;
+                break;
+            case PAYLOAD_ID_SN:
+                factory = new SuperNovaPayloadFactory();
+                break;
+            case PAYLOAD_ID_ENGFORMAT_TRIGGER:
+                factory = new EngFormatTriggerPayloadFactory();
+                break;
+            case PAYLOAD_ID_ENGFORMAT_HIT_TRIGGER:
+                factory = new EngFormatHitPayloadFactory();
+                break;
+            case PAYLOAD_ID_READOUT_REQUEST:
+                factory = new ReadoutRequestPayloadFactory();
+                break;
+            case PAYLOAD_ID_TRIGGER_REQUEST:
+                factory = new TriggerRequestPayloadFactory();
+                break;
+            case PAYLOAD_ID_ENGFORMAT_HIT_DATA:
+                factory = new EngineeringFormatHitDataPayloadFactory();
+                break;
+            case PAYLOAD_ID_READOUT_DATA:
+                factory = new ReadoutDataPayloadFactory();
+                break;
+            case PAYLOAD_ID_EVENT:
+                factory = new EventPayload_v1Factory();
+                break;
+            case PAYLOAD_ID_EVENT_V2:
+                factory = new EventPayload_v2Factory();
+                break;
+            case PAYLOAD_ID_BEACON:
+                factory = new BeaconPayloadFactory();
+                break;
+            case PAYLOAD_ID_DELTA_HIT:
+                factory = new DomHitDeltaCompressedFormatPayloadFactory();
+                break;
+            case PAYLOAD_ID_COMPRESSED_HIT_DATA:
+                factory = new DeltaCompressedFormatHitDataPayloadFactory();
+                break;
+            case PAYLOAD_ID_EVENT_V3:
+                factory = new EventPayload_v3Factory();
+                break;
+            case PAYLOAD_ID_EVENT_V4:
+                factory = new EventPayload_v4Factory();
+                break;
+            default:
+                throw new Error("No factory specified for #" + i);
+            }
+
+            factoryList.add(factory);
+        }
+
         //-Install the recycler if present
         if (mtBufferCache != null) {
-            for (int ii=0; ii < mt_PayloadFactories.size(); ii++) {
-                PayloadFactory tFactory = (PayloadFactory) mt_PayloadFactories.elementAt(ii);
+            for (int ii=0; ii < factoryList.size(); ii++) {
+                PayloadFactory tFactory = factoryList.get(ii);
                 if (tFactory != null) {
                     tFactory.setByteBufferCache(mtBufferCache);
-                    //-If a master composite payload factory has been set to non-null
-                    // then make sure these are set in any factories which are derived
-                    // from AbstractCompositePayload.
+                    //-If a master composite payload factory has been set to
+                    // non-null, make sure these are set in any factories
+                    // which are derived from AbstractCompositePayload.
                     if ( mtMasterCompositePayloadFactory != null ) {
                         if (tFactory instanceof CompositePayloadFactory ) {
                             ((CompositePayloadFactory) tFactory).setMasterCompositePayloadFactory(mtMasterCompositePayloadFactory);
@@ -238,7 +289,6 @@ public final class PayloadRegistry {
      * @return the factory that is appropriate for this type of payload.
      */
     public PayloadFactory getPayloadFactory(int iPayloadType) {
-        Object tFactory = mt_PayloadFactories.get(iPayloadType);
-        return (PayloadFactory) tFactory;
+        return factoryList.get(iPayloadType);
     }
 }
