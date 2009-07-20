@@ -64,6 +64,11 @@ public class VitreousBufferCache
         return totalBufferCount;
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
     public synchronized int getTotalBuffersCreated()
     {
         return totalBufferCount;
