@@ -1,30 +1,27 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IDomHit;
+import icecube.daq.payload.IPayloadDestination;
+import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.payload.splicer.Payload;
+import icecube.daq.trigger.impl.DOMID8B;
+import icecube.util.Poolable;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.IDomHit;
-import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadDestination;
-import icecube.daq.payload.PayloadRegistry;
-import icecube.daq.payload.impl.UTCTime8B;
-import icecube.daq.payload.splicer.Payload;
-import icecube.daq.splicer.Spliceable;
-import icecube.daq.trigger.impl.DOMID8B;
-import icecube.util.Poolable;
-
 /**
  * This object represents a Delta Compressed Hit from a DOM and includes
- * the waveform data. It carries both the header information and the data 
- * from the dom and is constructed after the data comes to the surface in the hub. 
- * The mux header is included in the header of each payload because they are 
- * seperated by time and not by dom-id after reaching the surface and being 
+ * the waveform data. It carries both the header information and the data
+ * from the dom and is constructed after the data comes to the surface in the hub.
+ * The mux header is included in the header of each payload because they are
+ * seperated by time and not by dom-id after reaching the surface and being
  * concentrated and sorted.
  *
  * FORMAT
@@ -37,6 +34,9 @@ import icecube.util.Poolable;
 
 public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomHit
 {
+    private static Log LOG =
+        LogFactory.getLog(DomHitDeltaCompressedFormatPayload.class);
+
     /**
      * true if payload information has been filled in from
      * the payload source into the container variables. False
@@ -56,7 +56,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      * nature of this object. False if waiting to laod only the
      * spliceable information.
      */
-    public boolean mbSpliceablePayloadLoaded = false;
+    public boolean mbSpliceablePayloadLoaded;
 
     //-Field size info
     public static final int SIZE_RECLEN = 4;  //-int
@@ -98,11 +98,11 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     /**
      * This method allows an object to be reinitialized to a new backing buffer
      * and position within that buffer.
-     * @param iOffset ...int representing the initial position of the object
+     * @param iOffset int representing the initial position of the object
      *                   within the ByteBuffer backing.
-     * @param tBackingBuffer ...ByteBuffer the backing buffer for this object.
+     * @param tBackingBuffer the backing buffer for this object.
      */
-    public void initialize(int iOffset, ByteBuffer tBackingBuffer) throws IOException, DataFormatException {
+    public void initialize(int iOffset, ByteBuffer tBackingBuffer) {
         super.mioffset = iOffset;
         super.mtbuffer = tBackingBuffer;
     }
@@ -142,18 +142,19 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      * Initializes Payload from backing so it can be used as a Spliceable.
      * This extracts the envelope which holds the actual engineering record.
      */
-    public void loadSpliceablePayload() throws IOException, DataFormatException {
+    public void loadSpliceablePayload() {
         //-read from the current position the data necessary to construct the spliceable.
         //--This might not be necessary
         //synchronized (mtbuffer) {
         //}
         //-load the header data, (and anything else necessary for implementation
         // of Spliceable ie - needed for compareTo() ).
-        miRecLen = super.milength = mtbuffer.getInt(mioffset + OFFSET_RECLEN);
+        miRecLen = mtbuffer.getInt(mioffset + OFFSET_RECLEN);
         miRecId = mtbuffer.getInt(mioffset + OFFSET_RECID);
         mlDomId = mtbuffer.getLong(mioffset + OFFSET_DOMID);
         //-TODO: Adjust the time based on the TimeCalibration will eventually have to be done!
         mlUTime = mtbuffer.getLong(mioffset + OFFSET_UTIME);
+        super.milength = miRecLen;
         super.mttime = new UTCTime8B(mlUTime);
         mbSpliceablePayloadLoaded = true;
     }
@@ -163,7 +164,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      *
      * @param tDestination PayloadDestination
      */
-    private int writeTestDaqHdr(PayloadDestination tDestination) throws IOException {
+    private int writeTestDaqHdr(IPayloadDestination tDestination) throws IOException {
         //-read from the current position the data necessary to construct the spliceable.
         //--This might not be necessary
         //synchronized (mtbuffer) {
@@ -187,7 +188,7 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     }
 
     /**
-     * Get's the TriggerMode from the Engineering Format Payload
+     * Get the TriggerMode from the Engineering Format Payload
      * Test pattern trigger     0x0
      * CPU requested trigger    0x1
      * SPE discriminator trigger    0x2
@@ -195,24 +196,44 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      * the default value of 0x80 is returned here and the test pattern trigger is used.
      */
     public int getTriggerMode() {
-        int iTriggerMode = -1;
+        int iTriggerMode;
         if (mbDeltaPayloadLoaded) {
             iTriggerMode =  mtDomHitDeltaCompressedRecord.getTriggerMode();
         } else {
             try {
                 iTriggerMode = DomHitDeltaCompressedFormatRecord.getTriggerMode(mioffset + OFFSET_REC, mtbuffer);
-            } catch ( IOException tException) {
-                //-TODO: Put in logging here
-                System.out.println("DomHitDeltaCompressedPayload.getTriggerMode() IOException="+tException);
+            } catch ( DataFormatException tException) {
+                LOG.error("Cannot get trigger mode", tException);
+                iTriggerMode = -1;
             }
         }
         return iTriggerMode;
     }
 
     /**
+     * Get local coincidence mode.
+     *
+     * @return mode
+     */
+    public int getLocalCoincidenceMode() {
+        int iLCMode;
+        if (mbDeltaPayloadLoaded) {
+            iLCMode =  mtDomHitDeltaCompressedRecord.getLocalCoincidenceMode();
+        } else {
+            try {
+                iLCMode = DomHitDeltaCompressedFormatRecord.getLocalCoincidenceMode(mioffset + OFFSET_REC, mtbuffer);
+            } catch ( DataFormatException tException) {
+                LOG.error("Cannot get LC mode", tException);
+                iLCMode = -1;
+            }
+        }
+        return iLCMode;
+    }
+
+    /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
-    public void loadPayload()  throws IOException, DataFormatException {
+    public void loadPayload() throws DataFormatException {
         if (mtbuffer != null) {
             //-Spliceable payload is also filled in by loadData()...
             if (!mbSpliceablePayloadLoaded) {
@@ -237,49 +258,47 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
         }
         mbSpliceablePayloadLoaded = false;
         mbDeltaPayloadLoaded = false;
-		//-CALL THIS LAST!
+        //-CALL THIS LAST!
         super.dispose();
     }
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-		Payload tPayload = (Payload) new DomHitDeltaCompressedFormatPayload(); 
-        return (Poolable) tPayload;
+        return new DomHitDeltaCompressedFormatPayload();
     }
 
     /**
      * Method to create instance from the object pool.
-     * @return Object .... this is an object which is ready for reuse.
+     * @return an object which is ready for reuse.
      */
     public Poolable getPoolable() {
-        return (Poolable) getFromPool();
+        return getFromPool();
     }
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		if (mtDomHitDeltaCompressedRecord != null) {
-			mtDomHitDeltaCompressedRecord.recycle();
-			mtDomHitDeltaCompressedRecord = null;
-		}
-		//-CALL THIS LAST!!!!!  Payload takes care of eventually calling recycle() once it reaches the base class
-		// (in other words: .recycle() is only call ONCE by Payload.recycle() after it has finished its work!
-		super.recycle();
+        if (mtDomHitDeltaCompressedRecord != null) {
+            mtDomHitDeltaCompressedRecord.recycle();
+            mtDomHitDeltaCompressedRecord = null;
+        }
+        //-CALL THIS LAST!!!!!  Payload takes care of eventually calling recycle() once it reaches the base class
+        // (in other words: .recycle() is only call ONCE by Payload.recycle() after it has finished its work!
+        super.recycle();
     }
 
 
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -289,12 +308,12 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(PayloadDestination tDestination) throws IOException {
+    public int writePayload(IPayloadDestination tDestination) throws IOException {
         return writePayload(false, tDestination);
     }
     /**
@@ -304,13 +323,13 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
      * for making use of specialized PayloadDestinations which can document
      * the output if necessary.
      *
-     * @param bWriteLoaded ...... boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
         int iLength = 0;
         if (tDestination.doLabel()) tDestination.label("[DomHitDeltaCompressedFormatPayload] {").indent();
         if (bWriteLoaded) {
@@ -348,5 +367,17 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
     public DomHitDeltaCompressedFormatRecord getRecord()
     {
         return mtDomHitDeltaCompressedRecord;
+    }
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
+    public String toString()
+    {
+        return "DeltaHit@" + mttime + "[dom " + Long.toHexString(mlDomId) + " " +
+            (mtDomHitDeltaCompressedRecord == null ? "<noRecord>" :
+             "[" + mtDomHitDeltaCompressedRecord.toDataString() + "]") + "]";
     }
 }

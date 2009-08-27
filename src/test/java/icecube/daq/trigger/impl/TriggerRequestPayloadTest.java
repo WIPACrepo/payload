@@ -1,7 +1,7 @@
 package icecube.daq.trigger.impl;
 
 import icecube.daq.payload.PayloadRegistry;
-
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDOMID;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockHit;
@@ -9,27 +9,21 @@ import icecube.daq.payload.test.MockReadoutRequest;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
-
+import icecube.daq.trigger.IHitPayload;
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
-import icecube.daq.trigger.IHitPayload;
-
-import icecube.daq.trigger.impl.ReadoutRequestElementRecord;
 
 import java.nio.ByteBuffer;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 public class TriggerRequestPayloadTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.
@@ -121,14 +115,14 @@ public class TriggerRequestPayloadTest
                      PayloadRegistry.PAYLOAD_ID_TRIGGER_REQUEST,
                      req.getPayloadType());
         assertEquals("Bad payload UTC time",
-                     0L, req.getPayloadTimeUTC().getUTCTimeAsLong());
+                     firstTime, req.getPayloadTimeUTC().longValue());
         assertEquals("Bad trigger type", trigType, req.getTriggerType());
         assertEquals("Bad config ID", cfgId, req.getTriggerConfigID());
         assertEquals("Bad source ID", srcId, req.getSourceID().getSourceID());
         assertEquals("Bad first UTC time",
-                     firstTime, req.getFirstTimeUTC().getUTCTimeAsLong());
+                     firstTime, req.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
-                     lastTime, req.getLastTimeUTC().getUTCTimeAsLong());
+                     lastTime, req.getLastTimeUTC().longValue());
         assertEquals("Bad UID", uid, req.getUID());
 
         IReadoutRequest rReq = req.getReadoutRequest();
@@ -147,14 +141,14 @@ public class TriggerRequestPayloadTest
                          (i == 0 ? type1 : type2), elem.getReadoutType());
             assertEquals("Bad element#" + i + " first time",
                          (i == 0 ? firstTime1 : firstTime2),
-                         elem.getFirstTimeUTC().getUTCTimeAsLong());
+                         elem.getFirstTimeUTC().longValue());
             assertEquals("Bad element#" + i + " last time",
                          (i == 0 ? lastTime1 : lastTime2),
-                         elem.getLastTimeUTC().getUTCTimeAsLong());
+                         elem.getLastTimeUTC().longValue());
             assertEquals("Bad element#" + i + " DOM ID",
                          (i == 0 ? domId1 : domId2),
                          (elem.getDomID() == null ? -1L :
-                          elem.getDomID().getDomIDAsLong()));
+                          elem.getDomID().longValue()));
             assertEquals("Bad element#" + i + " source ID",
                          (i == 0 ? srcId1 : srcId2),
                          (elem.getSourceID() == null ? -1 :
@@ -170,13 +164,13 @@ public class TriggerRequestPayloadTest
             IHitPayload hit = (IHitPayload) reqHits.get(i);
 
             assertEquals("Bad hit time",
-                         hitTime, hit.getHitTimeUTC().getUTCTimeAsLong());
+                         hitTime, hit.getHitTimeUTC().longValue());
             assertEquals("Bad hit type",
                          hitType, hit.getTriggerType());
             assertEquals("Bad hit DOM ID",
                          hitDomId,
                          (hit.getDOMID() == null ? -1L :
-                          hit.getDOMID().getDomIDAsLong()));
+                          hit.getDOMID().longValue()));
             assertEquals("Bad hit source ID",
                          hitSrcId,
                          (hit.getSourceID() == null ? -1 :
@@ -214,7 +208,7 @@ public class TriggerRequestPayloadTest
         final int hitSrcId = 36;
         final long hitDomId = 333L;
         final int hitMode = 39;
-        
+
         MockReadoutRequest mockReq = new MockReadoutRequest(uid, srcId);
         mockReq.addElement(makeElement(rrType, rrFirstTime, rrLastTime,
                                        rrDomId, rrSrcId));
@@ -236,14 +230,14 @@ public class TriggerRequestPayloadTest
                      PayloadRegistry.PAYLOAD_ID_TRIGGER_REQUEST,
                      req.getPayloadType());
         assertEquals("Bad payload UTC time",
-                     firstTime, req.getPayloadTimeUTC().getUTCTimeAsLong());
+                     firstTime, req.getPayloadTimeUTC().longValue());
         assertEquals("Bad trigger type", trigType, req.getTriggerType());
         assertEquals("Bad config ID", cfgId, req.getTriggerConfigID());
         assertEquals("Bad source ID", srcId, req.getSourceID().getSourceID());
         assertEquals("Bad first UTC time",
-                     firstTime, req.getFirstTimeUTC().getUTCTimeAsLong());
+                     firstTime, req.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
-                     lastTime, req.getLastTimeUTC().getUTCTimeAsLong());
+                     lastTime, req.getLastTimeUTC().longValue());
         assertEquals("Bad UID", uid, req.getUID());
 
         IReadoutRequest rReq = req.getReadoutRequest();
@@ -258,12 +252,12 @@ public class TriggerRequestPayloadTest
 
         assertEquals("Bad rrElem type", rrType, elem.getReadoutType());
         assertEquals("Bad rrElem first time",
-                     rrFirstTime, elem.getFirstTimeUTC().getUTCTimeAsLong());
+                     rrFirstTime, elem.getFirstTimeUTC().longValue());
         assertEquals("Bad rrElem last time",
-                     rrLastTime, elem.getLastTimeUTC().getUTCTimeAsLong());
+                     rrLastTime, elem.getLastTimeUTC().longValue());
         assertEquals("Bad rrElem DOM ID",
                      rrDomId, (elem.getDomID() == null ? -1L :
-                               elem.getDomID().getDomIDAsLong()));
+                               elem.getDomID().longValue()));
         assertEquals("Bad rrElem source ID",
                      rrSrcId, (elem.getSourceID() == null ? -1 :
                                elem.getSourceID().getSourceID()));
@@ -277,13 +271,13 @@ public class TriggerRequestPayloadTest
             IHitPayload hit = (IHitPayload) reqHits.get(i);
 
             assertEquals("Bad hit time",
-                         hitTime, hit.getHitTimeUTC().getUTCTimeAsLong());
+                         hitTime, hit.getHitTimeUTC().longValue());
             assertEquals("Bad hit type",
                          hitType, hit.getTriggerType());
             assertEquals("Bad hit DOM ID",
                          hitDomId,
                          (hit.getDOMID() == null ? -1L :
-                          hit.getDOMID().getDomIDAsLong()));
+                          hit.getDOMID().longValue()));
             assertEquals("Bad hit source ID",
                          hitSrcId,
                          (hit.getSourceID() == null ? -1 :
@@ -296,6 +290,111 @@ public class TriggerRequestPayloadTest
             // XXX get rid of this
             System.err.println("Ignoring implementation bug");
             cce.printStackTrace();
+        }
+    }
+
+    public void XXXtestCompareTo()
+        throws Exception
+    {
+        final int uid = 34;
+        final int trigType = 98;
+        final int cfgId = 385;
+        final int srcId = 12;
+        final long firstTime = 1000L;
+        final long lastTime = 2000L;
+
+        final int rrType = 100;
+        final long rrFirstTime = 1001L;
+        final long rrLastTime = 1002L;
+        final long rrDomId = 103;
+        final int rrSrcId = 104;
+
+        final long hitTime = 1011L;
+        final int hitType = 30;
+        final int hitCfgId = 33;
+        final int hitSrcId = 36;
+        final long hitDomId = 333L;
+        final int hitMode = 39;
+
+        MockReadoutRequest mockReq = new MockReadoutRequest(uid, srcId);
+        mockReq.addElement(makeElement(rrType, rrFirstTime, rrLastTime,
+                                       rrDomId, rrSrcId));
+
+        ArrayList hitList = new ArrayList();
+        hitList.add(new MockHit(hitTime, hitType, hitCfgId, hitSrcId, hitDomId,
+                                hitMode));
+
+        Vector hitVec = new Vector(hitList);
+
+        TriggerRequestPayload req = new TriggerRequestPayload();
+        req.initialize(uid, trigType, cfgId, new MockSourceID(srcId),
+                       new MockUTCTime(firstTime), new MockUTCTime(lastTime),
+                       hitVec, mockReq);
+
+        TriggerRequestPayload cmpTR = new TriggerRequestPayload();
+        for (int i = 0; i <= 6; i++) {
+            int cmpUID = uid;
+            int cmpType = trigType;
+            int cmpCfgId = cfgId;
+            int cmpSrcId = srcId;
+            long cmpFirst = firstTime;
+            long cmpLast = lastTime;
+
+            String cmpDiff;
+            switch (i) {
+            case 1:
+                cmpUID++;
+                cmpDiff = "uid";
+                break;
+            case 2:
+                cmpType++;
+                cmpDiff = "trigType";
+                break;
+            case 3:
+                cmpCfgId++;
+                cmpDiff = "configId";
+                break;
+            case 4:
+                cmpSrcId++;
+                cmpDiff = "sourceId";
+                break;
+            case 5:
+                cmpFirst++;
+                cmpDiff = "firstTime";
+                break;
+            case 6:
+                cmpLast++;
+                cmpDiff = "lastTime";
+                break;
+            default:
+                cmpDiff = "identical";
+                break;
+            }
+
+            cmpTR.initialize(cmpUID, cmpType, cmpCfgId,
+                             new MockSourceID(cmpSrcId),
+                             new MockUTCTime(cmpFirst),
+                             new MockUTCTime(cmpLast), hitVec, mockReq);
+
+            if (i == 0) {
+                assertTrue("Bad " + cmpDiff + " equality",
+                           cmpTR.equals(req));
+                assertTrue("Bad " + cmpDiff + " equality",
+                           req.equals(cmpTR));
+                assertEquals("Bad " + cmpDiff + " comparison",
+                             0, req.compareTo(cmpTR));
+                assertEquals("Bad " + cmpDiff + " reverse comparison",
+                             0, cmpTR.compareTo(req));
+            } else {
+                assertFalse("Bad " + cmpDiff + " inequality",
+                           cmpTR.equals(req));
+                assertFalse("Bad " + cmpDiff + " inequality",
+                           req.equals(cmpTR));
+                assertTrue("Bad " + cmpDiff + " comparison",
+                           req.compareTo(cmpTR) < 0);
+                assertTrue("Bad " + cmpDiff + " reverse comparison",
+                           cmpTR.compareTo(req) > 0);
+            }
         }
     }
 
@@ -321,7 +420,7 @@ public class TriggerRequestPayloadTest
         final int hitSrcId = 36;
         final long hitDomId = 333L;
         final int hitMode = 39;
-        
+
         MockReadoutRequest mockReq = new MockReadoutRequest(uid, srcId);
         mockReq.addElement(makeElement(rrType, rrFirstTime, rrLastTime,
                                        rrDomId, rrSrcId));
@@ -373,7 +472,7 @@ public class TriggerRequestPayloadTest
         final int hitSrcId = 36;
         final long hitDomId = 333L;
         final int hitMode = 39;
-        
+
         MockReadoutRequest mockReq = new MockReadoutRequest(uid, srcId);
         mockReq.addElement(makeElement(rrType, rrFirstTime, rrLastTime,
                                        rrDomId, rrSrcId));

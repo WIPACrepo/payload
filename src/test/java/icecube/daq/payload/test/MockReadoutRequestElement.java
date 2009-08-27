@@ -1,17 +1,14 @@
 package icecube.daq.payload.test;
 
 import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.payload.PayloadDestination;
-
 import icecube.daq.trigger.IReadoutRequestElement;
 
 import java.io.IOException;
-
 import java.nio.ByteBuffer;
-
 import java.util.zip.DataFormatException;
 
 public class MockReadoutRequestElement
@@ -82,7 +79,6 @@ public class MockReadoutRequestElement
      * @exception DataFormatException if the record is not of the correct format
      */
     public void loadData(int offset, ByteBuffer buffer)
-        throws IOException, DataFormatException
     {
         throw new Error("Unimplemented");
     }
@@ -94,7 +90,7 @@ public class MockReadoutRequestElement
      *
      * @return the number of bytes written to this destination.
      */
-    public int writeData(PayloadDestination dest)
+    public int writeData(IPayloadDestination dest)
         throws IOException
     {
         throw new Error("Unimplemented");

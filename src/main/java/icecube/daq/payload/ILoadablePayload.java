@@ -1,7 +1,6 @@
 package icecube.daq.payload;
 
 import java.io.IOException;
-
 import java.util.zip.DataFormatException;
 
 /**
@@ -19,7 +18,7 @@ public interface ILoadablePayload
     /**
      * Make a 'deep-copy' of the Payload so that all internally referenced
      * objects are completely new.
-     * 
+     *
      * @return Payload which is a deep copy of this Payload
      */
     Object deepCopy();

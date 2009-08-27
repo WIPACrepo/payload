@@ -2,25 +2,20 @@ package icecube.daq.payload.test;
 
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.ILoadablePayload;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
-
 import icecube.daq.trigger.IHitPayload;
-
 import icecube.util.Poolable;
 
 import java.io.IOException;
-
 import java.nio.ByteBuffer;
-
 import java.util.zip.DataFormatException;
 
 public class MockHit
-    extends Poolable
-    implements IHitPayload, ILoadablePayload, IWriteablePayload
+    implements IHitPayload, ILoadablePayload, IWriteablePayload, Poolable
 {
     private long utcTime;
     private IUTCTime utcObj;
@@ -31,6 +26,8 @@ public class MockHit
     private long domId;
     private IDOMID domObj;
     private int trigMode;
+
+    private boolean failDeepCopy;
 
     public MockHit(long utcTime, int trigType, int cfgId, int srcId,
                    long domId, int trigMode)
@@ -45,7 +42,11 @@ public class MockHit
 
     public Object deepCopy()
     {
-        throw new Error("Unimplemented");
+        if (failDeepCopy) {
+            return null;
+        }
+
+        return new MockHit(utcTime, trigType, cfgId, srcId, domId, trigMode);
     }
 
     /**
@@ -81,6 +82,11 @@ public class MockHit
         throw new Error("Unimplemented");
     }
 
+    public ByteBuffer getPayloadBacking()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public int getPayloadInterfaceType()
     {
         throw new Error("Unimplemented");
@@ -102,7 +108,7 @@ public class MockHit
     }
 
     /**
-     * Gets an object form the pool in a non-static context.
+     * Get an object from the pool in a non-static context.
      *
      * @return object of this type from the object pool.
      */
@@ -147,7 +153,17 @@ public class MockHit
         // do nothing
     }
 
-    public int writePayload(boolean b0, PayloadDestination x1)
+    /**
+     * Set deepCopy() failure mode.
+     *
+     * @param fail <tt>true</tt> if deepCopy() should fail
+     */
+    public void setDeepCopyFail(boolean fail)
+    {
+        failDeepCopy = fail;
+    }
+
+    public int writePayload(boolean b0, IPayloadDestination x1)
         throws IOException
     {
         throw new Error("Unimplemented");

@@ -2,23 +2,19 @@ package icecube.daq.payload.splicer;
 
 import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IUTCTime;
-
-import icecube.daq.payload.test.MockAppender;
+import icecube.daq.payload.test.LoggingCase;
 
 import java.io.IOException;
-
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
-
 import java.util.zip.DataFormatException;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
-
-import org.apache.log4j.BasicConfigurator;
 
 class MockPayload
     implements ILoadablePayload
@@ -61,6 +57,11 @@ class MockPayload
         return copy;
     }
 
+    public ByteBuffer getPayloadBacking()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public int getPayloadInterfaceType()
     {
         throw new Error("Unimplemented");
@@ -94,7 +95,7 @@ class MockPayload
     public void loadPayload()
         throws IOException, DataFormatException
     {
-        throw new IOException("Unimplemented");
+        throw new Error("Unimplemented");
     }
 
     public void recycle()
@@ -109,7 +110,7 @@ class MockPayload
 }
 
 public class CompositePayloadFactoryTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.
@@ -119,12 +120,6 @@ public class CompositePayloadFactoryTest
     public CompositePayloadFactoryTest(String name)
     {
         super(name);
-    }
-
-    protected void setUp()
-    {
-        BasicConfigurator.resetConfiguration();
-        BasicConfigurator.configure(new MockAppender());
     }
 
     public static Test suite()
@@ -147,7 +142,7 @@ public class CompositePayloadFactoryTest
     {
         CompositePayloadFactory factory = new CompositePayloadFactory();
 
-        Vector newV = factory.deepCopyPayloadVector(null);
+        List newV = factory.deepCopyPayloadList(null);
         assertNull("Returned copy is not null", newV);
     }
 
@@ -157,7 +152,7 @@ public class CompositePayloadFactoryTest
 
         CompositePayloadFactory factory = new CompositePayloadFactory();
 
-        Vector newV = factory.deepCopyPayloadVector(v);
+        List newV = factory.deepCopyPayloadList(v);
         assertNotNull("Returned copy is null", newV);
         assertEquals("Returned copy is not empty", 0, newV.size());
     }
@@ -170,8 +165,19 @@ public class CompositePayloadFactoryTest
 
         CompositePayloadFactory factory = new CompositePayloadFactory();
 
-        Vector newV = factory.deepCopyPayloadVector(v);
+        assertEquals("Bad number of log messages",
+                     0, getNumberOfMessages());
+
+        List newV = factory.deepCopyPayloadList(v);
         assertNull("Returned copy is not null", newV);
+
+        assertEquals("Bad number of log messages",
+                     1, getNumberOfMessages());
+        assertEquals("Unexpected log message",
+                     "Cannot deep-copy composite payload 1 of 2" +
+                     " (type 0, length 4)", getMessage(0));
+
+        clearMessages();
     }
 
     public void testDeepCopy()
@@ -182,7 +188,7 @@ public class CompositePayloadFactoryTest
 
         CompositePayloadFactory factory = new CompositePayloadFactory();
 
-        Vector newV = factory.deepCopyPayloadVector(v);
+        List newV = factory.deepCopyPayloadList(v);
         assertNotNull("Returned copy is null", newV);
         assertEquals("Returned copy has bad length", 2, newV.size());
 
@@ -200,6 +206,33 @@ public class CompositePayloadFactoryTest
         v.add((MockPayload) null);
 
         CompositePayloadFactory factory = new CompositePayloadFactory();
+        factory.recyclePayloads(v);
+
+        for (MockPayload pay : v) {
+            if (pay != null) {
+                assertTrue("Payload was not recycled", pay.isRecycled());
+            }
+        }
+    }
+
+    public void testDeepCopyArrayList()
+    {
+        ArrayList<MockPayload> v = new ArrayList<MockPayload>();
+        v.add(new MockPayload());
+        v.add(new MockPayload());
+        v.add((MockPayload) null);
+
+        CompositePayloadFactory factory = new CompositePayloadFactory();
+
+        List newV = factory.deepCopyPayloadList(v);
+        assertNotNull("Returned copy is null", newV);
+        assertEquals("Returned copy has bad length", 2, newV.size());
+
+        for (Iterator it = newV.iterator(); it.hasNext(); ) {
+            MockPayload pay = (MockPayload) it.next();
+            assertTrue("Payload was not copied", pay.isCopy());
+        }
+
         factory.recyclePayloads(v);
 
         for (MockPayload pay : v) {

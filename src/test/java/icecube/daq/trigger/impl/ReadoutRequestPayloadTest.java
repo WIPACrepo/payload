@@ -1,29 +1,25 @@
 package icecube.daq.trigger.impl;
 
 import icecube.daq.payload.PayloadRegistry;
-
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockReadoutRequest;
 import icecube.daq.payload.test.MockReadoutRequestElement;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
-
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
 
 import java.nio.ByteBuffer;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 public class ReadoutRequestPayloadTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.
@@ -72,7 +68,7 @@ public class ReadoutRequestPayloadTest
                      PayloadRegistry.PAYLOAD_ID_READOUT_REQUEST,
                      req.getPayloadType());
         assertEquals("Bad UTC time",
-                     utcTime, req.getPayloadTimeUTC().getUTCTimeAsLong());
+                     utcTime, req.getPayloadTimeUTC().longValue());
         assertEquals("Bad source ID", srcId, req.getSourceID().getSourceID());
         assertEquals("Bad UID", uid, req.getUID());
 
@@ -85,14 +81,14 @@ public class ReadoutRequestPayloadTest
                          (i == 0 ? type1 : type2), elem.getReadoutType());
             assertEquals("Bad element#" + i + " first time",
                          (i == 0 ? firstTime1 : firstTime2),
-                         elem.getFirstTimeUTC().getUTCTimeAsLong());
+                         elem.getFirstTimeUTC().longValue());
             assertEquals("Bad element#" + i + " last time",
                          (i == 0 ? lastTime1 : lastTime2),
-                         elem.getLastTimeUTC().getUTCTimeAsLong());
+                         elem.getLastTimeUTC().longValue());
             assertEquals("Bad element#" + i + " DOM ID",
                          (i == 0 ? domId1 : domId2),
                          (elem.getDomID() == null ? -1L :
-                          elem.getDomID().getDomIDAsLong()));
+                          elem.getDomID().longValue()));
             assertEquals("Bad element#" + i + " source ID",
                          (i == 0 ? srcId1 : srcId2),
                          (elem.getSourceID() == null ? -1 :
@@ -144,7 +140,7 @@ public class ReadoutRequestPayloadTest
                      PayloadRegistry.PAYLOAD_ID_READOUT_REQUEST,
                      req.getPayloadType());
         assertEquals("Bad UTC time",
-                     utcTime, req.getPayloadTimeUTC().getUTCTimeAsLong());
+                     utcTime, req.getPayloadTimeUTC().longValue());
         assertEquals("Bad source ID", srcId, req.getSourceID().getSourceID());
         assertEquals("Bad UID", uid, req.getUID());
 
@@ -157,27 +153,20 @@ public class ReadoutRequestPayloadTest
                          (i == 0 ? type1 : type2), elem.getReadoutType());
             assertEquals("Bad element#" + i + " first time",
                          (i == 0 ? firstTime1 : firstTime2),
-                         elem.getFirstTimeUTC().getUTCTimeAsLong());
+                         elem.getFirstTimeUTC().longValue());
             assertEquals("Bad element#" + i + " last time",
                          (i == 0 ? lastTime1 : lastTime2),
-                         elem.getLastTimeUTC().getUTCTimeAsLong());
+                         elem.getLastTimeUTC().longValue());
             assertEquals("Bad element#" + i + " DOM ID",
                          (i == 0 ? domId1 : domId2),
                          (elem.getDomID() == null ? -1L :
-                          elem.getDomID().getDomIDAsLong()));
+                          elem.getDomID().longValue()));
             assertEquals("Bad element#" + i + " source ID",
                          (i == 0 ? srcId1 : srcId2),
                          (elem.getSourceID() == null ? -1 :
                           elem.getSourceID().getSourceID()));
         }
 
-        try {
-            req.recycle();
-        } catch (ClassCastException cce) {
-            // XXX get rid of this
-            System.err.println("Ignoring implementation bug");
-            cce.printStackTrace();
-        }
         req.recycle();
     }
 

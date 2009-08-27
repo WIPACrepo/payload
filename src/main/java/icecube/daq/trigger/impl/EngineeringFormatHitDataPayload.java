@@ -1,28 +1,16 @@
 package icecube.daq.trigger.impl;
 
+import icecube.daq.payload.IPayloadDestination;
+import icecube.daq.payload.PayloadInterfaceRegistry;
+import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
+import icecube.daq.payload.splicer.Payload;
+import icecube.daq.trigger.IHitDataPayload;
+import icecube.daq.trigger.IHitDataRecord;
+import icecube.util.Poolable;
+
 import java.io.IOException;
 import java.util.zip.DataFormatException;
-import java.nio.ByteBuffer;
-
-import icecube.util.Poolable;
-import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
-import icecube.daq.payload.impl.PayloadEnvelope;
-import icecube.daq.payload.impl.UTCTime8B;
-import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadDestination;
-import icecube.daq.payload.PayloadRegistry;
-import icecube.daq.payload.PayloadInterfaceRegistry;
-import icecube.daq.payload.splicer.Payload;
-import icecube.daq.payload.IDOMID;
-import icecube.daq.trigger.IHitPayload;
-import icecube.daq.trigger.IHitDataRecord;
-import icecube.daq.trigger.impl.DOMID8B;
-import icecube.daq.trigger.impl.EngineeringFormatTriggerPayload;
-import icecube.daq.trigger.ITriggerPayload;
-import icecube.daq.trigger.IHitDataPayload;
-import icecube.daq.trigger.impl.EngineeringFormatHitPayload;
-import icecube.daq.splicer.Spliceable;
 
 /**
  * This object is the implementaion if IHitDataPayload which
@@ -46,9 +34,9 @@ public class EngineeringFormatHitDataPayload extends EngineeringFormatHitPayload
     }
 
     /**
-     * Get's access to the underlying data for an engineering hit
+     * Get access to the underlying data for an engineering hit
      */
-    public IHitDataRecord getHitRecord() throws IOException, DataFormatException {
+    public IHitDataRecord getHitRecord() throws DataFormatException {
         //-This will load everything including the engineering record.
         loadPayload();
         //-extract the DomHitEngineeringFormatRecord from the parent EngineeringFormatTriggerPayload class
@@ -56,57 +44,35 @@ public class EngineeringFormatHitDataPayload extends EngineeringFormatHitPayload
         return (IHitDataRecord) tRecord;
     }
 
-    //--[Poolable]-----
-
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new EngineeringFormatHitDataPayload();
+        return new EngineeringFormatHitDataPayload();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
-        //-for new just create a new EventPayload
-		Payload tPayload = (Payload) getFromPool();
+        Payload tPayload = (Payload) getFromPool();
         tPayload.mtParentPayloadFactory = mtParentPayloadFactory;
-        return (Poolable) tPayload;
+        return tPayload;
     }
 
-    /**
-     * Returns an instance of this object so that it can be
-     * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
-     */
-    public void recycle() {
-		//-since this class (at this level of inheritance does not need to recycle anything)
-		//-THIS MUST BE CALLED LAST!!
-		super.recycle();
-    }
-    /**
-     * Object is able to dispose of itself.
-     * This means it is able to return itself to the pool from
-     * which it came.
-     */
-    public void dispose() {
-		//-nothing to dispose at this level so move to the next level of inheritance.
-        super.dispose();
-    }
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param tDestination ...... PayloadDestination to which to write the payload
-     * @return int .............. the length in bytes which was written to the destination.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the destination.
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[EngineeringFormatHitDataPayload]=>").indent();
         iBytesWritten = super.writePayload(bWriteLoaded, tDestination);

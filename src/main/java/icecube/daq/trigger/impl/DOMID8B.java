@@ -10,13 +10,10 @@ import icecube.util.Poolable;
  * NOTE: This class is probably not needed except as a placeholder
  *       class for the primitive domid.
  */
-public class DOMID8B extends Poolable implements IDOMID {
+public class DOMID8B implements IDOMID, Poolable {
 
     private long ml_DomID;
-    private String ms_DomID = null;
-    //-can probably get rid of the initial internal long since this is
-    // sufficient to produce both the hash code and hold the long.
-    private Long mtDomID = null;
+    private String ms_DomID;
     /**
      * Simple constructor fo pooling.
      */
@@ -31,48 +28,30 @@ public class DOMID8B extends Poolable implements IDOMID {
      */
     public void initialize(long ldomid) {
         ml_DomID = ldomid;
-        mtDomID = new Long(ldomid);
-        getDomIDAsString();
     }
     /**
      * Constructor to populate the domid.
      */
     public DOMID8B(long ldomid) {
-        ml_DomID = ldomid;
-        mtDomID = new Long(ml_DomID);
-        getDomIDAsString();
+        initialize(ldomid);
     }
     /**
-     * Get's the DOMID as a long
+     * Get the DOMID as a long
      */
-    public long getDomIDAsLong() {
+    public long longValue() {
         return ml_DomID;
     }
     /**
-     * Convert the domId to hex string
-     * @return 12-character hex string representing the DOM ID.
-     */
-    public String getDomIDAsString() {
-        if (ms_DomID == null) {
-            String hexId = Long.toHexString(this.ml_DomID);
-            while (hexId.length() < 12) {
-                hexId = "0" + hexId;
-            }
-            ms_DomID = hexId;
-        }
-        return ms_DomID;
-    }
-    /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new DOMID8B();
+        return new DOMID8B();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -81,10 +60,9 @@ public class DOMID8B extends Poolable implements IDOMID {
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
     /**
      * Object is able to dispose of itself.
@@ -103,21 +81,14 @@ public class DOMID8B extends Poolable implements IDOMID {
      * domid long value will always hash to the same code.
      */
     public int hashCode() {
-        return mtDomID.hashCode();
-    }
-    /**
-     * this compares the internal representation of the domid and will
-     * compare if the domid's are equal, not the actual object.
-     */
-    public boolean isEquals(Object obj) {
-        return (((DOMID8B) obj).getDomIDAsLong() == ml_DomID);
+        return (int) (ml_DomID % (long) Integer.MAX_VALUE);
     }
     /**
      * this compares the internal representation of the domid and will
      * compare if the domid's are equal, not the actual object.
      */
     public boolean equals(Object obj) {
-        return isEquals(obj);
+        return (((IDOMID) obj).longValue() == ml_DomID);
     }
 
     /**
@@ -128,5 +99,16 @@ public class DOMID8B extends Poolable implements IDOMID {
         DOMID8B tCopy = (DOMID8B) getPoolable();
         tCopy.initialize(ml_DomID);
         return tCopy;
+    }
+
+    /**
+     * Return string representation.
+     *
+     * @return DOM ID string
+     */
+    public String toString()
+    {
+        if (ms_DomID == null) ms_DomID = String.format("%012x", ml_DomID);
+        return ms_DomID;
     }
 }

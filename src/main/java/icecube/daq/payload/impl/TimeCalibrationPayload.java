@@ -1,7 +1,7 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.PayloadDestination;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.splicer.Payload;
 import icecube.daq.trigger.impl.DOMID8B;
@@ -66,8 +66,8 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      * Internal format for actual Time Calibration Record if the payload
      * is completely loaded.
      */
-    private TimeCalibrationRecord mtTimeCalRecord = null;
-    private GpsRecord mtGpsRecord = null;
+    private TimeCalibrationRecord mtTimeCalRecord;
+    private GpsRecord mtGpsRecord;
 
 
     public static final ByteOrder DOM_TCAL_REC_BYTEORDER = ByteOrder.LITTLE_ENDIAN;
@@ -76,8 +76,8 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
     //  with parsing out the header data which envelopes the engineering record
     public String msDomId;    //- DOM ID as a String
     public long   mlDomId;    //- DOM ID         (this is stored just past the PayloadEnvelope)
-    public IDOMID mtDOMID = null;
-    
+    public IDOMID mtDOMID;
+
     //-- Spliceable payload (header data)
     //.
 
@@ -103,12 +103,12 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
     /**
      * This method allows an object to be reinitialized to a new backing buffer
      * and position within that buffer.
-     * @param iOffset ...int representing the initial position of the object
+     * @param iOffset int representing the initial position of the object
      *                   within the ByteBuffer backing.
-     * @param tBackingBuffer ...ByteBuffer the backing buffer for this object.
+     * @param tBackingBuffer the backing buffer for this object.
      */
     public void initialize(int iOffset, ByteBuffer tBackingBuffer) {
-        //-Make sure that this object is ready to recieve new information
+        //-Make sure that this object is ready to receive new information
         // dispose();
         super.mioffset = iOffset;
         super.mtbuffer = tBackingBuffer;
@@ -126,11 +126,13 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      * @param lUTCTime      - long, representing the utctime that has been computed to be appropriate for this Payload.
      * @param iPayloadStartOffset - int, the offset in the passed ByteBuffer of the beginning of the Payload.
      * @param tPayloadBuffer - ByteBuffer, the buffer into which the values are to be written.
-     * 
+     *
      */
-    public static void writePayloadEnvelopeAndID(IDOMID tDomId, long lUTCTime, int iPayloadStartOffset, ByteBuffer tPayloadBuffer)  throws IOException {
+    public static void writePayloadEnvelopeAndID(IDOMID tDomId, long lUTCTime, int iPayloadStartOffset, ByteBuffer tPayloadBuffer) {
         ByteOrder tSaveOrder = tPayloadBuffer.order();
-        tPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         //-get and envelope from the pool
         PayloadEnvelope tEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
         //-initiliaze it with the passed in parameters
@@ -138,8 +140,10 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
         //-write the envelope to the correct position in the assigned bufffer.
         tEnvelope.writeData(iPayloadStartOffset, tPayloadBuffer);
         //-write the domid to the correct position (BIG_ENDIAN)
-        tPayloadBuffer.putLong( (iPayloadStartOffset + OFFSET_DOMID), tDomId.getDomIDAsLong() );
-        tPayloadBuffer.order(tSaveOrder);
+        tPayloadBuffer.putLong( (iPayloadStartOffset + OFFSET_DOMID), tDomId.longValue() );
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tPayloadBuffer.order(tSaveOrder);
+        }
     }
 
     /**
@@ -176,7 +180,7 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
-    public void loadPayload()  throws IOException, DataFormatException {
+    public void loadPayload() throws DataFormatException {
         //-Payload Envelope
         loadEnvelope();
         //-Domid
@@ -191,10 +195,10 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      * Loads the domid from the position just after the PayloadEnvelope
      * and before the TimeCalibrationRecord.
      */
-    protected void loadGpsRecord()  throws IOException, DataFormatException {
+    protected void loadGpsRecord() throws DataFormatException {
         if (!super.mbPayloadCreated ) {
             if (mtGpsRecord == null) {
-                mtGpsRecord = new GpsRecord(mioffset + OFFSET_DOMHUB_SYNCGPS_RECORD , mtbuffer);  
+                mtGpsRecord = new GpsRecord(mioffset + OFFSET_DOMHUB_SYNCGPS_RECORD , mtbuffer);
             }
         }
     }
@@ -202,26 +206,28 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      * Loads the domid from the position just after the PayloadEnvelope
      * and before the TimeCalibrationRecord.
      */
-    protected void loadDomId()  throws IOException, DataFormatException {
+    protected void loadDomId() throws DataFormatException {
         if (!super.mbPayloadCreated ) {
             mlDomId = mtbuffer.getLong(mioffset + OFFSET_DOMID);
             msDomId = domIdAsString(mlDomId);
-			mtDOMID = new DOMID8B(mlDomId);
+            mtDOMID = new DOMID8B(mlDomId);
         }
     }
 
     /**
      * Loads the portion of this payload in which the TimeCalibrationRecord
      * is stored.
-     * 
+     *
      */
-    protected void loadTimeCalibrationRecord()  throws IOException, DataFormatException {
+    protected void loadTimeCalibrationRecord() {
         if (!super.mbPayloadCreated ) {
             //-load the header data, (and anything else necessary for implementation
             // of Spliceable ie - needed for compareTo() ).
             ByteOrder tSaveOrder = mtbuffer.order();
             //-extract the original byte-order so it can later be restored.
-            mtbuffer.order(ByteOrder.LITTLE_ENDIAN);
+            if (tSaveOrder != ByteOrder.LITTLE_ENDIAN) {
+                mtbuffer.order(ByteOrder.LITTLE_ENDIAN);
+            }
             if (mtTimeCalRecord == null) {
                 mtTimeCalRecord = (TimeCalibrationRecord) TimeCalibrationRecord.getFromPool(); //getUseableRecord();
             } else {
@@ -231,7 +237,9 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
             }
             mtTimeCalRecord.loadData(mioffset+OFFSET_DOMHUB_TCAL_RECORD, mtbuffer);
             //-restore the byte order
-            mtbuffer.order(tSaveOrder);
+            if (tSaveOrder != ByteOrder.LITTLE_ENDIAN) {
+                mtbuffer.order(tSaveOrder);
+            }
         }
     }
     /**
@@ -239,7 +247,7 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      * it has already been loaded. This is meant for testing the ability
      * to read from the backing buffer after it has been shifted.
      */
-    public void reloadPayload()  throws IOException, DataFormatException {
+    public void reloadPayload() throws DataFormatException {
         super.mbPayloadCreated = false;
         loadPayload();
     }
@@ -247,53 +255,51 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
     //-Payload abstract method implementation (end)
 
     /**
-     * Get's the Payload length from a Backing buffer (ByteBuffer)
+     * Get the Payload length from a Backing buffer (ByteBuffer)
      * if possible, otherwise return -1.
-     * @param iOffset .....int which holds the position in the ByteBuffer
+     * @param iOffset int which holds the position in the ByteBuffer
      *                     to check for the Payload length.
-     * @param tBuffer .....ByteBuffer from which to extract the lenght of the payload
-     * @return int ........the lenght of the payload if it can be extracted, otherwise -1
+     * @param tBuffer ByteBuffer from which to extract the length of the payload
+     * @return the length of the payload if it can be extracted, otherwise -1
      *
-     * @exception IOException ...........is thrown if there is trouble reading the Payload length
-     * @exception DataFormatException ...is thrown if there is something wrong with the payload and the
+     * @exception DataFormatException if there is something wrong with the payload and the
      *                                   length cannot be read.
      */
-    public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws DataFormatException {
         //-TCAL's are fixed length.
         return SIZE_TOTAL;
     }
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new TimeCalibrationPayload();
+        return new TimeCalibrationPayload();
     }
 
     /**
      * Method to create instance from the object pool.
-     * @return Object .... this is an object which is ready for reuse.
+     * @return an object which is ready for reuse.
      */
     public Poolable getPoolable() {
-        return (Poolable) getFromPool();
+        return getFromPool();
     }
 
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
         if (mtTimeCalRecord != null) {
             mtTimeCalRecord.recycle();
-			mtTimeCalRecord = null;
+            mtTimeCalRecord = null;
         }
         if (mtGpsRecord != null) {
             mtGpsRecord = null;
         }
-		//-call this LAST!!!
-		super.recycle();
+        //-call this LAST!!!
+        super.recycle();
     }
 
     /**
@@ -312,10 +318,10 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -325,26 +331,26 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(PayloadDestination tDestination) throws IOException {
+    public int writePayload(IPayloadDestination tDestination) throws IOException {
         return writePayload(false, tDestination);
     }
 
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param tDestination ...... PayloadDestination to which to write the payload
-     * @return int .............. the length in bytes which was written to the destination.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the destination.
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = 0;
         //-delimit the beginning of the record
         if (tDestination.doLabel()) tDestination.label("[TimeCalibrationPayload] {").indent();
@@ -365,8 +371,8 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
                 //-write out domid
                 tDestination.writeLong(DOMID, mlDomId);
                 //-write out the contents of the TimeCalibrationRecord
-                mtTimeCalRecord.writeData(tDestination); 
-                //-write out the contents of the GpsRecord 
+                mtTimeCalRecord.writeData(tDestination);
+                //-write out the contents of the GpsRecord
                 //-delimit the TimeCalibrationRecord
                 if (tDestination.doLabel()) tDestination.label("[GpsRecord] {").indent();
                 //mtGpsRecord.writeData(tDestination); //-off for now don't have all the original data.
@@ -389,24 +395,24 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
 
 
 
-	//-TimeCalibRecord implementation start
+    //-TimeCalibRecord implementation start
 
     /**
      *
      * @return the transmit DOM timestamp
      */
     public long getDomTXTime() {
-		return mtTimeCalRecord.getDomTXTime();
-	}
+        return mtTimeCalRecord.getDomTXTime();
+    }
 
     /**
      *
-     * @return the recieve DOM timestamp
+     * @return the receive DOM timestamp
      */
 
     public long getDomRXTime() {
-		return mtTimeCalRecord.getDomRXTime();
-	}
+        return mtTimeCalRecord.getDomRXTime();
+    }
 
     /**
      *
@@ -414,8 +420,8 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      */
 
     public long getDorTXTime() {
-		return mtTimeCalRecord.getDorTXTime();
-	}
+        return mtTimeCalRecord.getDorTXTime();
+    }
 
     /**
      *
@@ -423,8 +429,8 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      */
 
     public long getDorRXTime() {
-		return mtTimeCalRecord.getDorRXTime();
-	}
+        return mtTimeCalRecord.getDorRXTime();
+    }
 
     /**
      *
@@ -432,8 +438,8 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      */
 
     public int[] getDomWaveform() {
-		return mtTimeCalRecord.getDomWaveform();
-	}
+        return mtTimeCalRecord.getDomWaveform();
+    }
 
     /**
      *
@@ -441,8 +447,8 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      */
 
     public int[] getDorWaveform() {
-		return mtTimeCalRecord.getDorWaveform();
-	}
+        return mtTimeCalRecord.getDorWaveform();
+    }
 
     /**
      *
@@ -450,34 +456,32 @@ public class TimeCalibrationPayload extends Payload implements TimeCalibRecord {
      */
 
     public String getDomId() {
-		return msDomId;
-	}
+        return msDomId;
+    }
 
     /**
      *
      * @return  the count of seconds represented by the GPS UTC string
      */
     public int getGpsSeconds() {
-		return mtGpsRecord.getGpsSeconds();
-	}
+        return mtGpsRecord.getGpsSeconds();
+    }
 
     /**
      *
      * @return byte indicating the quality of the 1 PPS signal from GPS
      */
     public byte getGpsQualityByte() {
-		return mtGpsRecord.getGpsQualityByte();
-	}
+        return mtGpsRecord.getGpsQualityByte();
+    }
 
     /**
      *
      * @return the Dor count at the PGS time string - 1 count = 50 ns
      */
     public long getDorGpsSyncTime() {
-		return mtGpsRecord.getDorGpsSyncTime();
-	}
+        return mtGpsRecord.getDorGpsSyncTime();
+    }
 
-	//-TimeCalibRecord implementation end
+    //-TimeCalibRecord implementation end
 }
-
-

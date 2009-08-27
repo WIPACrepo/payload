@@ -6,7 +6,7 @@ package icecube.daq.payload;
  * associated with the Payload Record types and their human readable names
  *
  * @author dwharton
- * 
+ *
  * ====================================================================
  */
 public final class RecordTypeRegistry {
@@ -19,5 +19,7 @@ public final class RecordTypeRegistry {
     public static final int RECORD_TYPE_EVENT_V2                  = 7;
     public static final int RECORD_TYPE_DELTA_COMPRESSED_DATA     = 8;
     public static final int RECORD_TYPE_DELTA_COMPRESSED_HIT      = 9;
-    public static final int LAST_VALID_RECORD_TYPE = RECORD_TYPE_DELTA_COMPRESSED_HIT;
+    public static final int RECORD_TYPE_EVENT_V3                  = 10;
+    public static final int RECORD_TYPE_EVENT_V4                  = 11;
+    public static final int LAST_VALID_RECORD_TYPE = RECORD_TYPE_EVENT_V4;
 }

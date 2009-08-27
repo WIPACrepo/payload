@@ -1,29 +1,25 @@
 package icecube.daq.eventbuilder.impl;
 
 import icecube.daq.payload.PayloadRegistry;
-
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockHit;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
-
 import icecube.daq.trigger.IHitPayload;
 
 import java.nio.ByteBuffer;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 public class ReadoutDataPayloadTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.
@@ -79,14 +75,14 @@ public class ReadoutDataPayloadTest
                      PayloadRegistry.PAYLOAD_ID_READOUT_DATA,
                      rdp.getPayloadType());
         assertEquals("Bad payload UTC time",
-                     firstTime, rdp.getPayloadTimeUTC().getUTCTimeAsLong());
+                     firstTime, rdp.getPayloadTimeUTC().longValue());
         assertEquals("Bad trigger type", -1, rdp.getTriggerType());
         assertEquals("Bad config ID", -1, rdp.getTriggerConfigID());
         assertEquals("Bad source ID", srcId, rdp.getSourceID().getSourceID());
         assertEquals("Bad first UTC time",
-                     firstTime, rdp.getFirstTimeUTC().getUTCTimeAsLong());
+                     firstTime, rdp.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
-                     lastTime, rdp.getLastTimeUTC().getUTCTimeAsLong());
+                     lastTime, rdp.getLastTimeUTC().longValue());
         assertEquals("Bad UID", uid, rdp.getUID());
         assertEquals("Bad request UID", uid, rdp.getRequestUID());
         assertEquals("Bad payload number",
@@ -103,12 +99,12 @@ public class ReadoutDataPayloadTest
             IHitPayload hit = (IHitPayload) rdpHits.get(i);
 
             assertEquals("Bad hit time", (i == 0 ? hitTime1 : hitTime2),
-                         hit.getHitTimeUTC().getUTCTimeAsLong());
+                         hit.getHitTimeUTC().longValue());
             assertEquals("Bad hit type", (i == 0 ? hitType1 : hitType2),
                          hit.getTriggerType());
             assertEquals("Bad hit DOM ID", (i == 0 ? hitDomId1 : hitDomId2),
                          (hit.getDOMID() == null ? -1L :
-                          hit.getDOMID().getDomIDAsLong()));
+                          hit.getDOMID().longValue()));
             assertEquals("Bad hit source ID", (i == 0 ? hitSrcId1 : hitSrcId2),
                          (hit.getSourceID() == null ? -1 :
                           hit.getSourceID().getSourceID()));
@@ -165,14 +161,14 @@ public class ReadoutDataPayloadTest
                      PayloadRegistry.PAYLOAD_ID_READOUT_DATA,
                      rdp.getPayloadType());
         assertEquals("Bad payload UTC time",
-                     firstTime, rdp.getPayloadTimeUTC().getUTCTimeAsLong());
+                     firstTime, rdp.getPayloadTimeUTC().longValue());
         assertEquals("Bad trigger type", -1, rdp.getTriggerType());
         assertEquals("Bad config ID", -1, rdp.getTriggerConfigID());
         assertEquals("Bad source ID", srcId, rdp.getSourceID().getSourceID());
         assertEquals("Bad first UTC time",
-                     firstTime, rdp.getFirstTimeUTC().getUTCTimeAsLong());
+                     firstTime, rdp.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
-                     lastTime, rdp.getLastTimeUTC().getUTCTimeAsLong());
+                     lastTime, rdp.getLastTimeUTC().longValue());
         assertEquals("Bad UID", uid, rdp.getUID());
         assertEquals("Bad request UID", uid, rdp.getRequestUID());
         assertEquals("Bad payload number",
@@ -189,12 +185,12 @@ public class ReadoutDataPayloadTest
             IHitPayload hit = (IHitPayload) rdpHits.get(i);
 
             assertEquals("Bad hit time", (i == 0 ? hitTime1 : hitTime2),
-                         hit.getHitTimeUTC().getUTCTimeAsLong());
+                         hit.getHitTimeUTC().longValue());
             assertEquals("Bad hit type", (i == 0 ? hitType1 : hitType2),
                          hit.getTriggerType());
             assertEquals("Bad hit DOM ID", (i == 0 ? hitDomId1 : hitDomId2),
                          (hit.getDOMID() == null ? -1L :
-                          hit.getDOMID().getDomIDAsLong()));
+                          hit.getDOMID().longValue()));
             assertEquals("Bad hit source ID", (i == 0 ? hitSrcId1 : hitSrcId2),
                          (hit.getSourceID() == null ? -1 :
                           hit.getSourceID().getSourceID()));

@@ -1,6 +1,5 @@
 package icecube.daq.payload;
 
-import icecube.daq.payload.PayloadDestination;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -17,16 +16,16 @@ public interface IWriteablePayloadRecord extends IPayloadRecord {
 
     /**
      * Method to write this record to the payload destination.
-     * @param tDestination ....PayloadDestination to which to write this record.
-     * @return int the number of bytes written to this destination.
+     * @param tDestination PayloadDestination to which to write this record.
+     * @return the number of bytes written to this destination.
      */
-    int writeData(PayloadDestination tDestination) throws IOException;
+    int writeData(IPayloadDestination tDestination) throws IOException;
 
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset ....the offset at which to start writing the object.
-     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
-     * @return int the number of bytes written to this destination.
+     * @param iOffset the offset at which to start writing the object.
+     * @param tBuffer the ByteBuffer into which to write this payload-record.
+     * @return the number of bytes written to this destination.
      */
     int writeData(int iOffset, ByteBuffer tBuffer) throws IOException;
 }

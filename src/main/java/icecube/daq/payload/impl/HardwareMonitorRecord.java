@@ -1,14 +1,10 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IPayloadDestination;
+import icecube.util.Poolable;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.zip.DataFormatException;
-
-import icecube.daq.payload.IPayloadRecord;
-import icecube.daq.payload.PayloadDestination;
-import icecube.daq.payload.impl.MonitorRecord;
-import icecube.util.Poolable;
 
 /**
  * This Object is a container for the Hardware State Event Monitor record.
@@ -16,14 +12,14 @@ import icecube.util.Poolable;
  */
  public class HardwareMonitorRecord extends MonitorRecord {
 
-    public boolean mbHardwareRecLoaded = false;
+    public boolean mbHardwareRecLoaded;
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new HardwareMonitorRecord();
+        return new HardwareMonitorRecord();
     }
 
     /**
@@ -139,13 +135,10 @@ import icecube.util.Poolable;
 
     /**
      * This method is designed to be overridden by derived classes whic load more than just header data.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      */
-    protected void loadExtendedData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    protected void loadExtendedData(int iRecordOffset, ByteBuffer tBuffer) {
 
         //-set to false just in case there are some errors.
         mbHardwareRecLoaded = false;
@@ -191,14 +184,10 @@ import icecube.util.Poolable;
     /**
      * Static method to return the record-format so the appropriate object reader can be bound.
      * NOTE: This would be assumed to be a version of the HardwareMonitorRecord.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
-     *
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      */
-    public static byte readRecordVersion(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public static byte readRecordVersion(int iRecordOffset, ByteBuffer tBuffer) {
         return tBuffer.get(iRecordOffset + OFFSET_StateEventVersion );
     }
     /**
@@ -207,17 +196,17 @@ import icecube.util.Poolable;
      */
     public void dispose() {
         mbHardwareRecLoaded = false;
-		//-call this LAST!!
+        //-call this LAST!!
         super.dispose();
     }
 
-      
+
     /**
      * This method writes this IPayloadRecord to the PayloadDestination.
      *
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was writtern.
-     * 
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was writtern.
+     *
      * NOTE: Since IPayloadRecords do not have a ByteBuffer backing they have no choice
      *       but to write from their internal values.  This is generally only used for
      *       StringFilePayloadDesitinations and the like for documentation purposes because
@@ -225,40 +214,40 @@ import icecube.util.Poolable;
      *
      * @throws IOException if an erroroccurs during the process
      */
-    public int writeRecord(PayloadDestination tDestination) throws IOException {
+    public int writeRecord(IPayloadDestination tDestination) throws IOException {
         int iBytes = 0;
         iBytes += super.writeRecord(tDestination);
         if (tDestination.doLabel()) tDestination.label("[HardwareMonitorRecord] {").indent();
         iBytes += 1; tDestination.writeByte( LABEL_StateEventVersion  , mbyStateEventVersion);
-        iBytes += 2; tDestination.writeShort( LABEL_ADC_VOLTAGE_SUM            , msiADC_VOLTAGE_SUM);          
-        iBytes += 2; tDestination.writeShort( LABEL_ADC_5V_POWER_SUPPLY        , msiADC_5V_POWER_SUPPLY);      
-        iBytes += 2; tDestination.writeShort( LABEL_ADC_PRESSURE               , msiADC_PRESSURE);             
-        iBytes += 2; tDestination.writeShort( LABEL_ADC_5V_CURRENT             , msiADC_5V_CURRENT);           
-        iBytes += 2; tDestination.writeShort( LABEL_ADC_3_3V_CURRENT           , msiADC_3_3V_CURRENT);         
-        iBytes += 2; tDestination.writeShort( LABEL_ADC_2_5V_CURRENT           , msiADC_2_5V_CURRENT);         
-        iBytes += 2; tDestination.writeShort( LABEL_ADC_1_8V_CURRENT           , msiADC_1_8V_CURRENT);         
-        iBytes += 2; tDestination.writeShort( LABEL_ADC_MINUS_5V_CURRENT       , msiADC_MINUS_5V_CURRENT);     
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_ATWD0_TRIGGER_BIAS     , msiDAC_ATWD0_TRIGGER_BIAS);   
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_ATWD0_RAMP_TOP         , msiDAC_ATWD0_RAMP_TOP);       
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_ATWD0_RAMP_RATE        , msiDAC_ATWD0_RAMP_RATE);      
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_ATWD_ANALOG_REF        , msiDAC_ATWD_ANALOG_REF);      
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_ATWD1_TRIGGER_BIAS     , msiDAC_ATWD1_TRIGGER_BIAS);   
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_ATWD1_RAMP_TOP         , msiDAC_ATWD1_RAMP_TOP);       
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_ATWD1_RAMP_RATE        , msiDAC_ATWD1_RAMP_RATE);      
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_PMT_FE_PEDESTAL        , msiDAC_PMT_FE_PEDESTAL);      
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_MULTIPLE_SPE_THRESH    , msiDAC_MULTIPLE_SPE_THRESH);  
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_SINGLE_SPE_THRESH      , msiDAC_SINGLE_SPE_THRESH);    
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_LED_BRIGHTNESS         , msiDAC_LED_BRIGHTNESS);       
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_FAST_ADC_REF           , msiDAC_FAST_ADC_REF);         
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_INTERNAL_PULSER        , msiDAC_INTERNAL_PULSER);      
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_FE_AMP_LOWER_CLAMP     , msiDAC_FE_AMP_LOWER_CLAMP);   
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_FL_REF                 , msiDAC_FL_REF);               
-        iBytes += 2; tDestination.writeShort( LABEL_DAC_MUX_BIAS               , msiDAC_MUX_BIAS);             
-        iBytes += 2; tDestination.writeShort( LABEL_PMT_base_HV_set_value      , msiPMT_base_HV_set_value);    
+        iBytes += 2; tDestination.writeShort( LABEL_ADC_VOLTAGE_SUM            , msiADC_VOLTAGE_SUM);
+        iBytes += 2; tDestination.writeShort( LABEL_ADC_5V_POWER_SUPPLY        , msiADC_5V_POWER_SUPPLY);
+        iBytes += 2; tDestination.writeShort( LABEL_ADC_PRESSURE               , msiADC_PRESSURE);
+        iBytes += 2; tDestination.writeShort( LABEL_ADC_5V_CURRENT             , msiADC_5V_CURRENT);
+        iBytes += 2; tDestination.writeShort( LABEL_ADC_3_3V_CURRENT           , msiADC_3_3V_CURRENT);
+        iBytes += 2; tDestination.writeShort( LABEL_ADC_2_5V_CURRENT           , msiADC_2_5V_CURRENT);
+        iBytes += 2; tDestination.writeShort( LABEL_ADC_1_8V_CURRENT           , msiADC_1_8V_CURRENT);
+        iBytes += 2; tDestination.writeShort( LABEL_ADC_MINUS_5V_CURRENT       , msiADC_MINUS_5V_CURRENT);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_ATWD0_TRIGGER_BIAS     , msiDAC_ATWD0_TRIGGER_BIAS);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_ATWD0_RAMP_TOP         , msiDAC_ATWD0_RAMP_TOP);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_ATWD0_RAMP_RATE        , msiDAC_ATWD0_RAMP_RATE);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_ATWD_ANALOG_REF        , msiDAC_ATWD_ANALOG_REF);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_ATWD1_TRIGGER_BIAS     , msiDAC_ATWD1_TRIGGER_BIAS);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_ATWD1_RAMP_TOP         , msiDAC_ATWD1_RAMP_TOP);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_ATWD1_RAMP_RATE        , msiDAC_ATWD1_RAMP_RATE);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_PMT_FE_PEDESTAL        , msiDAC_PMT_FE_PEDESTAL);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_MULTIPLE_SPE_THRESH    , msiDAC_MULTIPLE_SPE_THRESH);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_SINGLE_SPE_THRESH      , msiDAC_SINGLE_SPE_THRESH);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_LED_BRIGHTNESS         , msiDAC_LED_BRIGHTNESS);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_FAST_ADC_REF           , msiDAC_FAST_ADC_REF);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_INTERNAL_PULSER        , msiDAC_INTERNAL_PULSER);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_FE_AMP_LOWER_CLAMP     , msiDAC_FE_AMP_LOWER_CLAMP);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_FL_REF                 , msiDAC_FL_REF);
+        iBytes += 2; tDestination.writeShort( LABEL_DAC_MUX_BIAS               , msiDAC_MUX_BIAS);
+        iBytes += 2; tDestination.writeShort( LABEL_PMT_base_HV_set_value      , msiPMT_base_HV_set_value);
         iBytes += 2; tDestination.writeShort( LABEL_PMT_base_HV_monitor_value  , msiPMT_base_HV_monitor_value);
-        iBytes += 2; tDestination.writeShort( LABEL_DOM_MB_Temperature         , msiDOM_MB_Temperature);       
-        iBytes += 4; tDestination.writeInt(  LABEL_SPE_Scaler                 , miSPE_Scaler);                 
-        iBytes += 4; tDestination.writeInt(  LABEL_MPE_Scaler                 , miMPE_Scaler);                 
+        iBytes += 2; tDestination.writeShort( LABEL_DOM_MB_Temperature         , msiDOM_MB_Temperature);
+        iBytes += 4; tDestination.writeInt(  LABEL_SPE_Scaler                 , miSPE_Scaler);
+        iBytes += 4; tDestination.writeInt(  LABEL_MPE_Scaler                 , miMPE_Scaler);
         if (tDestination.doLabel()) tDestination.undent().label("} [HardwareMonitorRecord]");
         return iBytes;
     }

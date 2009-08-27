@@ -1,7 +1,7 @@
 /*
  * class: IDOMID
  *
- * Version $Id: IDOMID.java,v 1.3 2005/10/07 22:35:45 dwharton Exp $
+ * Version $Id: IDOMID.java 2656 2008-02-15 23:20:07Z dglo $
  *
  * Date: September 18 2004
  *
@@ -9,25 +9,19 @@
  */
 
 package icecube.daq.payload;
+
 import icecube.util.ICopyable;
 
 /**
  * Encoding the DOM ID as an interface
  *
- * @version $Id: IDOMID.java,v 1.3 2005/10/07 22:35:45 dwharton Exp $
+ * @version $Id: IDOMID.java 2656 2008-02-15 23:20:07Z dglo $
  * @author hellwig,dwharton
  * dwharton: added descriptions and moved package.
  */
 public interface IDOMID extends ICopyable {
     /**
-     * Get's the DOMID as a long
+     * Get the DOMID as a long
      */
-    public long getDomIDAsLong();
-
-    /**
-     * Convert the domId to hex string
-     * @return 12-character hex string representing the DOM ID.
-     */
-    public String getDomIDAsString();
-
+    long longValue();
 }

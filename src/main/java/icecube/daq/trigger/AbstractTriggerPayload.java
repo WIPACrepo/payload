@@ -1,12 +1,12 @@
 package icecube.daq.trigger;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-
-import icecube.daq.payload.PayloadDestination;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.impl.PayloadEnvelope;
 import icecube.daq.payload.splicer.Payload;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
  * This class is an abstract implementation of ITriggerPayload
@@ -44,10 +44,10 @@ public abstract class AbstractTriggerPayload  extends Payload implements ITrigge
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param iOffset ........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tBuffer ........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param iOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -58,13 +58,12 @@ public abstract class AbstractTriggerPayload  extends Payload implements ITrigge
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(PayloadDestination tDestination) throws IOException {
+    public int writePayload(IPayloadDestination tDestination) throws IOException {
         return writePayload(false, tDestination);
     }
 }
-

@@ -1,23 +1,16 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IPayloadDestination;
+import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.payload.splicer.Payload;
+import icecube.daq.trigger.impl.DOMID8B;
+import icecube.util.Poolable;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadDestination;
-import icecube.daq.payload.PayloadRegistry;
-import icecube.daq.payload.impl.SuperNovaRecord;
-import icecube.daq.payload.impl.UTCTime8B;
-import icecube.daq.payload.splicer.Payload;
-import icecube.daq.splicer.Spliceable;
-import icecube.daq.trigger.impl.DOMID8B;
-import icecube.util.Poolable;
 
 /**
  * This object represents a SuperNova Payload.
@@ -26,7 +19,6 @@ import icecube.util.Poolable;
  *
  * NOTE: These objects can be pooled, so that they do not
  *       need to be created/garbage collected needlessly.
- * TODO: implement Poolable!
  *
  * @author Dan Wharton
  */
@@ -37,16 +29,13 @@ public class SuperNovaPayload extends Payload {
     public static int    OFFSET_SUPERNOVA_RECORD = OFFSET_DOMID                    + SIZE_DOMID;
     public static int    SIZE_FIXED_LENGTH_DATA  = PayloadEnvelope.SIZE_ENVELOPE   + SIZE_DOMID;
 
-    // set up logging channel for this component
-    private static Log mtLog = LogFactory.getLog(SuperNovaPayload.class);
-
     /**
      * Internal format for actual super-nova Record if the payload
      * is completely loaded. Depending on the type of Monitor Record
      * this can be one of several types.
      */
-    private SuperNovaRecord mtSuperNovaRecord = null;
-    IDOMID mtDomId = null;
+    private SuperNovaRecord mtSuperNovaRecord;
+    IDOMID mtDomId;
 
     //
     // Constructor
@@ -59,15 +48,19 @@ public class SuperNovaPayload extends Payload {
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
-    public void loadPayload() throws IOException, DataFormatException {
+    public void loadPayload() throws DataFormatException {
         loadSpliceablePayload();
         if (super.mtbuffer != null) {
             if (mtDomId == null) {
                 ByteOrder tSaveOrder = mtbuffer.order();
-                mtbuffer.order(ByteOrder.BIG_ENDIAN);
+                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                    mtbuffer.order(ByteOrder.BIG_ENDIAN);
+                }
                 long ldomid = mtbuffer.getLong(mioffset + OFFSET_DOMID);
                 mtDomId = new DOMID8B(ldomid);
-                mtbuffer.order(tSaveOrder);
+                if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+                    mtbuffer.order(tSaveOrder);
+                }
             }
             //-create the internal monitor record from the binary record.
             if (mtSuperNovaRecord == null ) {
@@ -92,7 +85,7 @@ public class SuperNovaPayload extends Payload {
      * @return MonitorRecord the contained monitor record.
      *         If this returns null then the sub-record type
      *         is not yet supported.
-     * 
+     *
      */
     public SuperNovaRecord getSuperNovaRecord() {
         return mtSuperNovaRecord;
@@ -100,32 +93,31 @@ public class SuperNovaPayload extends Payload {
 
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new SuperNovaPayload();
+        return new SuperNovaPayload();
     }
 
     /**
      * Method to create instance from the object pool.
-     * @return Object .... this is an object which is ready for reuse.
+     * @return an object which is ready for reuse.
      */
     public Poolable getPoolable() {
-        return (Poolable) getFromPool();
+        return getFromPool();
     }
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
         if (mtSuperNovaRecord != null) {
             mtSuperNovaRecord.recycle();
             mtSuperNovaRecord = null;
         }
-		//-this must be LAST!!
-		super.recycle();
+        //-this must be LAST!!
+        super.recycle();
     }
     /**
      * This method de-initializes this object in preparation for reuse.
@@ -136,7 +128,7 @@ public class SuperNovaPayload extends Payload {
             mtSuperNovaRecord.dispose();
             mtSuperNovaRecord = null;
         }
-		//-call this LAST!!!
+        //-call this LAST!!!
         super.dispose();
     }
     // (end)
@@ -144,10 +136,10 @@ public class SuperNovaPayload extends Payload {
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
-     * @param iDestOffset........int the offset into the destination ByteBuffer at which to start writting the payload
-     * @param tDestBuffer........ByteBuffer the destination ByteBuffer to write the payload to.
+     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param tDestBuffer the destination ByteBuffer to write the payload to.
      *
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
@@ -157,25 +149,25 @@ public class SuperNovaPayload extends Payload {
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param tDestination ......PayloadDestination to which to write the payload
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(PayloadDestination tDestination) throws IOException {
+    public int writePayload(IPayloadDestination tDestination) throws IOException {
         return writePayload(false, tDestination);
     }
     /**
      * This method writes this payload to the PayloadDestination.
      *
-     * @param bWriteLoaded ...... boolean: true to write loaded data (even if bytebuffer backing exists)
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
      *                                     false to write data normally (depending on backing)
-     * @param tDestination ...... PayloadDestination to which to write the payload
-     * @return int .............. the length in bytes which was written to the destination.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the destination.
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, PayloadDestination tDestination) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[SuperNovaPayload] {").indent();
         if (!bWriteLoaded) {
@@ -188,7 +180,7 @@ public class SuperNovaPayload extends Payload {
             }
             super.mt_PayloadEnvelope.writeData(tDestination);
             // long ldomid = mtbuffer.getLong(mioffset + OFFSET_DOMID);
-            tDestination.writeLong(NAME_DOMID, mtDomId.getDomIDAsLong());
+            tDestination.writeLong(NAME_DOMID, mtDomId.longValue());
             iBytesWritten += SIZE_DOMID;
             iBytesWritten += writeSuperNovaRecord(tDestination);
         }
@@ -202,13 +194,13 @@ public class SuperNovaPayload extends Payload {
      *                      type destinations because normally the byte-buffer backing will be used to write out
      *                      to destinations at a higher level.
      */
-    protected int writeSuperNovaRecord(PayloadDestination tDestination) throws IOException {
+    protected int writeSuperNovaRecord(IPayloadDestination tDestination) throws IOException {
         if (mtSuperNovaRecord != null) {
             return mtSuperNovaRecord.writeRecord(tDestination);
         } else {
             return 0;
         }
-    }                                                          
+    }
     /**
      * Writes out the PayloadEnvelope which is filled with the DOMID and IUTCTIME in the correct
      * position in the ByteBuffer. This method is used for constructing a SuperNovaPayload
@@ -219,11 +211,13 @@ public class SuperNovaPayload extends Payload {
      * @param lUTCTime      - long, representing the utctime that has been computed to be appropriate for this Payload.
      * @param iPayloadStartOffset - int, the offset in the passed ByteBuffer of the beginning of the Payload.
      * @param tPayloadBuffer - ByteBuffer, the buffer into which the values are to be written.
-     * 
+     *
      */
-    public static void writePayloadEnvelopeAndID(int iPayloadLength, IDOMID tDomId, long lUTCTime, int iPayloadStartOffset, ByteBuffer tPayloadBuffer)  throws IOException {
+    public static void writePayloadEnvelopeAndID(int iPayloadLength, IDOMID tDomId, long lUTCTime, int iPayloadStartOffset, ByteBuffer tPayloadBuffer) {
         ByteOrder tSaveOrder = tPayloadBuffer.order();
-        tPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         //-get and envelope from the pool
         PayloadEnvelope tEnvelope = (PayloadEnvelope) PayloadEnvelope.getFromPool();
         //-initiliaze it with the passed in parameters
@@ -231,20 +225,21 @@ public class SuperNovaPayload extends Payload {
         //-write the envelope to the correct position in the assigned bufffer.
         tEnvelope.writeData(iPayloadStartOffset, tPayloadBuffer);
         //-write the domid to the correct position (BIG_ENDIAN)
-        tPayloadBuffer.putLong( (iPayloadStartOffset + OFFSET_DOMID), tDomId.getDomIDAsLong() );
-        tPayloadBuffer.order( tSaveOrder );
+        tPayloadBuffer.putLong( (iPayloadStartOffset + OFFSET_DOMID), tDomId.longValue() );
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tPayloadBuffer.order( tSaveOrder );
+        }
     }
     /**
      * This static method provides access to the dom-clock
      * for a super-nova record, based on the offest of the
-     * begining of the raw record *not* the begining of the
+     * beginning of the raw record *not* the beginning of the
      * payload.
      */
-    public static long getRawDomClockValue(int iRawOffset, ByteBuffer tBuffer) throws IOException {
+    public static long getRawDomClockValue(int iRawOffset, ByteBuffer tBuffer) {
         long lDomClock = -1L;
         //-TODO: fill in the value
         lDomClock = SuperNovaRecord.readDomClock(iRawOffset,tBuffer);
         return lDomClock;
     }
 }
-

@@ -1,12 +1,10 @@
 package icecube.daq.payload.test;
 
+import icecube.daq.payload.IUTCTime;
 import icecube.util.Poolable;
 
-import icecube.daq.payload.IUTCTime;
-
 public class MockUTCTime
-    extends Poolable
-    implements IUTCTime
+    implements IUTCTime, Poolable
 {
     private long time;
 
@@ -15,9 +13,22 @@ public class MockUTCTime
         this.time = time;
     }
 
-    public int compareTo(Object x0)
+    public int compareTo(Object obj)
     {
-        throw new Error("Unimplemented");
+        if (obj == null) {
+            return 1;
+        } else if (!(obj instanceof IUTCTime)) {
+            return getClass().getName().compareTo(obj.getClass().getName());
+        }
+
+        final long val = ((IUTCTime) obj).longValue();
+        if (time < val) {
+            return -1;
+        } else if (time > val) {
+            return 1;
+        }
+
+        return 0;
     }
 
     public Object deepCopy()
@@ -35,24 +46,39 @@ public class MockUTCTime
         // do nothing
     }
 
-    public IUTCTime getOffsetUTCTime(double x0)
+    public boolean equals(Object obj)
     {
-        throw new Error("Unimplemented");
+        return compareTo(obj) == 0;
+    }
+
+    public IUTCTime getOffsetUTCTime(double nanoSec)
+    {
+        return new MockUTCTime(time + (long) (nanoSec * 10.0));
     }
 
     /**
-     * Gets an object form the pool in a non-static context.
+     * Get an object from the pool in a non-static context.
      *
      * @return object of this type from the object pool.
      */
     public Poolable getPoolable()
     {
-        return new MockSourceID(-1);
+        return new MockUTCTime(-1);
     }
 
-    public long getUTCTimeAsLong()
+    public long longValue()
     {
         return time;
+    }
+
+    public int hashCode()
+    {
+        final long modValue = Integer.MAX_VALUE / 256;
+
+        final long topTwo = time / modValue;
+
+        return (int) (topTwo / modValue) + (int) (topTwo % modValue) +
+            (int) (time % modValue);
     }
 
     /**
@@ -63,13 +89,18 @@ public class MockUTCTime
         // do nothing
     }
 
-    public long timeDiff(IUTCTime x0)
+    public long timeDiff(IUTCTime otherTime)
     {
         throw new Error("Unimplemented");
     }
 
-    public double timeDiff_ns(IUTCTime x0)
+    public double timeDiff_ns(IUTCTime otherTime)
     {
-        throw new Error("Unimplemented");
+        return (double) (time - otherTime.longValue());
+    }
+
+    public String toString()
+    {
+        return Long.toString(time);
     }
 }

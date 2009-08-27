@@ -1,15 +1,15 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IPayloadDestination;
+import icecube.daq.payload.IWriteablePayloadRecord;
+import icecube.daq.payload.RecordTypeRegistry;
+import icecube.daq.trigger.IHitDataRecord;
+import icecube.util.Poolable;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.zip.DataFormatException;
-
-import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.trigger.IHitDataRecord;
-import icecube.daq.payload.RecordTypeRegistry;
-import icecube.daq.payload.PayloadDestination;
-import icecube.util.Poolable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
  * is enveloped inside a Payload.
  * @author dwharton
  */
-public class DomHitEngineeringFormatRecord extends Poolable implements IWriteablePayloadRecord, IHitDataRecord {
+public class DomHitEngineeringFormatRecord implements IWriteablePayloadRecord, IHitDataRecord, Poolable {
 
     private static Log mtLog = LogFactory.getLog(DomHitEngineeringFormatRecord.class);
     public static final int NUM_ATWDFORMATS    = 4;
@@ -56,8 +56,8 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     /**
      * boolean indicating if data has been successfully loaded into this 'container'
      */
-    public boolean mbLoaded = false;
-    public boolean mbDomClockLoaded = false;
+    public boolean mbLoaded;
+    public boolean mbDomClockLoaded;
 
     //.
     //--EngineeringFormatPayload container variables (start)
@@ -84,7 +84,7 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     }
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mbLoaded;
@@ -103,16 +103,16 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     }
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new DomHitEngineeringFormatRecord();
+        return new DomHitEngineeringFormatRecord();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -121,10 +121,9 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
 
 
@@ -141,13 +140,12 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     /**
      * reads the engineering data from the Engineering Record from a DomHit
      * in TestDAQ format.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
-     * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         //-Set to false to start to start with just in case there is an error
         mbLoaded = false;
         //-Fill in the internal data
@@ -170,6 +168,7 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
         //-Parse the ATWDFormat's and initialize
         miaAFF[0] = (int) (tBuffer.get(iRecordOffset + OFFSET_AFFBYTE0) & 0xff);
         miaAFF[1] = (int) (tBuffer.get(iRecordOffset + OFFSET_AFFBYTE1) & 0xff);
+
         //-initialize ATWDFormat's
         mtaAtwdFormat[0].initialize( (miaAFF[0] & 0x0f) );
         mtaAtwdFormat[1].initialize( (miaAFF[0] >> 4)   );
@@ -207,12 +206,12 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
                     for (int ii = 0; ii < mtaAtwdFormat[ch].numSamples(); ii++) {
                         maiATWD[ch][ii] = tBuffer.getShort(iATWDSamplesPosition + (ii * 2));
                     }
-					iATWDSamplesPosition += mtaAtwdFormat[ch].numSamples() * 2; 
+                    iATWDSamplesPosition += mtaAtwdFormat[ch].numSamples() * 2;
                 } else {
                     for (int ii = 0; ii < mtaAtwdFormat[ch].numSamples(); ii++) {
                         maiATWD[ch][ii] = tBuffer.get( iATWDSamplesPosition + ii );
                     }
-					iATWDSamplesPosition += mtaAtwdFormat[ch].numSamples(); 
+                    iATWDSamplesPosition += mtaAtwdFormat[ch].numSamples();
                 }
             }
         }
@@ -228,13 +227,10 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     }
     /**
      * Pulls out the Trigger Mode if not already loaded
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      */
-    public static int getTriggerMode(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public static int getTriggerMode(int iRecordOffset, ByteBuffer tBuffer) {
         int iTrigMode = tBuffer.get(iRecordOffset + OFFSET_TRIGGERMODE);
         return iTrigMode;
     }
@@ -243,14 +239,13 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
      * Utility function to detect the correct ByteOrder based on the record format id, and set's
      * the correct ByteOrder for subsiquent reads of the ByteBuffer.
      *
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
-     * @return ByteOrder ...the correct ByteOrder for this buffer which is now set for subsiquent reads.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
+     * @return the correct ByteOrder for this buffer which is now set for subsiquent reads.
      *
-     * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    protected  ByteOrder setCorrectByteOrder(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    protected  ByteOrder setCorrectByteOrder(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         ByteOrder tCurrentOrder = tBuffer.order();
         ByteOrder tCorrectOrder = tCurrentOrder;
         miFormatID = tBuffer.getShort(iRecordOffset + OFFSET_FORMATID);
@@ -274,14 +269,13 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
      * Utility function to detect the correct ByteOrder based on the record format id, and set's
      * the correct ByteOrder for subsiquent reads of the ByteBuffer.
      *
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
-     * @return ByteOrder ...the correct ByteOrder for this buffer which is now set for subsiquent reads.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
+     * @return the correct ByteOrder for this buffer which is now set for subsiquent reads.
      *
-     * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    protected static ByteOrder getCorrectByteOrder(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    protected static ByteOrder getCorrectByteOrder(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         ByteOrder tCurrentOrder = tBuffer.order();
         ByteOrder tCorrectOrder = tCurrentOrder;
         int iFormatID = tBuffer.getShort(iRecordOffset + OFFSET_FORMATID);
@@ -303,13 +297,11 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     }
     /**
      * Method to quickly get the DomClockValue either from the cache or from the bytebuffer.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
-     * @return long ...representing the dom clock value.
-     *
-     * @exception IOException if errors are detected reading the record
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
+     * @return representing the dom clock value.
      */
-    public long getDomClockValue(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
+    public long getDomClockValue(int iRecordOffset, ByteBuffer tBuffer) {
         //-Check to see if DomClock has been loaded alread and used cached value if already loaded
         if (!mbDomClockLoaded) {
             mlDomClock = extractDomClockValue(iRecordOffset, tBuffer);
@@ -320,13 +312,12 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
 
     /**
      * This is a utility function to extract the value of the DomClock without creating an intermediate value.
-     * @param iRecordOffset ...int the offset from which to start loading the data for the engin. format rec.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
-     * @exception IOException if errors are detected reading the record
+     * @param iRecordOffset the offset from which to start loading the data for the engin. format rec.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
-     * @return long ...the value of the DomClock stored in a long
+     * @return the value of the DomClock stored in a long
      */
-    public static final long extractDomClockValue(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
+    public static final long extractDomClockValue(int iRecordOffset, ByteBuffer tBuffer) {
         long ldomClock = 0L;
         for (int ii = 0; ii < SIZE_DOMCLOCK; ii++) {
             ldomClock = (ldomClock << 8) | (tBuffer.get(iRecordOffset + OFFSET_DOMCLOCK + ii) & 0xffL);
@@ -335,24 +326,18 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     }
     /**
      * This is a utility function to extract the value of the record length without creating an intermediate value.
-     * @param iRecordOffset ...int the offset from which to start loading the data for the engin. format rec.
-     * @param tBuffer       ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data for the engin. format rec.
+     * @param tBuffer ByteBuffer from which to construct the record.
      * @exception IOException if errors are detected reading the record
      *
-     * @return int ... the record length.
+     * @return the record length.
      */
-    public static final int extractRecordLength(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
+    public static final int extractRecordLength(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         int iRecLen = 0;
         //-Determine the ByteOrder of this record by the formatid which should always
         // be read out as '1' if the correct ording has been used.
         ByteOrder tSaveOrder = tBuffer.order();
-        //-NOTE: The byte order is set by this call
-        ByteOrder tReadOrder = tSaveOrder;
-        try {
-            tReadOrder = DomHitEngineeringFormatRecord.getCorrectByteOrder(iRecordOffset, tBuffer);
-        } catch (DataFormatException tException) {
-            throw new IOException("DataFormatException caught in reading ByteOrder");
-        }
+        getCorrectByteOrder(iRecordOffset, tBuffer);
         //-Read in the data using the corrected byte order (if an exception hasn't been thrown
         //.
         //-Load the record length
@@ -364,7 +349,7 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     /**
      * Returns the type code used for the interpretation of this record so
      * that the object which is returned can be formatted/interpreted correctly.
-     * @return int ... the type of record, as identified by the RecordRegistry
+     * @return the type of record, as identified by the RecordRegistry
      */
     public int getRecordType() {
         return RecordTypeRegistry.RECORD_TYPE_DOMHIT_ENGINEERING_FORMAT;
@@ -373,7 +358,7 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
 
     /**
      * Returns the particular version of this record type.
-     * @return int ... the version of this record type.
+     * @return the version of this record type.
      */
     public int getVersion() {
         return miFormatID;
@@ -383,7 +368,7 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
     /**
      * Returns the record itself, generically as an object.
      *
-     * @return Object ... the record which contains the Hit data, which is interpretted by the above id's
+     * @return the record which contains the Hit data, which is interpretted by the above id's
      */
     public Object getRecord() {
         return this;
@@ -393,10 +378,10 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
 
     /**
      * Method to write this record to the payload destination.
-     * @param tDestination ....PayloadDestination to which to write this record.
-     * @return int the number of bytes written to this destination.
+     * @param tDestination PayloadDestination to which to write this record.
+     * @return the number of bytes written to this destination.
      */
-    public int writeData(PayloadDestination tDestination) throws IOException {
+    public int writeData(IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = 0;
         if (tDestination.doLabel()) tDestination.label("[DomHitEngineeringFormatRecord] {").indent();
         //-write the record length
@@ -485,12 +470,65 @@ public class DomHitEngineeringFormatRecord extends Poolable implements IWriteabl
 
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset ....the offset at which to start writing the object.
-     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
-     * @return int the number of bytes written to this destination.
+     * @param iOffset the offset at which to start writing the object.
+     * @param tBuffer the ByteBuffer into which to write this payload-record.
+     * @return the number of bytes written to this destination.
      */
-    public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
-        throw new IOException("this method is not implemented yet");
+    public int writeData(int iOffset, ByteBuffer tBuffer) {
+        throw new Error("this method is not implemented yet");
+    }
+
+    /**
+     * Get engineering format data string.
+     *
+     * @return data string
+     */
+    public String toDataString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append("chip ").append(miAtwdChip);
+        buf.append(" aff ").append(miaAFF[0]).append(',').append(miaAFF[1]);
+        buf.append(" trigMode ").append(miTrigMode);
+        buf.append(" fadc [");
+        for (int i = 0; i < maiFADC.length; i++) {
+            if (i > 0) {
+                buf.append(' ');
+            }
+
+            int val = ((int) maiFADC[i]) & 0xffff;
+            buf.append(Integer.toHexString(val));
+        }
+        buf.append(']');
+        buf.append(" atwd [");
+        for (int i = 0; i < maiATWD.length; i++) {
+            if (i > 0) {
+                buf.append(',');
+            }
+            buf.append('[');
+            if (maiATWD[i] != null) {
+                for (int j = 0; j < maiATWD[i].length; j++) {
+                    if (j > 0) {
+                        buf.append(' ');
+                    }
+
+                    int val = ((int) maiATWD[i][j]) & 0xffff;
+                    buf.append(Integer.toHexString(val));
+                }
+            }
+            buf.append(']');
+        }
+        buf.append(']');
+        return buf.toString();
+    }
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
+    public String toString()
+    {
+        return "DomHitEngineeringFormatRecord[" + toDataString() + "]";
     }
 }
 
@@ -502,7 +540,7 @@ class ATWDFormat {
 
     public boolean mbShortWords;
     int miWsel;
-    static int maiStab[] = { 0, 32, 64, 16, 128 };
+    static int[] maiStab = { 0, 32, 64, 16, 128 };
 
     /**
      * initial creation of object format
@@ -529,5 +567,4 @@ class ATWDFormat {
     }
 
     public int numSamples() { return maiStab[miWsel]; }
-
 }

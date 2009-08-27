@@ -1,5 +1,6 @@
 package icecube.daq.trigger.impl;
 
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDOMID;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockSourceID;
@@ -10,13 +11,11 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 public class ReadoutRequestElementRecordTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.
@@ -54,13 +53,13 @@ public class ReadoutRequestElementRecordTest
         assertEquals("Bad readout type", type, elemRec.getReadoutType());
         assertNotNull("Null DOM ID", elemRec.getDomID());
         assertEquals("Bad DOM ID",
-                     domId, elemRec.getDomID().getDomIDAsLong());
+                     domId, elemRec.getDomID().longValue());
         assertNotNull("Null first UTC time", elemRec.getFirstTimeUTC());
         assertEquals("Bad first UTC time",
-                     firstTime, elemRec.getFirstTimeUTC().getUTCTimeAsLong());
+                     firstTime, elemRec.getFirstTimeUTC().longValue());
         assertNotNull("Null last UTC time", elemRec.getLastTimeUTC());
         assertEquals("Bad last UTC time",
-                     lastTime, elemRec.getLastTimeUTC().getUTCTimeAsLong());
+                     lastTime, elemRec.getLastTimeUTC().longValue());
         assertNotNull("Null source ID", elemRec.getSourceID());
         assertEquals("Bad source ID",
                      srcId, elemRec.getSourceID().getSourceID());
@@ -90,13 +89,13 @@ public class ReadoutRequestElementRecordTest
         assertEquals("Bad readout type", type, elemRec.getReadoutType());
         assertNotNull("Null DOM ID", elemRec.getDomID());
         assertEquals("Bad DOM ID",
-                     domId, elemRec.getDomID().getDomIDAsLong());
+                     domId, elemRec.getDomID().longValue());
         assertNotNull("Null first UTC time", elemRec.getFirstTimeUTC());
         assertEquals("Bad first UTC time",
-                     firstTime, elemRec.getFirstTimeUTC().getUTCTimeAsLong());
+                     firstTime, elemRec.getFirstTimeUTC().longValue());
         assertNotNull("Null last UTC time", elemRec.getLastTimeUTC());
         assertEquals("Bad last UTC time",
-                     lastTime, elemRec.getLastTimeUTC().getUTCTimeAsLong());
+                     lastTime, elemRec.getLastTimeUTC().longValue());
         assertNotNull("Null source ID", elemRec.getSourceID());
         assertEquals("Bad source ID",
                      srcId, elemRec.getSourceID().getSourceID());
@@ -127,13 +126,13 @@ public class ReadoutRequestElementRecordTest
         assertEquals("Bad readout type", type, elemRec.getReadoutType());
         assertNotNull("Null DOM ID", elemRec.getDomID());
         assertEquals("Bad DOM ID",
-                     domId, elemRec.getDomID().getDomIDAsLong());
+                     domId, elemRec.getDomID().longValue());
         assertNotNull("Null first UTC time", elemRec.getFirstTimeUTC());
         assertEquals("Bad first UTC time",
-                     firstTime, elemRec.getFirstTimeUTC().getUTCTimeAsLong());
+                     firstTime, elemRec.getFirstTimeUTC().longValue());
         assertNotNull("Null last UTC time", elemRec.getLastTimeUTC());
         assertEquals("Bad last UTC time",
-                     lastTime, elemRec.getLastTimeUTC().getUTCTimeAsLong());
+                     lastTime, elemRec.getLastTimeUTC().longValue());
         assertNotNull("Null source ID", elemRec.getSourceID());
         assertEquals("Bad source ID",
                      srcId, elemRec.getSourceID().getSourceID());

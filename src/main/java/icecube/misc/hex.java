@@ -4,7 +4,7 @@ package icecube.misc;
  */
 public class hex {
     // Converts a string of hex digits into a byte array of those digits
-    static public byte[] toByteArr(String no)
+    public static byte[] toByteArr(String no)
         {
         byte[] number = new byte[no.length()/2];
         int i;
@@ -16,87 +16,87 @@ public class hex {
         return number;
         }
 
-    static public void printHex(byte[] b)   {printHex(b, b.length);}
+    public static void printHex(byte[] b)   {printHex(b, b.length);}
 
-    static public void printHex(short[] b)  {printHex(b, b.length);}
+    public static void printHex(short[] b)  {printHex(b, b.length);}
 
-    static public void printHex(int[] b)    {printHex(b, b.length);}
-
-
-    static public void printHex(String label, byte[] b)  {printHex(label, b, b.length);}
-
-    static public void printHex(String label, short[] b) {printHex(label, b, b.length);}
-
-    static public void printHex(String label, int[] b)   {printHex(label, b, b.length);}
+    public static void printHex(int[] b)    {printHex(b, b.length);}
 
 
-    static public String toHexF(String label, byte[] b)  {return toHexF(label, b, b.length);}
+    public static void printHex(String label, byte[] b)  {printHex(label, b, b.length);}
 
-    static public String toHexF(String label, short[] b) {return toHexF(label, b, b.length);}
+    public static void printHex(String label, short[] b) {printHex(label, b, b.length);}
 
-    static public String toHexF(String label, int[] b)   {return toHexF(label, b, b.length);}
-
-
-    static public String toHexF(int[] b)   {return toHexF(b, b.length);}
-
-    static public String toHexF(short[] b) {return toHexF(b, b.length);}
-    static public String toShortF(short[] b) {return toShortF(b, b.length);}
-
-    static public String toHexF(byte[] b)  {return toHexF(b, b.length);}
+    public static void printHex(String label, int[] b)   {printHex(label, b, b.length);}
 
 
-    static public String toHex(byte[] b)  {return toHex(b, b.length);}
+    public static String toHexF(String label, byte[] b)  {return toHexF(label, b, b.length);}
 
-    static public String toHex(short[] b) {return toHex(b, b.length);}
+    public static String toHexF(String label, short[] b) {return toHexF(label, b, b.length);}
 
-    static public String toHex(int[] b)   {return toHex(b, b.length);}
-    static public void printHex(String label, byte[] b, int len)
+    public static String toHexF(String label, int[] b)   {return toHexF(label, b, b.length);}
+
+
+    public static String toHexF(int[] b)   {return toHexF(b, b.length);}
+
+    public static String toHexF(short[] b) {return toHexF(b, b.length);}
+    public static String toShortF(short[] b) {return toShortF(b, b.length);}
+
+    public static String toHexF(byte[] b)  {return toHexF(b, b.length);}
+
+
+    public static String toHex(byte[] b)  {return toHex(b, b.length);}
+
+    public static String toHex(short[] b) {return toHex(b, b.length);}
+
+    public static String toHex(int[] b)   {return toHex(b, b.length);}
+    public static void printHex(String label, byte[] b, int len)
         {
         System.out.println(label);
         printHex(b, len);
         }
 
-    static public void printHex(String label, short[] b, int len)
+    public static void printHex(String label, short[] b, int len)
         {
         System.out.println(label);
         printHex(b, len);
         }
 
-    static public void printHex(String label, int[] b, int len)
+    public static void printHex(String label, int[] b, int len)
         {
         System.out.println(label);
         printHex(b, len);
         }
 
 
-    static public void printHex(byte[] b, int len)   {System.out.print(toHexF(b, len));}
+    public static void printHex(byte[] b, int len)   {System.out.print(toHexF(b, len));}
 
-    static public void printHex(short[] b, int len)  {System.out.print(toHexF(b, len));}
+    public static void printHex(short[] b, int len)  {System.out.print(toHexF(b, len));}
 
-    static public void printHex(int[] b, int len)    {System.out.print(toHexF(b, len));}
+    public static void printHex(int[] b, int len)    {System.out.print(toHexF(b, len));}
 
 
-    static public String toHexF(String label, int[] b, int len)
+    public static String toHexF(String label, int[] b, int len)
         {
         return label + "\n" + toHexF(b, len);
         }
 
-    static public String toHexF(String label, short[] b, int len)
+    public static String toHexF(String label, short[] b, int len)
         {
         return label + "\n" + toHexF(b, len);
         }
 
-    static public String toHexF(String label, byte[] b, int len)
+    public static String toHexF(String label, byte[] b, int len)
         {
         return label + "\n" + toHexF(b, len);
         }
 
-    static public String toHexF(byte[] b, int len)
+    public static String toHexF(byte[] b, int len)
         {
         return toHexF(b,0,len);
         }
 
-    static public String toHexF(byte[] b, int start, int len)
+    public static String toHexF(byte[] b, int start, int len)
         {
         StringBuffer s = new StringBuffer("");
         int i;
@@ -117,7 +117,7 @@ public class hex {
         return s.toString();
         }
 
-    static public String toHexF(short[] b, int len)
+    public static String toHexF(short[] b, int len)
         {
         StringBuffer s = new StringBuffer("");
         int i;
@@ -135,7 +135,7 @@ public class hex {
         return s.toString();
         }
 
-    static public String toShortF(short[] b, int len)
+    public static String toShortF(short[] b, int len)
         {
         StringBuffer s = new StringBuffer("");
         int i;
@@ -149,7 +149,7 @@ public class hex {
         return s.toString();
         }
 
-    static public String toHexF(int[] b, int len)
+    public static String toHexF(int[] b, int len)
         {
         StringBuffer s = new StringBuffer("");
         int i;
@@ -166,7 +166,7 @@ public class hex {
         }
 
 
-    static public String toHex(int[] b, int len)
+    public static String toHex(int[] b, int len)
         {
         if (b==null) return "";
         StringBuffer s = new StringBuffer("");
@@ -176,7 +176,7 @@ public class hex {
         return s.toString();
         }
 
-    static public String toHex(short[] b, int len)
+    public static String toHex(short[] b, int len)
         {
         if (b==null) return "";
         StringBuffer s = new StringBuffer("");
@@ -186,7 +186,7 @@ public class hex {
         return s.toString();
         }
 
-    static public String toHex(byte[] b, int start, int len)
+    public static String toHex(byte[] b, int start, int len)
         {
         if (b==null) return "";
         StringBuffer s = new StringBuffer("");
@@ -196,7 +196,7 @@ public class hex {
         return s.toString();
         }
 
-    static public String toHex(byte[] b, int len)
+    public static String toHex(byte[] b, int len)
         {
         if (b==null) return "";
         StringBuffer s = new StringBuffer("");
@@ -207,7 +207,7 @@ public class hex {
         }
 
 
-    static public String toHex(byte b)
+    public static String toHex(byte b)
         {
         Integer I = new Integer((((int)b) << 24) >>> 24);
         int i = I.intValue();
@@ -218,18 +218,18 @@ public class hex {
             return     Integer.toString(i, 16);
         }
 
-    static public String toHex(short i)
+    public static String toHex(short i)
         {
-        byte b[] = new byte[2];
+        byte[] b = new byte[2];
         b[0] = (byte)((i & 0xff00) >>>  8);
         b[1] = (byte)((i & 0x00ff)       );
 
         return toHex(b[0])+toHex(b[1]);
         }
 
-    static public String toHex(int i)
+    public static String toHex(int i)
         {
-        byte b[] = new byte[4];
+        byte[] b = new byte[4];
         b[0] = (byte)((i & 0xff000000) >>> 24);
         b[1] = (byte)((i & 0x00ff0000) >>> 16);
         b[2] = (byte)((i & 0x0000ff00) >>>  8);
@@ -237,9 +237,9 @@ public class hex {
 
         return toHex(b[0])+toHex(b[1])+toHex(b[2])+toHex(b[3]);
         }
-    static public String toHex(long l)
+    public static String toHex(long l)
         {
-        byte b[] = new byte[8];
+        byte[] b = new byte[8];
         b[0] = (byte)((l & 0xff00000000000000L) >>> 56);
         b[1] = (byte)((l & 0x00ff000000000000L) >>> 48);
         b[2] = (byte)((l & 0x0000ff0000000000L) >>> 40);

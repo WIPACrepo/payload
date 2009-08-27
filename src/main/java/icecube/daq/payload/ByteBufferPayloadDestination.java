@@ -1,51 +1,43 @@
 package icecube.daq.payload;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
-
-import icecube.daq.payload.splicer.Payload;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This object is a PayloadDestination that is able to write a Payload to
  * a new ByteBuffer which is acquired from an IByteBufferCache and pass this
  * newly created and written-to ByteBuffer (which now contains the contents of
  * a Payload) to an IByteBufferReceiver.
- * 
+ *
  * @author dwharton
  */
 public class ByteBufferPayloadDestination extends PayloadDestination   {
 
     /**
-     * Logger for this class.
-     */
-    private static final Log log = LogFactory.getLog(ByteBufferPayloadDestination.class);
-
-    /**
      * The IByteBufferCache from which new ByteBuffer's are acquired to
      * write Payloads to.
      */
-    private IByteBufferCache mtCache = null;
+    private IByteBufferCache mtCache;
 
     /**
      * The IByteBufferReceiver object which is to receive the ByteBuffer that has
      * been allocated and written into.
      */
-    protected IByteBufferReceiver mtByteBufferReciever = null;
+    protected IByteBufferReceiver mtByteBufferReceiver;
 
     /**
      * Constructor.
-     * @param tReceiver IByteBufferReceiver the object which will recieve the ByteBuffer
+     * @param tReceiver IByteBufferReceiver the object which will receive the ByteBuffer
      *  which has been created by subsiquent calls to the PayloadDestination.
      * @param tCache the IByteBufferCache which is used to acquire byte-buffers to write to.
-     * 
+     *
      */
     public ByteBufferPayloadDestination(IByteBufferReceiver tReceiver, IByteBufferCache tCache) {
         if (tCache == null) {
-            throw new Error("ByteBufferCache is null");
+            throw new Error("Buffer cache is null");
         }
 
-        mtByteBufferReciever = tReceiver;
+        mtByteBufferReceiver = tReceiver;
         mtCache = tCache;
     }
 
@@ -55,12 +47,12 @@ public class ByteBufferPayloadDestination extends PayloadDestination   {
      * be invoke the write method itself, or to pass the payload by refernce
      * to the target.
      *
-     * @param tPayload ...... Payload to which to write to this destination
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param tPayload Payload to which to write to this destination
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(Payload tPayload) throws IOException {
+    public int writePayload(IWriteablePayload tPayload) throws IOException {
         return writePayload(false,tPayload);
     }
 
@@ -70,15 +62,15 @@ public class ByteBufferPayloadDestination extends PayloadDestination   {
      * be invoke the write method itself, or to pass the payload by refernce
      * to the target.
      *
-     * @param bWriteLoaded ...... boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tPayload ...... Payload to which to write to this destination
-     * @return int ..............the length in bytes which was written to the ByteBuffer.
+     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tPayload Payload to which to write to this destination
+     * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, Payload tPayload) throws IOException {
+    public int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload) throws IOException {
 
-        if (mtByteBufferReciever == null) {
+        if (mtByteBufferReceiver == null) {
             throw new IOException("This PayloadDestination is not valid");
         }
 
@@ -100,7 +92,7 @@ public class ByteBufferPayloadDestination extends PayloadDestination   {
         tBuffer.position(0);
         tBuffer.limit(iWrittenLength);
         //
-        notifyByteBufferReciever(tBuffer);
+        notifyByteBufferReceiver(tBuffer);
         return iWrittenLength;
 
     }
@@ -109,12 +101,12 @@ public class ByteBufferPayloadDestination extends PayloadDestination   {
      * Notifies the installed receiver of the new byte-buffer which has been created.
      * @param tBuffer the new ByteBuffer which has been created.
      */
-    public void notifyByteBufferReciever(ByteBuffer tBuffer) {
-        mtByteBufferReciever.receiveByteBuffer(tBuffer);
+    public void notifyByteBufferReceiver(ByteBuffer tBuffer) {
+        mtByteBufferReceiver.receiveByteBuffer(tBuffer);
     }
 
     /**
-     * Optionally recieve the ByteBuffer back for reuse.
+     * Optionally receive the ByteBuffer back for reuse.
      * @param  tBuffer ByteBuffer the buffer which can be reused.
      */
     public void recycleByteBuffer(ByteBuffer tBuffer) {
@@ -139,8 +131,8 @@ public class ByteBufferPayloadDestination extends PayloadDestination   {
      * @throws  IOException  If an I/O error occurs
      */
     public void close() throws IOException {
-        mtByteBufferReciever.destinationClosed();
-        mtByteBufferReciever = null;
+        mtByteBufferReceiver.destinationClosed();
+        mtByteBufferReceiver = null;
     }
 
 }

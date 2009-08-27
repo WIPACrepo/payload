@@ -1,7 +1,7 @@
 /*
  * class: SourceIdRegistry
  *
- * Version $Id: SourceIdRegistry.java,v 1.7 2005/12/20 03:03:08 dglo Exp $
+ * Version $Id: SourceIdRegistry.java 4149 2009-05-14 21:06:40Z kael $
  *
  * Date: January 13 2005
  *
@@ -14,10 +14,10 @@ import icecube.daq.common.DAQCmdInterface;
 import icecube.daq.payload.impl.SourceID4B;
 
 /**
- * This class ...does what?
+ * Source ID registry and associated methods.
  *
  * @author pat
- * @version $Id: SourceIdRegistry.java,v 1.7 2005/12/20 03:03:08 dglo Exp $
+ * @version $Id: SourceIdRegistry.java 4149 2009-05-14 21:06:40Z kael $
  */
 public final class SourceIdRegistry {
 
@@ -46,6 +46,10 @@ public final class SourceIdRegistry {
      */
     public static int getSourceIDFromNameAndId(String name, int id) {
 
+        if (id < 0 || id >= 1000) {
+            throw new Error("Bad " + name + " component ID " + id);
+        }
+
         if (name.compareTo(DAQCmdInterface.DAQ_DOMHUB) == 0) {
             return DOMHUB_SOURCE_ID + id;
         } else if (name.compareTo(DAQCmdInterface.DAQ_STRINGPROCESSOR) == 0) {
@@ -68,7 +72,9 @@ public final class SourceIdRegistry {
             return AMANDA_TRIGGER_SOURCE_ID + id;
         } else if (name.compareTo(DAQCmdInterface.DAQ_SNBUILDER) == 0) {
             return SNBUILDER_SOURCE_ID + id;
-        } else if (name.compareTo(DAQCmdInterface.DAQ_STRING_HUB) == 0) {
+        } else if (name.compareTo(DAQCmdInterface.DAQ_STRING_HUB) == 0 ||
+                   name.compareTo(DAQCmdInterface.DAQ_REPLAY_HUB) == 0)
+        {
             return STRING_HUB_SOURCE_ID + (id % 1000);
         }
 
@@ -215,9 +221,7 @@ public final class SourceIdRegistry {
             return false;
         }
 
-        int daqId = srcId % 1000;
-
-        return daqId == 0;
+        return srcId == 12000 || srcId == 13000;
     }
 
     /**
@@ -270,11 +274,8 @@ public final class SourceIdRegistry {
             return false;
         }
 
-        int daqId = srcId % 1000;
-
-        return daqId > DAQCmdInterface.DAQ_MAX_NUM_STRINGS &&
-            daqId <= (DAQCmdInterface.DAQ_MAX_NUM_STRINGS +
-                      DAQCmdInterface.DAQ_MAX_NUM_IDH);
+        int daqId = srcId - STRING_HUB_SOURCE_ID;
+        return daqId >= 200 && daqId <= 210;
     }
 
     /**
@@ -302,7 +303,7 @@ public final class SourceIdRegistry {
             return false;
         }
 
-        int daqId = srcId % 1000;
+        int daqId = srcId - STRING_HUB_SOURCE_ID;
 
         return daqId > 0 && daqId <= DAQCmdInterface.DAQ_MAX_NUM_STRINGS;
     }

@@ -1,5 +1,6 @@
 package icecube.daq.eventbuilder.impl;
 
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockUTCTime;
@@ -8,13 +9,11 @@ import icecube.daq.payload.test.TestUtil;
 import java.nio.ByteBuffer;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 public class EventPayloadRecord_v2Test
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.
@@ -50,9 +49,9 @@ public class EventPayloadRecord_v2Test
         final int cfgId = 666;
         final int runNum = 777;
 
-        ByteBuffer buf = TestUtil.createEventRecord(uid, srcId, firstTime,
-                                                    lastTime, type, cfgId,
-                                                    runNum);
+        ByteBuffer buf = TestUtil.createEventRecordv2(uid, srcId, firstTime,
+                                                      lastTime, type, cfgId,
+                                                      runNum);
 
         EventPayloadRecord_v2 evtRec =
             new EventPayloadRecord_v2();
@@ -61,18 +60,18 @@ public class EventPayloadRecord_v2Test
         evtRec.loadData(0, buf);
         assertTrue("Data should be loaded", evtRec.isDataLoaded());
 
-        assertEquals("Bad UID", uid, evtRec.mi_UID);
-        assertNotNull("Null source ID", evtRec.mt_sourceid);
-        assertEquals("Bad source ID", srcId, evtRec.mt_sourceid.getSourceID());
-        assertNotNull("Null first time", evtRec.mt_firstTime);
+        assertEquals("Bad UID", uid, evtRec.getEventUID());
+        assertNotNull("Null source ID", evtRec.getSourceID());
+        assertEquals("Bad source ID", srcId, evtRec.getSourceID().getSourceID());
+        assertNotNull("Null first time", evtRec.getFirstTimeUTC());
         assertEquals("Bad first time",
-                     firstTime, evtRec.mt_firstTime.getUTCTimeAsLong());
-        assertNotNull("Null last time", evtRec.mt_lastTime);
+                     firstTime, evtRec.getFirstTimeLong());
+        assertNotNull("Null last time", evtRec.getLastTimeUTC());
         assertEquals("Bad last time",
-                     lastTime, evtRec.mt_lastTime.getUTCTimeAsLong());
-        assertEquals("Bad event type", type, evtRec.mi_eventType);
-        assertEquals("Bad event config ID", cfgId, evtRec.mi_eventConfigID);
-        assertEquals("Bad run number", runNum, evtRec.mi_runNumber);
+                     lastTime, evtRec.getLastTimeLong());
+        assertEquals("Bad event type", type, evtRec.getEventType());
+        assertEquals("Bad event config ID", cfgId, evtRec.getEventConfigID());
+        assertEquals("Bad run number", runNum, evtRec.getRunNumber());
 
         evtRec.dispose();
         assertFalse("Data should NOT be loaded", evtRec.isDataLoaded());
@@ -99,18 +98,18 @@ public class EventPayloadRecord_v2Test
 
         assertTrue("Data should be loaded", evtRec.isDataLoaded());
 
-        assertEquals("Bad UID", uid, evtRec.mi_UID);
-        assertNotNull("Null source ID", evtRec.mt_sourceid);
-        assertEquals("Bad source ID", srcId, evtRec.mt_sourceid.getSourceID());
-        assertNotNull("Null first time", evtRec.mt_firstTime);
+        assertEquals("Bad UID", uid, evtRec.getEventUID());
+        assertNotNull("Null source ID", evtRec.getSourceID());
+        assertEquals("Bad source ID", srcId, evtRec.getSourceID().getSourceID());
+        assertNotNull("Null first time", evtRec.getFirstTimeUTC());
         assertEquals("Bad first time",
-                     firstTime, evtRec.mt_firstTime.getUTCTimeAsLong());
-        assertNotNull("Null last time", evtRec.mt_lastTime);
+                     firstTime, evtRec.getFirstTimeLong());
+        assertNotNull("Null last time", evtRec.getLastTimeUTC());
         assertEquals("Bad last time",
-                     lastTime, evtRec.mt_lastTime.getUTCTimeAsLong());
-        assertEquals("Bad event type", type, evtRec.mi_eventType);
-        assertEquals("Bad event config ID", cfgId, evtRec.mi_eventConfigID);
-        assertEquals("Bad run number", runNum, evtRec.mi_runNumber);
+                     lastTime, evtRec.getLastTimeLong());
+        assertEquals("Bad event type", type, evtRec.getEventType());
+        assertEquals("Bad event config ID", cfgId, evtRec.getEventConfigID());
+        assertEquals("Bad run number", runNum, evtRec.getRunNumber());
 
         evtRec.recycle();
         assertFalse("Data should NOT be loaded", evtRec.isDataLoaded());
@@ -127,9 +126,9 @@ public class EventPayloadRecord_v2Test
         final int cfgId = 666;
         final int runNum = 777;
 
-        ByteBuffer buf = TestUtil.createEventRecord(uid, srcId, firstTime,
-                                                    lastTime, type, cfgId,
-                                                    runNum);
+        ByteBuffer buf = TestUtil.createEventRecordv2(uid, srcId, firstTime,
+                                                      lastTime, type, cfgId,
+                                                      runNum);
 
         EventPayloadRecord_v2 evtRec =
             new EventPayloadRecord_v2();
@@ -159,9 +158,9 @@ public class EventPayloadRecord_v2Test
         final int cfgId = 666;
         final int runNum = 777;
 
-        ByteBuffer buf = TestUtil.createEventRecord(uid, srcId, firstTime,
-                                                    lastTime, type, cfgId,
-                                                    runNum);
+        ByteBuffer buf = TestUtil.createEventRecordv2(uid, srcId, firstTime,
+                                                      lastTime, type, cfgId,
+                                                      runNum);
 
         EventPayloadRecord_v2 evtRec =
             new EventPayloadRecord_v2();

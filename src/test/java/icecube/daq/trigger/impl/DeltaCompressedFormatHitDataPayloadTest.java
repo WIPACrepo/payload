@@ -1,10 +1,9 @@
 package icecube.daq.trigger.impl;
 
 import icecube.daq.payload.PayloadRegistry;
-
-import icecube.daq.payload.impl.DomHitDeltaCompressedFormatRecord;
 import icecube.daq.payload.impl.DomHitDeltaCompressedFormatPayload;
-
+import icecube.daq.payload.impl.DomHitDeltaCompressedFormatRecord;
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.TestUtil;
@@ -13,13 +12,11 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 public class DeltaCompressedFormatHitDataPayloadTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.
@@ -88,11 +85,11 @@ public class DeltaCompressedFormatHitDataPayloadTest
         hit.loadPayload();
 
         assertEquals("Bad hit time",
-                     utcTime, hit.getHitTimeUTC().getUTCTimeAsLong());
+                     utcTime, hit.getHitTimeUTC().longValue());
         assertEquals("Bad config ID", configId, hit.getTriggerConfigID());
         assertEquals("Bad trigger type", trigType, hit.getTriggerType());
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());
-        assertEquals("Bad DOM ID", domId, hit.getDOMID().getDomIDAsLong());
+        assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
 
         DomHitDeltaCompressedFormatRecord hitRec = hit.getPayloadRecord();
 
@@ -154,11 +151,11 @@ public class DeltaCompressedFormatHitDataPayloadTest
         hit.loadPayload();
 
         assertEquals("Bad hit time",
-                     utcTime, hit.getHitTimeUTC().getUTCTimeAsLong());
+                     utcTime, hit.getHitTimeUTC().longValue());
         assertEquals("Bad config ID", configId, hit.getTriggerConfigID());
         assertEquals("Bad trigger type", -1, hit.getTriggerType());
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());
-        assertEquals("Bad DOM ID", domId, hit.getDOMID().getDomIDAsLong());
+        assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
 
         DomHitDeltaCompressedFormatRecord hitRec = hit.getPayloadRecord();
 

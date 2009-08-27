@@ -1,21 +1,18 @@
 package icecube.daq.payload.splicer;
 
-import java.io.IOException;
+import icecube.daq.payload.ILoadablePayload;
+
+import java.util.List;
 import java.util.Vector;
-import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import icecube.daq.payload.ILoadablePayload;
-
-import icecube.daq.payload.splicer.PayloadFactory;
 
 /**
  * This Object extends PayloadFactory to the extent that
  * it contains the MasterPayloadFactory which is used for
  * instantiating the sub-payloads.
- * 
+ *
  * @author dwharton
  */
 public class CompositePayloadFactory extends PayloadFactory {
@@ -27,7 +24,7 @@ public class CompositePayloadFactory extends PayloadFactory {
      * which are created so that they have the appropriate MasterPayloadFactory
      * with which to create
      */
-    protected PayloadFactory mtMasterCompositePayloadFactory = null;
+    protected PayloadFactory mtMasterCompositePayloadFactory;
 
     /**
      * This method gets the internal PayloadFactory which is used to construct
@@ -47,36 +44,33 @@ public class CompositePayloadFactory extends PayloadFactory {
     }
 
     /**
-     * This deep copies a vector of Payloads to a new Vector.
-     * @param tPayloads Vector of Payloads which to make 'deep-copies'
-     * @return Vector containing the same ordered list of 'deep-copied' payloads.
+     * This deep copies a list of Payloads to a new list.
+     * @param tPayloads list of Payloads which to make 'deep-copies'
+     * @return list containing the same ordered list of 'deep-copied' payloads.
      */
-    public static Vector deepCopyPayloadVector(Vector tPayloads) {
+    public static List deepCopyPayloadList(List tPayloads) {
         boolean bDeepCopyOK = false;
-        Vector tPayloadsCopy = null;
+        List tPayloadsCopy = null;
         if (tPayloads != null) {
             tPayloadsCopy = new Vector();
-            if (tPayloads.size() == 0) {
-                bDeepCopyOK = true;
-            } else {
+            bDeepCopyOK = true;
+            if (tPayloads.size() > 0) {
                 for (int ii=0; ii < tPayloads.size(); ii++) {
-                    bDeepCopyOK = false;
                     ILoadablePayload tPay =
                         (ILoadablePayload) tPayloads.get(ii);
                     if (tPay != null) {
                         Object tCopy = tPay.deepCopy();
                         if (tCopy == null) {
                             mtLog.error("Cannot deep-copy composite payload " +
-                                        ii + " of " + tPayloads.size() +
+                                        (ii + 1) + " of " + tPayloads.size() +
                                         " (type " + tPay.getPayloadType() +
                                         ", length " + tPay.getPayloadLength() +
                                         ")");
-                            tCopy = null;
+                            bDeepCopyOK = false;
                             break;
                         }
                         tPayloadsCopy.add(tCopy);
                     }
-                    bDeepCopyOK = true;
                 }
             }
         }
@@ -95,7 +89,7 @@ public class CompositePayloadFactory extends PayloadFactory {
      * of payloads.
      * @param tPayloads a non-null vector of Payloads which will be recycled.
      */
-    public static void recyclePayloads(Vector tPayloads) {
+    public static void recyclePayloads(List tPayloads) {
         for (int ii=0; ii < tPayloads.size(); ii++) {
             ILoadablePayload tPay = (ILoadablePayload) tPayloads.get(ii);
             if (tPay != null) {

@@ -1,14 +1,13 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IPayloadDestination;
+import icecube.daq.payload.IWriteablePayloadRecord;
+import icecube.util.Poolable;
 
-import java.util.zip.DataFormatException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-import icecube.util.Poolable;
-import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.payload.PayloadDestination;
+import java.util.zip.DataFormatException;
 
 /**
  * This is a utility Class to assist in the packaging/unpackaging of the TestDAQ
@@ -28,7 +27,7 @@ import icecube.daq.payload.PayloadDestination;
  *
  * @author dwharton
  */
-public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord {
+public class PayloadEnvelope implements IWriteablePayloadRecord, Poolable {
 
     public static final ByteOrder ENVELOPE_BYTEORDER = ByteOrder.BIG_ENDIAN;
     //-changing type and order for fixed payload-envelope endian-ness
@@ -45,7 +44,7 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
     public static final String PAYLOADTYPE = "PAYLOADTYPE";
     public static final String UTIME       = "UTIME";
 
-    private boolean mb_IsLoaded = false;
+    private boolean mb_IsLoaded;
     public int miPayloadLen;    //-record length including the envelope
     public int miPayloadType;
     public long mlUTime;    //- Universal Time from TestDAQ
@@ -56,16 +55,16 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
     public PayloadEnvelope() {}
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded(){ return mb_IsLoaded;}
 
     /**
      * method to initialize envelope that does not correspond to data that
      * has been loaded from a buffer.
-     * @param iPayloadType .......int the type of payload contained in the envelope
-     * @param  iPayloadLen ........int the length of the payload (including this header)
-     * @param lUtime .............long the universal time for this payload.
+     * @param iPayloadType the type of payload contained in the envelope
+     * @param  iPayloadLen the length of the payload (including this header)
+     * @param lUtime the universal time for this payload.
      */
     public void initialize(int iPayloadType, int iPayloadLen, long lUtime) {
         miPayloadType = iPayloadType;
@@ -75,13 +74,12 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
     }
     /**
      * Loads the data from the buffer into the container record.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
-     * @exception IOException if errors are detected reading the record
      * @exception DataFormatException if the record is not of the correct format.
      */
-    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws DataFormatException {
         mb_IsLoaded = false;
         if (tBuffer.limit() < iRecordOffset + OFFSET_UTIME + SIZE_UTIME) {
             throw new DataFormatException("Cannot read payload envelope;" +
@@ -92,7 +90,9 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
         }
 
         ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         //-read the payload length
         miPayloadLen = tBuffer.getInt(iRecordOffset + OFFSET_PAYLOADLEN);
         //-Read the payload type and correct for endiannes
@@ -109,14 +109,14 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
 
     /**
      *  Writes the contents of the PayloadEnvelope to the specified position.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
-     *
-     * @exception IOException if errors are detected writing the record
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      */
-    public int writeData(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
+    public int writeData(int iRecordOffset, ByteBuffer tBuffer) {
         ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         tBuffer.putInt((iRecordOffset + OFFSET_PAYLOADLEN), miPayloadLen);
         tBuffer.putInt((iRecordOffset + OFFSET_PAYLOADTYPE), miPayloadType);
         tBuffer.putLong((iRecordOffset + OFFSET_UTIME), mlUTime);
@@ -128,11 +128,11 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
     }
     /**
      *  Writes the contents of the PayloadEnvelope to the specified destination.
-     * @param tDestination ....PayloadDestination the destination for this record.
+     * @param tDestination the destination for this record.
      *
      * @exception IOException if errors are detected writing the record
      */
-    public int writeData(PayloadDestination tDestination) throws IOException {
+    public int writeData(IPayloadDestination tDestination) throws IOException {
         if (tDestination.doLabel()) tDestination.label("[PayloadEnvelope]=>").indent();
         tDestination.writeInt(PAYLOADLEN,  miPayloadLen);
         tDestination.writeInt(PAYLOADTYPE, miPayloadType);
@@ -152,12 +152,12 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
      * Method to get from pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new PayloadEnvelope();
+        return new PayloadEnvelope();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -166,25 +166,60 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
+     * @param tReadoutRequestPayload ReadoutRequestPayload which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
 
     /**
-     * Get's the Payload length from a Backing buffer (ByteBuffer)
+     * Get the Payload type from a Backing buffer (ByteBuffer)
      * if possible, otherwise return -1.
-     * @param iOffset .....int which holds the position in the ByteBuffer
+     * @param iOffset int which holds the position in the ByteBuffer
      *                     to check for the Payload length.
-     * @param tBuffer .....ByteBuffer from which to extract the lenght of the payload
-     * @return int ........the lenght of the payload if it can be extracted, otherwise -1
+     * @param tBuffer ByteBuffer from which to extract the length of the payload
+     * @return the payload type if it can be extracted, otherwise -1
      *
-     * @exception IOException ...........is thrown if there is trouble reading the Payload length
-     * @exception DataFormatException ...is thrown if there is something wrong with the payload and the
+     * @exception DataFormatException if there is something wrong with the
+     *                                payload and the type cannot be read.
+     */
+    public static int readPayloadType(int iOffset, ByteBuffer tBuffer)
+        throws DataFormatException
+    {
+        if (tBuffer.limit() < iOffset + OFFSET_PAYLOADTYPE + SIZE_PAYLOADTYPE) {
+            throw new DataFormatException("Cannot read payload type;" +
+                                          " need " +
+                                          (iOffset + OFFSET_PAYLOADTYPE +
+                                           SIZE_PAYLOADTYPE) +
+                                          " bytes, but only " +
+                                          tBuffer.limit() + " are available");
+        }
+        int iRecType = -1;
+        ByteOrder tSaveOrder = tBuffer.order();
+        //-The Payload Envelope has been defined to always be BIG_ENDIAN
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
+        iRecType = tBuffer.getInt(iOffset + OFFSET_PAYLOADTYPE);
+        //-restore endianess to the buffer
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
+        return iRecType;
+    }
+
+    /**
+     * Get the Payload length from a Backing buffer (ByteBuffer)
+     * if possible, otherwise return -1.
+     * @param iOffset int which holds the position in the ByteBuffer
+     *                     to check for the Payload length.
+     * @param tBuffer ByteBuffer from which to extract the length of the payload
+     * @return the length of the payload if it can be extracted, otherwise -1
+     *
+     * @exception DataFormatException if there is something wrong with the payload and the
      *                                   length cannot be read.
      */
-    public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public static int readPayloadLength(int iOffset, ByteBuffer tBuffer) throws DataFormatException {
         if (tBuffer.limit() < iOffset + OFFSET_PAYLOADLEN + SIZE_PAYLOADLEN) {
             throw new DataFormatException("Cannot read payload length;" +
                                           " need " +
@@ -196,7 +231,9 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
         int iRecLength = -1;
         ByteOrder tSaveOrder = tBuffer.order();
         //-The Payload Envelope has been defined to always be BIG_ENDIAN
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         iRecLength = tBuffer.getInt(iOffset + OFFSET_PAYLOADLEN);
         //-restore endianess to the buffer
         if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
@@ -205,4 +242,3 @@ public class PayloadEnvelope extends Poolable implements IWriteablePayloadRecord
         return iRecLength;
     }
 }
-

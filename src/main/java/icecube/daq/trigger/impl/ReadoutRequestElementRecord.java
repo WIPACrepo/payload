@@ -1,20 +1,17 @@
 package icecube.daq.trigger.impl;
 
-import java.nio.ByteOrder;
-import java.nio.ByteBuffer;
-import java.io.IOException;
-import java.util.zip.DataFormatException;
-
-import icecube.daq.payload.PayloadDestination;
 import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.IPayload;
-import icecube.daq.payload.impl.SourceID4B;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.IWriteablePayloadRecord;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.IWriteablePayloadRecord;
+import icecube.daq.payload.impl.SourceID4B;
 import icecube.daq.payload.impl.UTCTime8B;
 import icecube.daq.trigger.IReadoutRequestElement;
-import icecube.daq.trigger.impl.DOMID8B;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
  * ReadoutRequestElementRecord
@@ -48,21 +45,21 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
     public static final String LAST_TIME    = "LAST_TIME";
     public static final String DOMID        = "DOMID";
 
-    private boolean mb_IsLoaded = false;
+    private boolean mb_IsLoaded;
     /**
      * PayloadRecord data...
      */
     public int mi_readoutType = -1;
-    public ISourceID    mt_sourceId    = null;
-    public IUTCTime     mt_firstTime   = null;
-    public IUTCTime     mt_lastTime    = null;
-    public IDOMID       mt_domId       = null;
+    public ISourceID    mt_sourceId;
+    public IUTCTime     mt_firstTime;
+    public IUTCTime     mt_lastTime;
+    public IDOMID       mt_domId;
 
 
     //--[IWriteablePayloadRecord]----
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mb_IsLoaded;
@@ -88,13 +85,10 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
 
     /**
      * Loads the data from the buffer into the container record.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      */
-    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public void loadData(int iRecordOffset, ByteBuffer tBuffer) {
         mb_IsLoaded = false;
         //-read type and determine endian order
         ByteOrder tSaveOrder = tBuffer.order();
@@ -125,10 +119,10 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
     }
     /**
      * Method to write this record to the payload destination.
-     * @param tDestination ....PayloadDestination to which to write this record.
-     * @return int the nubmer of bytes written.
+     * @param tDestination PayloadDestination to which to write this record.
+     * @return the number of bytes written.
      */
-    public int writeData(PayloadDestination tDestination) throws IOException {
+    public int writeData(IPayloadDestination tDestination) throws IOException {
         //-write out READOUT_TYPE
         tDestination.writeInt( READOUT_TYPE, mi_readoutType);
         //-write out OFFSET_SOURCEID
@@ -139,12 +133,12 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
             tDestination.writeInt(SOURCEID, -1);
         }
         //-write out OFFSET_FIRST_TIME
-        tDestination.writeLong(FIRST_TIME, mt_firstTime.getUTCTimeAsLong());
+        tDestination.writeLong(FIRST_TIME, mt_firstTime.longValue());
         //-write out OFFSET_LAST_TIME
-        tDestination.writeLong(LAST_TIME, mt_lastTime.getUTCTimeAsLong());
+        tDestination.writeLong(LAST_TIME, mt_lastTime.longValue());
         //-write out OFFSET_DOMID
         if (mt_domId != null) {
-            tDestination.writeLong(DOMID, mt_domId.getDomIDAsLong());
+            tDestination.writeLong(DOMID, mt_domId.longValue());
         } else {
             //-this indicates no specific dom (ie for a general request)
             tDestination.writeLong(DOMID,-1L);
@@ -154,9 +148,9 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
 
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset ....the offset at which to start writing the object.
-     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
-     * @return int the nubmer of bytes written.
+     * @param iOffset the offset at which to start writing the object.
+     * @param tBuffer the ByteBuffer into which to write this payload-record.
+     * @return the number of bytes written.
      */
     public int writeData(int iOffset, ByteBuffer tBuffer) throws IOException {
         //-write out READOUT_TYPE
@@ -169,12 +163,12 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
             tBuffer.putInt(iOffset + OFFSET_SOURCEID, -1);
         }
         //-write out OFFSET_FIRST_TIME
-        tBuffer.putLong(iOffset + OFFSET_FIRST_TIME, mt_firstTime.getUTCTimeAsLong());
+        tBuffer.putLong(iOffset + OFFSET_FIRST_TIME, mt_firstTime.longValue());
         //-write out OFFSET_LAST_TIME
-        tBuffer.putLong(iOffset + OFFSET_LAST_TIME, mt_lastTime.getUTCTimeAsLong());
+        tBuffer.putLong(iOffset + OFFSET_LAST_TIME, mt_lastTime.longValue());
         //-write out OFFSET_DOMID
         if (mt_domId != null) {
-            tBuffer.putLong(iOffset + OFFSET_DOMID, mt_domId.getDomIDAsLong());
+            tBuffer.putLong(iOffset + OFFSET_DOMID, mt_domId.longValue());
         } else {
             //-this indicates no specific dom (ie for a general request)
             tBuffer.putLong(iOffset + OFFSET_DOMID, -1L);
@@ -205,9 +199,7 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
     }
 
     /**
-     * getDomID()
-     * @return IDOMID ...identifies module to readout.
-     *                   IDOMID object if request is for single DOM
+     * getDomID() IDOMID object if request is for single DOM
      *                   null if request is not specific to a single DOM.
      */
     public IDOMID getDomID() {
@@ -216,7 +208,7 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
 
     /**
      * getSourceID()
-     * @return ISourceID ....the component from which to get data (typically a StringProcessor)
+     * @return the component from which to get data (typically a StringProcessor)
      */
     public ISourceID getSourceID() {
         return mt_sourceId;
@@ -238,11 +230,53 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
 
     /**
      * Allows this object to know how to pool itself.
-     * @return  ReadoutRequestRecord ....from the pool
+     * @return  ReadoutRequestElementRecord from the pool
      * TODO: implement pooling!!!!!
      */
     public static ReadoutRequestElementRecord getFromPool() {
         return new ReadoutRequestElementRecord();
     }
-}
 
+    static final String getTypeString(int rdoutType)
+    {
+        switch (rdoutType) {
+        case READOUT_TYPE_GLOBAL:
+            return "GLOBAL";
+        case READOUT_TYPE_II_GLOBAL:
+            return  "II_GLOBAL";
+        case READOUT_TYPE_IT_GLOBAL:
+            return "IT_GLOBAL";
+        case READOUT_TYPE_II_STRING:
+            return "II_STRING";
+        case READOUT_TYPE_II_MODULE:
+            return "II_MODULE";
+        case READOUT_TYPE_IT_MODULE:
+            return "IT_MODULE";
+        default:
+            break;
+        }
+
+        return "UNKNOWN#" + rdoutType;
+    }
+
+    /**
+     * Get readout request element data string.
+     *
+     * @return data string
+     */
+    public String toDataString()
+    {
+        return getTypeString(mi_readoutType) + " [" + mt_firstTime + "-" +
+            mt_lastTime + "] dom " + mt_domId + " src " + mt_sourceId;
+    }
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
+    public String toString()
+    {
+        return "ReadoutRequestElementRecord[" + toDataString() + "]";
+    }
+}

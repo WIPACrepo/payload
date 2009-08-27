@@ -1,5 +1,6 @@
 package icecube.daq.eventbuilder.impl;
 
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockHit;
 import icecube.daq.payload.test.MockSourceID;
@@ -7,17 +8,14 @@ import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
 
 import java.nio.ByteBuffer;
-
 import java.util.ArrayList;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 public class ReadoutDataRecordTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.
@@ -52,10 +50,10 @@ public class ReadoutDataRecordTest
         assertEquals("Bad source ID", srcId, rdRec.mt_sourceid.getSourceID());
         assertNotNull("Null first UTC time", rdRec.mt_firstTime);
         assertEquals("Bad first UTC time",
-                     firstTime, rdRec.mt_firstTime.getUTCTimeAsLong());
+                     firstTime, rdRec.mt_firstTime.longValue());
         assertNotNull("Null last UTC time", rdRec.mt_lastTime);
         assertEquals("Bad last UTC time",
-                     lastTime, rdRec.mt_lastTime.getUTCTimeAsLong());
+                     lastTime, rdRec.mt_lastTime.longValue());
         assertEquals("Bad UID", uid, rdRec.mi_UID);
         assertEquals("Bad payload number", payNum, rdRec.mi_payloadNum);
         assertEquals("Bad isLastPayload value", isLast, rdRec.mb_payloadLast);
@@ -84,10 +82,10 @@ public class ReadoutDataRecordTest
         assertEquals("Bad source ID", srcId, rdRec.mt_sourceid.getSourceID());
         assertNotNull("Null first UTC time", rdRec.mt_firstTime);
         assertEquals("Bad first UTC time",
-                     firstTime, rdRec.mt_firstTime.getUTCTimeAsLong());
+                     firstTime, rdRec.mt_firstTime.longValue());
         assertNotNull("Null last UTC time", rdRec.mt_lastTime);
         assertEquals("Bad last UTC time",
-                     lastTime, rdRec.mt_lastTime.getUTCTimeAsLong());
+                     lastTime, rdRec.mt_lastTime.longValue());
         assertEquals("Bad UID", uid, rdRec.mi_UID);
         assertEquals("Bad payload number", payNum, rdRec.mi_payloadNum);
         assertEquals("Bad isLastPayload value", isLast, rdRec.mb_payloadLast);

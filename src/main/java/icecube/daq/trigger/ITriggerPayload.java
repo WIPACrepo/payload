@@ -10,8 +10,9 @@
 
 package icecube.daq.trigger;
 
+import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.IPayload;
+import icecube.daq.payload.IWriteablePayload;
 
 /**
  * Adds some basic informations to IPayload that are necessary for any type of Trigger primitive
@@ -19,14 +20,14 @@ import icecube.daq.payload.IPayload;
  * @version $Id: ITriggerPayload.java,v 1.1 2004/11/12 04:25:30 dwharton Exp $
  * @author hellwig, dwharton
  */
-public interface ITriggerPayload extends IPayload {
+public interface ITriggerPayload extends ILoadablePayload, IWriteablePayload {
     /**
      * returns type of trigger
      */
     int getTriggerType();
 
     /**
-     * `returns ID of trigger
+     * returns ID of trigger
      */
     int getTriggerConfigID();
 

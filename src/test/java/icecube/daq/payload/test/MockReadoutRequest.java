@@ -1,29 +1,53 @@
 package icecube.daq.payload.test;
 
 import icecube.daq.payload.ISourceID;
-
 import icecube.daq.trigger.IReadoutRequest;
 import icecube.daq.trigger.IReadoutRequestElement;
 
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.List;
 
 public class MockReadoutRequest
     implements IReadoutRequest
 {
     private int uid;
     private ISourceID srcId;
-    private ArrayList elemList;
+    private List elemList;
+
+    public MockReadoutRequest()
+    {
+        this(-1, -1, null);
+    }
+
+    public MockReadoutRequest(IReadoutRequest rReq)
+    {
+        this(rReq.getUID(), rReq.getSourceID(),
+             rReq.getReadoutRequestElements());
+    }
 
     public MockReadoutRequest(int uid, int srcId)
     {
+        this(uid, new MockSourceID(srcId), null);
+    }
+
+    public MockReadoutRequest(int uid, int srcId, List elemList)
+    {
+        this(uid, new MockSourceID(srcId), elemList);
+    }
+
+    public MockReadoutRequest(int uid, ISourceID srcId, List elemList)
+    {
         this.uid = uid;
-        this.srcId = new MockSourceID(srcId);
-        this.elemList = new ArrayList();
+        this.srcId = srcId;
+        this.elemList = elemList;
     }
 
     public void addElement(IReadoutRequestElement elem)
     {
+        if (elemList == null) {
+            elemList = new ArrayList();
+        }
+
         elemList.add(elem);
     }
 
@@ -34,10 +58,13 @@ public class MockReadoutRequest
                                                  domId, srcId));
     }
 
-    // XXX this should return a List, not a Vector
-    public Vector getReadoutRequestElements()
+    public List getReadoutRequestElements()
     {
-        return new Vector(elemList);
+        if (elemList == null) {
+            elemList = new ArrayList();
+        }
+
+        return elemList;
     }
 
     public ISourceID getSourceID()

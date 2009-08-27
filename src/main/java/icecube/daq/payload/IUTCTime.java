@@ -1,7 +1,7 @@
 /*
  * class: IUTCTime
  *
- * Version $Id: IUTCTime.java,v 1.3 2005/10/07 22:35:45 dwharton Exp $
+ * Version $Id: IUTCTime.java 2657 2008-02-15 23:41:14Z dglo $
  *
  * Date: September 18 2004
  *
@@ -11,47 +11,43 @@
 package icecube.daq.payload;
 
 import icecube.util.ICopyable;
+
 /**
  * This interface defines a UTC timestamp in 1/10 second resolution
  * as defined by the DOR time definition.  Nanosec time difference
  * is available computed as a double.
  *
- * @version $Id: IUTCTime.java,v 1.3 2005/10/07 22:35:45 dwharton Exp $
+ * @version $Id: IUTCTime.java 2657 2008-02-15 23:41:14Z dglo $
  * @author hellwig,dwharton
  */
-public interface IUTCTime  extends ICopyable {
+public interface IUTCTime extends Comparable, ICopyable {
 
     /**
      * Compares ThisTime - tDifferenceTime and computes time
      * difference in the time units of the DOR Card.
      * @param tTime IUTCTime to compare to.
-     * @return long ...the difference in time in dor card units
+     * @return the difference in time in dor card units
      */
-    public long timeDiff(IUTCTime tTime);
+    long timeDiff(IUTCTime tTime);
 
     /**
      * Compares ThisTime - tDifferenceTime and computes time
      * difference in nanoseconds.
      * @param tTime IUTCTime to compare to.
-     * @return long ...the difference in time in ns
+     * @return the difference in time in ns
      */
-    public double timeDiff_ns(IUTCTime tTime);
+    double timeDiff_ns(IUTCTime tTime);
 
     /**
      * Returns the UTCTime as long.
      */
-    public long getUTCTimeAsLong();
+    long longValue();
 
     /**
      * Generates IUTCTime based on offset in ns from this time.
-     * @param dNanoSec ....the positive or negative nanosec value from which to
+     * @param dNanoSec the positive or negative nanosec value from which to
      *                     produce another IUTCTime which is representative of this
      *                     time difference.
      */
-    public IUTCTime getOffsetUTCTime(double dNanoSec);
-
-    /**
-     * Compare to needed for Splicer.
-     */
-    public int compareTo(Object object);
+    IUTCTime getOffsetUTCTime(double dNanoSec);
 }

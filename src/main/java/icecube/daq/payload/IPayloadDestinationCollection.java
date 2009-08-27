@@ -1,7 +1,7 @@
 /*
  * interface: IPayloadDestinationCollection
  *
- * Version $Id: IPayloadDestinationCollection.java,v 1.4 2005/12/09 00:09:41 artur Exp $
+ * Version $Id: IPayloadDestinationCollection.java 2629 2008-02-11 05:48:36Z dglo $
  *
  * Date: October 19 2005
  *
@@ -10,18 +10,17 @@
 
 package icecube.daq.payload;
 
-import icecube.daq.payload.splicer.Payload;
-
-import java.util.Collection;
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * This interface defines a collection of PayloadDestinations.
  *
- * @version $Id: IPayloadDestinationCollection.java,v 1.4 2005/12/09 00:09:41 artur Exp $
+ * @version $Id: IPayloadDestinationCollection.java 2629 2008-02-11 05:48:36Z dglo $
  * @author pat
  */
 public interface IPayloadDestinationCollection
+    extends IPayloadOutput
 {
 
     /**
@@ -57,15 +56,7 @@ public interface IPayloadDestinationCollection
      * @return number of bytes written
      * @throws IOException if there is a write error from the underlying PayloadDestination
      */
-    int writePayload(ISourceID sourceId, Payload payload) throws IOException;
-
-    /**
-     * Write a Payload to all destinations.
-     * @param payload Payload to write
-     * @return total number of bytes written
-     * @throws IOException if there is a write error from the underlying PayloadDestination
-     */
-    int writePayload(Payload payload) throws IOException;
+    int writePayload(ISourceID sourceId, IWriteablePayload payload) throws IOException;
 
     /**
      * Close the PayloadDestination for this SourceId.

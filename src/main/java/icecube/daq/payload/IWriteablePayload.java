@@ -8,7 +8,7 @@ public interface IWriteablePayload
 {
     void dispose();
     void recycle();
-    int writePayload(boolean writeLoaded, PayloadDestination pDest)
+    int writePayload(boolean writeLoaded, IPayloadDestination pDest)
         throws IOException;
     int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
         throws IOException;

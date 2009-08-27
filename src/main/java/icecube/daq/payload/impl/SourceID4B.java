@@ -1,7 +1,7 @@
 /*
  * class: SourceID4B
  *
- * Version $Id: SourceID4B.java,v 1.11 2006/08/08 20:18:15 vav111 Exp $
+ * Version $Id: SourceID4B.java 2962 2008-04-22 04:18:17Z dglo $
  *
  * Date: September 21 2004
  *
@@ -17,10 +17,10 @@ import icecube.util.Poolable;
 /**
  * Implementation of ISourceID using a 4 byte int
  *
- * @version $Id: SourceID4B.java,v 1.11 2006/08/08 20:18:15 vav111 Exp $
+ * @version $Id: SourceID4B.java 2962 2008-04-22 04:18:17Z dglo $
  * @author hellwig,dwharton
  */
-public class SourceID4B extends Poolable implements ISourceID
+public class SourceID4B implements ISourceID, Poolable
 {
     public static final int SIZE = 4;
     private int misource = -1;
@@ -90,16 +90,16 @@ public class SourceID4B extends Poolable implements ISourceID
         return misource;
     }
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new SourceID4B();
+        return new SourceID4B();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -110,7 +110,7 @@ public class SourceID4B extends Poolable implements ISourceID
      * recycled, ie returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
 
     /**
@@ -146,11 +146,11 @@ public class SourceID4B extends Poolable implements ISourceID
             return 1;
         }
 
-        if (!(obj instanceof SourceID4B)) {
+        if (!(obj instanceof ISourceID)) {
             return getClass().getName().compareTo(obj.getClass().getName());
         }
 
-        return compareTo((SourceID4B) obj);
+        return compareTo((ISourceID) obj);
     }
 
     /**
@@ -163,7 +163,7 @@ public class SourceID4B extends Poolable implements ISourceID
      *         ID, and <tt>1</tt> if this source ID is 'greater than' the
      *         other source ID
      */
-    public int compareTo(SourceID4B sourceId)
+    public int compareTo(ISourceID sourceId)
     {
         return getSourceID() - sourceId.getSourceID();
     }
@@ -177,7 +177,7 @@ public class SourceID4B extends Poolable implements ISourceID
      */
     public boolean equals(Object obj)
     {
-        return (compareTo(obj) == 0);
+        return compareTo(obj) == 0;
     }
 
     /**
@@ -188,5 +188,16 @@ public class SourceID4B extends Poolable implements ISourceID
     public int hashCode()
     {
         return getSourceID();
+    }
+
+    /**
+     * Get the string representation of this source ID.
+     *
+     * @return DAQName#DAQId
+     */
+    public String toString()
+    {
+        return SourceIdRegistry.getDAQNameFromSourceID(misource) + "#" +
+            SourceIdRegistry.getDAQIdFromSourceID(misource);
     }
 }

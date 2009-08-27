@@ -10,11 +10,10 @@
 
 package icecube.daq.trigger;
 
-import java.io.IOException;
-import java.util.Vector;
-
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.trigger.ITriggerPayload;
+
+import java.io.IOException;
+import java.util.List;
 import java.util.zip.DataFormatException;
 
 /**
@@ -35,9 +34,9 @@ public interface ICompositePayload extends ITriggerPayload {
     IUTCTime getLastTimeUTC();
 
     /**
-     * get vector of Payload's.
+     * get list of Payload's.
      */
-    Vector getPayloads() throws IOException, DataFormatException;
+    List getPayloads() throws DataFormatException;
 
     /**
      * implement getPayloadTimeUTC from IPayload
@@ -49,5 +48,5 @@ public interface ICompositePayload extends ITriggerPayload {
      * get timeordered list of all hits contained in Composite, this
      * is the unique list of  Payload's which are IHitPayload's
      */
-    Vector getHitList();
+    List getHitList();
 }

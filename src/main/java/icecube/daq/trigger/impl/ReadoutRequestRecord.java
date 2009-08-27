@@ -1,18 +1,18 @@
 package icecube.daq.trigger.impl;
 
-import java.nio.ByteOrder;
+import icecube.daq.payload.IPayloadDestination;
+import icecube.daq.payload.ISourceID;
+import icecube.daq.payload.IWriteablePayloadRecord;
+import icecube.daq.payload.impl.SourceID4B;
+import icecube.daq.trigger.IReadoutRequest;
+import icecube.daq.trigger.IReadoutRequestElement;
+import icecube.util.Poolable;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
+import java.nio.ByteOrder;
+import java.util.List;
 import java.util.Vector;
-
-import icecube.daq.trigger.impl.ReadoutRequestElementRecord;
-import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.impl.SourceID4B;
-import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.trigger.IReadoutRequest;
-import icecube.daq.payload.PayloadDestination;
-import icecube.util.Poolable;
 
 /**
  * This object contains the data representing a single
@@ -21,7 +21,7 @@ import icecube.util.Poolable;
  *
  * @author dwharton
  */
-public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadRecord, IReadoutRequest {
+public class ReadoutRequestRecord implements IWriteablePayloadRecord, IReadoutRequest, Poolable {
     public static final int DEFAULT_REC_TYPE = 1;
     //
     //-Static's defining location and size of data within a ByteBuffer
@@ -31,7 +31,7 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
     public static final int SIZE_SOURCEID           = SourceID4B.SIZE;    //-int
     public static final int SIZE_NUMBER_ELEMENTS    = 4;    //-int number of contained request elements
 
-    //-This is the size of the header before the begining of the variable length portion.
+    //-This is the size of the header before the beginning of the variable length portion.
     public static final int SIZE_HEADER = SIZE_REQUEST_TYPE + SIZE_TRIGGER_UID + SIZE_SOURCEID + SIZE_NUMBER_ELEMENTS;
 
     public static final int OFFSET_REQUEST_TYPE     = 0;
@@ -54,13 +54,13 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
     //       (This may have to be changed in the future, but for now we assume that there is
     //       everything in the interface to be able to write the objecte uniquely for these low-level
     //       objects without resorting to versioning, etc)
-    public boolean   mb_IsLoaded             = false;
+    public boolean   mb_IsLoaded;
 
     public short     msi_RequestType         = DEFAULT_REC_TYPE; //this is used for endian detection too
     public int       mi_TriggerUID           = -1;
-    public ISourceID mt_SourceID             = null;
-    public int       mi_numRequestElements   = 0;
-    public Vector    mt_RequestElementVector = null;
+    public ISourceID mt_SourceID;
+    public int       mi_numRequestElements;
+    public List      mt_RequestElementList;
 
 
     /**
@@ -73,35 +73,38 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
     /**
      * computes and returns the total size of this
      * record as it would be written as bytes.
-     * @return int ... the size in bytes of the record(including header + elements)
+     * @return the size in bytes of the record(including header + elements)
      */
     public int getTotalRecordSize() {
-        int iSize = SIZE_HEADER + (mt_RequestElementVector.size() * ReadoutRequestElementRecord.SIZE_READOUT_REQUEST_ELEMENT_RECORD);
+        int iSize = SIZE_HEADER;
+        if (mt_RequestElementList != null) {
+            iSize += mt_RequestElementList.size() * ReadoutRequestElementRecord.SIZE_READOUT_REQUEST_ELEMENT_RECORD;
+        }
         return iSize;
     }
 
     /**
      * method to initialize a ReadoutRequestRecord.
-     * @param i_TriggerUID ............. the UID of this trigger.
-     * @param t_SourceID ............... the ISourceID makeing this request.
-     * @param t_RequestElementVector ... Vector of IReadoutRequestElement's
+     * @param i_TriggerUID the UID of this trigger.
+     * @param t_SourceID the ISourceID makeing this request.
+     * @param t_RequestElementList list of IReadoutRequestElement's
      */
     public void initialize(
             int       i_TriggerUID,
             ISourceID t_SourceID,
-            Vector    t_RequestElementVector
+            List      t_RequestElementList
             ) {
         mb_IsLoaded = true;
         msi_RequestType           = 0x00FF; //this is used for endian detection only!
         mi_TriggerUID             = i_TriggerUID;
         mt_SourceID               = t_SourceID;
-        mi_numRequestElements     = t_RequestElementVector.size();
-        mt_RequestElementVector   = t_RequestElementVector;
+        mi_numRequestElements     = t_RequestElementList.size();
+        mt_RequestElementList     = t_RequestElementList;
     }
 
     /**
      * method to initialize a ReadoutRequestRecord.
-     * @param IReadoutRequest ... the request which contains the information with which to init the record.
+     * @param IReadoutRequest the request which contains the information with which to init the record.
      */
     public void initialize(
             IReadoutRequest tRequest
@@ -110,18 +113,22 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
         msi_RequestType           = 0x00FF; //this is used for endian detection only!
         mi_TriggerUID             = tRequest.getUID();
         mt_SourceID               = tRequest.getSourceID();
-        mt_RequestElementVector   = tRequest.getReadoutRequestElements();
-        mi_numRequestElements     = mt_RequestElementVector.size();
+        mt_RequestElementList     = tRequest.getReadoutRequestElements();
+        if (mt_RequestElementList == null) {
+            mi_numRequestElements = 0;
+        } else {
+            mi_numRequestElements = mt_RequestElementList.size();
+        }
     }
 
     //--[IWriteablePayloadRecord]---
 
     /**
      * Method to write this record to the payload destination.
-     * @param tDestination ....PayloadDestination to which to write this record.
-     * @return int the nubmer of bytes written.
+     * @param tDestination PayloadDestination to which to write this record.
+     * @return the number of bytes written.
      */
-    public int writeData(PayloadDestination tDestination) throws IOException {
+    public int writeData(IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = SIZE_HEADER;
         if (tDestination.doLabel()) tDestination.label("[ReadoutRequestRecord]=>").indent();
         //-write request-type (including endianness)
@@ -139,7 +146,7 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
 
         //-write individual request elements
         for ( int ii=0; ii < mi_numRequestElements; ii++ ) {
-            ReadoutRequestElementRecord tRequestElement = (ReadoutRequestElementRecord) mt_RequestElementVector.get(ii);
+            ReadoutRequestElementRecord tRequestElement = (ReadoutRequestElementRecord) mt_RequestElementList.get(ii);
             if (tDestination.doLabel()) tDestination.label("[ReadoutRequestElementRecord("+(ii+1)+" of "+mi_numRequestElements+")]=>").indent();
             iBytesWritten += tRequestElement.writeData(tDestination);
             if (tDestination.doLabel()) tDestination.undent().label("<=[ReadoutRequestElementRecord("+(ii+1)+" of "+mi_numRequestElements+")]");
@@ -149,14 +156,16 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
     }
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset ....the offset at which to start writing the object.
-     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
-     * @return int the nubmer of bytes written.
+     * @param iOffset the offset at which to start writing the object.
+     * @param tBuffer the ByteBuffer into which to write this payload-record.
+     * @return the number of bytes written.
      */
     public int writeData(int iRecordOffset, ByteBuffer tBuffer) throws IOException {
         int iBytesWritten = SIZE_HEADER;
         ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         //-write request-type (including endianness)
         // OFFSET_REQUEST_TYPE
         tBuffer.putShort(iRecordOffset + OFFSET_REQUEST_TYPE, msi_RequestType);
@@ -176,17 +185,19 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
         //-write individual request elements
         int iCurrOffset = iRecordOffset + OFFSET_START_ELEMENTS;
         for ( int ii=0; ii < mi_numRequestElements; ii++, iCurrOffset += ReadoutRequestElementRecord.SIZE_READOUT_REQUEST_ELEMENT_RECORD ) {
-            ReadoutRequestElementRecord tRequestElement = (ReadoutRequestElementRecord) mt_RequestElementVector.get(ii);
+            ReadoutRequestElementRecord tRequestElement = (ReadoutRequestElementRecord) mt_RequestElementList.get(ii);
             iBytesWritten += tRequestElement.writeData(iCurrOffset, tBuffer);
         }
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
         return iBytesWritten;
     }
 
     //--[IPayloadRecord]---
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mb_IsLoaded;
@@ -194,16 +205,15 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
 
     /**
      * Loads the data from the buffer into the container record.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      */
-    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public void loadData(int iRecordOffset, ByteBuffer tBuffer) {
         mb_IsLoaded = false;
         ByteOrder tSaveOrder = tBuffer.order();
-        tBuffer.order(ByteOrder.BIG_ENDIAN);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(ByteOrder.BIG_ENDIAN);
+        }
         //-read request-type
         // OFFSET_REQUEST_TYPE
         msi_RequestType = tBuffer.getShort(iRecordOffset + OFFSET_REQUEST_TYPE);
@@ -221,16 +231,18 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
         mi_numRequestElements = tBuffer.getInt(iRecordOffset + OFFSET_NUM_ELEMENTS);
 
         //-read individual request elements
-        mt_RequestElementVector = new Vector();
+        mt_RequestElementList = new Vector();
         int iCurrOffset = iRecordOffset + OFFSET_START_ELEMENTS;
         for ( int ii=0; ii < mi_numRequestElements; ii++, iCurrOffset += ReadoutRequestElementRecord.SIZE_READOUT_REQUEST_ELEMENT_RECORD ) {
             ReadoutRequestElementRecord tRequestElement = (ReadoutRequestElementRecord) ReadoutRequestElementRecord.getFromPool();
             tRequestElement.loadData(iCurrOffset, tBuffer);
-            mt_RequestElementVector.add(tRequestElement);
+            mt_RequestElementList.add(tRequestElement);
         }
 
         //-restore order
-        tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.BIG_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
         mb_IsLoaded = true;
     }
 
@@ -242,10 +254,12 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
         if ( mb_IsLoaded ) {
             mb_IsLoaded = false;
             //-recycle the loaded request elements
-            for ( int ii=0; ii < mt_RequestElementVector.size(); ii++ ) {
-                ((IWriteablePayloadRecord) mt_RequestElementVector.get(ii)).dispose();
+            for ( int ii=0; mt_RequestElementList != null &&
+                            ii < mt_RequestElementList.size(); ii++ )
+            {
+                ((IWriteablePayloadRecord) mt_RequestElementList.get(ii)).dispose();
             }
-            mt_RequestElementVector = null;
+            mt_RequestElementList = null;
             mi_TriggerUID = -1;
             mt_SourceID = null;
         }
@@ -254,12 +268,12 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
     //--[IReadoutRequest]---
     /**
      * getReadoutSPRequestElements()
-     * returns a Vector of IReadoutRequestElement's describing the
+     * returns a list of IReadoutRequestElement's describing the
      * readout request for a single ISourceID (ie String)
-     * @return Vector Vector of IReadoutRequestElement
+     * @return list of IReadoutRequestElement
      */
-    public Vector getReadoutRequestElements() {
-        return mt_RequestElementVector;
+    public List getReadoutRequestElements() {
+        return mt_RequestElementList;
     }
 
     /**
@@ -289,25 +303,23 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
     }
     /**
      * Method to get a useable ReadoutRequestElementRecord from a pool.
-     * @return ReadoutRequestElementRecord ...the useable record, from a pool (TODO)
+     * @return the useable record, from a pool (TODO)
      */
     public static ReadoutRequestElementRecord getUseableReadoutRequestElementRecord() {
-        //-TODO: implement pooling
         return new ReadoutRequestElementRecord();
     }
 
     /**
      * Allows this object to know how to pool itself.
-     * @return  ReadoutRequestRecord ....from the pool
-     * TODO: implement pooling!!!!!
+     * @return  ReadoutRequestRecord from the pool
      */
     public static Poolable getFromPool() {
-        return(Poolable) new ReadoutRequestRecord();
+        return new ReadoutRequestRecord();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -315,10 +327,46 @@ public class ReadoutRequestRecord extends Poolable implements IWriteablePayloadR
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
 
+    /**
+     * Get readout request data string.
+     *
+     * @return data string
+     */
+    public String toDataString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append("reqType ").append(msi_RequestType);
+        buf.append(" trigUID ").append(mi_TriggerUID);
+        buf.append(" src ").append(mt_SourceID);
+        if (mt_RequestElementList != null) {
+            for (Object obj : mt_RequestElementList) {
+                IReadoutRequestElement elem =
+                    (IReadoutRequestElement) obj;
+                int type = elem.getReadoutType();
+                String typeStr =
+                    ReadoutRequestElementRecord.getTypeString(type);
+                buf.append(" [").append(typeStr);
+                buf.append(" [").append(elem.getFirstTimeUTC()).append("-");
+                buf.append(elem.getLastTimeUTC()).append("] dom ");
+                buf.append(elem.getDomID()).append(" src ");
+                buf.append(elem.getSourceID()).append("]");
+            }
+        }
+        return buf.toString();
+    }
+
+    /**
+     * Return string description of the object.
+     *
+     * @return object description
+     */
+    public String toString()
+    {
+        return "ReadoutRequestRecord[" + toDataString() + "]";
+    }
 }

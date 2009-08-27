@@ -3,7 +3,7 @@ package icecube.daq.payload;
 import java.nio.ByteBuffer;
 
 /**
- * Generic DomHit interface
+ * Generic DomHit interface.
  */
 public interface IDomHit
     extends ILoadablePayload
@@ -14,6 +14,13 @@ public interface IDomHit
      * @return DOM ID
      */
     long getDomId();
+
+    /**
+     * Get local coincidence mode.
+     *
+     * @return mode
+     */
+    int getLocalCoincidenceMode();
 
     /**
      * Get the backing ByteBuffer for this DOM hit.

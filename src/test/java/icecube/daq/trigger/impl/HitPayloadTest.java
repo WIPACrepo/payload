@@ -1,32 +1,27 @@
 package icecube.daq.trigger.impl;
 
 import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-
 import icecube.daq.payload.impl.DomHitEngineeringFormatPayload;
 import icecube.daq.payload.impl.DomHitEngineeringFormatRecord;
 import icecube.daq.payload.impl.SourceID4B;
-
+import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDOMID;
 import icecube.daq.payload.test.MockDestination;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
-
 import icecube.daq.trigger.IHitDataPayload;
 import icecube.daq.trigger.IHitDataRecord;
 
 import java.io.IOException;
-
 import java.nio.ByteBuffer;
-
 import java.util.zip.DataFormatException;
 
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import junit.textui.TestRunner;
 
 class MockHitData
@@ -52,13 +47,18 @@ class MockHitData
         throw new Error("Unimplemented");
     }
 
+    public void dispose()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public IDOMID getDOMID()
     {
         return domId;
     }
 
     public IHitDataRecord getHitRecord()
-        throws IOException, DataFormatException
+        throws DataFormatException
     {
         throw new Error("Unimplemented");
     }
@@ -69,6 +69,11 @@ class MockHitData
     }
 
     public double getIntegratedCharge()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public ByteBuffer getPayloadBacking()
     {
         throw new Error("Unimplemented");
     }
@@ -107,10 +112,36 @@ class MockHitData
     {
         return trigType;
     }
+
+    /**
+     * Initializes Payload from backing so it can be used as an IPayload.
+     */
+    public void loadPayload()
+        throws IOException, DataFormatException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void recycle()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, IPayloadDestination pDest)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
 }
 
 public class HitPayloadTest
-    extends TestCase
+    extends LoggingCase
 {
     /**
      * Constructs an instance of this test.
@@ -173,10 +204,10 @@ public class HitPayloadTest
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());
         assertEquals("Bad trigger type", trigType, hit.getTriggerType());
         assertEquals("Bad trigger config ID", cfgId, hit.getTriggerConfigID());
-        assertEquals("Bad DOM ID", domId, hit.getDOMID().getDomIDAsLong());
+        assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
         assertEquals("Bad integrated charge", -1.0, hit.getIntegratedCharge());
         assertEquals("Bad hit time",
-                     utcTime, hit.getHitTimeUTC().getUTCTimeAsLong());
+                     utcTime, hit.getHitTimeUTC().longValue());
 
         hit.recycle();
     }
@@ -200,10 +231,10 @@ public class HitPayloadTest
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());
         assertEquals("Bad trigger type", trigType, hit.getTriggerType());
         assertEquals("Bad trigger config ID", cfgId, hit.getTriggerConfigID());
-        assertEquals("Bad DOM ID", domId, hit.getDOMID().getDomIDAsLong());
+        assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
         assertEquals("Bad integrated charge", -1.0, hit.getIntegratedCharge());
         assertEquals("Bad hit time",
-                     utcTime, hit.getHitTimeUTC().getUTCTimeAsLong());
+                     utcTime, hit.getHitTimeUTC().longValue());
 
         try {
             hit.recycle();
@@ -234,10 +265,10 @@ public class HitPayloadTest
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());
         assertEquals("Bad trigger type", trigType, hit.getTriggerType());
         assertEquals("Bad trigger config ID", cfgId, hit.getTriggerConfigID());
-        assertEquals("Bad DOM ID", domId, hit.getDOMID().getDomIDAsLong());
+        assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
         assertEquals("Bad integrated charge", -1.0, hit.getIntegratedCharge());
         assertEquals("Bad hit time",
-                     utcTime, hit.getHitTimeUTC().getUTCTimeAsLong());
+                     utcTime, hit.getHitTimeUTC().longValue());
 
         try {
             hit.recycle();

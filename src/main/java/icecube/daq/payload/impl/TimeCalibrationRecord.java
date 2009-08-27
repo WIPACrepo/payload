@@ -1,15 +1,12 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IPayloadDestination;
+import icecube.daq.payload.IWriteablePayloadRecord;
+import icecube.util.Poolable;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.zip.DataFormatException;
-
-import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.trigger.impl.DOMID8B;
-import icecube.util.Poolable;
-import icecube.daq.payload.PayloadDestination;
 
 /**
  * TimeCalibrationRecord
@@ -18,9 +15,9 @@ import icecube.daq.payload.PayloadDestination;
  * about the gps-data which is stored in the record in the last 22 bytes.
  *
  * @author dwharton
- * 
+ *
  */
-public class TimeCalibrationRecord extends Poolable implements IWriteablePayloadRecord {
+public class TimeCalibrationRecord implements IWriteablePayloadRecord, Poolable {
 
     //-Static positions of data within the record
     public static final int SIZE_PACKET_LEN    = 4;
@@ -40,7 +37,7 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
     public static final String DORTX       = "DORTX";
     public static final String DORRX       = "DORRX";
     public static final String DORWF_ARRAY = "DORWF_ARRAY";
-    public static final String DOMRX       = "DOMRX"; 
+    public static final String DOMRX       = "DOMRX";
     public static final String DOMTX       = "DOMTX";
     public static final String DOMWF_ARRAY = "DOMWF_ARRAY";
     public static final String PADDING     = "PADDING";
@@ -50,14 +47,14 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
 
     //-this is defined and includes 64 bytes of padding (for those who are skeptical)
     public static final int SIZE_TOTAL         = 292;
-	//public static final int OFFSET_GPS_DATA    = OFFSET_DOMWF_ARRAY + SIZE_DOMWF_ARRY * 2; //-skip past the short array
+    //public static final int OFFSET_GPS_DATA    = OFFSET_DOMWF_ARRAY + SIZE_DOMWF_ARRY * 2; //-skip past the short array
 
     //-Variable length offsets start after this point in the record.
 
     /**
      * boolean indicating if data has been successfully loaded into this 'container'
      */
-    public boolean mbLoaded = false;
+    public boolean mbLoaded;
     //.
     //--TimeCalibrationRecord container variables (start)
     //
@@ -73,16 +70,16 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
     //.
 
     /**
-     * Get's an object form the pool
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool
+     * @return object of this type from the object pool.
      */
     public static Poolable getFromPool() {
-        return (Poolable) new TimeCalibrationRecord();
+        return new TimeCalibrationRecord();
     }
 
     /**
-     * Get's an object form the pool in a non-static context.
-     * @return IPoolable ... object of this type from the object pool.
+     * Get an object from the pool in a non-static context.
+     * @return object of this type from the object pool.
      */
     public Poolable getPoolable() {
         return this.getFromPool();
@@ -91,10 +88,10 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
     /**
      * Returns an instance of this object so that it can be
      * recycled, ie returned to the pool.
-     * @param tReadoutRequestPayload ... Object (a ReadoutRequestPayload) which is to be returned to the pool.
+     * @param tReadoutRequestPayload ReadoutRequestPayload which is to be returned to the pool.
      */
     public void recycle() {
-		dispose();
+        dispose();
     }
 
     /**
@@ -105,7 +102,7 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
     }
     /**
      * Determines if this record is loaded with valid data.
-     * @return boolean ...true if data is loaded, false otherwise.
+     * @return true if data is loaded, false otherwise.
      */
     public boolean isDataLoaded() {
         return mbLoaded;
@@ -132,20 +129,20 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
     /**
      * reads the time calibration data from the TimeCalibration Record a ByteBuffer
      * containing the data.
-     * @param iRecordOffset ...int the offset from which to start loading the data fro the engin.
-     * @param tBuffer ...ByteBuffer from wich to construct the record.
+     * @param iRecordOffset the offset from which to start loading the data fro the engin.
+     * @param tBuffer ByteBuffer from which to construct the record.
      *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format.
      * @see icecube.daq.payload.IPayloadRecord
      */
-    public void loadData(int iRecordOffset, ByteBuffer tBuffer) throws IOException, DataFormatException {
+    public void loadData(int iRecordOffset, ByteBuffer tBuffer) {
         //-Set to false to start to start with just in case there is an error
         mbLoaded = false;
         //-Fill in the internal data
         // this.domId = domId;
         ByteOrder tSaveOrder = tBuffer.order();
-		tBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        if (tSaveOrder != ByteOrder.LITTLE_ENDIAN) {
+            tBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        }
 
         //-read in the packet length
         miPacketLen = tBuffer.getInt(iRecordOffset + OFFSET_PACKET_LEN);
@@ -164,7 +161,9 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
             maiDomwf[ii] = (int) tBuffer.getShort(iRecordOffset + OFFSET_DOMWF_ARRAY + ii * 2);
 
         //-Restore the ordering of the buffer if needed.
-		tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.LITTLE_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
 
         //-If have loaded to this point without an exception, then set loaded to true
         mbLoaded = true;
@@ -172,8 +171,8 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
 
     /**
      * Method to write this record to the payload destination.
-     * @param iOffset ....the offset at which to start writing the object.
-     * @param tBuffer ....the ByteBuffer into which to write this payload-record.
+     * @param iOffset the offset at which to start writing the object.
+     * @param tBuffer the ByteBuffer into which to write this payload-record.
      *
      * @see IWriteablePayloadRecord
      */
@@ -181,7 +180,9 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
         int iBytesWritten = 0;
         //-save the byte-order
         ByteOrder tSaveOrder = tBuffer.order();
-		tBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        if (tSaveOrder != ByteOrder.LITTLE_ENDIAN) {
+            tBuffer.order(ByteOrder.LITTLE_ENDIAN);
+        }
 
         //-The packet length of the array.
         iBytesWritten += 4;
@@ -190,8 +191,8 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
         //-write out the Dor Transmit time
         iBytesWritten += 8;
         tBuffer.putLong(iOffset + OFFSET_DORTX, mlDorTX);
-        
-        //-write out the Dor Recieve time.
+
+        //-write out the Dor Receive time.
         iBytesWritten += 8;
         tBuffer.putLong( iOffset + OFFSET_DORRX, mlDorRX);
 
@@ -200,7 +201,7 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
         for (int ii=0; ii < SIZE_DORWF_ARRY; ii++)
             tBuffer.putInt(iOffset + OFFSET_DORWF_ARRAY + (ii*4), maiDorwf[ii]);
 
-        //-write out the Dom Recieve time
+        //-write out the Dom Receive time
         iBytesWritten += 8;
         tBuffer.putLong(iOffset + OFFSET_DOMRX, mlDomRX);
 
@@ -218,7 +219,9 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
         tBuffer.put(PADDING_BYTE_ARRAY);
 
         //-restore the input byte-order
-		tBuffer.order(tSaveOrder);
+        if (tSaveOrder != ByteOrder.LITTLE_ENDIAN) {
+            tBuffer.order(tSaveOrder);
+        }
 
         //-return the total number of bytes written.
         return iBytesWritten;
@@ -230,16 +233,16 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
      * target destination.
      * @param tDestination PayloadDestination to which to write the output.
      *
-     * @return int the number of bytes written to the destination.
+     * @return the number of bytes written to the destination.
      *
      * @see IWriteablePayloadRecord
      */
-    public int writeData(PayloadDestination tDestination) throws IOException {
+    public int writeData(IPayloadDestination tDestination) throws IOException {
         int iBytesWritten = 0;
 
         //-delimit the beginning of the record.
         if (tDestination.doLabel()) tDestination.label("[TimeCalibrationRecord] {").indent();
-        
+
         //-The packet length of the array.
         iBytesWritten += 4;
         tDestination.writeInt(PACKET_LEN,miPacketLen);
@@ -247,8 +250,8 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
         //-write out the Dor Transmit time
         iBytesWritten += 8;
         tDestination.writeLong(DORTX,mlDorTX);
-        
-        //-write out the Dor Recieve time.
+
+        //-write out the Dor Receive time.
         iBytesWritten += 8;
         tDestination.writeLong(DORRX, mlDorRX);
 
@@ -256,7 +259,7 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
         iBytesWritten += SIZE_DORWF_ARRY * 4;
         tDestination.writeIntArrayRange(DORWF_ARRAY,0,SIZE_DORWF_ARRY-1, maiDorwf);
 
-        //-write out the Dom Recieve time
+        //-write out the Dom Receive time
         iBytesWritten += 8;
         tDestination.writeLong(DOMRX,mlDomRX);
 
@@ -285,47 +288,47 @@ public class TimeCalibrationRecord extends Poolable implements IWriteablePayload
      * @return the transmit DOM timestamp
      */
     public long getDomTXTime() {
-		return mlDomTX;
-	}
+        return mlDomTX;
+    }
 
     /**
      *
-     * @return the recieve DOM timestamp
+     * @return the receive DOM timestamp
      */
     public long getDomRXTime() {
-		return mlDomRX;
-	}
+        return mlDomRX;
+    }
 
     /**
      *
      * @return the transmit DOR timestamp
      */
     public long getDorTXTime() {
-		return mlDorTX;
-	}
+        return mlDorTX;
+    }
 
     /**
      *
      * @return the receive DOR timestamp
      */
     public long getDorRXTime() {
-		return mlDorRX;
-	}
+        return mlDorRX;
+    }
 
     /**
      *
      * @return the waveform as measured by the DOM
      */
     public int[] getDomWaveform() {
-		return maiDomwf;
-	}
+        return maiDomwf;
+    }
 
     /**
      *
      * @return the waveform as measured by the DOR card
      */
     public int[] getDorWaveform() {
-		return maiDorwf;
-	}
+        return maiDorwf;
+    }
 
 }

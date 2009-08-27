@@ -1,7 +1,7 @@
 /*
  * interface: IPayloadDestinationCollectionController
  *
- * Version $Id: IPayloadDestinationCollectionController.java,v 1.2 2005/11/18 18:25:42 toale Exp $
+ * Version $Id: IPayloadDestinationCollectionController.java 2852 2008-03-26 10:39:43Z dglo $
  *
  * Date: October 19 2005
  *
@@ -14,14 +14,11 @@ package icecube.daq.payload;
  * This interface defines an object the will create and control a
  *  PayloadDestinationCollection.
  *
- * @version $Id: IPayloadDestinationCollectionController.java,v 1.2 2005/11/18 18:25:42 toale Exp $
+ * @version $Id: IPayloadDestinationCollectionController.java 2852 2008-03-26 10:39:43Z dglo $
  * @author pat
  */
 public interface IPayloadDestinationCollectionController
 {
-
-    public static final int BYTE_BUFFER_PAYLOAD_DESTINATION = 0;
-    public static final int SINK_PAYLOAD_DESTINATION    = 1;
 
     /**
      * Get the PayloadDestinationCollection.
@@ -40,11 +37,4 @@ public interface IPayloadDestinationCollectionController
      * Callback method that indicates all PayloadDestinations have been closed.
      */
     void allPayloadDestinationsClosed();
-
-    /**
-     * Set the type of PayloadDestination to use.
-     * @param type see PayloadDestinationRegistry
-     */
-    void setPayloadDestinationType(int type);
-
 }
