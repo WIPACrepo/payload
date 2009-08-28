@@ -1,7 +1,7 @@
 /*
  * interface: IPayloadDestinationCollectionController
  *
- * Version $Id: IPayloadDestinationCollectionController.java 2852 2008-03-26 10:39:43Z dglo $
+ * Version $Id: IPayloadDestinationCollectionController.java 4574 2009-08-28 21:32:32Z dglo $
  *
  * Date: October 19 2005
  *
@@ -14,7 +14,7 @@ package icecube.daq.payload;
  * This interface defines an object the will create and control a
  *  PayloadDestinationCollection.
  *
- * @version $Id: IPayloadDestinationCollectionController.java 2852 2008-03-26 10:39:43Z dglo $
+ * @version $Id: IPayloadDestinationCollectionController.java 4574 2009-08-28 21:32:32Z dglo $
  * @author pat
  */
 public interface IPayloadDestinationCollectionController
@@ -27,8 +27,8 @@ public interface IPayloadDestinationCollectionController
     IPayloadDestinationCollection getPayloadDestinationCollection();
 
     /**
-     * Callback method that indicates that the PayloadDestination associated with
-     * this SourceId has been closed by the user.
+     * Callback method that indicates that the PayloadDestination associated
+     * with this SourceId has been closed by the user.
      * @param sourceId SourceId of closed PayloadDestination
      */
     void payloadDestinationClosed(ISourceID sourceId);

@@ -7,10 +7,9 @@ import java.nio.ByteBuffer;
  * receive ByteBuffers. (for what-ever reason)
  *
  * @author dwharton
- *
- * @see icecube.daq.payload.ByteBufferPayloadDestination
  */
-public interface IByteBufferReceiver {
+public interface IByteBufferReceiver
+{
     /**
      * Receives a ByteBuffer from a source.
      * @param tBuffer ByteBuffer the new buffer to be processed.

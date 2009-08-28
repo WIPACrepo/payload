@@ -13,7 +13,9 @@ import java.nio.ByteBuffer;
  *
  * @author dwharton
  */
-public interface IPayloadDestination extends DataOutput {
+public interface IPayloadDestination
+    extends DataOutput
+{
 
     /**
      * Tells whether or not this channel is open.
@@ -26,8 +28,8 @@ public interface IPayloadDestination extends DataOutput {
      * Closes this channel.
      *
      * <p> After a channel is closed, any further attempt to invoke I/O
-     * operations upon it will cause a {@link java.nio.channels.ClosedChannelException} to be
-     * thrown.
+     * operations upon it will cause a <tt>ClosedChannelException</tt>
+     * to be thrown.
      *
      * <p> If this channel is already closed then invoking this method has no
      * effect.
@@ -40,7 +42,7 @@ public interface IPayloadDestination extends DataOutput {
      * @throws  IOException  If an I/O error occurs
      */
     void close()
-            throws IOException;
+        throws IOException;
 
     /**
      * Returns boolean to tell if label operation should be performed.
@@ -53,30 +55,33 @@ public interface IPayloadDestination extends DataOutput {
     /**
      * simple labeling routine which is a stub but is useful for debugging.
      * this is NOT INTENDED to contribute to the output stream.
-     * @param sLabel String which indicates some aspect of how the destination is being used
-     *                   at a point in the writing of payloads.
+     * @param sLabel String which indicates some aspect of how the destination
+     *               is being used at a point in the writing of payloads.
+     * @return this object
      */
     IPayloadDestination label(String sLabel);
 
     /**
      * adds indentation level for labeling
+     * @return this object
      */
     IPayloadDestination indent();
 
     /**
      * removes indentation level for labeling
+     * @return this object
      */
     IPayloadDestination undent();
 
     /**
-     * This method writes bytes from the given offset in the ByteBuffer for a length of iBytes
-     * to the destination.
+     * This method writes bytes from the given offset in the ByteBuffer for a
+     * length of iBytes to the destination.
      * @param iOffset the offset in the ByteBuffer to start
      * @param tBuffer ByteBuffer from which to write to destination.
      * @param iBytes  the number of bytes to write to the destination.
      *
-     * @throws IOException....if an error occurs either reading the ByteBuffer or writing
-     *                        to the destination.
+     * @throws IOException if an error occurs either reading the ByteBuffer or
+     *                     writing to the destination.
      */
     void write(int iOffset, ByteBuffer tBuffer, int iBytes)
         throws IOException;
@@ -87,6 +92,7 @@ public interface IPayloadDestination extends DataOutput {
      * The 24 high-order  bits of <code>b</code>
      * are ignored.
      *
+     * @param sName name of the string
      * @param      b   the byte to be written.
      * @exception  IOException  if an I/O error occurs.
      */
@@ -128,16 +134,16 @@ public interface IPayloadDestination extends DataOutput {
         throws IOException;
 
     /**
-     * This method writes bytes from the given offset in the ByteBuffer for a length of iBytes
-     * to the destination.
+     * This method writes bytes from the given offset in the ByteBuffer for a
+     * length of iBytes to the destination.
      *
      * @param sFieldName name of the field.
      * @param iOffset the offset in the ByteBuffer to start
      * @param tBuffer ByteBuffer from which to write to destination.
      * @param iBytes the number of bytes to write to the destination.
      *
-     * @throws IOException....if an error occurs either reading the ByteBuffer or writing
-     *                        to the destination.
+     * @throws IOException if an error occurs either reading the ByteBuffer or
+     *                     writing to the destination.
      */
     void write(String sFieldName, int iOffset, ByteBuffer tBuffer, int iBytes)
         throws IOException;
@@ -154,6 +160,7 @@ public interface IPayloadDestination extends DataOutput {
      * which will then return a <code>byte</code>
      * equal to <code>(byte)v</code>.
      *
+     * @param sName name of the string
      * @param      v   the byte value to be written.
      * @exception  IOException  if an I/O error occurs.
      */
@@ -175,6 +182,7 @@ public interface IPayloadDestination extends DataOutput {
      * will then return a <code>short</code> equal
      * to <code>(short)v</code>.
      *
+     * @param sName name of the string
      * @param      v   the <code>short</code> value to be written.
      * @exception  IOException  if an I/O error occurs.
      */
@@ -197,6 +205,7 @@ public interface IPayloadDestination extends DataOutput {
      * <code>DataInput</code> , which will then
      * return an <code>int</code> equal to <code>v</code>.
      *
+     * @param sName name of the string
      * @param      v   the <code>int</code> value to be written.
      * @exception  IOException  if an I/O error occurs.
      */
@@ -224,6 +233,7 @@ public interface IPayloadDestination extends DataOutput {
      * will then return a <code>long</code> equal
      * to <code>v</code>.
      *
+     * @param sName name of the string
      * @param      v   the <code>long</code> value to be written.
      * @exception  IOException  if an I/O error occurs.
      */
@@ -245,7 +255,8 @@ public interface IPayloadDestination extends DataOutput {
      * byte first, in exactly the manner of the
      * <code>writeChar</code> method.
      *
-     * @param      s   the string value to be written.
+     * @param sName name of the string
+     * @param s the string value to be written.
      * @exception  IOException  if an I/O error occurs.
      */
     void writeChars(String sName, String s)
@@ -260,6 +271,7 @@ public interface IPayloadDestination extends DataOutput {
      * @param iLast the last element number to write
      * @param iaArray array containing the elements to write
      *
+     * @throws IOException if an error occurs during the process
      */
     void writeShortArrayRange(String sArrayName, int iFirst, int iLast,
                               short[] iaArray)
@@ -274,6 +286,7 @@ public interface IPayloadDestination extends DataOutput {
      * @param iLast the last element number to write
      * @param iaArray array containing the elements to write
      *
+     * @throws IOException if an error occurs during the process
      */
     void writeShortArrayRangeAsBytes(String sArrayName, int iFirst, int iLast,
                                      short[] iaArray)
@@ -288,6 +301,7 @@ public interface IPayloadDestination extends DataOutput {
      * @param iLast the last element number to write
      * @param iaArray array containing the elements to write
      *
+     * @throws IOException if an error occurs during the process
      */
     void writeIntArrayRange(String sArrayName, int iFirst, int iLast,
                             int[] iaArray)
@@ -305,7 +319,7 @@ public interface IPayloadDestination extends DataOutput {
      * @throws IOException if an error occurs during the process
      */
     int writePayload(IWriteablePayload tPayload)
-            throws IOException;
+        throws IOException;
 
     /**
      * This methods proxies the call to write Payload to allow the whole
@@ -313,14 +327,15 @@ public interface IPayloadDestination extends DataOutput {
      * be invoke the write method itself, or to pass the payload by refernce
      * to the target.
      *
-     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
+     * @param bWriteLoaded boolean to indicate if the loaded vs buffered
+     *                     payload should be written.
      * @param tPayload Payload to which to write to this destination
      * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
     int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload)
-            throws IOException;
+        throws IOException;
 
     /**
      * This methods proxies the call to write Payload to allow the whole
@@ -328,16 +343,19 @@ public interface IPayloadDestination extends DataOutput {
      * be invoke the write method itself, or to pass the payload by refernce
      * to the target.
      *
-     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
+     * @param bWriteLoaded boolean to indicate if the loaded vs buffered
+     *                     payload should be written.
      * @param tPayload Payload to which to write to this destination
-     * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
+     * @param iDestOffset the offset into the destination ByteBuffer at which
+     *                    to start writting the payload
      * @param tDestBuffer the destination ByteBuffer to write the payload to.
      * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
      */
-    int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload, int iDestOffset, ByteBuffer tDestBuffer)
-            throws IOException;
+    int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload,
+                     int iDestOffset, ByteBuffer tDestBuffer)
+        throws IOException;
 
 
 }

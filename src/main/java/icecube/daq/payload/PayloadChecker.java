@@ -1,20 +1,18 @@
 package icecube.daq.payload;
 
-import icecube.daq.eventbuilder.IEventPayload;
-import icecube.daq.eventbuilder.IReadoutDataPayload;
-import icecube.daq.trigger.IHitDataPayload;
-import icecube.daq.trigger.IHitPayload;
-import icecube.daq.trigger.IReadoutRequest;
-import icecube.daq.trigger.IReadoutRequestElement;
-import icecube.daq.trigger.ITriggerRequestPayload;
-import icecube.daq.trigger.TriggerRegistry;
+import icecube.daq.payload.impl.SourceID;
+import icecube.daq.payload.impl.UTCTime;
+//import icecube.daq.trigger.TriggerRegistry;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,13 +23,26 @@ import org.dom4j.DocumentException;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
+/**
+ * Generic XML-based configuration.
+ */
 abstract class XMLConfig
 {
+    /**
+     * Get the node text as an integer value.
+     * @param branch integer node
+     * @return integer value
+     */
     static int getNodeInteger(Branch branch)
     {
         return Integer.parseInt(getNodeText(branch));
     }
 
+    /**
+     * Concatenate the text from the node's children.
+     * @param branch node
+     * @return concatenated text
+     */
     static String getNodeText(Branch branch)
     {
         StringBuilder str = new StringBuilder();
@@ -50,11 +61,20 @@ abstract class XMLConfig
     }
 }
 
+/**
+ * Run configuration.
+ */
 class RunConfig
     extends XMLConfig
 {
+    /** Trigger configuration name. */
     private String trigCfg;
 
+    /**
+     * Run configuration
+     * @param configName configuration name
+     * @param doc XML tree describing run configuration
+     */
     RunConfig(String configName, Branch doc)
     {
         List cfgNodes = doc.selectNodes("runConfig/triggerConfig");
@@ -68,18 +88,62 @@ class RunConfig
         trigCfg = getNodeText((Branch) cfgNodes.get(0));
     }
 
+    /**
+     * Return trigger configuration name.
+     * @return name
+     */
     String getTriggerConfig()
     {
         return trigCfg;
     }
 }
 
+/**
+ * Trigger configuration entry
+ */
 class TriggerConfigEntry
     extends XMLConfig
 {
-    /** Log object. */
-    private static final Log LOG =
-        LogFactory.getLog(TriggerConfigEntry.class);
+    /**
+     * Map of configuration names to list of parameters
+     */
+    private static final HashMap<String, String[]> triggerParams =
+        new HashMap<String, String[]>() {
+            {
+                put("AmandaM18Trigger", new String[0]);
+                put("AmandaM24Trigger", new String[0]);
+                put("AmandaMFrag20Trigger", new String[0]);
+                put("AmandaRandomTrigger", new String[0]);
+                put("AmandaStringTrigger", new String[0]);
+                put("AmandaVolumeTrigger", new String[0]);
+                put("CalibrationTrigger", new String[] { "hitType" });
+                put("ClusterTrigger",
+                    new String[] {
+                        "coherenceLength", "multiplicity", "timeWindow",
+                    });
+                put("MinBiasTrigger", new String[] { "prescale" });
+                put("MultiplicityStringTrigger",
+                    new String[] {
+                        "maxLength", "numberOfVetoTopDoms", "string",
+                        "threshold", "timeWindow",
+                    });
+                put("PhysicsMinBiasTrigger",
+                    new String[] { "deadtime", "prescale" });
+                put("SimpleMajorityTrigger",
+                    new String[] { "threshold", "timeWindow" });
+                put("ThroughputTrigger", new String[0]);
+                put("TrigBoardTrigger", new String[] { "prescale" });
+            }
+        };
+
+    /*
+    private static final String[] bogusTypeList = new String[] {
+        "AmandaRandomTrigger",
+        "ClusterTrigger",
+        "MultiplicityStringTrigger",
+        "PhysicsMinBiasTrigger",
+    };
+    */
 
     private int type = -1;
     private int id = -1;
@@ -87,6 +151,9 @@ class TriggerConfigEntry
     private String name;
     private HashMap<String, Integer> params = new HashMap<String, Integer>();
 
+    /**
+     * Trigger configuration entry
+     */
     TriggerConfigEntry(Branch top)
     {
         for (Iterator iter = top.nodeIterator(); iter.hasNext(); ) {
@@ -179,42 +246,6 @@ class TriggerConfigEntry
         return type == this.type;
     }
 
-    private static final HashMap<String, String[]> triggerParams =
-        new HashMap<String, String[]>() {
-            {
-                put("AmandaM18Trigger", new String[0]);
-                put("AmandaM24Trigger", new String[0]);
-                put("AmandaMFrag20Trigger", new String[0]);
-                put("AmandaRandomTrigger", new String[0]);
-                put("AmandaStringTrigger", new String[0]);
-                put("AmandaVolumeTrigger", new String[0]);
-                put("CalibrationTrigger", new String[] { "hitType" });
-                put("ClusterTrigger",
-                    new String[] {
-                        "coherenceLength", "multiplicity","timeWindow"
-                    });
-                put("MinBiasTrigger", new String[] { "prescale" });
-                put("MultiplicityStringTrigger",
-                    new String[] {
-                        "maxLength", "numberOfVetoTopDoms", "string",
-                        "threshold","timeWindow"
-                    });
-                put("PhysicsMinBiasTrigger",
-                    new String[] { "deadtime", "prescale" });
-                put("SimpleMajorityTrigger",
-                    new String[] { "threshold", "timeWindow" });
-                put("ThroughputTrigger", new String[0]);
-                put("TrigBoardTrigger", new String[] { "prescale" });
-            }
-        };
-
-    private static final String[] bogusTypeList = new String[] {
-        "AmandaRandomTrigger",
-        "ClusterTrigger",
-        "MultiplicityStringTrigger",
-        "PhysicsMinBiasTrigger",
-    };
-
     void validate()
     {
         if (name == null || srcId < 0 || type < 0) {
@@ -228,6 +259,7 @@ class TriggerConfigEntry
                             SourceIdRegistry.getDAQNameFromSourceID(srcId));
         }
 
+/*
         boolean isBogusType = false;
         for (String b : bogusTypeList) {
             if (name.equals(b)) {
@@ -247,6 +279,7 @@ class TriggerConfigEntry
 
             LOG.error(errMsg);
         }
+*/
 
         if (!triggerParams.containsKey(name)) {
             throw new Error("Trigger \"" + name + "\" has no parameter entry");
@@ -292,25 +325,49 @@ class TriggerConfigEntry
     }
 }
 
+/**
+ * Trigger configuration
+ */
 class TriggerConfig
 {
     private String name;
     private List<TriggerConfigEntry> entries =
         new ArrayList<TriggerConfigEntry>();
 
+    /**
+     * Trigger configuration
+     * @param name configuration name
+     */
     TriggerConfig(String name)
     {
         this.name = name;
     }
 
+    /**
+     * Add a configuration entry.
+     * @param entry configuration entry
+     */
     void add(TriggerConfigEntry entry)
     {
         entries.add(entry);
     }
 
+    /**
+     * Get the list of entries
+     * @return list of entries
+     */
     List<TriggerConfigEntry> entries()
     {
         return entries;
+    }
+
+    /**
+     * Get the configuration name.
+     * @return name
+     */
+    String getName()
+    {
+        return name;
     }
 }
 
@@ -323,13 +380,13 @@ public abstract class PayloadChecker
     private static final Log LOG =
         LogFactory.getLog(PayloadChecker.class);
 
-    private static final int SMT_TYPE =
-        TriggerRegistry.getTriggerType("SimpleMajorityTrigger");
+    private static final int SMT_TYPE = -1;
+    // = TriggerRegistry.getTriggerType("SimpleMajorityTrigger");
 
     private static short year;
 
     static {
-        GregorianCalendar cal = new GregorianCalendar(); 
+        GregorianCalendar cal = new GregorianCalendar();
         year = (short) cal.get(GregorianCalendar.YEAR);
     };
 
@@ -341,6 +398,13 @@ public abstract class PayloadChecker
 
     /** Trigger configuration data. */
     private static TriggerConfig triggerConfig;
+
+    /**
+     * Cannot create an instance of a utility class
+     */
+    private PayloadChecker()
+    {
+    }
 
     /**
      * Load trigger configuration data.
@@ -499,6 +563,18 @@ public abstract class PayloadChecker
      *
      * @return source ID string
      */
+    private static String getSourceString(int src)
+    {
+        return getSourceString(new SourceID(src));
+    }
+
+    /**
+     * Get string representation of a source ID.
+     *
+     * @param src source ID
+     *
+     * @return source ID string
+     */
     private static String getSourceString(ISourceID src)
     {
         if (src == null || src.getSourceID() < 0) {
@@ -519,8 +595,8 @@ public abstract class PayloadChecker
         List payList;
         try {
             payList = tr.getPayloads();
-        } catch (Exception ex) {
-            LOG.error("Couldn't get list of payloads from " + tr, ex);
+        } catch (DataFormatException dfe) {
+            LOG.error("Couldn't get list of payloads from " + tr, dfe);
             payList = null;
         }
 
@@ -577,6 +653,19 @@ public abstract class PayloadChecker
         Document doc = readConfigFile(xmlRdr, configDir, runConfig);
         RunConfig runCfg = new RunConfig(runConfig, doc);
         return runCfg.getTriggerConfig();
+    }
+
+    /**
+     * Get string representation of a trigger record.
+     *
+     * @param tr trigger record
+     *
+     * @return trigger record string
+     */
+    private static String getTriggerRecordString(IEventTriggerRecord tr)
+    {
+        return "trigRec[" + getSourceString(tr.getSourceID()) + "[" +
+            tr.getFirstTime() + "-" + tr.getLastTime() + "]]";
     }
 
     /**
@@ -727,8 +816,11 @@ public abstract class PayloadChecker
 
         try {
             loadable.loadPayload();
-        } catch (Exception ex) {
-            LOG.error("Couldn't load payload", ex);
+        } catch (IOException ioe) {
+            LOG.error("Couldn't load payload", ioe);
+            return false;
+        } catch (DataFormatException dfe) {
+            LOG.error("Couldn't load payload", dfe);
             return false;
         }
 
@@ -742,6 +834,8 @@ public abstract class PayloadChecker
      * @param xmlRdr SAX reader
      * @param trigCfgDir directory holding trigger configuration files
      * @param trigConfig name of trigger configuration file
+     *
+     * @return configuration entries
      */
     public static TriggerConfig loadTriggerConfig(SAXReader xmlRdr,
                                                   File trigCfgDir,
@@ -773,6 +867,64 @@ public abstract class PayloadChecker
         } catch (DocumentException de) {
             throw new Error("Cannot read " + cfgFile, de);
         }
+    }
+
+    private static String toHexString(ByteBuffer bb)
+    {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < bb.limit(); i++) {
+            String str = Integer.toHexString(bb.get(i));
+            buf.append("(byte)0x");
+            if (str.length() < 2) {
+                buf.append('0').append(str);
+            } else if (str.length() > 2) {
+                buf.append(str.substring(str.length() - 2));
+            } else {
+                buf.append(str);
+            }
+            buf.append(", ");
+        }
+
+        // lose trailing whitespace
+        while (buf.length() > 0 && buf.charAt(buf.length() - 1) == ' ') {
+            buf.setLength(buf.length() - 1);
+        }
+
+        return buf.toString();
+    }
+
+    /**
+     * Return a Java definition of the byte array (named <tt>payBytes</tt>
+     * which describes the payload.
+     * @param pay payload to dump
+     * @return string dump of payload bytes
+     */
+    public static String dumpPayloadBytes(IWriteablePayload pay)
+    {
+        return dumpPayloadBytes(pay, "payBytes");
+    }
+
+    /**
+     * Return a Java definition of the byte array which describes the payload.
+     * @param pay payload to dump
+     * @param name name  of byte array
+     * @return string dump of payload bytes
+     */
+    public static String dumpPayloadBytes(IWriteablePayload pay, String name)
+    {
+        ByteBuffer buf = ByteBuffer.allocate(pay.getPayloadLength());
+        try {
+            pay.writePayload(false, 0, buf);
+        } catch (java.io.IOException ioe) {
+            System.err.println("Couldn't dump payload " + pay);
+            ioe.printStackTrace();
+            buf = null;
+        }
+        if (buf == null) {
+            return null;
+        }
+
+        return "byte[] " + name + " = new byte[] { " + toHexString(buf) + " };";
     }
 
     /**
@@ -810,16 +962,63 @@ public abstract class PayloadChecker
         loadPayload(evt);
 
         String evtDesc = getEventString(evt);
-        IUTCTime evtFirst = evt.getFirstTimeUTC();
-        IUTCTime evtLast = evt.getLastTimeUTC();
-        if (!validateInterval(evtDesc, evtFirst, evtLast, verbose)) {
+        if (!validateInterval(evtDesc, evt.getFirstTimeUTC(),
+                              evt.getLastTimeUTC(), verbose))
+        {
             return false;
         }
 
-        if (!validateEventYear(evt.getPayloadType(), evt.getYear(), verbose)) {
+        if (!validateEventYear(evt.getYear(), verbose)) {
             return false;
         }
 
+        boolean valid;
+        if (evt.getEventVersion() >= 5) {
+            valid = validateEventRecords(evt, evtDesc, verbose);
+        } else {
+            valid = validateEventTrigReqAndHits(evt, evtDesc, verbose);
+        }
+
+        return valid;
+    }
+
+    private static boolean validateEventRecords(IEventPayload evt,
+                                                String evtDesc, boolean verbose)
+    {
+        for (IEventTriggerRecord trigRec : evt.getTriggerRecords()) {
+            String trDesc = getTriggerRecordString(trigRec);
+            IUTCTime trFirst = new UTCTime(trigRec.getFirstTime());
+            IUTCTime trLast = new UTCTime(trigRec.getLastTime());
+            if (!validateInterval(trDesc, trFirst, trLast, verbose)) {
+                return false;
+            }
+
+            if (!isIntervalContained(evtDesc, evt.getFirstTimeUTC(),
+                                     evt.getLastTimeUTC(),
+                                     trDesc, trFirst, trLast, verbose))
+            {
+                return false;
+            }
+
+        }
+
+        final long evtFirst = evt.getFirstTimeUTC().longValue();
+        final long evtLast = evt.getLastTimeUTC().longValue();
+
+        for (IEventHitRecord hitRec : evt.getHitRecords()) {
+            final long hitTime = hitRec.getHitTime();
+            if (hitTime < evtFirst || hitTime > evtLast) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean validateEventTrigReqAndHits(IEventPayload evt,
+                                                       String evtDesc,
+                                                       boolean verbose)
+    {
         ITriggerRequestPayload trigReq = evt.getTriggerRequestPayload();
         loadPayload(trigReq);
 
@@ -830,7 +1029,8 @@ public abstract class PayloadChecker
             return false;
         }
 
-        if (!isIntervalContained(evtDesc, evtFirst, evtLast,
+        if (!isIntervalContained(evtDesc, evt.getFirstTimeUTC(),
+                                 evt.getLastTimeUTC(),
                                  trDesc, trFirst, trLast, verbose))
         {
             return false;
@@ -884,8 +1084,18 @@ public abstract class PayloadChecker
             }
 
             if (!found) {
+                StringBuffer hBuf = new StringBuffer();
+                for (IHitDataPayload eHit : evtHits) {
+                    if (hBuf.length() == 0) {
+                        hBuf.append('[');
+                    } else {
+                        hBuf.append(' ');
+                    }
+                    hBuf.append(eHit.toString());
+                }
+                hBuf.append(']');
                 LOG.error("Couldn't find trigger hit " + tHit +
-                          " in readout data hits");
+                          " in readout data hits " + hBuf.toString());
                 valid = false;
             }
         }
@@ -896,26 +1106,17 @@ public abstract class PayloadChecker
     /**
      * Validate the year value for this event.
      *
-     * @param payloadType events before version 4 do not have a year value
      * @param evtYear year value for this event
      * @param verbose <tt>true</tt> if errors should be logged
      *
      * @return <tt>true</tt> if event year is valid
      */
-    public static boolean validateEventYear(int payloadType, short evtYear,
-                                            boolean verbose)
+    public static boolean validateEventYear(short evtYear, boolean verbose)
     {
-        short expYear;
-        if (payloadType == PayloadRegistry.PAYLOAD_ID_EVENT_V4) {
-            expYear = year;
-        } else {
-            expYear = (short) -1;
-        }
-
-        if (evtYear != expYear) {
+        if (evtYear != year && evtYear != -1) {
             if (verbose) {
-                LOG.error("Expected event year to be " + expYear + ", not " +
-                          evtYear);
+                LOG.error("Expected event year to be " + year +
+                          " (or -1), not " + evtYear);
             }
 
             return false;
@@ -1102,8 +1303,8 @@ public abstract class PayloadChecker
         List payList;
         try {
             payList = tr.getPayloads();
-        } catch (Exception ex) {
-            LOG.error("Couldn't fetch payloads for " + trDesc, ex);
+        } catch (DataFormatException dfe) {
+            LOG.error("Couldn't fetch payloads for " + trDesc, dfe);
             return false;
         }
 

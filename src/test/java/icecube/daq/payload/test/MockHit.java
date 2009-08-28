@@ -1,21 +1,25 @@
 package icecube.daq.payload.test;
 
+import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.IDOMID;
+import icecube.daq.payload.IEventHitRecord;
+import icecube.daq.payload.IHitData;
+import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadRegistry;
-import icecube.daq.trigger.IHitPayload;
-import icecube.util.Poolable;
+import icecube.daq.payload.Poolable;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.zip.DataFormatException;
 
 public class MockHit
-    implements IHitPayload, ILoadablePayload, IWriteablePayload, Poolable
+    implements IHitData, IHitPayload, ILoadablePayload, IWriteablePayload,
+               Poolable
 {
     private long utcTime;
     private IUTCTime utcObj;
@@ -66,6 +70,11 @@ public class MockHit
         }
 
         return domObj;
+    }
+
+    public IEventHitRecord getEventHitRecord(short chanId)
+    {
+        throw new Error("Unimplemented");
     }
 
     public IUTCTime getHitTimeUTC()
@@ -136,13 +145,18 @@ public class MockHit
         return trigType;
     }
 
+    public int length()
+    {
+        throw new Error("Unimplemented");
+    }
+
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
     public void loadPayload()
         throws IOException, DataFormatException
     {
-        throw new Error("Unimplemented");
+        // do nothing
     }
 
     /**
@@ -153,6 +167,11 @@ public class MockHit
         // do nothing
     }
 
+    public void setCache(IByteBufferCache cache)
+    {
+        throw new Error("Unimplemented");
+    }
+
     /**
      * Set deepCopy() failure mode.
      *
@@ -161,6 +180,11 @@ public class MockHit
     public void setDeepCopyFail(boolean fail)
     {
         failDeepCopy = fail;
+    }
+
+    public int writePayload(ByteBuffer buf, int offset)
+    {
+        throw new Error("Unimplemented");
     }
 
     public int writePayload(boolean b0, IPayloadDestination x1)

@@ -1,11 +1,12 @@
 package icecube.daq.payload.test;
 
 import icecube.daq.payload.ILoadablePayload;
+import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.IPayloadDestination;
+import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.ISourceID;
+import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.trigger.IReadoutRequest;
-import icecube.daq.trigger.ITriggerRequestPayload;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -24,7 +25,7 @@ public class MockTriggerRequest
     private int srcId;
     private long firstTime;
     private long lastTime;
-    private List hitList;
+    private List dataList;
     private IReadoutRequest rReq;
 
     private boolean failDeepCopy;
@@ -36,7 +37,7 @@ public class MockTriggerRequest
 
     public MockTriggerRequest(long utcTime, int uid, int type, int cfgId,
                               int srcId, long firstTime, long lastTime,
-                              List hitList, IReadoutRequest rReq)
+                              List dataList, IReadoutRequest rReq)
     {
         this.utcTime = utcTime;
         this.uid = uid;
@@ -45,7 +46,7 @@ public class MockTriggerRequest
         this.srcId = srcId;
         this.firstTime = firstTime;
         this.lastTime = lastTime;
-        this.hitList = hitList;
+        this.dataList = dataList;
         this.rReq = rReq;
     }
 
@@ -56,12 +57,12 @@ public class MockTriggerRequest
         }
 
         ArrayList newList;
-        if (hitList == null) {
+        if (dataList == null) {
             newList = null;
         } else {
-            newList = new ArrayList(hitList.size());
+            newList = new ArrayList(dataList.size());
 
-            for (Iterator iter = hitList.iterator(); iter.hasNext(); ) {
+            for (Iterator iter = dataList.iterator(); iter.hasNext(); ) {
                 newList.add(((ILoadablePayload) iter.next()).deepCopy());
             }
         }
@@ -89,11 +90,7 @@ public class MockTriggerRequest
 
     public List getHitList()
     {
-        if (hitList == null) {
-            return null;
-        }
-
-        return hitList;
+        throw new Error("Unimplemented");
     }
 
     public IUTCTime getLastTimeUTC()
@@ -114,10 +111,10 @@ public class MockTriggerRequest
     public int getPayloadLength()
     {
         final int hitLen;
-        if (hitList == null) {
+        if (dataList == null) {
             hitLen = 0;
         } else {
-            hitLen = hitList.size() * 40;
+            hitLen = dataList.size() * 40;
         }
 
         final int rrLen;
@@ -152,7 +149,7 @@ public class MockTriggerRequest
     public List getPayloads()
         throws DataFormatException
     {
-        throw new Error("Unimplemented");
+        return dataList;
     }
 
     public IReadoutRequest getReadoutRequest()
@@ -195,6 +192,11 @@ public class MockTriggerRequest
     public void recycle()
     {
         // do nothing
+    }
+
+    public void setCache(IByteBufferCache cache)
+    {
+        throw new Error("Unimplemented");
     }
 
     /**

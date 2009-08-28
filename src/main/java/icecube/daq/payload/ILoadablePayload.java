@@ -11,17 +11,11 @@ public interface ILoadablePayload
 {
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
+     * @throws IOException if the payload cannot be loaded
+     * @throws DataFormatException if there is a problem loading the payload
      */
     void loadPayload()
         throws IOException, DataFormatException;
-
-    /**
-     * Make a 'deep-copy' of the Payload so that all internally referenced
-     * objects are completely new.
-     *
-     * @return Payload which is a deep copy of this Payload
-     */
-    Object deepCopy();
 
     /**
      * Object knows how to recycle itself
