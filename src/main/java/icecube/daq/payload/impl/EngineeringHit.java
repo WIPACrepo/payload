@@ -73,8 +73,9 @@ public class EngineeringHit
         }
 
         short check = buf.getShort(offset + OFFSET_ORDERCHK);
-        if (check != (short) 1) {
-            throw new PayloadException("First word should be 1, not " + check);
+        if (check != (short) 1 && check != (short) 2) {
+            throw new PayloadException("First word should be 1 or 2, not " +
+                                       check);
         }
 
         atwdChip = buf.get(offset + OFFSET_ATWDCHIP);
