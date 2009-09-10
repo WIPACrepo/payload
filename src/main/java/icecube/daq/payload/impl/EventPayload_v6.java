@@ -12,14 +12,23 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Event version 6
  */
 public class EventPayload_v6
     extends EventPayload_v5
 {
+    /** Logging object */
+    private static final Log LOG = LogFactory.getLog(EventPayload_v6.class);
+
     /** Were the hit records compressed? */
     private byte compressed;
+
+    /** Cached compressed hit record data */
+    private ByteBuffer compressedHitRecords;
 
     /**
      * Create an event
@@ -70,17 +79,6 @@ public class EventPayload_v6
     }
 
     /**
-     * Estimate the payload buffer length.
-     * NOTE: This just added a byte to the estimated Event V5 length
-     *
-     * @return estimated length
-     */
-    int estimateLength()
-    {
-        return super.estimateLength() + 1;
-    }
-
-    /**
      * Get event version
      * @return <tt>6</tt>
      */
@@ -101,6 +99,44 @@ public class EventPayload_v6
 
         return super.getExtraString() + " zipped";
     }
+
+    /**
+     * Get the hit record length.
+     * NOTE: This is used in both EventPayload_v5 and EventPayload_v6.
+     *
+     * @return hit record length
+     */
+    int getHitRecordLength()
+    {
+        if (!isLoaded()) {
+            throw new Error("Hit records have not been loaded");
+        }
+
+        if (compressedHitRecords != null) {
+            return compressedHitRecords.limit();
+        }
+
+        int maxLen = 1 + super.getHitRecordLength();
+
+        ByteBuffer buf = ByteBuffer.allocate(maxLen);
+
+        int hitLen;
+        try {
+            hitLen = putHitRecords(buf, 0, getFirstTime());
+        } catch (PayloadException pe) {
+            LOG.error("Could not put hit records to V6 event", pe);
+            hitLen = Integer.MIN_VALUE;
+            compressed = (byte) 0;
+        }
+
+        if (compressed != 0) {
+            buf.position(hitLen);
+            buf.flip();
+            compressedHitRecords = buf;
+        }
+
+        return hitLen;
+   }
 
     /**
      * Get the name of this payload.
@@ -191,19 +227,26 @@ public class EventPayload_v6
     int putHitRecords(ByteBuffer buf, int offset, long baseTime)
         throws PayloadException
     {
-        final int origPos = buf.position();
+        if (compressed != 0 && compressedHitRecords != null) {
+            final int origPos = buf.position();
 
-        final int hitLen = super.putHitRecords(buf, offset + 1, baseTime);
+            buf.position(offset);
+            buf.put(compressedHitRecords.array(), 0,
+                    compressedHitRecords.limit());
+            buf.position(origPos);
+            return compressedHitRecords.limit();
+        }
 
-        byte[] hitBytes = new byte[hitLen];
-        buf.position(offset + 1);
-        buf.get(hitBytes, 0, hitLen);
-        buf.position(origPos);
+        int maxLen = super.getHitRecordLength();
+
+        ByteBuffer hitRecBuf = ByteBuffer.allocate(maxLen);
+
+        final int hitLen = super.putHitRecords(hitRecBuf, 0, baseTime);
 
         Deflater compressor = new Deflater(Deflater.BEST_COMPRESSION, true);
 
         // Give the compressor the data to compress
-        compressor.setInput(hitBytes);
+        compressor.setInput(hitRecBuf.array());
         compressor.finish();
 
         // Compress the data
@@ -216,15 +259,22 @@ public class EventPayload_v6
             zipLen > Short.MAX_VALUE)
         {
             buf.put(offset, (byte) 0);
+
+            hitRecBuf.flip();
+            buf.put(hitRecBuf);
+
             return 1 + hitLen;
         }
 
         compressed = (byte) 1;
 
+        final int origPos = buf.position();
+
         buf.put(offset, compressed);
         buf.putInt(offset + 1, zipLen);
         buf.position(offset + 5);
         buf.put(zipData, 0, zipLen);
+
         buf.position(origPos);
 
         return 5 + zipLen;

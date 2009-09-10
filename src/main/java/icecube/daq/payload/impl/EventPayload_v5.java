@@ -395,7 +395,14 @@ public class EventPayload_v5
             throw new Error(getPayloadName() + " has not been loaded");
         }
 
-        return estimateLength();
+        final int hitLen = getHitRecordLength();
+
+        int trigLen = 4;
+        for (IEventTriggerRecord trigRec : trigRecList) {
+            trigLen += trigRec.length();
+        }
+
+        return LEN_PAYLOAD_HEADER + OFFSET_HITDATA + hitLen + trigLen;
     }
 
     /**
@@ -413,27 +420,6 @@ public class EventPayload_v5
     public void dispose()
     {
         throw new Error("Unimplemented");
-    }
-
-    /**
-     * Estimate the payload buffer length.
-     * NOTE: This is used in both EventPayload_v5 and EventPayload_v6.
-     *
-     * @return estimated length
-     */
-    int estimateLength()
-    {
-        int hitLen = 4;
-        for (IEventHitRecord hitRec : hitRecList) {
-            hitLen += hitRec.length();
-        }
-
-        int trigLen = 4;
-        for (IEventTriggerRecord trigRec : trigRecList) {
-            trigLen += trigRec.length();
-        }
-
-        return LEN_PAYLOAD_HEADER + OFFSET_HITDATA + hitLen + trigLen;
     }
 
     /**
@@ -544,12 +530,41 @@ public class EventPayload_v5
     }
 
     /**
+     * Get event starting time
+     * NOTE: This is currently used only to get the base time to EventPayload_v6
+     * so that it can precompress the hit records in order to correctly
+     * calculate the payload length.
+     * @return starting time value
+     */
+    long getFirstTime()
+    {
+        return firstTime;
+    }
+
+    /**
      * Unimplemented
      * @return Error
      */
     public List getHitList()
     {
         throw new Error("Unimplemented");
+    }
+
+    /**
+     * Get the hit record length.
+     * NOTE: This is used in both EventPayload_v5 and EventPayload_v6.
+     *
+     * @return hit record length
+     */
+    int getHitRecordLength()
+    {
+        int hitLen = 4;
+
+        for (IEventHitRecord hitRec : hitRecList) {
+            hitLen += hitRec.length();
+        }
+
+        return hitLen;
     }
 
     /**

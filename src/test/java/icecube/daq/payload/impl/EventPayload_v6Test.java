@@ -24,6 +24,9 @@ import junit.textui.TestRunner;
 public class EventPayload_v6Test
     extends LoggingCase
 {
+    /** offset of 'compressed' byte in event ByteBuffer */
+    private static final int OFFSET_ZIPBYTE = 34;
+
     /**
      * Constructs an instance of this test.
      *
@@ -64,10 +67,6 @@ public class EventPayload_v6Test
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
 
-        MockDeltaHitRecord hitRec =
-            new MockDeltaHitRecord((byte) 0, (short) 12, hitTime1, (short) 34,
-                                   56, 78, new byte[0]);
-
         MockReadoutRequest mockReq =
             new MockReadoutRequest(uid, trigSrcId);
         mockReq.addElement(rrType, firstTime, lastTime, rrDomId, rrSrcId);
@@ -79,6 +78,10 @@ public class EventPayload_v6Test
 
         ArrayList<IEventHitRecord> hitRecList =
             new ArrayList<IEventHitRecord>();
+
+        MockDeltaHitRecord hitRec =
+            new MockDeltaHitRecord((byte) 0, (short) 12, hitTime1, (short) 34,
+                                   56, 78, new byte[0]);
         hitRecList.add(hitRec);
 
         EventPayload_v6 evt =
@@ -95,7 +98,105 @@ public class EventPayload_v6Test
         assertEquals("Bad run number", runNum, evt.getRunNumber());
         assertEquals("Bad subrun number", subrunNum, evt.getSubrunNumber());
 
+        final int expLen = evt.getPayloadLength();
+
+        ByteBuffer newBuf = ByteBuffer.allocate(expLen);
+        for (int b = 0; b < 2; b++) {
+            final boolean loaded = (b == 1);
+            final int written = evt.writePayload(loaded, 0, newBuf);
+
+            assertEquals("Bad number of bytes written", expLen, written);
+
+            assertEquals("Bad payload length", expLen, newBuf.getInt(0));
+            assertEquals("Event should not be compressed",
+                         (byte) 0, newBuf.get(OFFSET_ZIPBYTE));
+        }
+
         evt.recycle();
+    }
+
+    public void testCreateCompressed()
+        throws Exception
+    {
+        final int uid = 12;
+        final long firstTime = 1111L;
+        final long lastTime = 2222L;
+        final short year = 3333;
+        final int runNum = 4444;
+        final int subrunNum = 5555;
+
+        final int trigCfgId = 6666;
+        final int trigType = 7777;
+        final int trigSrcId = 8888;
+
+        final int rrType = 100;
+        final long rrDomId = 103;
+        final int rrSrcId = 104;
+
+        final long hitTime1 = 1122L;
+        final int hitType1 = 23;
+        final int hitCfgId1 = 24;
+        final int hitSrcId1 = 25;
+        final long hitDomId1 = 1126L;
+        final int hitMode1 = 27;
+
+        MockReadoutRequest mockReq =
+            new MockReadoutRequest(uid, trigSrcId);
+        mockReq.addElement(rrType, firstTime, lastTime, rrDomId, rrSrcId);
+
+        MockTriggerRequest trigReq =
+            new MockTriggerRequest(firstTime, uid, trigType, trigCfgId,
+                                   trigSrcId, firstTime, lastTime, null,
+                                   mockReq);
+
+        for (int r = 1; r < 100; r++) {
+            ArrayList<IEventHitRecord> hitRecList =
+                new ArrayList<IEventHitRecord>();
+
+            for (int i = 0; i < r; i++) {
+                MockDeltaHitRecord hitRec =
+                    new MockDeltaHitRecord((byte) 0, (short) 12, hitTime1 + i,
+                                           (short) (34 + i), 56 + i, 78 + i,
+                                           new byte[0]);
+                hitRecList.add(hitRec);
+            }
+
+            EventPayload_v6 evt =
+                new EventPayload_v6(uid, new MockUTCTime(firstTime),
+                                    new MockUTCTime(lastTime), year, runNum,
+                                    subrunNum, trigReq, hitRecList);
+
+            assertEquals("Bad UID", uid, evt.getEventUID());
+            assertEquals("Bad first UTC time",
+                         firstTime, evt.getFirstTimeUTC().longValue());
+            assertEquals("Bad last UTC time",
+                         lastTime, evt.getLastTimeUTC().longValue());
+            assertEquals("Bad year", year, evt.getYear());
+            assertEquals("Bad run number", runNum, evt.getRunNumber());
+            assertEquals("Bad subrun number", subrunNum, evt.getSubrunNumber());
+
+            final int expLen = evt.getPayloadLength();
+
+            ByteBuffer newBuf = ByteBuffer.allocate(expLen + 10);
+            for (int b = 0; b < 2; b++) {
+                final boolean loaded = (b == 1);
+                final int written = evt.writePayload(loaded, 0, newBuf);
+
+                assertEquals("Bad number of bytes written for " + r +
+                             "-hit event", expLen, written);
+
+                assertEquals("Bad payload length for " + r + "-hit event",
+                             written, newBuf.getInt(0));
+
+                final boolean expZip = r > 1;
+                assertEquals("Event with " + r + " hits should " +
+                             (expZip ? "" : "not ") + " be compressed",
+                             (byte) (expZip ? 1 : 0),
+                             newBuf.get(OFFSET_ZIPBYTE));
+            }
+
+            evt.recycle();
+        }
     }
 
     public void testCreateFromBuffer()
