@@ -260,8 +260,10 @@ public class EventPayload_v6
         {
             buf.put(offset, (byte) 0);
 
-            hitRecBuf.flip();
+            final int origPos = buf.position();
+            buf.position(offset + 1);
             buf.put(hitRecBuf);
+            buf.position(origPos);
 
             return 1 + hitLen;
         }
