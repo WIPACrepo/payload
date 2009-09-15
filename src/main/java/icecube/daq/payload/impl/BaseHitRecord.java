@@ -67,6 +67,24 @@ public abstract class BaseHitRecord
     }
 
     /**
+     * Get the raw data array
+     * @return raw data array
+     */
+    public byte[] getRawData()
+    {
+        return rawData;
+    }
+
+    /**
+     * Get a debugging string for the hit record's raw data.
+     * @return debugging string
+     */
+    public String getRawDataString()
+    {
+        return " rawData*" + rawData.length;
+    }
+
+    /**
      * Get the name of this hit type (used in base class error messages)
      * @return name
      */
@@ -173,6 +191,6 @@ public abstract class BaseHitRecord
     public String toString()
     {
         return getTypeName() + "HitRecord[flags " + flags + " chan " + chanId +
-            " time " + time + " rawData*" + rawData.length + "]";
+            " time " + time + getRawDataString() + "]";
     }
 }
