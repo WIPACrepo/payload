@@ -316,8 +316,8 @@ public abstract class TestUtil
                                           long domClock, Object fadcSamples,
                                           Object atwdSamples)
     {
-        ByteBuffer recBuf = createEngHitRecord(atwdChip, trigMode, domClock,
-                                               fadcSamples, atwdSamples);
+        ByteBuffer recBuf = createOldEngHitRecord(atwdChip, trigMode, domClock,
+                                                  fadcSamples, atwdSamples);
 
         final int bufLen = 32 + recBuf.limit();
 
@@ -330,131 +330,6 @@ public abstract class TestUtil
         buf.put(recBuf);
 
         buf.flip();
-
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
-
-        return buf;
-    }
-
-    public static ByteBuffer createEngHitRecord(int atwdChip, int trigMode,
-                                                long domClock, Object fadcObj,
-                                                Object atwdObj)
-    {
-        return createEngHitRecord(atwdChip, trigMode, domClock, fadcObj,
-                                  atwdObj, ByteOrder.BIG_ENDIAN);
-    }
-
-    public static ByteBuffer createEngHitRecord(int atwdChip, int trigMode,
-                                                long domClock, Object fadcObj,
-                                                Object atwdObj, ByteOrder order)
-    {
-        if (fadcObj == null || !(fadcObj.getClass().isArray())) {
-            throw new Error("Invalid FADC array object " + fadcObj);
-        }
-
-        final int lenFADC = Array.getLength(fadcObj);
-
-        if (atwdObj == null || !(atwdObj.getClass().isArray())) {
-            throw new Error("Invalid ATWD array object " + atwdObj);
-        }
-
-        final int lenATWD = Array.getLength(atwdObj);
-        if (lenATWD != NUM_ATWD_CHANNELS) {
-            throw new Error("Expected " + NUM_ATWD_CHANNELS +
-                            " ATWD channels, not " + lenATWD);
-        }
-
-        final boolean isATWDShort = atwdObj instanceof short[][];
-        if (!isATWDShort && !(atwdObj instanceof byte[][])) {
-            throw new Error("Invalid ATWD array type");
-        }
-
-        int affByte0 = 0;
-        int affByte1 = 0;
-
-        int numATWDSamples = -1;
-        for (int i = 0; i < lenATWD; i++) {
-            Object subATWD = Array.get(atwdObj, i);
-            if (subATWD == null || !subATWD.getClass().isArray()) {
-                throw new Error("Invalid ATWD channel#" + i);
-            }
-
-            final int subLen = Array.getLength(subATWD);
-            if (numATWDSamples < 0) {
-                numATWDSamples = subLen;
-            } else if (numATWDSamples != subLen) {
-                throw new Error("Expected " + numATWDSamples +
-                                " samples for ATWD channel#" + i + ", not " +
-                                subLen);
-            }
-
-            int sampLen = -1;
-            for (int j = 0; j < ATWD_SAMPLE_LENGTH.length; j++) {
-                if (subLen == ATWD_SAMPLE_LENGTH[j]) {
-                    sampLen = j;
-                    break;
-                }
-            }
-            if (sampLen < 0) {
-                throw new Error("Unknown sample length " + subLen +
-                                " for ATWD channel#" + i);
-            }
-
-            int nybble = 1 | (isATWDShort ? 2 : 0) | (sampLen * 4);
-            switch (i) {
-            case 0:
-                affByte0 |= nybble;
-                break;
-            case 1:
-                affByte0 |= (nybble << 4);
-                break;
-            case 2:
-                affByte1 |= nybble;
-                break;
-            case 3:
-                affByte1 |= (nybble << 4);
-                break;
-            }
-        }
-
-        final int bufLen = 16 + (lenFADC * 2) +
-            (lenATWD * numATWDSamples * (isATWDShort ? 2 : 1));
-
-        ByteBuffer buf = ByteBuffer.allocate(bufLen);
-
-        final ByteOrder origOrder = buf.order();
-
-        buf.order(order);
-
-        buf.putShort((short) buf.capacity());  // record length
-        buf.putShort((short) 1);               // used to test byte order
-        buf.put((byte) atwdChip);
-        buf.put((byte) lenFADC);
-        buf.put((byte) affByte0);
-        buf.put((byte) affByte1);
-        buf.put((byte) trigMode);
-        buf.put((byte) 0);
-        putDomClock(buf, buf.position(), domClock);
-        for (int i = 0; i < lenFADC; i++) {
-            buf.putShort(Array.getShort(fadcObj, i));
-        }
-        for (int i = 0; i < lenATWD; i++) {
-            Object samples = Array.get(atwdObj, i);
-            for (int j = 0; j < numATWDSamples; j++) {
-                if (isATWDShort) {
-                    buf.putShort(Array.getShort(samples, j));
-                } else {
-                    buf.put(Array.getByte(samples, j));
-                }
-            }
-        }
-
-        buf.flip();
-
-        buf.order(origOrder);
 
         if (buf.limit() != buf.capacity()) {
             throw new Error("Expected payload length is " + buf.capacity() +
@@ -1434,6 +1309,131 @@ public abstract class TestUtil
 
         if (buf.limit() != buf.capacity()) {
             throw new Error("Expected record length is " + buf.capacity() +
+                            ", actual length is " + buf.limit());
+        }
+
+        return buf;
+    }
+
+    public static ByteBuffer createOldEngHitRecord(int atwdChip, int trigMode,
+                                                   long domClock, Object fadcObj,
+                                                   Object atwdObj)
+    {
+        return createOldEngHitRecord(atwdChip, trigMode, domClock, fadcObj,
+                                  atwdObj, ByteOrder.BIG_ENDIAN);
+    }
+
+    public static ByteBuffer createOldEngHitRecord(int atwdChip, int trigMode,
+                                                   long domClock, Object fadcObj,
+                                                   Object atwdObj, ByteOrder order)
+    {
+        if (fadcObj == null || !(fadcObj.getClass().isArray())) {
+            throw new Error("Invalid FADC array object " + fadcObj);
+        }
+
+        final int lenFADC = Array.getLength(fadcObj);
+
+        if (atwdObj == null || !(atwdObj.getClass().isArray())) {
+            throw new Error("Invalid ATWD array object " + atwdObj);
+        }
+
+        final int lenATWD = Array.getLength(atwdObj);
+        if (lenATWD != NUM_ATWD_CHANNELS) {
+            throw new Error("Expected " + NUM_ATWD_CHANNELS +
+                            " ATWD channels, not " + lenATWD);
+        }
+
+        final boolean isATWDShort = atwdObj instanceof short[][];
+        if (!isATWDShort && !(atwdObj instanceof byte[][])) {
+            throw new Error("Invalid ATWD array type");
+        }
+
+        int affByte0 = 0;
+        int affByte1 = 0;
+
+        int numATWDSamples = -1;
+        for (int i = 0; i < lenATWD; i++) {
+            Object subATWD = Array.get(atwdObj, i);
+            if (subATWD == null || !subATWD.getClass().isArray()) {
+                throw new Error("Invalid ATWD channel#" + i);
+            }
+
+            final int subLen = Array.getLength(subATWD);
+            if (numATWDSamples < 0) {
+                numATWDSamples = subLen;
+            } else if (numATWDSamples != subLen) {
+                throw new Error("Expected " + numATWDSamples +
+                                " samples for ATWD channel#" + i + ", not " +
+                                subLen);
+            }
+
+            int sampLen = -1;
+            for (int j = 0; j < ATWD_SAMPLE_LENGTH.length; j++) {
+                if (subLen == ATWD_SAMPLE_LENGTH[j]) {
+                    sampLen = j;
+                    break;
+                }
+            }
+            if (sampLen < 0) {
+                throw new Error("Unknown sample length " + subLen +
+                                " for ATWD channel#" + i);
+            }
+
+            int nybble = 1 | (isATWDShort ? 2 : 0) | (sampLen * 4);
+            switch (i) {
+            case 0:
+                affByte0 |= nybble;
+                break;
+            case 1:
+                affByte0 |= (nybble << 4);
+                break;
+            case 2:
+                affByte1 |= nybble;
+                break;
+            case 3:
+                affByte1 |= (nybble << 4);
+                break;
+            }
+        }
+
+        final int bufLen = 16 + (lenFADC * 2) +
+            (lenATWD * numATWDSamples * (isATWDShort ? 2 : 1));
+
+        ByteBuffer buf = ByteBuffer.allocate(bufLen);
+
+        final ByteOrder origOrder = buf.order();
+
+        buf.order(order);
+
+        buf.putShort((short) buf.capacity());  // record length
+        buf.putShort((short) 1);               // used to test byte order
+        buf.put((byte) atwdChip);
+        buf.put((byte) lenFADC);
+        buf.put((byte) affByte0);
+        buf.put((byte) affByte1);
+        buf.put((byte) trigMode);
+        buf.put((byte) 0);
+        putDomClock(buf, buf.position(), domClock);
+        for (int i = 0; i < lenFADC; i++) {
+            buf.putShort(Array.getShort(fadcObj, i));
+        }
+        for (int i = 0; i < lenATWD; i++) {
+            Object samples = Array.get(atwdObj, i);
+            for (int j = 0; j < numATWDSamples; j++) {
+                if (isATWDShort) {
+                    buf.putShort(Array.getShort(samples, j));
+                } else {
+                    buf.put(Array.getByte(samples, j));
+                }
+            }
+        }
+
+        buf.flip();
+
+        buf.order(origOrder);
+
+        if (buf.limit() != buf.capacity()) {
+            throw new Error("Expected payload length is " + buf.capacity() +
                             ", actual length is " + buf.limit());
         }
 

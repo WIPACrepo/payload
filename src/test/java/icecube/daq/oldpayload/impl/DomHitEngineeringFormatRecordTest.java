@@ -32,10 +32,10 @@ public class DomHitEngineeringFormatRecordTest
                                     Object fadcSamples, Object atwdSamples)
         throws Exception
     {
-        ByteBuffer buf = TestUtil.createEngHitRecord(atwdChip, trigMode,
-                                                     domClock, fadcSamples,
-                                                     atwdSamples,
-                                                     ByteOrder.LITTLE_ENDIAN);
+        ByteBuffer buf = TestUtil.createOldEngHitRecord(atwdChip, trigMode,
+                                                        domClock, fadcSamples,
+                                                        atwdSamples,
+                                                        ByteOrder.LITTLE_ENDIAN);
 
         assertEquals("Bad record length", buf.capacity(),
                      DomHitEngineeringFormatRecord.extractRecordLength(0, buf));
@@ -328,8 +328,8 @@ public class DomHitEngineeringFormatRecordTest
         }
 
         ByteBuffer buf =
-            TestUtil.createEngHitRecord(atwdChip, trigMode, domClock,
-                                        fadcSamples, atwdSamples);
+            TestUtil.createOldEngHitRecord(atwdChip, trigMode, domClock,
+                                           fadcSamples, atwdSamples);
 
         assertEquals("Bad record length", buf.capacity(),
                      DomHitEngineeringFormatRecord.extractRecordLength(0, buf));
