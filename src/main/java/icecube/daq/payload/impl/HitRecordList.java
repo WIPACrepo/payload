@@ -282,7 +282,14 @@ public class HitRecordList
      */
     public String toString()
     {
+        String hrStr;
+        if (hitRecList == null) {
+            hrStr = " <null recList>";
+        } else {
+            hrStr = " recs*" + hitRecList.size();
+        }
+
         return "HitRecordList[uid " + uid + " time " + getUTCTime() +
-            " src " + srcId + " recs*" + hitRecList.size() + "]";
+            " src " + srcId + hrStr + "]";
     }
 }
