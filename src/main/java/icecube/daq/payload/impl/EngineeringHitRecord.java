@@ -213,8 +213,8 @@ public class EngineeringHitRecord
                     if (isByte) {
                         data[d] = rawData[offset++] & 0xff;
                     } else {
-                        data[d] = ((rawData[offset + 1] & 0xff) << 8) +
-                            (rawData[offset] & 0xff);
+                        data[d] = ((rawData[offset] & 0xff) << 8) +
+                            (rawData[offset + 1] & 0xff);
                         offset += 2;
                     }
                 }
@@ -246,8 +246,8 @@ public class EngineeringHitRecord
         for (int i = 0; i < data.length; i++) {
             int idx = i * 2;
 
-            data[i] = ((rawData[OFFSET_DATA + idx + 1] & 0xff) << 8) +
-                (((int) rawData[OFFSET_DATA + idx]) & 0xff);
+            data[i] = ((rawData[OFFSET_DATA + idx] & 0xff) << 8) +
+                (((int) rawData[OFFSET_DATA + idx + 1]) & 0xff);
         }
 
         return data;

@@ -451,7 +451,8 @@ public abstract class TestUtil
 
         final ByteOrder origOrder = buf.order();
 
-        buf.order(order);
+        // hit records should always be in BIG_ENDIAN order
+        buf.order(ByteOrder.BIG_ENDIAN);
 
         buf.put((byte) atwdChip);
         buf.put((byte) lenFADC);
