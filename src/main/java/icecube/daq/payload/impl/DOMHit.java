@@ -160,6 +160,17 @@ public abstract class DOMHit
     public abstract short getTriggerMode();
 
     /**
+     * Hit payloads don't need to preload anything.
+     * @param buf byte buffer
+     * @param offset index of first byte
+     * @param len total number of bytes
+     */
+    public void preloadSpliceableFields(ByteBuffer buf, int offset, int len)
+    {
+        // do nothing
+    }
+
+    /**
      * Clear out any cached data.
      */
     public void recycle()

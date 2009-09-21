@@ -808,6 +808,19 @@ public class EventPayload_v5
     }
 
     /**
+     * Preload any essential fields so splicer can sort unloaded payloads.
+     * @param buf byte buffer
+     * @param offset index of first byte
+     * @param len total number of bytes
+     * @throws PayloadException if the essential fields cannot be preloaded
+     */
+    public void preloadSpliceableFields(ByteBuffer buf, int offset, int len)
+        throws PayloadException
+    {
+        // do nothing
+    }
+
+    /**
      * Write this payload's data to the byte buffer
      * @param buf byte buffer
      * @param offset index of first byte

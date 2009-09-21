@@ -275,6 +275,37 @@ public abstract class Monitor
         throws PayloadException;
 
     /**
+     * Preload any essential fields so splicer can sort unloaded payloads.
+     * @param buf byte buffer
+     * @param offset index of first byte
+     * @param len total number of bytes
+     * @throws PayloadException if the essential fields cannot be preloaded
+     */
+    public void preloadSpliceableFields(ByteBuffer buf, int offset, int len)
+        throws PayloadException
+    {
+        if (isLoaded()) {
+            return;
+        }
+
+        // make sure we can load the field(s) needed in compareSpliceable()
+        final int bodyOffset;
+        if (offset == 0) {
+            bodyOffset = OFFSET_PAYLOAD;
+        } else {
+            bodyOffset = 0;
+        }
+
+        if (bodyOffset + OFFSET_DOMID + 8 > len) {
+            throw new PayloadException("Cannot load field at offset " +
+                                       (bodyOffset + OFFSET_DOMID) +
+                                       " from " + len + "-byte buffer");
+        }
+
+        domId = buf.getLong(offset + bodyOffset + OFFSET_DOMID);
+    }
+
+    /**
      * Write the bytes of this payload's binary representation to the
      * byte buffer.
      * @param buf byte buffer

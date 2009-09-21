@@ -105,6 +105,17 @@ abstract class BaseHitData
     public abstract int getTriggerType();
 
     /**
+     * Hit data payloads don't need to preload anything.
+     * @param buf byte buffer
+     * @param offset index of first byte
+     * @param len total number of bytes
+     */
+    public void preloadSpliceableFields(ByteBuffer buf, int offset, int len)
+    {
+        // do nothing
+    }
+
+    /**
      * Unimplemented
      */
     public void recycle()

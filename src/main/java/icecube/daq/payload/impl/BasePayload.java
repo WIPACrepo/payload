@@ -88,6 +88,8 @@ public abstract class BasePayload
         this.offset = offset;
 
         bufLen = len;
+
+        preloadSpliceableFields(buf, offset, len);
     }
 
     /**
@@ -107,6 +109,8 @@ public abstract class BasePayload
         this.offset = offset;
 
         bufLen = len;
+
+        preloadSpliceableFields(buf, offset, len);
     }
 
     /**
@@ -273,6 +277,17 @@ public abstract class BasePayload
             loaded = true;
         }
     }
+
+    /**
+     * Preload any essential fields so splicer can sort unloaded payloads.
+     * @param buf byte buffer
+     * @param offset index of first byte
+     * @param len total number of bytes
+     * @throws PayloadException if the essential fields cannot be preloaded
+     */
+    public abstract void preloadSpliceableFields(ByteBuffer buf, int offset,
+                                                 int len)
+        throws PayloadException;
 
     /**
      * Write this payload's data to the byte buffer

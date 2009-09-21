@@ -264,6 +264,17 @@ public class SimpleHit
     }
 
     /**
+     * Simple hits don't need to preload anything.
+     * @param buf byte buffer
+     * @param offset index of first byte
+     * @param len total number of bytes
+     */
+    public void preloadSpliceableFields(ByteBuffer buf, int offset, int len)
+    {
+        // do nothing
+    }
+
+    /**
      * Unimplemented
      * @param buf ignored
      * @param offset ignored
