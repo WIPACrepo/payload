@@ -215,7 +215,7 @@ public abstract class BaseReadoutData
      * Get the number of hits
      * @return number of hits
      */
-    abstract short getNumHits();
+    public abstract int getNumHits();
 
     /**
      * Get the payload registry type
@@ -437,7 +437,7 @@ public abstract class BaseReadoutData
         buf.putInt(offset + OFFSET_COMPLEN, -1);
         // composite type is deprecated
         buf.putShort(offset + OFFSET_COMPTYPE, (short) 0);
-        buf.putShort(offset + OFFSET_COMPNUM, getNumHits());
+        buf.putShort(offset + OFFSET_COMPNUM, (short) getNumHits());
 
         int dataLen = writeHitBytes(buf, offset + OFFSET_COMPDATA);
 

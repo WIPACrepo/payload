@@ -61,4 +61,10 @@ public interface IReadoutDataPayload
      * ---
      */
     boolean isLastPayloadOfGroup();
+
+    /**
+     * Get the number of hits
+     * @return number of hits
+     */
+    int getNumHits();
 }

@@ -4,6 +4,7 @@ import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.IEventPayload;
 import icecube.daq.payload.IEventTriggerRecord;
 import icecube.daq.payload.ILoadablePayload;
+import icecube.daq.payload.IReadoutDataPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
@@ -603,8 +604,24 @@ public class EventPayload_v4
             subStr = " sub " + subrunNum;
         }
 
+        int totData;
+        int totHits;
+        if (dataList == null) {
+            totData = 0;
+            totHits = 0;
+        } else {
+            totData = dataList.size();
+
+            totHits = 0;
+            for (IWriteablePayload pay : dataList) {
+                IReadoutDataPayload rdout = (IReadoutDataPayload) pay;
+                totHits += rdout.getNumHits();
+            }
+        }
+
         return "EventPayload_v4[#" + uid + " src " + getSourceID() + " [" +
             firstTime + "-" + lastTime + "] yr " + year + " run " + runNum +
-            subStr + " trig " + trigReq + " data*" + dataList.size() + "]";
+            subStr + " trig " + trigReq + " data*" + totData +
+            " hits*" + totHits + "]";
     }
 }

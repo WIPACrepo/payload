@@ -58,6 +58,11 @@ public class MockReadoutData
         throw new Error("Unimplemented");
     }
 
+    public int getNumHits()
+    {
+        return hitList.size();
+    }
+
     public ByteBuffer getPayloadBacking()
     {
         throw new Error("Unimplemented");

@@ -109,9 +109,9 @@ public class HitDataReadoutData
      * Get the number of hits
      * @return number of hits
      */
-    short getNumHits()
+    public int getNumHits()
     {
-        return (short) hitList.size();
+        return hitList.size();
     }
 
     /**

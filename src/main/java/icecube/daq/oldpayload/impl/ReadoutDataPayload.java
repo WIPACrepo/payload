@@ -204,6 +204,20 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
     public List getDataPayloads() {
         return super.mt_Payloads;
     }
+
+    /**
+     * Get the number of hits
+     * @return number of hits
+     */
+    public int getNumHits()
+    {
+        if (mt_Payloads == null) {
+            return 0;
+        }
+
+        return mt_Payloads.size();
+    }
+
     /**
      * The order number of this payload in the group of payload's
      * which have been sent in the group corresponding to the getRequestUID()
