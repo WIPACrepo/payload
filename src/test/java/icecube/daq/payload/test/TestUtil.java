@@ -617,8 +617,11 @@ public abstract class TestUtil
 
         ByteBuffer trBuf = createTriggerRequest(trigReq);
 
+        final long trigFirst = trigReq.getFirstTimeUTC().longValue();
+        final long trigLast = trigReq.getLastTimeUTC().longValue();
+
         ByteBuffer rdBuf =
-            createReadoutDataPayload(uid, 0, true, srcId, firstTime, lastTime,
+            createReadoutDataPayload(uid, 0, true, srcId, trigFirst, trigLast,
                                      hitList);
 
         final int bufListBytes = trBuf.limit() + rdBuf.limit();

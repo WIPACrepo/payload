@@ -31,7 +31,7 @@ public class MockDeltaHitRecord
 
     private int getChannelID(long domId)
     {
-System.err.println("Not getting channel ID for DOM " + domId);
+//System.err.println("Not getting channel ID for DOM " + domId);
         return chanId;
     }
 

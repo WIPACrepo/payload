@@ -3,6 +3,7 @@ package icecube.daq.payload.impl;
 import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.IHitDataPayload;
 import icecube.daq.payload.IWriteablePayload;
+import icecube.daq.payload.PayloadChecker;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDeltaHitRecord;
@@ -15,6 +16,7 @@ import icecube.daq.payload.test.TestUtil;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import junit.framework.Test;
@@ -24,6 +26,10 @@ import junit.textui.TestRunner;
 public class EventPayload_v6Test
     extends LoggingCase
 {
+    /** Get the current year */
+    private static final short YEAR =
+        (short) (new GregorianCalendar()).get(GregorianCalendar.YEAR);
+
     /** offset of 'compressed' byte in event ByteBuffer */
     private static final int OFFSET_ZIPBYTE = 34;
 
@@ -42,13 +48,12 @@ public class EventPayload_v6Test
         return new TestSuite(EventPayload_v6Test.class);
     }
 
-    public void testCreate()
+    public void ZZZtestCreate()
         throws Exception
     {
         final int uid = 12;
         final long firstTime = 1111L;
         final long lastTime = 2222L;
-        final short year = 3333;
         final int runNum = 4444;
         final int subrunNum = 5555;
 
@@ -60,7 +65,7 @@ public class EventPayload_v6Test
         final long rrDomId = 103;
         final int rrSrcId = 104;
 
-        final long hitTime1 = 1122L;
+        final long hitTime1 = firstTime + 10;
         final int hitType1 = 23;
         final int hitCfgId1 = 24;
         final int hitSrcId1 = 25;
@@ -86,15 +91,17 @@ public class EventPayload_v6Test
 
         EventPayload_v6 evt =
             new EventPayload_v6(uid, new MockUTCTime(firstTime),
-                                new MockUTCTime(lastTime), year, runNum,
+                                new MockUTCTime(lastTime), YEAR, runNum,
                                 subrunNum, trigReq, hitRecList);
+
+        assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
         assertEquals("Bad UID", uid, evt.getEventUID());
         assertEquals("Bad first UTC time",
                      firstTime, evt.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
                      lastTime, evt.getLastTimeUTC().longValue());
-        assertEquals("Bad year", year, evt.getYear());
+        assertEquals("Bad year", YEAR, evt.getYear());
         assertEquals("Bad run number", runNum, evt.getRunNumber());
         assertEquals("Bad subrun number", subrunNum, evt.getSubrunNumber());
 
@@ -115,13 +122,12 @@ public class EventPayload_v6Test
         evt.recycle();
     }
 
-    public void testCreateCompressed()
+    public void ZZZtestCreateCompressed()
         throws Exception
     {
         final int uid = 12;
         final long firstTime = 1111L;
         final long lastTime = 2222L;
-        final short year = 3333;
         final int runNum = 4444;
         final int subrunNum = 5555;
 
@@ -133,7 +139,7 @@ public class EventPayload_v6Test
         final long rrDomId = 103;
         final int rrSrcId = 104;
 
-        final long hitTime1 = 1122L;
+        final long hitTime1 = lastTime - 200;
         final int hitType1 = 23;
         final int hitCfgId1 = 24;
         final int hitSrcId1 = 25;
@@ -163,15 +169,17 @@ public class EventPayload_v6Test
 
             EventPayload_v6 evt =
                 new EventPayload_v6(uid, new MockUTCTime(firstTime),
-                                    new MockUTCTime(lastTime), year, runNum,
+                                    new MockUTCTime(lastTime), YEAR, runNum,
                                     subrunNum, trigReq, hitRecList);
+
+            assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
             assertEquals("Bad UID", uid, evt.getEventUID());
             assertEquals("Bad first UTC time",
                          firstTime, evt.getFirstTimeUTC().longValue());
             assertEquals("Bad last UTC time",
                          lastTime, evt.getLastTimeUTC().longValue());
-            assertEquals("Bad year", year, evt.getYear());
+            assertEquals("Bad year", YEAR, evt.getYear());
             assertEquals("Bad run number", runNum, evt.getRunNumber());
             assertEquals("Bad subrun number", subrunNum, evt.getSubrunNumber());
 
@@ -199,13 +207,12 @@ public class EventPayload_v6Test
         }
     }
 
-    public void testCreateFromBuffer()
+    public void ZZZtestCreateFromBuffer()
         throws Exception
     {
         final int uid = 12;
         final long firstTime = 1111L;
         final long lastTime = 2222L;
-        final short year = 333;
         final int runNum = 444;
         final int subrunNum = 555;
 
@@ -213,29 +220,31 @@ public class EventPayload_v6Test
         final int trigType = 777;
         final int trigCfgId = 888;
         final int trigSrcId = 999;
-        final long trigFirstTime = 101010L;
-        final long trigLastTime = 111111L;
+        final long trigFirstTime = firstTime + 1;
+        final long trigLastTime = lastTime - 1;
+
+        final long halfTime = firstTime + (lastTime - firstTime) / 2L;
 
         final int type1 = 100;
-        final long firstTime1 = 1010L;
-        final long lastTime1 = 1020L;
+        final long firstTime1 = firstTime + 4;
+        final long lastTime1 = halfTime - 3;
         final long domId1 = 103;
         final int srcId1 = 104;
 
         final int type2 = 200;
-        final long firstTime2 = 2010L;
-        final long lastTime2 = 2020L;
+        final long firstTime2 = halfTime + 3;
+        final long lastTime2 = lastTime - 4;
         final long domId2 = -1;
         final int srcId2 = -1;
 
-        final long hitTime1 = 1122L;
+        final long hitTime1 = firstTime + 11;
         final int hitType1 = 23;
         final int hitCfgId1 = 24;
         final int hitSrcId1 = 25;
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
 
-        final long hitTime2 = 2211;
+        final long hitTime2 = lastTime - 11;
         final int hitType2 = 33;
         final int hitCfgId2 = 34;
         final int hitSrcId2 = 35;
@@ -267,18 +276,20 @@ public class EventPayload_v6Test
                                               new byte[] { (byte) 45,
                                                            (byte) 5 }));
         ByteBuffer buf =
-            TestUtil.createEventv6(uid, firstTime, lastTime, year, runNum,
+            TestUtil.createEventv6(uid, firstTime, lastTime, YEAR, runNum,
                                    subrunNum, trigReq, hitRecList, false);
 
         EventPayload_v6 evt = new EventPayload_v6(buf, 0);
         evt.loadPayload();
+
+        assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
         assertEquals("Bad UID", uid, evt.getEventUID());
         assertEquals("Bad first UTC time",
                      firstTime, evt.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
                      lastTime, evt.getLastTimeUTC().longValue());
-        assertEquals("Bad year", year, evt.getYear());
+        assertEquals("Bad year", YEAR, evt.getYear());
         assertEquals("Bad run number", runNum, evt.getRunNumber());
         assertEquals("Bad subrun number", subrunNum, evt.getSubrunNumber());
 
@@ -291,7 +302,6 @@ public class EventPayload_v6Test
         final int uid = 12;
         final long firstTime = 1111L;
         final long lastTime = 2222L;
-        final short year = 333;
         final int runNum = 444;
         final int subrunNum = 555;
 
@@ -299,36 +309,38 @@ public class EventPayload_v6Test
         final int trigType = 777;
         final int trigCfgId = 888;
         final int trigSrcId = 999;
-        final long trigFirstTime = 101010L;
-        final long trigLastTime = 111111L;
+        final long trigFirstTime = firstTime + 1;
+        final long trigLastTime = lastTime - 1;
+
+        final long halfTime = firstTime + (lastTime - firstTime) / 2L;
 
         final int type1 = 100;
-        final long firstTime1 = 1010L;
-        final long lastTime1 = 1020L;
+        final long firstTime1 = firstTime + 3;
+        final long lastTime1 = halfTime - 3;
         final long domId1 = 103;
         final int srcId1 = 104;
 
         final int type2 = 200;
-        final long firstTime2 = 2010L;
-        final long lastTime2 = 2020L;
+        final long firstTime2 = halfTime + 3;
+        final long lastTime2 = lastTime - 3;
         final long domId2 = -1;
         final int srcId2 = -1;
 
-        final long hitTime1 = 1122L;
+        final long hitTime1 = firstTime + 12;
         final int hitType1 = 23;
         final int hitCfgId1 = 24;
         final int hitSrcId1 = 25;
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
 
-        final long hitTime2 = 2211;
+        final long hitTime2 = halfTime + 12;
         final int hitType2 = 33;
         final int hitCfgId2 = 34;
         final int hitSrcId2 = 35;
         final long hitDomId2 = 2109L;
         final int hitMode2 = 37;
 
-        final long hitTime3 = 2345;
+        final long hitTime3 = lastTime - 12;
         final int hitType3 = 43;
         final int hitCfgId3 = 44;
         final int hitSrcId3 = 45;
@@ -369,11 +381,14 @@ public class EventPayload_v6Test
                                                            (byte) 8 }));
 
         ByteBuffer buf =
-            TestUtil.createEventv6(uid, firstTime, lastTime, year, runNum,
+            TestUtil.createEventv6(uid, firstTime, lastTime, YEAR, runNum,
                                    subrunNum, trigReq, hitRecList, false);
 
         EventPayload_v6 evt = new EventPayload_v6(buf, 0);
         evt.loadPayload();
+
+setVerbose(true);
+        assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
         ByteBuffer newBuf = ByteBuffer.allocate(buf.limit());
         for (int b = 0; b < 2; b++) {

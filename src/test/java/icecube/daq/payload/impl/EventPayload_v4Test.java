@@ -1,6 +1,7 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IWriteablePayload;
+import icecube.daq.payload.PayloadChecker;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockHitData;
@@ -12,6 +13,7 @@ import icecube.daq.payload.test.TestUtil;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 
 import junit.framework.Test;
@@ -21,6 +23,10 @@ import junit.textui.TestRunner;
 public class EventPayload_v4Test
     extends LoggingCase
 {
+    /** Get the current year */
+    private static final short YEAR =
+        (short) (new GregorianCalendar()).get(GregorianCalendar.YEAR);
+
     /**
      * Constructs an instance of this test.
      *
@@ -43,7 +49,6 @@ public class EventPayload_v4Test
         final int srcId = 34;
         final long firstTime = 1111L;
         final long lastTime = 2222L;
-        final short year = 3333;
         final int runNum = 4444;
         final int subrunNum = 5555;
 
@@ -82,11 +87,13 @@ public class EventPayload_v4Test
         EventPayload_v4 evt =
             new EventPayload_v4(uid, new MockSourceID(srcId),
                                 new MockUTCTime(firstTime),
-                                new MockUTCTime(lastTime), year, runNum,
+                                new MockUTCTime(lastTime), YEAR, runNum,
                                 subrunNum, trigReq, hitList);
 
 //        assertEquals("Bad payload UTC time",
 //                     -1, evt.getPayloadTimeUTC().longValue());
+
+        assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
         assertEquals("Bad UID", uid, evt.getEventUID());
         assertEquals("Bad source ID", srcId, evt.getSourceID().getSourceID());
@@ -94,7 +101,7 @@ public class EventPayload_v4Test
                      firstTime, evt.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
                      lastTime, evt.getLastTimeUTC().longValue());
-        assertEquals("Bad year", year, evt.getYear());
+        assertEquals("Bad year", YEAR, evt.getYear());
         assertEquals("Bad run number", runNum, evt.getRunNumber());
         assertEquals("Bad subrun number", subrunNum, evt.getSubrunNumber());
 
@@ -105,7 +112,7 @@ public class EventPayload_v4Test
 //        assertNull("Non-null hit list", evt.getHitList());
 
         ByteBuffer buf =
-            TestUtil.createEventv4(uid, srcId, firstTime, lastTime, year,
+            TestUtil.createEventv4(uid, srcId, firstTime, lastTime, YEAR,
                                    runNum, subrunNum, trigReq, hitList);
 
         assertEquals("Bad payload length",
@@ -121,7 +128,6 @@ public class EventPayload_v4Test
         final int srcId = 34;
         final long firstTime = 1111L;
         final long lastTime = 2222L;
-        final short year = 333;
         final int runNum = 444;
         final int subrunNum = 555;
 
@@ -129,39 +135,39 @@ public class EventPayload_v4Test
         final int trigType = 777;
         final int trigCfgId = 888;
         final int trigSrcId = 999;
-        final long trigFirstTime = 101010L;
-        final long trigLastTime = 111111L;
+        final long trigFirstTime = firstTime + 1;
+        final long trigLastTime = lastTime - 1;
+
+        final long halfTime = firstTime + (lastTime - firstTime) / 2L;
 
         final int type1 = 100;
-        final long firstTime1 = 1010L;
-        final long lastTime1 = 1020L;
+        final long firstTime1 = firstTime + 10;
+        final long lastTime1 = halfTime - 1;
         final long domId1 = 103;
         final int srcId1 = 104;
 
         final int type2 = 200;
-        final long firstTime2 = 2010L;
-        final long lastTime2 = 2020L;
+        final long firstTime2 = halfTime + 1;
+        final long lastTime2 = lastTime - 10;
         final long domId2 = -1;
         final int srcId2 = -1;
 
-        final long hitTime1 = 1122L;
+        final long hitTime1 = halfTime - 10;
         final int hitType1 = 23;
         final int hitCfgId1 = 24;
-        final int hitSrcId1 = 25;
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
 
-        final long hitTime2 = 2211;
+        final long hitTime2 = halfTime + 10;
         final int hitType2 = 33;
         final int hitCfgId2 = 34;
-        final int hitSrcId2 = 35;
         final long hitDomId2 = 2109L;
         final int hitMode2 = 37;
 
         ArrayList hitList = new ArrayList();
-        hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
+        hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, srcId,
                                     hitDomId1, hitMode1));
-        hitList.add(new MockHitData(hitTime2, hitType2, hitCfgId2, hitSrcId2,
+        hitList.add(new MockHitData(hitTime2, hitType2, hitCfgId2, srcId,
                                     hitDomId2, hitMode2));
 
         MockReadoutRequest mockReq =
@@ -175,11 +181,13 @@ public class EventPayload_v4Test
                                    hitList, mockReq);
 
         ByteBuffer buf =
-            TestUtil.createEventv4(uid, srcId, firstTime, lastTime, year,
+            TestUtil.createEventv4(uid, srcId, firstTime, lastTime, YEAR,
                                    runNum, subrunNum, trigReq, hitList);
 
         EventPayload_v4 evt = new EventPayload_v4(buf, 0);
         evt.loadPayload();
+
+        assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
         assertEquals("Bad payload length",
                      buf.capacity(), evt.getPayloadLength());
@@ -193,7 +201,7 @@ public class EventPayload_v4Test
                      firstTime, evt.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
                      lastTime, evt.getLastTimeUTC().longValue());
-        assertEquals("Bad year", year, evt.getYear());
+        assertEquals("Bad year", YEAR, evt.getYear());
         assertEquals("Bad run number", runNum, evt.getRunNumber());
         assertEquals("Bad subrun number", subrunNum, evt.getSubrunNumber());
 
@@ -211,9 +219,8 @@ public class EventPayload_v4Test
     {
         final int uid = 12;
         final int srcId = 34;
-        final long firstTime = 1111L;
-        final long lastTime = 2222L;
-        final short year = 333;
+        final long firstTime = 1234L;
+        final long lastTime = 5432L;
         final int runNum = 444;
         final int subrunNum = 555;
 
@@ -221,39 +228,39 @@ public class EventPayload_v4Test
         final int trigType = 777;
         final int trigCfgId = 888;
         final int trigSrcId = 999;
-        final long trigFirstTime = 101010L;
-        final long trigLastTime = 111111L;
+        final long trigFirstTime = firstTime + 1;
+        final long trigLastTime = lastTime - 1;
+
+        final long halfTime = firstTime + (lastTime - firstTime) / 2L;
 
         final int type1 = 100;
-        final long firstTime1 = 1010L;
-        final long lastTime1 = 1020L;
+        final long firstTime1 = firstTime + 10;
+        final long lastTime1 = halfTime - 1;
         final long domId1 = 103;
         final int srcId1 = 104;
 
         final int type2 = 200;
-        final long firstTime2 = 2010L;
-        final long lastTime2 = 2020L;
+        final long firstTime2 = halfTime + 1;
+        final long lastTime2 = lastTime - 10;
         final long domId2 = -1;
         final int srcId2 = -1;
 
-        final long hitTime1 = 1122L;
+        final long hitTime1 = halfTime - 10;
         final int hitType1 = -1;
         final int hitCfgId1 = 24;
-        final int hitSrcId1 = 25;
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
 
-        final long hitTime2 = 2211;
+        final long hitTime2 = halfTime + 10;
         final int hitType2 = -1;
         final int hitCfgId2 = 34;
-        final int hitSrcId2 = 35;
         final long hitDomId2 = 2109L;
         final int hitMode2 = 37;
 
         ArrayList hitList = new ArrayList();
-        hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
+        hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, srcId,
                                     hitDomId1, hitMode1));
-        hitList.add(new MockHitData(hitTime2, hitType2, hitCfgId2, hitSrcId2,
+        hitList.add(new MockHitData(hitTime2, hitType2, hitCfgId2, srcId,
                                     hitDomId2, hitMode2));
 
         MockReadoutRequest mockReq =
@@ -267,11 +274,13 @@ public class EventPayload_v4Test
                                    hitList, mockReq);
 
         ByteBuffer buf =
-            TestUtil.createEventv4(uid, srcId, firstTime, lastTime, year,
+            TestUtil.createEventv4(uid, srcId, firstTime, lastTime, YEAR,
                                    runNum, subrunNum, trigReq, hitList);
 
         EventPayload_v4 evt = new EventPayload_v4(buf, 0);
         evt.loadPayload();
+
+        assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
         ByteBuffer newBuf = ByteBuffer.allocate(buf.limit());
         for (int b = 0; b < 2; b++) {
