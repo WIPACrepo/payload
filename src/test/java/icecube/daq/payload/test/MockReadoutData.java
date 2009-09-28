@@ -6,6 +6,8 @@ import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IReadoutDataPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.impl.BasePayload;
+import icecube.daq.payload.impl.BaseReadoutData;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -16,10 +18,18 @@ import java.util.zip.DataFormatException;
 public class MockReadoutData
     implements IReadoutDataPayload
 {
+    private int uid;
+    private int srcId;
+    private long firstTime;
+    private long lastTime;
     private List<IHitDataPayload> hitList;
 
-    public MockReadoutData()
+    public MockReadoutData(int uid, int srcId, long firstTime, long lastTime)
     {
+        this.uid = uid;
+        this.srcId = srcId;
+        this.firstTime = firstTime;
+        this.lastTime = lastTime;
         hitList = new ArrayList<IHitDataPayload>();
     }
 
@@ -40,22 +50,22 @@ public class MockReadoutData
 
     public List getDataPayloads()
     {
-        throw new Error("Unimplemented");
+        return hitList;
     }
 
     public IUTCTime getFirstTimeUTC()
     {
-        throw new Error("Unimplemented");
+        return new MockUTCTime(firstTime);
     }
 
     public List getHitList()
     {
-        throw new Error("Unimplemented");
+        return hitList;
     }
 
     public IUTCTime getLastTimeUTC()
     {
-        throw new Error("Unimplemented");
+        return new MockUTCTime(lastTime);
     }
 
     public int getNumHits()
@@ -75,7 +85,15 @@ public class MockReadoutData
 
     public int getPayloadLength()
     {
-        throw new Error("Unimplemented");
+        int hitLen = 0;
+        if (hitList != null) {
+            for (IHitDataPayload hit : hitList) {
+                hitLen += hit.getPayloadLength();
+            }
+        }
+
+        return BasePayload.LEN_PAYLOAD_HEADER +
+            BaseReadoutData.OFFSET_COMPDATA + hitLen;
     }
 
     public IUTCTime getPayloadTimeUTC()
@@ -101,17 +119,17 @@ public class MockReadoutData
 
     public int getRequestUID()
     {
-        throw new Error("Unimplemented");
+        return uid;
     }
 
     public ISourceID getSourceID()
     {
-        throw new Error("Unimplemented");
+        return new MockSourceID(srcId);
     }
 
     public int getTriggerConfigID()
     {
-        throw new Error("Unimplemented");
+        return -1;
     }
 
     public int getTriggerType()
@@ -127,12 +145,16 @@ public class MockReadoutData
     public void loadPayload()
         throws IOException, DataFormatException
     {
-        throw new Error("Unimplemented");
+        // do nothing
     }
 
     public void recycle()
     {
-        throw new Error("Unimplemented");
+        uid = -1;
+        srcId = -1;
+        firstTime = Long.MIN_VALUE;
+        lastTime = Long.MIN_VALUE;
+        hitList.clear();
     }
 
     public void setCache(IByteBufferCache cache)
@@ -150,5 +172,11 @@ public class MockReadoutData
         throws IOException
     {
         throw new Error("Unimplemented");
+    }
+
+    public String toString()
+    {
+        return "MockReadoutData[#" + uid + " src " + srcId +
+            " [" + firstTime + "-" + lastTime + "] hits*"+hitList.size() + "]";
     }
 }

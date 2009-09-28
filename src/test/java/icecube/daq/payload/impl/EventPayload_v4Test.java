@@ -5,6 +5,7 @@ import icecube.daq.payload.PayloadChecker;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockHitData;
+import icecube.daq.payload.test.MockReadoutData;
 import icecube.daq.payload.test.MockReadoutRequest;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockTriggerRequest;
@@ -63,10 +64,10 @@ public class EventPayload_v4Test
         final long hitTime1 = 1122L;
         final int hitType1 = 23;
         final int hitCfgId1 = 24;
-        final int hitSrcId1 = 25;
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
 
+setVerbose(true);
         MockReadoutRequest mockReq =
             new MockReadoutRequest(uid, trigSrcId);
         mockReq.addElement(rrType, firstTime, lastTime, rrDomId, rrSrcId);
@@ -77,18 +78,22 @@ public class EventPayload_v4Test
                                    mockReq);
 
         MockHitData hitData = new MockHitData(hitTime1, hitType1, hitCfgId1,
-                                              hitSrcId1, hitDomId1, hitMode1);
+                                              srcId, hitDomId1, hitMode1);
         hitData.setLength(114);
 
-        ArrayList<IWriteablePayload> hitList =
+        MockReadoutData rdp =
+            new MockReadoutData(uid, srcId, firstTime, lastTime);
+        rdp.add(hitData);
+
+        ArrayList<IWriteablePayload> rdpList =
             new ArrayList<IWriteablePayload>();
-        hitList.add(hitData);
+        rdpList.add(rdp);
 
         EventPayload_v4 evt =
             new EventPayload_v4(uid, new MockSourceID(srcId),
                                 new MockUTCTime(firstTime),
                                 new MockUTCTime(lastTime), YEAR, runNum,
-                                subrunNum, trigReq, hitList);
+                                subrunNum, trigReq, rdpList);
 
 //        assertEquals("Bad payload UTC time",
 //                     -1, evt.getPayloadTimeUTC().longValue());
@@ -111,12 +116,18 @@ public class EventPayload_v4Test
 
 //        assertNull("Non-null hit list", evt.getHitList());
 
+/*
+        ArrayList<IWriteablePayload> hitList =
+            new ArrayList<IWriteablePayload>();
+        hitList.add(hitData);
+
         ByteBuffer buf =
             TestUtil.createEventv4(uid, srcId, firstTime, lastTime, YEAR,
                                    runNum, subrunNum, trigReq, hitList);
 
         assertEquals("Bad payload length",
                      buf.capacity(), evt.getPayloadLength());
+*/
 
         evt.recycle();
     }
