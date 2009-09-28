@@ -9,6 +9,7 @@ import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -69,9 +70,22 @@ public class EventFactory
             throw new Error("Unimplemented");
         }
 
+        ITriggerRequestPayload reqCopy =
+            (ITriggerRequestPayload) trigReq.deepCopy();
+
+        ArrayList copyList;
+        if (dataList == null) {
+            copyList = null;
+        } else {
+            copyList = new ArrayList();
+            for (Object obj : dataList) {
+                copyList.add(((ILoadablePayload) obj).deepCopy());
+            }
+        }
+
         EventPayload_v4 e4 =
             new EventPayload_v4(uid, srcId, firstTime, lastTime, year,
-                                runNum, subrunNum, trigReq, dataList);
+                                runNum, subrunNum, reqCopy, copyList);
         if (bufCache != null) {
             e4.setCache(bufCache);
         }
