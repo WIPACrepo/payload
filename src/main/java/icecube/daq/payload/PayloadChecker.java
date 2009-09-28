@@ -383,12 +383,9 @@ public abstract class PayloadChecker
     private static final int SMT_TYPE = -1;
     // = TriggerRegistry.getTriggerType("SimpleMajorityTrigger");
 
-    private static short year;
-
-    static {
-        GregorianCalendar cal = new GregorianCalendar();
-        year = (short) cal.get(GregorianCalendar.YEAR);
-    };
+    /** Get the current year */
+    private static final short YEAR =
+        (short) (new GregorianCalendar()).get(GregorianCalendar.YEAR);
 
     /**
      * Should we ignore readout request elements which fall outside the
@@ -1113,9 +1110,9 @@ public abstract class PayloadChecker
      */
     public static boolean validateEventYear(short evtYear, boolean verbose)
     {
-        if (evtYear != year && evtYear != -1) {
+        if (evtYear != YEAR && evtYear != -1) {
             if (verbose) {
-                LOG.error("Expected event year to be " + year +
+                LOG.error("Expected event year to be " + YEAR +
                           " (or -1), not " + evtYear);
             }
 
