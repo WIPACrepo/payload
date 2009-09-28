@@ -108,8 +108,9 @@ public class EngineeringHitData
         }
 
         final short check = buf.getShort(offset + OFFSET_ORDERCHK);
-        if (check != (short) 2) {
-            throw new PayloadException("Order check should be 2, not " + check);
+        if (check != (short) 1 && check != (short) 2) {
+            throw new PayloadException("Order check should be 1 or 2, not " +
+                                       check);
         }
 
         atwdChip = buf.get(offset + OFFSET_ATWDCHIP);
