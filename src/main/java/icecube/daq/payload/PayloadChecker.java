@@ -1005,6 +1005,8 @@ public abstract class PayloadChecker
         for (IEventHitRecord hitRec : evt.getHitRecords()) {
             final long hitTime = hitRec.getHitTime();
             if (hitTime < evtFirst || hitTime > evtLast) {
+                LOG.error(evtDesc + " interval [" + evtFirst + "-" + evtLast +
+                          " does not contain hit@" + hitTime);
                 return false;
             }
         }
