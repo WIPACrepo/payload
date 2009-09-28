@@ -1308,43 +1308,47 @@ public abstract class PayloadChecker
             return false;
         }
 
-        for (Object obj : payList) {
-            if (obj instanceof ITriggerRequestPayload) {
-                ITriggerRequestPayload subTR = (ITriggerRequestPayload) obj;
-                loadPayload(subTR);
+        if (payList != null) {
+            for (Object obj : payList) {
+                if (obj instanceof ITriggerRequestPayload) {
+                    ITriggerRequestPayload subTR = (ITriggerRequestPayload) obj;
+                    loadPayload(subTR);
 
-                String subDesc = getTriggerRequestString(subTR);
-                IUTCTime subFirst = subTR.getFirstTimeUTC();
-                IUTCTime subLast = subTR.getLastTimeUTC();
-                if (!validateInterval(subDesc, subFirst, subLast, verbose)) {
+                    String subDesc = getTriggerRequestString(subTR);
+                    IUTCTime subFirst = subTR.getFirstTimeUTC();
+                    IUTCTime subLast = subTR.getLastTimeUTC();
+                    if (!validateInterval(subDesc, subFirst, subLast,
+                                          verbose))
+                    {
+                        return false;
+                    }
+
+                    if (!isIntervalContained(trDesc, trFirst, trLast, subDesc,
+                                             subFirst, subLast, verbose))
+                    {
+                        return false;
+                    }
+
+                    if (!validateTriggerRequest(subTR, verbose)) {
+                        return false;
+                    }
+                } else if (obj instanceof IHitPayload) {
+                    IHitPayload hit = (IHitPayload) obj;
+                    loadPayload(hit);
+
+                    IUTCTime time = hit.getHitTimeUTC();
+                    String hitDesc = "hit@" + time;
+
+                    if (!isIntervalContained(trDesc, trFirst, trLast,
+                                             hitDesc, time, time, verbose))
+                    {
+                        return false;
+                    }
+                } else {
+                    LOG.error("Unknown payload type " +
+                              obj.getClass().getName() + " in " + trDesc);
                     return false;
                 }
-
-                if (!isIntervalContained(trDesc, trFirst, trLast,
-                                         subDesc, subFirst, subLast, verbose))
-                {
-                    return false;
-                }
-
-                if (!validateTriggerRequest(subTR, verbose)) {
-                    return false;
-                }
-            } else if (obj instanceof IHitPayload) {
-                IHitPayload hit = (IHitPayload) obj;
-                loadPayload(hit);
-
-                IUTCTime time = hit.getHitTimeUTC();
-                String hitDesc = "hit@" + time;
-
-                if (!isIntervalContained(trDesc, trFirst, trLast,
-                                         hitDesc, time, time, verbose))
-                {
-                    return false;
-                }
-            } else {
-                LOG.error("Unknown payload type " + obj.getClass().getName() +
-                          " in " + trDesc);
-                return false;
             }
         }
 
