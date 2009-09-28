@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.DataFormatException;
 
 /**
  * Trigger request
@@ -178,6 +179,10 @@ public class TriggerRequest
      */
     public Object deepCopy()
     {
+        if (!isLoaded()) {
+            throw new Error(getPayloadName() + " has not been loaded");
+        }
+
         IReadoutRequest newRReq =
             (IReadoutRequest) ((ILoadablePayload) rdoutReq).deepCopy();
 
@@ -358,6 +363,13 @@ public class TriggerRequest
         }
 
         rdoutReq = new ReadoutRequest(buf, pos + OFFSET_RDOUTREQ, firstTime);
+        try {
+            ((ILoadablePayload) rdoutReq).loadPayload();
+        } catch (DataFormatException dfe) {
+            throw new PayloadException("Cannot load readout request", dfe);
+        } catch (IOException ioe) {
+            throw new PayloadException("Cannot load readout request", ioe);
+        }
 
         int rrPos = pos + OFFSET_RDOUTREQ + rdoutReq.getEmbeddedLength();
 
@@ -408,6 +420,13 @@ public class TriggerRequest
         PayloadFactory factory = getPayloadFactory();
         for (int i = 0; i < numData; i++) {
             IWriteablePayload pay = factory.getPayload(buf, offset + totLen);
+            try {
+                ((ILoadablePayload) pay).loadPayload();
+            } catch (DataFormatException dfe) {
+                throw new PayloadException("Cannot load composite#" + i, dfe);
+            } catch (IOException ioe) {
+                throw new PayloadException("Cannot load composite#" + i, ioe);
+            }
             compList.add(pay);
             totLen += pay.getPayloadLength();
         }
