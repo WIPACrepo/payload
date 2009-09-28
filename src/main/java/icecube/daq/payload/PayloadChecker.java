@@ -1043,6 +1043,11 @@ public abstract class PayloadChecker
 
         ArrayList<IHitDataPayload> evtHits = new ArrayList<IHitDataPayload>();
         for (Object obj : evt.getReadoutDataPayloads()) {
+            if (!(obj instanceof IReadoutDataPayload)) {
+                LOG.error("Not validating " + obj);
+                continue;
+            }
+
             IReadoutDataPayload rdp = (IReadoutDataPayload) obj;
             loadPayload(rdp);
 
