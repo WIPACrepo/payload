@@ -199,7 +199,7 @@ public abstract class BasePayload
      */
     public IUTCTime getPayloadTimeUTC()
     {
-        throw new Error("Unimplemented");
+        return new UTCTime(utcTime);
     }
 
     /**
