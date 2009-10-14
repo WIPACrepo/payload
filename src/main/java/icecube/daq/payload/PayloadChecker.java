@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -979,6 +980,29 @@ public abstract class PayloadChecker
         return valid;
     }
 
+    private static boolean validateEventRdoutData(IReadoutDataPayload rdp,
+                                                  String trDesc,
+                                                  IUTCTime trFirst,
+                                                  IUTCTime trLast,
+                                                  boolean verbose)
+    {
+        String rdpDesc = getReadoutDataString(rdp);
+        IUTCTime rdpFirst = rdp.getFirstTimeUTC();
+        IUTCTime rdpLast = rdp.getLastTimeUTC();
+
+        if (!validateInterval(rdpDesc, rdpFirst, rdpLast, verbose)) {
+            return false;
+        }
+
+        if (!isIntervalContained(trDesc, trFirst, trLast,
+                                 rdpDesc, rdpFirst, rdpLast, verbose))
+        {
+            return false;
+        }
+
+        return validateReadoutDataPayload(rdp, verbose);
+    }
+
     private static boolean validateEventRecords(IEventPayload evt,
                                                 String evtDesc, boolean verbose)
     {
@@ -1014,6 +1038,8 @@ public abstract class PayloadChecker
         return true;
     }
 
+    private enum Container { UNKNOWN, READOUT_DATA, HIT_REC_LIST };
+
     private static boolean validateEventTrigReqAndHits(IEventPayload evt,
                                                        String evtDesc,
                                                        boolean verbose)
@@ -1041,37 +1067,39 @@ public abstract class PayloadChecker
 
         List<IHitPayload> trigHits = getTrigReqHits(trigReq);
 
+        EnumSet<Container> container = EnumSet.noneOf(Container.class);
+
         ArrayList<IHitDataPayload> evtHits = new ArrayList<IHitDataPayload>();
         for (Object obj : evt.getReadoutDataPayloads()) {
-            if (!(obj instanceof IReadoutDataPayload)) {
-                LOG.error("Not validating " + obj);
-                continue;
-            }
+            if (obj instanceof IReadoutDataPayload) {
+                IReadoutDataPayload rdp = (IReadoutDataPayload) obj;
+                loadPayload(rdp);
 
-            IReadoutDataPayload rdp = (IReadoutDataPayload) obj;
-            loadPayload(rdp);
-
-            String rdpDesc = getReadoutDataString(rdp);
-            IUTCTime rdpFirst = rdp.getFirstTimeUTC();
-            IUTCTime rdpLast = rdp.getLastTimeUTC();
-
-            if (!validateInterval(rdpDesc, rdpFirst, rdpLast, verbose)) {
-                return false;
-            }
-
-            if (!isIntervalContained(trDesc, trFirst, trLast,
-                                     rdpDesc, rdpFirst, rdpLast, verbose))
-            {
-                return false;
-            }
-
-            validateReadoutDataPayload(rdp, verbose);
-
-            List rdpHits = rdp.getHitList();
-            if (rdpHits != null) {
-                for (Object rh : rdpHits) {
-                    evtHits.add((IHitDataPayload) rh);
+                if (!validateEventRdoutData(rdp, trDesc, trFirst, trLast,
+                                            verbose))
+                {
+                    return false;
                 }
+
+                List rdpHits = rdp.getHitList();
+                if (rdpHits != null) {
+                    for (Object rh : rdpHits) {
+                        evtHits.add((IHitDataPayload) rh);
+                    }
+                }
+
+                container.add(Container.READOUT_DATA);
+            } else if (obj instanceof IHitRecordList) {
+                IHitRecordList recList = (IHitRecordList) obj;
+
+                LOG.error("Event #" + evt.getEventUID() + " contains" +
+                          " hit record list #" + recList.getUID() +
+                          " instead of readout data payload");
+                return false;
+            } else {
+                LOG.error("Not validating " + obj);
+
+                container.add(Container.UNKNOWN);
             }
         }
 
@@ -1088,7 +1116,7 @@ public abstract class PayloadChecker
             }
 
             if (!found) {
-                StringBuffer hBuf = new StringBuffer();
+                StringBuilder hBuf = new StringBuilder();
                 for (IHitDataPayload eHit : evtHits) {
                     if (hBuf.length() == 0) {
                         hBuf.append('[');
@@ -1098,8 +1126,30 @@ public abstract class PayloadChecker
                     hBuf.append(eHit.toString());
                 }
                 hBuf.append(']');
+
+                StringBuilder csBuf = new StringBuilder();
+                if (container.contains(Container.READOUT_DATA)) {
+                    if (csBuf.length() > 0) {
+                        csBuf.append('|');
+                    }
+                    csBuf.append("readout data");
+                }
+                if (container.contains(Container.HIT_REC_LIST)) {
+                    if (csBuf.length() > 0) {
+                        csBuf.append('|');
+                    }
+                    csBuf.append("hit record list");
+                }
+                if (container.contains(Container.UNKNOWN)) {
+                    if (csBuf.length() > 0) {
+                        csBuf.append('|');
+                    }
+                    csBuf.append("??unknown object??");
+                }
+
                 LOG.error("Couldn't find trigger hit " + tHit +
-                          " in readout data hits " + hBuf.toString());
+                          " in " + csBuf.toString() +
+                          " hits " + hBuf.toString());
                 valid = false;
             }
         }
