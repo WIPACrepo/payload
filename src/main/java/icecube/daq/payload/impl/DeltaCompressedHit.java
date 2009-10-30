@@ -77,24 +77,19 @@ public class DeltaCompressedHit
         buf.position(dataStart);
         buf.get(data, 0, data.length);
 
-        switch ((word0 >> 18) & 0x1017) {
-        case 0x0004:
-            trigMode = (short) 1;
-            break;
-        case 0x0001:
-        case 0x0002:
-        case 0x0003:
-            trigMode = (short) 2;
-            break;
-        case 0x0010:
-            trigMode = (short) 3;
-            break;
-        case 0x1000:
+        // Note that comparisons need to be in this order or
+        // the wrong trigger mode will be returned
+        int modeBits = (word0 >> 18) & 0x1017;
+        if ((modeBits & 0x1000) == 0x1000) {
             trigMode = (short) 4;
-            break;
-        default:
+        } else if ((modeBits & 0x0010) == 0x0010) {
+            trigMode = (short) 3;
+        } else if ((modeBits & 0x0003) != 0) {
+            trigMode = (short) 2;
+        } else if ((modeBits & 0x0004) == 0x0004) {
+            trigMode = (short) 1;
+        } else {
             trigMode = (short) 0;
-            break;
         }
     }
 
