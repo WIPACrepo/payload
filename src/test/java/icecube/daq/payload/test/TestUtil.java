@@ -205,8 +205,7 @@ public abstract class TestUtil
                                                  atwdSize, isATWD_B,
                                                  isPeakUpper, peakSample,
                                                  prePeakCnt, peakCnt,
-                                                 postPeakCnt, dataBytes,
-                                                 ByteOrder.BIG_ENDIAN);
+                                                 postPeakCnt, dataBytes);
 
         final int bufLen = 36 + recBuf.limit();
 
@@ -228,6 +227,27 @@ public abstract class TestUtil
         }
 
         return buf;
+    }
+
+    public static ByteBuffer createDeltaHitRecord(short version, short pedestal,
+                                                  long domClock,
+                                                  boolean isCompressed,
+                                                  int trigFlags, int lcFlags,
+                                                  boolean hasFADC,
+                                                  boolean hasATWD, int atwdSize,
+                                                  boolean isATWD_B,
+                                                  boolean isPeakUpper,
+                                                  int peakSample,
+                                                  int prePeakCnt, int peakCnt,
+                                                  int postPeakCnt,
+                                                  byte[] dataBytes)
+    {
+        return createDeltaHitRecord(version, pedestal, domClock, isCompressed,
+                                    trigFlags, lcFlags, hasFADC, hasATWD,
+                                    atwdSize, isATWD_B, isPeakUpper,
+                                    peakSample, prePeakCnt, peakCnt,
+                                    postPeakCnt, dataBytes,
+                                    ByteOrder.BIG_ENDIAN);
     }
 
     public static ByteBuffer createDeltaHitRecord(short version, short pedestal,
@@ -1467,7 +1487,8 @@ public abstract class TestUtil
     }
 
     public static ByteBuffer createOldEngHitRecord(int atwdChip, int trigMode,
-                                                   long domClock, Object fadcObj,
+                                                   long domClock,
+                                                   Object fadcObj,
                                                    Object atwdObj)
     {
         return createOldEngHitRecord(atwdChip, trigMode, domClock, fadcObj,
@@ -1475,8 +1496,10 @@ public abstract class TestUtil
     }
 
     public static ByteBuffer createOldEngHitRecord(int atwdChip, int trigMode,
-                                                   long domClock, Object fadcObj,
-                                                   Object atwdObj, ByteOrder order)
+                                                   long domClock,
+                                                   Object fadcObj,
+                                                   Object atwdObj,
+                                                   ByteOrder order)
     {
         if (fadcObj == null || !(fadcObj.getClass().isArray())) {
             throw new Error("Invalid FADC array object " + fadcObj);
@@ -2094,6 +2117,9 @@ public abstract class TestUtil
     public static int getEngFmtTriggerMode(int dcTrigFlags)
     {
         int mode = 0;
+        if ((dcTrigFlags & 0x1000) != 0) {
+            return 4;
+        }
         if ((dcTrigFlags & 0x10) != 0) {
             return 3;
         }
