@@ -303,7 +303,7 @@ public class EngineeringHitData
             throw new PayloadException("Engineering hit data length is " +
                                        payLen +
                                        ", which exceeds buffer limit by " +
-                                       leftOver + " bytes (offset=" + offset +
+                                       -leftOver + " bytes (offset=" + offset +
                                        ")");
         }
 

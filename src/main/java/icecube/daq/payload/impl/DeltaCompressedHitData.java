@@ -293,7 +293,7 @@ public class DeltaCompressedHitData
             throw new PayloadException("Delta compressed hit data length is " +
                                        payLen +
                                        ", which exceeds buffer limit by " +
-                                       leftOver + " bytes (offset=" + offset +
+                                       -leftOver + " bytes (offset=" + offset +
                                        ")");
         }
 

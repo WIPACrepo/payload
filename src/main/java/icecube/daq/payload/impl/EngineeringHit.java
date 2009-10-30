@@ -69,7 +69,7 @@ public class EngineeringHit
             throw new PayloadException("Engineering record length is " +
                                        recLen +
                                        ", which exceeds buffer limit by " +
-                                       leftOver + " bytes");
+                                       -leftOver + " bytes");
         }
 
         short check = buf.getShort(offset + OFFSET_ORDERCHK);
