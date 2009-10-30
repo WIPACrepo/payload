@@ -112,6 +112,15 @@ public class DeltaCompressedHit
     }
 
     /**
+     * Get compressed hit data.
+     * @return hit data
+     */
+    public byte[] getCompressedData()
+    {
+        return data;
+    }
+
+    /**
      * Get the length of this DOM hit's data payload
      * @return number of bytes
      */
@@ -236,7 +245,7 @@ public class DeltaCompressedHit
     public String toString()
     {
         return "DeltaCompressedHit[" + getSubstring() + " ped " + pedestal +
-            " clk " + domClock + " word0 " + word0 + " word2 " + word2 +
-            " data " + data + "]";
+            " clk " + domClock + " word0 " + Integer.toHexString(word0) +
+            " word2 " + Integer.toHexString(word2) + " data " + data + "]";
     }
 }
