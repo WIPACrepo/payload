@@ -167,7 +167,8 @@ public abstract class Monitor
      */
     public String getMonitorString()
     {
-        return "time " + getUTCTime() + " dom " + Long.toHexString(domId) +
+        return "time " + getUTCTime() +
+            " dom " + String.format("%012x", domId) +
             " clk " + getDomClock();
     }
 

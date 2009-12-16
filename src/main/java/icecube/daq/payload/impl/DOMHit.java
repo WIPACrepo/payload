@@ -140,7 +140,7 @@ public abstract class DOMHit
      */
     String getSubstring()
     {
-        return "src " + srcId + " dom " + Long.toHexString(domId) +
+        return "src " + srcId + " dom " + String.format("%012x", domId) +
             " time " + getUTCTime();
     }
 

@@ -444,8 +444,7 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      * @return hex representation of domid, useful for hashing
      */
     public String getDomIdAsString() {
-        String sHex = Long.toHexString(mlDomId);
-        return sHex;
+        return String.format("%012x", mlDomId);
     }
 
     public long getDomId() {
