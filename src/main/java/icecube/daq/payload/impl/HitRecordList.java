@@ -84,7 +84,7 @@ public class HitRecordList
 
         hitRecList = new ArrayList<IEventHitRecord>();
         for (DOMHit hit : hitList) {
-            final String domStr = Long.toHexString(hit.getDomId());
+            final String domStr = String.format("%012x", hit.getDomId());
             final int chanId = reg.getChannelId(domStr);
             if (chanId == -1) {
                 System.err.println("Cannot find channel ID for DOM " + domStr);
