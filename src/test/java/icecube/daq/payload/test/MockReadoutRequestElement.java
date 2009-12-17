@@ -2,10 +2,10 @@ package icecube.daq.payload.test;
 
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IPayloadDestination;
+import icecube.daq.payload.IReadoutRequestElement;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayloadRecord;
-import icecube.daq.trigger.IReadoutRequestElement;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -23,11 +23,19 @@ public class MockReadoutRequestElement
     public MockReadoutRequestElement(int type, long firstTime, long lastTime,
                                      long domId, int srcId)
     {
+        this(type, new MockUTCTime(firstTime), new MockUTCTime(lastTime),
+             new MockDOMID(domId), new MockSourceID(srcId));
+    }
+
+    public MockReadoutRequestElement(int type, IUTCTime firstTime,
+                                     IUTCTime lastTime, IDOMID domId,
+                                     ISourceID srcId)
+    {
         this.type = type;
-        this.firstTime = new MockUTCTime(firstTime);
-        this.lastTime = new MockUTCTime(lastTime);
-        this.domId = new MockDOMID(domId);
-        this.srcId = (srcId < 0 ? null : new MockSourceID(srcId));
+        this.firstTime = firstTime;
+        this.lastTime = lastTime;
+        this.domId = domId;
+        this.srcId = srcId;
     }
 
     public void dispose()
@@ -108,5 +116,36 @@ public class MockReadoutRequestElement
         throws IOException
     {
         throw new Error("Unimplemented");
+    }
+
+    public String toString()
+    {
+        String typeStr;
+        switch (type) {
+        case READOUT_TYPE_GLOBAL:
+            typeStr = "GLOBAL";
+            break;
+        case READOUT_TYPE_II_GLOBAL:
+            typeStr = "II_GLOBAL";
+            break;
+        case READOUT_TYPE_IT_GLOBAL:
+            typeStr = "IT_GLOBAL";
+            break;
+        case READOUT_TYPE_II_STRING:
+            typeStr = "II_STRING";
+            break;
+        case READOUT_TYPE_II_MODULE:
+            typeStr = "II_MODULE";
+            break;
+        case READOUT_TYPE_IT_MODULE:
+            typeStr = "IT_MODULE";
+            break;
+        default:
+            typeStr = "UNKNOWN";
+            break;
+        }
+
+        return "MockReadoutRequestElement[" + typeStr + " [" + firstTime +
+            "-" + lastTime + "] dom " + domId + " src " + srcId + "]";
     }
 }

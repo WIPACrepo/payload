@@ -1,60 +1,206 @@
-/*
- * class: SourceIdRegistry
- *
- * Version $Id: SourceIdRegistry.java 4149 2009-05-14 21:06:40Z kael $
- *
- * Date: January 13 2005
- *
- * (c) 2005 IceCube Collaboration
- */
-
 package icecube.daq.payload;
 
 import icecube.daq.common.DAQCmdInterface;
-import icecube.daq.payload.impl.SourceID4B;
+import icecube.daq.payload.impl.SourceID;
 
 /**
- * Source ID registry and associated methods.
- *
- * @author pat
- * @version $Id: SourceIdRegistry.java 4149 2009-05-14 21:06:40Z kael $
+ * Source ID constants and utility methods
  */
-public final class SourceIdRegistry {
-
-    public static final int DOMHUB_SOURCE_ID = 1000;
+public final class SourceIdRegistry
+{
+    /** String processor (obsolete) */
     public static final int STRINGPROCESSOR_SOURCE_ID = 2000;
+    /** Icetop data handler */
     public static final int ICETOP_DATA_HANDLER_SOURCE_ID = 3000;
+    /** In-ice trigger */
     public static final int INICE_TRIGGER_SOURCE_ID = 4000;
+    /** Icetop trigger */
     public static final int ICETOP_TRIGGER_SOURCE_ID = 5000;
+    /** Global trigger */
     public static final int GLOBAL_TRIGGER_SOURCE_ID = 6000;
+    /** Event builder */
     public static final int EVENTBUILDER_SOURCE_ID = 7000;
+    /** Time calibration builder */
     public static final int TCALBUILDER_SOURCE_ID = 8000;
+    /** Monitor builder */
     public static final int MONITORBUILDER_SOURCE_ID = 9000;
+    /** Amanda trigger (obsolete) */
     public static final int AMANDA_TRIGGER_SOURCE_ID = 10000;
+    /** Supernova builder */
     public static final int SNBUILDER_SOURCE_ID = 11000;
+    /** String hub */
     public static final int STRING_HUB_SOURCE_ID = 12000;
+    /** Simulated string hub */
     public static final int SIMULATION_HUB_SOURCE_ID = 13000;
+    /** Secondary builders (monitor, supernova, and time calibration) */
+    public static final int SECONDARY_BUILDERS_SOURCE_ID = 14000;
 
     /**
-     * Generates an integer source ID based on a string and an integer.
-     * This is intended to be used to transform the component name and
-     * component id into a source id.
-     *
-     * @param name name of component as specified in DAQCmdInterface
-     * @param id   id of component with respect to other components of the same tpye
-     * @return integer source id
+     * This is a utility class.
      */
-    public static int getSourceIDFromNameAndId(String name, int id) {
+    private SourceIdRegistry()
+    {
+    }
 
-        if (id < 0 || id >= 1000) {
-            throw new Error("Bad " + name + " component ID " + id);
+    /**
+     * Get DAQ component ID from numeric source ID.
+     * @param srcId source ID
+     * @return DAQ component ID (0-999)
+     */
+    public static int getDAQIdFromSourceID(int srcId)
+    {
+        if (srcId >= STRINGPROCESSOR_SOURCE_ID &&
+            srcId < STRINGPROCESSOR_SOURCE_ID + 1000)
+        {
+            return srcId - STRINGPROCESSOR_SOURCE_ID;
+        } else if (srcId >= ICETOP_DATA_HANDLER_SOURCE_ID &&
+            srcId < ICETOP_DATA_HANDLER_SOURCE_ID + 1000)
+        {
+            return srcId - ICETOP_DATA_HANDLER_SOURCE_ID;
+        } else if (srcId >= INICE_TRIGGER_SOURCE_ID &&
+            srcId < INICE_TRIGGER_SOURCE_ID + 1000)
+        {
+            return srcId - INICE_TRIGGER_SOURCE_ID;
+        } else if (srcId >= ICETOP_TRIGGER_SOURCE_ID &&
+            srcId < ICETOP_TRIGGER_SOURCE_ID + 1000)
+        {
+            return srcId - ICETOP_TRIGGER_SOURCE_ID;
+        } else if (srcId >= GLOBAL_TRIGGER_SOURCE_ID &&
+            srcId < GLOBAL_TRIGGER_SOURCE_ID + 1000)
+        {
+            return srcId - GLOBAL_TRIGGER_SOURCE_ID;
+        } else if (srcId >= EVENTBUILDER_SOURCE_ID &&
+            srcId < EVENTBUILDER_SOURCE_ID + 1000)
+        {
+            return srcId - EVENTBUILDER_SOURCE_ID;
+        } else if (srcId >= TCALBUILDER_SOURCE_ID &&
+            srcId < TCALBUILDER_SOURCE_ID + 1000)
+        {
+            return srcId - TCALBUILDER_SOURCE_ID;
+        } else if (srcId >= MONITORBUILDER_SOURCE_ID &&
+            srcId < MONITORBUILDER_SOURCE_ID + 1000)
+        {
+            return srcId - MONITORBUILDER_SOURCE_ID;
+        } else if (srcId >= AMANDA_TRIGGER_SOURCE_ID &&
+            srcId < AMANDA_TRIGGER_SOURCE_ID + 1000)
+        {
+            return srcId - AMANDA_TRIGGER_SOURCE_ID;
+        } else if (srcId >= SNBUILDER_SOURCE_ID &&
+            srcId < SNBUILDER_SOURCE_ID + 1000)
+        {
+            return srcId - SNBUILDER_SOURCE_ID;
+        } else if (srcId >= STRING_HUB_SOURCE_ID &&
+            srcId < STRING_HUB_SOURCE_ID + 1000)
+        {
+            return srcId - STRING_HUB_SOURCE_ID;
+        } else if (srcId >= SIMULATION_HUB_SOURCE_ID &&
+            srcId < SIMULATION_HUB_SOURCE_ID + 1000)
+        {
+            return srcId - SIMULATION_HUB_SOURCE_ID;
+        } else if (srcId == -1) {
+            return srcId;
         }
 
-        if (name.compareTo(DAQCmdInterface.DAQ_DOMHUB) == 0) {
-            return DOMHUB_SOURCE_ID + id;
-        } else if (name.compareTo(DAQCmdInterface.DAQ_STRINGPROCESSOR) == 0) {
+        return srcId;
+    }
+
+    /**
+     * Get DAQ component name from numeric source ID.
+     * @param srcId source ID
+     * @return DAQ component name
+     */
+    public static String getDAQNameFromSourceID(int srcId)
+    {
+        if (srcId >= STRINGPROCESSOR_SOURCE_ID &&
+            srcId < STRINGPROCESSOR_SOURCE_ID + 1000)
+        {
+            return DAQCmdInterface.DAQ_STRINGPROCESSOR;
+        } else if (srcId >= ICETOP_DATA_HANDLER_SOURCE_ID &&
+            srcId < ICETOP_DATA_HANDLER_SOURCE_ID + 1000)
+        {
+            return DAQCmdInterface.DAQ_ICETOP_DATA_HANDLER;
+        } else if (srcId >= INICE_TRIGGER_SOURCE_ID &&
+            srcId < INICE_TRIGGER_SOURCE_ID + 1000)
+        {
+            return DAQCmdInterface.DAQ_INICE_TRIGGER;
+        } else if (srcId >= ICETOP_TRIGGER_SOURCE_ID &&
+            srcId < ICETOP_TRIGGER_SOURCE_ID + 1000)
+        {
+            return DAQCmdInterface.DAQ_ICETOP_TRIGGER;
+        } else if (srcId >= GLOBAL_TRIGGER_SOURCE_ID &&
+            srcId < GLOBAL_TRIGGER_SOURCE_ID + 1000)
+        {
+            return DAQCmdInterface.DAQ_GLOBAL_TRIGGER;
+        } else if (srcId >= EVENTBUILDER_SOURCE_ID &&
+            srcId < EVENTBUILDER_SOURCE_ID + 1000)
+        {
+            return DAQCmdInterface.DAQ_EVENTBUILDER;
+        } else if (srcId >= TCALBUILDER_SOURCE_ID &&
+            srcId < TCALBUILDER_SOURCE_ID + 1000)
+        {
+            return DAQCmdInterface.DAQ_TCALBUILDER;
+        } else if (srcId >= MONITORBUILDER_SOURCE_ID &&
+            srcId < MONITORBUILDER_SOURCE_ID + 1000)
+        {
+            return DAQCmdInterface.DAQ_MONITORBUILDER;
+        } else if (srcId >= AMANDA_TRIGGER_SOURCE_ID &&
+            srcId < AMANDA_TRIGGER_SOURCE_ID + 1000)
+        {
+            return DAQCmdInterface.DAQ_AMANDA_TRIGGER;
+        } else if (srcId >= SNBUILDER_SOURCE_ID &&
+            srcId < SNBUILDER_SOURCE_ID + 1000)
+        {
+            return DAQCmdInterface.DAQ_SNBUILDER;
+        } else if (srcId >= STRING_HUB_SOURCE_ID &&
+            srcId < STRING_HUB_SOURCE_ID + 1000)
+        {
+            return DAQCmdInterface.DAQ_STRING_HUB;
+        } else if (srcId >= SIMULATION_HUB_SOURCE_ID &&
+            srcId < SIMULATION_HUB_SOURCE_ID + 1000)
+        {
+            return DAQCmdInterface.DAQ_SIMULATION_HUB;
+        }
+
+        return "unknownComponent#" + srcId;
+    }
+
+    /**
+     * Get DAQ component name from source ID object.
+     * @param srcId source ID object
+     * @return DAQ component name
+     */
+    public static String getDAQNameFromISourceID(ISourceID srcId)
+    {
+        if (srcId == null) {
+            throw new Error("SourceID is null");
+        }
+
+        return getDAQNameFromSourceID(srcId.getSourceID());
+    }
+
+    /**
+     * Get source ID from DAQ name and number.
+     * @param name DAQ component name (like <tt>stringHub</tt>)
+     * @param id DAQ component number (0-999)
+     * @return source ID object
+     */
+    public static ISourceID getISourceIDFromNameAndId(String name, int id)
+    {
+        return new SourceID(getSourceIDFromNameAndId(name, id));
+    }
+
+    /**
+     * Get source ID from DAQ name and number.
+     * @param name DAQ component name (like <tt>stringHub</tt>)
+     * @param id DAQ component number (0-999)
+     * @return numeric source ID
+     */
+    public static int getSourceIDFromNameAndId(String name, int id)
+    {
+        if (name.compareTo(DAQCmdInterface.DAQ_STRINGPROCESSOR) == 0) {
             return STRINGPROCESSOR_SOURCE_ID + id;
-        } else if (name.compareTo(DAQCmdInterface.DAQ_ICETOP_DATA_HANDLER) == 0) {
+        } else if (name.compareTo(DAQCmdInterface.DAQ_ICETOP_DATA_HANDLER) == 0)
+        {
             return ICETOP_DATA_HANDLER_SOURCE_ID + id;
         } else if (name.compareTo(DAQCmdInterface.DAQ_INICE_TRIGGER) == 0) {
             return INICE_TRIGGER_SOURCE_ID + id;
@@ -72,128 +218,16 @@ public final class SourceIdRegistry {
             return AMANDA_TRIGGER_SOURCE_ID + id;
         } else if (name.compareTo(DAQCmdInterface.DAQ_SNBUILDER) == 0) {
             return SNBUILDER_SOURCE_ID + id;
-        } else if (name.compareTo(DAQCmdInterface.DAQ_STRING_HUB) == 0 ||
-                   name.compareTo(DAQCmdInterface.DAQ_REPLAY_HUB) == 0)
+        } else if (name.compareTo(DAQCmdInterface.DAQ_STRING_HUB) == 0) {
+            return STRING_HUB_SOURCE_ID + id;
+        } else if (name.compareTo(DAQCmdInterface.DAQ_SIMULATION_HUB) == 0) {
+            return SIMULATION_HUB_SOURCE_ID + id;
+        } else if (name.compareTo(DAQCmdInterface.DAQ_SECONDARY_BUILDERS) == 0)
         {
-            return STRING_HUB_SOURCE_ID + (id % 1000);
+            return SECONDARY_BUILDERS_SOURCE_ID + id;
         }
 
-        return 0;
-    }
-
-    /**
-     * Generates an ISourceID based on a string and an integer.
-     * This is intended to be used to transform the component name and
-     * component id into a source id.
-     *
-     * @param name name of component as specified in DAQCmdInterface
-     * @param id   id of component with respect to other components of the same tpye
-     * @return source id
-     */
-    public static ISourceID getISourceIDFromNameAndId(String name, int id) {
-
-        return new SourceID4B(getSourceIDFromNameAndId(name, id));
-
-    }
-
-    /**
-     * method to return DAQ component name based on integer source ID
-     *
-     * @param source integer source ID
-     * @return DAQ component name
-     */
-    public static String getDAQNameFromSourceID(int source) {
-
-        if (source < DOMHUB_SOURCE_ID) {
-            return DAQCmdInterface.DAQ_PAYLOAD_INVALID_SOURCE_ID;
-        } else if (source < STRINGPROCESSOR_SOURCE_ID) {
-            return DAQCmdInterface.DAQ_DOMHUB;
-        } else if (source < ICETOP_DATA_HANDLER_SOURCE_ID) {
-            return DAQCmdInterface.DAQ_STRINGPROCESSOR;
-        } else if (source < INICE_TRIGGER_SOURCE_ID) {
-            return DAQCmdInterface.DAQ_ICETOP_DATA_HANDLER;
-        } else if (source < ICETOP_TRIGGER_SOURCE_ID) {
-            return DAQCmdInterface.DAQ_INICE_TRIGGER;
-        } else if (source < GLOBAL_TRIGGER_SOURCE_ID) {
-            return DAQCmdInterface.DAQ_ICETOP_TRIGGER;
-        } else if (source < EVENTBUILDER_SOURCE_ID) {
-            return DAQCmdInterface.DAQ_GLOBAL_TRIGGER;
-        } else if (source < TCALBUILDER_SOURCE_ID) {
-            return DAQCmdInterface.DAQ_EVENTBUILDER;
-        } else if (source < MONITORBUILDER_SOURCE_ID) {
-            return DAQCmdInterface.DAQ_TCALBUILDER;
-        } else if (source < AMANDA_TRIGGER_SOURCE_ID) {
-            return DAQCmdInterface.DAQ_MONITORBUILDER;
-        } else if (source < SNBUILDER_SOURCE_ID) {
-            return DAQCmdInterface.DAQ_AMANDA_TRIGGER;
-        } else if (source < STRING_HUB_SOURCE_ID) {
-            return DAQCmdInterface.DAQ_SNBUILDER;
-        } else {
-            return DAQCmdInterface.DAQ_STRING_HUB;
-        }
-
-    }
-
-    /**
-     * method to return DAQ component name based on ISourceID
-     *
-     * @param sourceID ISourceID
-     * @return DAQ component name
-     */
-    public static String getDAQNameFromISourceID(ISourceID sourceID) {
-
-        return getDAQNameFromSourceID(sourceID.getSourceID());
-
-    }
-
-    /**
-     * method to return DAQ component Id based on integer source ID
-     *
-     * @param source integer source ID
-     * @return DAQ component Id
-     */
-    public static int getDAQIdFromSourceID(int source) {
-
-        if (source < DOMHUB_SOURCE_ID) {
-            return source;
-        } else if (source < STRINGPROCESSOR_SOURCE_ID) {
-            return source - DOMHUB_SOURCE_ID;
-        } else if (source < ICETOP_DATA_HANDLER_SOURCE_ID) {
-            return source - STRINGPROCESSOR_SOURCE_ID;
-        } else if (source < INICE_TRIGGER_SOURCE_ID) {
-            return source - ICETOP_DATA_HANDLER_SOURCE_ID;
-        } else if (source < ICETOP_TRIGGER_SOURCE_ID) {
-            return source - INICE_TRIGGER_SOURCE_ID;
-        } else if (source < GLOBAL_TRIGGER_SOURCE_ID) {
-            return source - ICETOP_TRIGGER_SOURCE_ID;
-        } else if (source < EVENTBUILDER_SOURCE_ID) {
-            return source - GLOBAL_TRIGGER_SOURCE_ID;
-        } else if (source < TCALBUILDER_SOURCE_ID) {
-            return source - EVENTBUILDER_SOURCE_ID;
-        } else if (source < MONITORBUILDER_SOURCE_ID) {
-            return source - TCALBUILDER_SOURCE_ID;
-        } else if (source < AMANDA_TRIGGER_SOURCE_ID) {
-            return source - MONITORBUILDER_SOURCE_ID;
-        } else if (source < SNBUILDER_SOURCE_ID) {
-            return source - AMANDA_TRIGGER_SOURCE_ID;
-        } else if (source < STRING_HUB_SOURCE_ID) {
-            return source - SNBUILDER_SOURCE_ID;
-        } else {
-            return source - STRING_HUB_SOURCE_ID;
-        }
-
-    }
-
-    /**
-     * method to return DAQ component Id based on ISourceID
-     *
-     * @param sourceID ISourceID
-     * @return DAQ component Id
-     */
-    public static int getDAQIdFromISourceID(ISourceID sourceID) {
-
-        return getDAQIdFromSourceID(sourceID.getSourceID());
-
+        throw new Error("Unknown DAQ component " + name + "#" + id);
     }
 
     /**
@@ -203,26 +237,17 @@ public final class SourceIdRegistry {
      *
      * @return <tt>true</tt> if the source ID is for an AMANDA hub component
      */
-    public static boolean isAmandaHubSourceID(ISourceID sourceID)
-    {
-        return isAmandaHubSourceID(sourceID.getSourceID());
-    }
-
-    /**
-     * Is the source ID for an AMANDA hub?
-     *
-     * @param srcId integer source ID
-     *
-     * @return <tt>true</tt> if the source ID is for an AMANDA hub component
-     */
+/*
     public static boolean isAmandaHubSourceID(int srcId)
     {
         if (!isAnyHubSourceID(srcId)) {
             return false;
         }
 
-        return srcId == 12000 || srcId == 13000;
+        return srcId == STRING_HUB_SOURCE_ID ||
+            srcId == SIMULATION_HUB_SOURCE_ID;
     }
+*/
 
     /**
      * Is the source ID for an amanda hub, string hub, or icetop hub?
@@ -231,9 +256,13 @@ public final class SourceIdRegistry {
      *
      * @return <tt>true</tt> if the source ID is for a hub component
      */
-    public static boolean isAnyHubSourceID(ISourceID sourceID)
+    public static boolean isAnyHubSourceID(ISourceID srcId)
     {
-        return isAnyHubSourceID(sourceID.getSourceID());
+        if (srcId == null) {
+            return false;
+        }
+
+        return isAnyHubSourceID(srcId.getSourceID());
     }
 
     /**
@@ -256,9 +285,13 @@ public final class SourceIdRegistry {
      *
      * @return <tt>true</tt> if the source ID is for an icetop hub component
      */
-    public static boolean isIcetopHubSourceID(ISourceID sourceID)
+    public static boolean isIcetopHubSourceID(ISourceID srcId)
     {
-        return isIcetopHubSourceID(sourceID.getSourceID());
+        if (srcId == null) {
+            return false;
+        }
+
+        return isIcetopHubSourceID(srcId.getSourceID());
     }
 
     /**
@@ -274,7 +307,7 @@ public final class SourceIdRegistry {
             return false;
         }
 
-        int daqId = srcId - STRING_HUB_SOURCE_ID;
+        int daqId = srcId % 1000;
         return daqId >= 200 && daqId <= 210;
     }
 
@@ -285,9 +318,13 @@ public final class SourceIdRegistry {
      *
      * @return <tt>true</tt> if the source ID is for an in-ice hub component
      */
-    public static boolean isIniceHubSourceID(ISourceID sourceID)
+    public static boolean isIniceHubSourceID(ISourceID srcId)
     {
-        return isIniceHubSourceID(sourceID.getSourceID());
+        if (srcId == null) {
+            return false;
+        }
+
+        return isIniceHubSourceID(srcId.getSourceID());
     }
 
     /**
@@ -303,7 +340,7 @@ public final class SourceIdRegistry {
             return false;
         }
 
-        int daqId = srcId - STRING_HUB_SOURCE_ID;
+        int daqId = srcId % 1000;
 
         return daqId > 0 && daqId <= DAQCmdInterface.DAQ_MAX_NUM_STRINGS;
     }
