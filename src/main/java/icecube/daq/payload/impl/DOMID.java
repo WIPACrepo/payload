@@ -117,6 +117,10 @@ public class DOMID
      */
     public String toString()
     {
-        return String.format("%012x", domId);
+        String str = Long.toHexString(domId);
+        while (str.length() < 12) {
+            str = "0" + str;
+        }
+        return str;
     }
 }
