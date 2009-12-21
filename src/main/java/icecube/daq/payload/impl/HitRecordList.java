@@ -86,7 +86,7 @@ public class HitRecordList
         for (DOMHit hit : hitList) {
             String domStr = Long.toHexString(hit.getDomId());
             while (domStr.length() < 12) {
-                domStr += "0" + domStr;
+                domStr = "0" + domStr;
             }
 
             final int chanId = reg.getChannelId(domStr);
