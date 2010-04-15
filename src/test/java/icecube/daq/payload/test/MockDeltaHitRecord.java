@@ -1,7 +1,8 @@
 package icecube.daq.payload.test;
 
 import icecube.daq.payload.IEventHitRecord;
-import icecube.daq.payload.IHitDataPayload;
+import icecube.daq.payload.IHitPayload;
+import icecube.daq.util.IDOMRegistry;
 
 import java.nio.ByteBuffer;
 
@@ -45,13 +46,13 @@ public class MockDeltaHitRecord
         return 20 + data.length;
     }
 
-    public boolean matches(IHitDataPayload hitData)
+    public boolean matches(IDOMRegistry domRegistry, IHitPayload hit)
     {
-        if (time != hitData.getHitTimeUTC().longValue()) {
+        if (time != hit.getHitTimeUTC().longValue()) {
             return false;
         }
 
-        if (chanId != getChannelID(hitData.getDOMID().longValue())) {
+        if (chanId != getChannelID(hit.getDOMID().longValue())) {
             return false;
         }
 

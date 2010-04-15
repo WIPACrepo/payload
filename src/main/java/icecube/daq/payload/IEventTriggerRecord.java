@@ -1,5 +1,7 @@
 package icecube.daq.payload;
 
+import icecube.daq.util.IDOMRegistry;
+
 import java.nio.ByteBuffer;
 import java.util.List;
 
@@ -11,10 +13,11 @@ public interface IEventTriggerRecord
     /**
      * Find the trigger record's hits in <tt>hitRecList</tt> and cache a
      * list of those indices.
+     * @param domRegistry used to map each hit's DOM ID to the channel ID
      * @param hitRecList list of hits
      * @throws PayloadException if there is a problem
      */
-    void computeIndices(List<IEventHitRecord> hitRecList)
+    void computeIndices(IDOMRegistry domRegistry, List<IEventHitRecord> hitRecList)
         throws PayloadException;
     /**
      * Return the starting time for this trigger.

@@ -1,16 +1,19 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IByteBufferCache;
+import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.IEventPayload;
 import icecube.daq.payload.IEventTriggerRecord;
-import icecube.daq.payload.IHitDataPayload;
 import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.ILoadablePayload;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.util.IDOMRegistry;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -20,6 +23,120 @@ import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+/**
+ * Temporary simple hit
+ */
+class TemporaryHit
+    implements IHitPayload
+{
+    private IDOMID domId;
+    private IUTCTime hitTime;
+
+    public TemporaryHit(IHitPayload hit)
+    {
+        domId = (IDOMID) hit.getDOMID().deepCopy();
+        hitTime = (IUTCTime) hit.getHitTimeUTC().deepCopy();
+    }
+
+    public Object deepCopy()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void dispose()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public IDOMID getDOMID()
+    {
+        return domId;
+    }
+
+    public IUTCTime getHitTimeUTC()
+    {
+        return hitTime;
+    }
+
+    public double getIntegratedCharge()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public ByteBuffer getPayloadBacking()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getPayloadInterfaceType()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getPayloadLength()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public IUTCTime getPayloadTimeUTC()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getPayloadType()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public ISourceID getSourceID()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getTriggerConfigID()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getTriggerType()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void loadPayload()
+        throws IOException, DataFormatException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void recycle()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void setCache(IByteBufferCache x0)
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean b0, IPayloadDestination x1)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean b0, int i1, ByteBuffer x2)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public String toString()
+    {
+        return "TemporaryHit[" + hitTime + " dom " + domId + "]";
+    }
+}
 
 /**
  * Trigger record
@@ -56,7 +173,7 @@ class TriggerRecord
     /** ending time */
     private long endTime;
     /** List of hits for this trigger */
-    private List<IHitDataPayload> hitList;
+    private List<IHitPayload> hitList;
     /** List of indices into event's hit record list */
     private int[] indices;
 
@@ -73,7 +190,7 @@ class TriggerRecord
         srcId = trigReq.getSourceID().getSourceID();
         startTime = trigReq.getFirstTimeUTC().longValue();
         endTime = trigReq.getLastTimeUTC().longValue();
-        hitList = new ArrayList<IHitDataPayload>();
+        hitList = new ArrayList<IHitPayload>();
 
         try {
             trigReq.loadPayload();
@@ -96,7 +213,7 @@ class TriggerRecord
 
         if (payList != null) {
             for (Object obj : payList) {
-                if (!(obj instanceof IHitDataPayload)) {
+                if (!(obj instanceof IHitPayload)) {
                     continue;
                 }
 
@@ -110,7 +227,7 @@ class TriggerRecord
                     continue;
                 }
 
-                hitList.add((IHitDataPayload) obj);
+                hitList.add(new TemporaryHit((IHitPayload) obj));
             }
         }
     }
@@ -143,35 +260,40 @@ class TriggerRecord
     }
 
     /**
-     * Compute this trigger records hit indices.
+     * Compute this trigger record's hit indices.
+     * @param domRegistry used to map each hit's DOM ID to the channel ID
      * @param hitRecList list of this event's hit records
      * @throws PayloadException if there is a problem
      */
-    public void computeIndices(List<IEventHitRecord> hitRecList)
+    public void computeIndices(IDOMRegistry domRegistry,
+                               List<IEventHitRecord> hitRecList)
         throws PayloadException
     {
         if (indices != null) {
             return;
         } else if (hitList == null) {
             throw new PayloadException("No hits specified for " + toString());
+        } else if (domRegistry == null) {
+            throw new PayloadException("DOM registry has not been set");
         }
 
         indices = new int[hitList.size()];
-
         for (int i = 0; i < hitList.size(); i++) {
-            IHitDataPayload hit = hitList.get(i);
+            IHitPayload hit = hitList.get(i);
 
             int idx = -1;
             for (int j = 0; j < hitRecList.size(); j++) {
-                if (hitRecList.get(j).matches(hit)) {
+                if (hitRecList.get(j).matches(domRegistry, hit)) {
                     idx = j;
                     break;
                 }
             }
 
             if (idx == -1) {
+                final int chanId =
+                    domRegistry.getChannelId(hit.getDOMID().toString());
                 throw new PayloadException("Couldn't find hit record for " +
-                                           hit);
+                                           hit + " (chanId " + chanId + ")");
             }
 
             indices[i] = idx;
@@ -200,7 +322,7 @@ class TriggerRecord
      * Get the number of hits in this trigger record
      * @return number of hits
      */
-    private int getNumHits()
+    public int getNumHits()
     {
         if (indices != null) {
             return indices.length;
@@ -326,6 +448,9 @@ public class EventPayload_v5
     private UTCTime firstTimeObj;
     /** cached ending time object */
     private UTCTime lastTimeObj;
+
+    /** DOM registry used to map each hit's DOM ID to the channel ID */
+    private IDOMRegistry domRegistry;
 
     /**
      * Create an event
@@ -879,12 +1004,16 @@ public class EventPayload_v5
     private int putTriggerRecords(ByteBuffer buf, int offset, long baseTime)
         throws PayloadException
     {
+        if (domRegistry == null) {
+            throw new PayloadException("DOM registry has not been set");
+        }
+
         buf.putInt(offset, trigRecList.size());
 
         int pos = offset + 4;
 
         for (IEventTriggerRecord trigRec : trigRecList) {
-            trigRec.computeIndices(hitRecList);
+            trigRec.computeIndices(domRegistry, hitRecList);
             int len = trigRec.writeRecord(buf, pos, baseTime);
             pos += len;
         }
@@ -910,6 +1039,15 @@ public class EventPayload_v5
 
         firstTimeObj = null;
         lastTimeObj = null;
+    }
+
+    /**
+     * Set the DOM registry used to translate hit DOM IDs to channel IDs
+     * @param domRegistry DOM registry
+     */
+    public void setDOMRegistry(IDOMRegistry domRegistry)
+    {
+        this.domRegistry = domRegistry;
     }
 
     /**

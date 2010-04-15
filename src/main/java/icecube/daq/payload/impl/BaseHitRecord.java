@@ -1,8 +1,9 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IEventHitRecord;
-import icecube.daq.payload.IHitDataPayload;
+import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.PayloadException;
+import icecube.daq.util.IDOMRegistry;
 
 import java.nio.ByteBuffer;
 
@@ -140,13 +141,22 @@ public abstract class BaseHitRecord
     }
 
     /**
-     * Unimplemented
-     * @param hitData ignored
-     * @return Error
+     * Return <tt>true</tt> if the specified hit matches this hit record
+     * @param domRegistry used to map each hit's DOM ID to the channel ID
+     * @param hit hit to compare
+     * @return <tt>true</tt> if this hit record matches the hit
      */
-    public boolean matches(IHitDataPayload hitData)
+    public boolean matches(IDOMRegistry domRegistry, IHitPayload hit)
     {
-        throw new Error("Unimplemented");
+        if (time != hit.getHitTimeUTC().longValue()) {
+            return false;
+        }
+
+        if (chanId != domRegistry.getChannelId(hit.getDOMID().toString())) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

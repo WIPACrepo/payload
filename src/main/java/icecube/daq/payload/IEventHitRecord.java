@@ -1,5 +1,7 @@
 package icecube.daq.payload;
 
+import icecube.daq.util.IDOMRegistry;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -19,10 +21,11 @@ public interface IEventHitRecord
     int length();
     /**
      * Return <tt>true</tt> if <tt>hitData</tt> matches this hit.
+     * @param domRegistry used to map each hit's DOM ID to the channel ID
      * @param hitData hit data being compared
      * @return <tt>true</tt> if the hits match
      */
-    boolean matches(IHitDataPayload hitData);
+    boolean matches(IDOMRegistry domRegistry, IHitPayload hitData);
     /**
      * Write this hit record.
      * @param buf byte buffer

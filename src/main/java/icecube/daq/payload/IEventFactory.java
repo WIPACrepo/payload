@@ -1,5 +1,7 @@
 package icecube.daq.payload;
 
+import icecube.daq.util.IDOMRegistry;
+
 import java.util.List;
 
 /**
@@ -45,6 +47,7 @@ public interface IEventFactory
      * @param subrunNum subrun number
      * @param trigReq trigger request associated with this event
      * @param hitRecList list of hit records for this event
+     * @param domRegistry used to map each hit's DOM ID to the channel ID
      *
      * @return event
      *
@@ -54,6 +57,7 @@ public interface IEventFactory
                                    IUTCTime lastTime, short year, int runNum,
                                    int subrunNum,
                                    ITriggerRequestPayload trigReq,
-                                   List<IEventHitRecord> hitRecList)
+                                   List<IEventHitRecord> hitRecList,
+                                   IDOMRegistry domRegistry)
         throws PayloadException;
 }

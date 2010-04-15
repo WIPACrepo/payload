@@ -13,11 +13,13 @@ import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockTriggerRequest;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
+import icecube.daq.util.IDOMRegistry;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -26,6 +28,25 @@ import junit.textui.TestRunner;
 public class EventPayload_v6Test
     extends LoggingCase
 {
+    class MockDOMRegistry
+        implements IDOMRegistry
+    {
+        public short getChannelId(String mbid)
+        {
+            throw new Error("Unimplemented");
+        }
+
+        public int getStringMajor(String mbid)
+        {
+            throw new Error("Unimplemented");
+        }
+
+        public Set<String> keys()
+        {
+            throw new Error("Unimplemented");
+        }
+    }
+
     /** Get the current year */
     private static final short YEAR =
         (short) (new GregorianCalendar()).get(GregorianCalendar.YEAR);
@@ -275,9 +296,13 @@ public class EventPayload_v6Test
                                               (short) 56, 78, 90,
                                               new byte[] { (byte) 45,
                                                            (byte) 5 }));
+
+        IDOMRegistry domRegistry = new MockDOMRegistry();
+
         ByteBuffer buf =
             TestUtil.createEventv6(uid, firstTime, lastTime, YEAR, runNum,
-                                   subrunNum, trigReq, hitRecList, false);
+                                   subrunNum, trigReq, hitRecList, false,
+                                   domRegistry);
 
         EventPayload_v6 evt = new EventPayload_v6(buf, 0);
         evt.loadPayload();
@@ -380,14 +405,18 @@ public class EventPayload_v6Test
                                                            (byte) 7,
                                                            (byte) 8 }));
 
+        IDOMRegistry domRegistry = new MockDOMRegistry();
+
         ByteBuffer buf =
             TestUtil.createEventv6(uid, firstTime, lastTime, YEAR, runNum,
-                                   subrunNum, trigReq, hitRecList, false);
+                                   subrunNum, trigReq, hitRecList, false,
+                                   domRegistry);
 
         EventPayload_v6 evt = new EventPayload_v6(buf, 0);
         evt.loadPayload();
 
-setVerbose(true);
+        evt.setDOMRegistry(new MockDOMRegistry());
+
         assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
         ByteBuffer newBuf = ByteBuffer.allocate(buf.limit());
