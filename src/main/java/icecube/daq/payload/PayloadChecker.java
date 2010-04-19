@@ -134,6 +134,7 @@ class TriggerConfigEntry
                     new String[] { "threshold", "timeWindow" });
                 put("ThroughputTrigger", new String[0]);
                 put("TrigBoardTrigger", new String[] { "prescale" });
+                put("VolumeTrigger", new String[0]);
             }
         };
 
