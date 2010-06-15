@@ -45,6 +45,11 @@ public class EventPayload_v6Test
         {
             throw new Error("Unimplemented");
         }
+
+        public double distanceBetweenDOMs(String mbid0, String mbid1)
+        {
+            throw new Error("Unimplemented");
+        }
     }
 
     /** Get the current year */

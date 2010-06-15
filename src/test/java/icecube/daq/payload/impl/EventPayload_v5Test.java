@@ -20,6 +20,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
@@ -41,6 +43,11 @@ public class EventPayload_v5Test
         }
 
         public Set<String> keys()
+        {
+            throw new Error("Unimplemented");
+        }
+
+        public double distanceBetweenDOMs(String mbid0, String mbid1)
         {
             throw new Error("Unimplemented");
         }
