@@ -81,7 +81,7 @@ public abstract class DOMHit
     public ByteBuffer getHitBuffer(IByteBufferCache cache)
         throws PayloadException
     {
-        return SimpleHit.getBuffer(cache, getUTCTime(),  getTriggerMode(),
+        return SimpleHit.getBuffer(cache, getUTCTime(), getTriggerMode(),
                                    getConfigId(), srcId.getSourceID(),
                                    domId, getTriggerMode());
     }
