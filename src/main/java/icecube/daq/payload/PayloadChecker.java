@@ -137,6 +137,7 @@ class TriggerConfigEntry
                 put("VolumeTrigger",
                     new String[] {
                         "timeWindow", "multiplicity", "coherenceLength",
+                        "domSet",
                     });
             }
         };
