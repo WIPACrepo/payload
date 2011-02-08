@@ -132,6 +132,7 @@ class TriggerConfigEntry
                     new String[] { "deadtime", "prescale" });
                 put("SimpleMajorityTrigger",
                     new String[] { "threshold", "timeWindow" });
+                put("SlowMPTrigger", new String[0]);
                 put("ThroughputTrigger", new String[0]);
                 put("TrigBoardTrigger", new String[] { "prescale" });
                 put("VolumeTrigger",
