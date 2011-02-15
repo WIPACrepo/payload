@@ -256,20 +256,39 @@ public class TriggerRequestRecord implements IWriteablePayloadRecord, Poolable {
         mt_readoutRequestRecord  = null;
     }
 
-    /** List of trigger types */
-    private static String[] trigTypes = new String[] {
-        "SimpMaj", "Calib", "MinBias", "Thruput", "FixedRt", "SyncBrd",
-        "TrigBrd", "AmMFrag20", "AmVol", "AmM18", "AmM24", "AmStr",
-        "AmSpase", "AmRand", "AmCalT0", "AmCalLaser",
+    /** list of trigger names */
+    private static String[] TYPE_NAMES = new String[] {
+        "SimpMaj", "Calib", "MinBias", "Thruput", "Cluster", "SyncBrd",
+        "TrigBrd", "AmMFrag20", "AmVol", "AmM18", "AmM24", "AmStr", "AmRand",
+        "PhysMinBias", "??Trig14??", "Volume", "??Trig16??", "MplcityStr",
+        "??Trig18??", "??Trig19??", "Volume", "Cylinder", "SlowMP",
+        "??Trig22??", "??Trig23??", "??Trig24??", "??Trig25??", "??Trig26??",
+        "??Trig27??", "??Trig28??", "??Trig29??", "FixedRate"
     };
 
-    private static String getTypeString(int trigType)
+    public static String getTriggerName(int type)
     {
-        if (trigType >= 0 && trigType < trigTypes.length) {
-            return trigTypes[trigType];
+        if (TYPE_NAMES == null || type < 0 || type >= TYPE_NAMES.length ||
+            TYPE_NAMES[type] == null)
+        {
+            return "#" + type;
         }
 
-        return "unknownTrigType#" + trigType;
+        return TYPE_NAMES[type];
+    }
+
+    public String getTriggerName()
+    {
+        if (mi_triggerType == -1 && mi_triggerConfigID == -1 && mi_UID >= 0) {
+            return "Merged";
+        }
+
+        return getTriggerName(mi_triggerType);
+    }
+
+    public static void setTypeNames(String[] names)
+    {
+        TYPE_NAMES = names;
     }
 
     /**
@@ -280,7 +299,7 @@ public class TriggerRequestRecord implements IWriteablePayloadRecord, Poolable {
     public String toDataString()
     {
         return "uid " + mi_UID +
-            " type " + getTypeString(mi_triggerType) +
+            " type " + getTriggerName() +
             " cfgId " + mi_triggerConfigID +
             " src " + mt_sourceid +
             " [" + mt_firstTime + "-" + mt_lastTime + "] rdoutReq" +

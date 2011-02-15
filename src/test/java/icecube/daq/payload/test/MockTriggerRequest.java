@@ -167,6 +167,11 @@ public class MockTriggerRequest
         return cfgId;
     }
 
+    public String getTriggerName()
+    {
+        return null;
+    }
+
     public int getTriggerType()
     {
         return type;

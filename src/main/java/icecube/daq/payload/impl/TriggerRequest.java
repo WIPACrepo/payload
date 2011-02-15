@@ -56,6 +56,16 @@ public class TriggerRequest
     /** Length of composite header */
     public static final int LEN_COMPOSITE_HEADER = 8;
 
+    /** list of trigger names */
+    private static String[] TYPE_NAMES = new String[] {
+        "SimpMaj", "Calib", "MinBias", "Thruput", "Cluster", "SyncBrd",
+        "TrigBrd", "AmMFrag20", "AmVol", "AmM18", "AmM24", "AmStr", "AmRand",
+        "PhysMinBias", "??Trig14??", "Volume", "??Trig16??", "MplcityStr",
+        "??Trig18??", "??Trig19??", "Volume", "Cylinder", "SlowMP",
+        "??Trig22??", "??Trig23??", "??Trig24??", "??Trig25??", "??Trig26??",
+        "??Trig27??", "??Trig28??", "??Trig29??", "FixedRate"
+    };
+
     /** unique ID */
     private int uid;
     /** trigger type */
@@ -315,6 +325,36 @@ public class TriggerRequest
     }
 
     /**
+     * Get the trigger name for the specified trigger type.
+     *
+     * @return trigger name
+     */
+    public String getTriggerName(int type)
+    {
+        if (type == -1 && cfgId == -1 && uid >= 0) {
+            return "Merged";
+        }
+
+        if (TYPE_NAMES == null || type < 0 || type >= TYPE_NAMES.length ||
+            TYPE_NAMES[type] == null)
+        {
+            return "#" + type;
+        }
+
+        return TYPE_NAMES[type];
+    }
+
+    /**
+     * Get the trigger name for the trigger type.
+     *
+     * @return trigger name
+     */
+    public String getTriggerName()
+    {
+        return getTriggerName(trigType);
+    }
+
+    /**
      * Get the unique ID
      * @return unique ID
      */
@@ -564,6 +604,11 @@ public class TriggerRequest
         lastTimeObj = null;
     }
 
+    public static void setTypeNames(String[] names)
+    {
+        TYPE_NAMES = names;
+    }
+
     /**
      * Unimplemented
      * @param buf ignored
@@ -583,9 +628,16 @@ public class TriggerRequest
      */
     public String toString()
     {
-        return "TriggerRequest[uid " + uid + " type " + trigType +
-            " cfg " + cfgId + " src " + getSourceID() + " [" + firstTime + "-" +
-            lastTime + "] rReq " + rdoutReq + " composites*" + compList.size() +
+        String szStr;
+        if (compList == null) {
+            szStr = "null";
+        } else {
+            szStr = Integer.toString(compList.size());
+        }
+
+        return "TriggerRequest[uid " + uid + " type " + getTriggerName() +
+            " cfg " + cfgId + " src " + getSourceID() + " [" + firstTime +
+            "-" + lastTime + "] rReq " + rdoutReq + " composites*" + szStr +
             "]";
     }
 }
