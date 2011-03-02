@@ -7,6 +7,7 @@ import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
+import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
 
@@ -255,6 +256,15 @@ public class TriggerRequest
     public int getNumData()
     {
         throw new Error("Unimplemented");
+    }
+
+    /**
+     * Get the payload interface type.
+     * @return interface type
+     */
+    public int getPayloadInterfaceType()
+    {
+        return PayloadInterfaceRegistry.I_TRIGGER_REQUEST;
     }
 
     /**
