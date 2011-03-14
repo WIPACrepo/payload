@@ -389,6 +389,11 @@ class TriggerConfig
     {
         return name;
     }
+
+    public String toString()
+    {
+        return name + "*" + entries.size();
+    }
 }
 
 /**
@@ -439,6 +444,26 @@ public abstract class PayloadChecker
         File trigCfgDir = new File(configDir, "trigger");
 
         triggerConfig = loadTriggerConfig(xmlRdr, trigCfgDir, trigCfgName);
+
+        setTriggerNames();
+    }
+
+    private static void setTriggerNames()
+    {
+        int max = 0;
+        for (TriggerConfigEntry entry : triggerConfig.entries()) {
+            if (max < entry.getType()) {
+                max = entry.getType();
+            }
+        }
+
+        String[] typeNames = new String[max + 1];
+        for (TriggerConfigEntry entry : triggerConfig.entries()) {
+            typeNames[entry.getType()] = entry.getName();
+        }
+
+        icecube.daq.oldpayload.impl.TriggerRequestRecord.setTypeNames(typeNames);
+        icecube.daq.payload.impl.TriggerRequest.setTypeNames(typeNames);
     }
 
     /**
