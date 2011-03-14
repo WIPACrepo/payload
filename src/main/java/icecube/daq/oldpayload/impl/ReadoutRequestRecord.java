@@ -72,7 +72,7 @@ public class ReadoutRequestRecord implements IWriteablePayloadRecord, IReadoutRe
     /**
      * New method which is unused in old implementation.
      */
-    public void addElement(int type, int srcId, long firstTime, long lastTime, 
+    public void addElement(int type, int srcId, long firstTime, long lastTime,
                            long domId)
     {
         throw new Error("Unimplemented");
