@@ -298,10 +298,9 @@ public class TriggerRequestRecord implements IWriteablePayloadRecord, Poolable {
      */
     public String toDataString()
     {
-        return "uid " + mi_UID +
-            " type " + getTriggerName() +
-            " cfgId " + mi_triggerConfigID +
-            " src " + mt_sourceid +
+        return mt_sourceid.toString() +
+            " " + getTriggerName() + "-" + mi_triggerConfigID +
+            " uid " + mi_UID +
             " [" + mt_firstTime + "-" + mt_lastTime + "] rdoutReq" +
             (mt_readoutRequestRecord == null ? "<noRecord>" :
              "[" + mt_readoutRequestRecord.toDataString() + "]");

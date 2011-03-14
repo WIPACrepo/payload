@@ -645,9 +645,8 @@ public class TriggerRequest
             szStr = Integer.toString(compList.size());
         }
 
-        return "TriggerRequest[uid " + uid + " type " + getTriggerName() +
-            " cfg " + cfgId + " src " + getSourceID() + " [" + firstTime +
-            "-" + lastTime + "] rReq " + rdoutReq + " composites*" + szStr +
-            "]";
+        return "TriggerRequest[" + getSourceID() + " " + getTriggerName() +
+            "-" + cfgId + " uid " + uid + " [" + firstTime + "-" + lastTime +
+            "] rReq " + rdoutReq + " composites*" + szStr + "]";
     }
 }
