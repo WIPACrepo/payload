@@ -14,6 +14,7 @@ import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.EventPayload_v4;
 import icecube.daq.payload.impl.Monitor;
 import icecube.daq.payload.impl.TriggerRequest;
+import icecube.daq.util.IDOMRegistry;
 
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
@@ -32,7 +33,8 @@ class RequestData
     private long endTime;
     private int[] hitIndices;
 
-    RequestData(ITriggerRequestPayload tr, List<IEventHitRecord> hitList)
+    RequestData(IDOMRegistry domRegistry, ITriggerRequestPayload tr,
+                List<IEventHitRecord> hitList)
         throws DataFormatException
     {
         type = tr.getTriggerType();
@@ -42,11 +44,11 @@ class RequestData
         endTime = tr.getLastTimeUTC().longValue();
         List payList = tr.getPayloads();
         if (payList != null) {
-            hitIndices = buildHitIndexList(payList, hitList);
+            hitIndices = buildHitIndexList(domRegistry, payList, hitList);
         }
     }
 
-    private static int[] buildHitIndexList(List reqHits,
+    private static int[] buildHitIndexList(IDOMRegistry domRegistry, List reqHits,
                                            List<IEventHitRecord> hitList)
     {
         ArrayList<IHitDataPayload> tmpHits = new ArrayList<IHitDataPayload>();
@@ -58,7 +60,7 @@ class RequestData
 
         int[] indices = new int[tmpHits.size()];
         for (int i = 0; i < indices.length; i++) {
-            indices[i] = findIndex(tmpHits.get(i), hitList);
+            indices[i] = findIndex(domRegistry, tmpHits.get(i), hitList);
             if (indices[i] < 0) {
                 throw new Error("Couldn't find hit " + tmpHits.get(i));
             }
@@ -67,11 +69,11 @@ class RequestData
         return indices;
     }
 
-    private static int findIndex(IHitDataPayload hit,
+    private static int findIndex(IDOMRegistry domRegistry, IHitDataPayload hit,
                                  List<IEventHitRecord> hitList)
     {
         for (int i = 0; i < hitList.size(); i++) {
-            if (hitList.get(i).matches(hit)) {
+            if (hitList.get(i).matches(domRegistry, hit)) {
                 return i;
             }
         }
@@ -671,7 +673,8 @@ public abstract class TestUtil
                                            long lastTime, short year,
                                            int runNum, int subrunNum,
                                            ITriggerRequestPayload trigReq,
-                                           List<IEventHitRecord> hitList)
+                                           List<IEventHitRecord> hitList,
+                                           IDOMRegistry domRegistry)
         throws DataFormatException, PayloadException
     {
         int hitLen = 0;
@@ -689,7 +692,7 @@ public abstract class TestUtil
         int trigLen = 0;
 
         List<RequestData> trigList = new ArrayList<RequestData>();
-        RequestData topReq = new RequestData(trigReq, hitList);
+        RequestData topReq = new RequestData(domRegistry, trigReq, hitList);
         trigList.add(topReq);
         trigLen += topReq.length();
 
@@ -707,7 +710,8 @@ public abstract class TestUtil
                     }
 
                     RequestData reqData =
-                        new RequestData((ITriggerRequestPayload) tr, hitList);
+                        new RequestData(domRegistry, (ITriggerRequestPayload) tr,
+                                        hitList);
                     trigList.add(reqData);
                     trigLen += reqData.length();
                 }
@@ -767,7 +771,8 @@ public abstract class TestUtil
                                            int runNum, int subrunNum,
                                            ITriggerRequestPayload trigReq,
                                            List<IEventHitRecord> hitList,
-                                           boolean forceCompression)
+                                           boolean forceCompression,
+                                           IDOMRegistry domRegistry)
         throws DataFormatException, PayloadException
     {
         ByteBuffer hitBuf =
@@ -783,7 +788,7 @@ public abstract class TestUtil
         int trigLen = 0;
 
         List<RequestData> trigList = new ArrayList<RequestData>();
-        RequestData topReq = new RequestData(trigReq, hitList);
+        RequestData topReq = new RequestData(domRegistry, trigReq, hitList);
         trigList.add(topReq);
         trigLen += topReq.length();
 
@@ -801,7 +806,8 @@ public abstract class TestUtil
                     }
 
                     RequestData reqData =
-                        new RequestData((ITriggerRequestPayload) tr, hitList);
+                        new RequestData(domRegistry, (ITriggerRequestPayload) tr,
+                                        hitList);
                     trigList.add(reqData);
                     trigLen += reqData.length();
                 }

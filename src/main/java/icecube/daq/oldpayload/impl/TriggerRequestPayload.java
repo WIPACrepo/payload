@@ -133,6 +133,13 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
             return -1;
         }
     }
+    public String getTriggerName() {
+        if (mt_triggerRequestRecord != null) {
+            return mt_triggerRequestRecord.getTriggerName();
+        } else {
+            return null;
+        }
+    }
     /**
      * returns start time of interval
      */

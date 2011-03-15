@@ -72,7 +72,7 @@ public class ReadoutRequestRecord implements IWriteablePayloadRecord, IReadoutRe
     /**
      * New method which is unused in old implementation.
      */
-    public void addElement(int type, int srcId, long firstTime, long lastTime, 
+    public void addElement(int type, int srcId, long firstTime, long lastTime,
                            long domId)
     {
         throw new Error("Unimplemented");
@@ -384,14 +384,24 @@ public class ReadoutRequestRecord implements IWriteablePayloadRecord, IReadoutRe
             for (Object obj : mt_RequestElementList) {
                 IReadoutRequestElement elem =
                     (IReadoutRequestElement) obj;
+                // XXX - this should call IReadoutRequestElement.toDataString()
                 int type = elem.getReadoutType();
                 String typeStr =
                     ReadoutRequestElementRecord.getTypeString(type);
                 buf.append(" [").append(typeStr);
+                if (elem.getSourceID() == null ||
+                    elem.getSourceID().getSourceID() != -1)
+                {
+                    buf.append(" src ").append(elem.getSourceID());
+                }
                 buf.append(" [").append(elem.getFirstTimeUTC()).append("-");
-                buf.append(elem.getLastTimeUTC()).append("] dom ");
-                buf.append(elem.getDomID()).append(" src ");
-                buf.append(elem.getSourceID()).append("]");
+                buf.append(elem.getLastTimeUTC()).append("]");
+                if (elem.getDomID() == null ||
+                    elem.getDomID().longValue() != -1L)
+                {
+                    buf.append(" dom ").append(elem.getDomID());
+                }
+                buf.append("]");
             }
         }
         return buf.toString();

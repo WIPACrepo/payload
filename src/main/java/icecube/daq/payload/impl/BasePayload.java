@@ -354,11 +354,22 @@ public abstract class BasePayload
      */
     public static String toHexString(ByteBuffer buf, int offset, int length)
     {
-        StringBuffer strBuf = new StringBuffer();
-        strBuf.append(offset + 0).append(": ");
+        if (buf.limit() < offset + length) {
+            length = buf.limit() - offset;
+        }
 
-        int num = 0;
+        StringBuffer strBuf = new StringBuffer();
+
         for (int i = 0; i < length; i++) {
+            if (i % 16 == 0) {
+                if (i > 0) {
+                    strBuf.append('\n');
+                }
+                strBuf.append(offset + i).append(": ");
+            } else {
+                strBuf.append(' ');
+            }
+
             String str = Integer.toHexString(buf.get(offset + i));
             if (str.length() < 2) {
                 strBuf.append('0').append(str);
@@ -366,13 +377,6 @@ public abstract class BasePayload
                 strBuf.append(str.substring(str.length() - 2));
             } else {
                 strBuf.append(str);
-            }
-            if (num == 15) {
-                strBuf.append('\n').append(offset + i + 1).append(": ");
-                num = 0;
-            } else {
-                strBuf.append(' ');
-                num++;
             }
         }
 

@@ -266,8 +266,16 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
      */
     public String toDataString()
     {
-        return getTypeString(mi_readoutType) + " [" + mt_firstTime + "-" +
-            mt_lastTime + "] dom " + mt_domId + " src " + mt_sourceId;
+        StringBuffer buf = new StringBuffer(getTypeString(mi_readoutType));
+        if (mt_sourceId == null || mt_sourceId.getSourceID() != -1) {
+            buf.append(" src ").append(mt_sourceId);
+        }
+        buf.append(" [").append(mt_firstTime).append('-');
+        buf.append(mt_lastTime).append(']');
+        if (mt_domId == null || mt_domId.longValue() != -1L) {
+            buf.append(" dom ").append(mt_domId);
+        }
+        return  buf.toString();
     }
 
     /**

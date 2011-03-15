@@ -34,6 +34,8 @@ public final class SourceIdRegistry
     public static final int SIMULATION_HUB_SOURCE_ID = 13000;
     /** Secondary builders (monitor, supernova, and time calibration) */
     public static final int SECONDARY_BUILDERS_SOURCE_ID = 14000;
+    /** Track engine **/
+    public static final int TRACK_ENGINE_SOURCE_ID = 15000;
 
     /**
      * This is a utility class.

@@ -115,12 +115,21 @@ public class DOMID
      * Get a debugging string representing this object.
      * @return debugging string
      */
-    public String toString()
+    public static String toString(long domId)
     {
         String str = Long.toHexString(domId);
         while (str.length() < 12) {
             str = "0" + str;
         }
         return str;
+    }
+
+    /**
+     * Get a debugging string representing this object.
+     * @return debugging string
+     */
+    public String toString()
+    {
+        return toString(domId);
     }
 }

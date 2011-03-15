@@ -8,6 +8,7 @@ import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
+import icecube.daq.util.IDOMRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,13 +103,15 @@ public class EventFactory
      * @param subrunNum subrun number
      * @param trigReq trigger request
      * @param hitRecList list of hit records
+     * @param domRegistry used to map each hit's DOM ID to the channel ID
      * @return new event
      */
     public ILoadablePayload createPayload(int uid, IUTCTime firstTime,
                                           IUTCTime lastTime, short year,
                                           int runNum, int subrunNum,
                                           ITriggerRequestPayload trigReq,
-                                          List<IEventHitRecord> hitRecList)
+                                          List<IEventHitRecord> hitRecList,
+                                          IDOMRegistry domRegistry)
         throws PayloadException
     {
         switch (version) {
@@ -121,6 +124,7 @@ public class EventFactory
             if (bufCache != null) {
                 e5.setCache(bufCache);
             }
+            e5.setDOMRegistry(domRegistry);
             return e5;
         case 6:
             EventPayload_v6 e6 =
@@ -129,6 +133,7 @@ public class EventFactory
             if (bufCache != null) {
                 e6.setCache(bufCache);
             }
+            e6.setDOMRegistry(domRegistry);
             return e6;
         default:
             throw new PayloadException("Bad event version " + version);

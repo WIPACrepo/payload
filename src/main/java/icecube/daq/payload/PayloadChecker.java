@@ -105,6 +105,10 @@ class RunConfig
 class TriggerConfigEntry
     extends XMLConfig
 {
+    /** Log object. */
+    private static final Log LOG =
+        LogFactory.getLog(TriggerConfigEntry.class);
+
     /**
      * Map of configuration names to list of parameters
      */
@@ -121,6 +125,12 @@ class TriggerConfigEntry
                 put("ClusterTrigger",
                     new String[] {
                         "coherenceLength", "multiplicity", "timeWindow",
+                        "domSet",
+                    });
+                put("CylinderTrigger",
+                    new String[] {
+                        "multiplicity", "simpleMultiplicity", "radius", "height",
+                        "timeWindow", "domSet",
                     });
                 put("MinBiasTrigger", new String[] { "prescale" });
                 put("MultiplicityStringTrigger",
@@ -131,9 +141,15 @@ class TriggerConfigEntry
                 put("PhysicsMinBiasTrigger",
                     new String[] { "deadtime", "prescale" });
                 put("SimpleMajorityTrigger",
-                    new String[] { "threshold", "timeWindow" });
+                    new String[] { "threshold", "timeWindow", "domSet" });
+                put("SlowMPTrigger", new String[0]);
                 put("ThroughputTrigger", new String[0]);
                 put("TrigBoardTrigger", new String[] { "prescale" });
+                put("VolumeTrigger",
+                    new String[] {
+                        "timeWindow", "multiplicity", "coherenceLength",
+                        "domSet",
+                    });
             }
         };
 
@@ -283,20 +299,23 @@ class TriggerConfigEntry
 */
 
         if (!triggerParams.containsKey(name)) {
-            throw new Error("Trigger \"" + name + "\" has no parameter entry");
+            LOG.error("Not validating trigger \"" + name + "\"");
+            return;
         }
 
         String[] expParams = triggerParams.get(name);
-        if (expParams.length != params.size()) {
-            throw new Error("Trigger \"" + name + "\" should have " +
-                            expParams.length + " parameters, not " +
-                            params.size());
-        }
 
-        for (String p : expParams) {
-            if (!params.containsKey(p)) {
-                throw new Error("Trigger \"" + name + "\" does not contain" +
-                                " expected parameter \"" + p + "\"");
+        for (String p : params.keySet()) {
+            boolean found = false;
+            for (String x : expParams) {
+                if (p.equals(x)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                throw new Error("Trigger \"" + name + "\" has unknown" +
+                                " parameter \"" + p + "\"");
             }
         }
     }
@@ -370,6 +389,11 @@ class TriggerConfig
     {
         return name;
     }
+
+    public String toString()
+    {
+        return name + "*" + entries.size();
+    }
 }
 
 /**
@@ -420,6 +444,26 @@ public abstract class PayloadChecker
         File trigCfgDir = new File(configDir, "trigger");
 
         triggerConfig = loadTriggerConfig(xmlRdr, trigCfgDir, trigCfgName);
+
+        setTriggerNames();
+    }
+
+    private static void setTriggerNames()
+    {
+        int max = 0;
+        for (TriggerConfigEntry entry : triggerConfig.entries()) {
+            if (max < entry.getType()) {
+                max = entry.getType();
+            }
+        }
+
+        String[] typeNames = new String[max + 1];
+        for (TriggerConfigEntry entry : triggerConfig.entries()) {
+            typeNames[entry.getType()] = entry.getName();
+        }
+
+        icecube.daq.oldpayload.impl.TriggerRequestRecord.setTypeNames(typeNames);
+        icecube.daq.payload.impl.TriggerRequest.setTypeNames(typeNames);
     }
 
     /**
@@ -579,6 +623,10 @@ public abstract class PayloadChecker
             return "";
         }
 
+        if (SourceIdRegistry.getDAQIdFromSourceID(src.getSourceID()) == 0) {
+            return SourceIdRegistry.getDAQNameFromSourceID(src.getSourceID());
+        }
+
         return src.toString();
     }
 
@@ -676,7 +724,8 @@ public abstract class PayloadChecker
     private static String getTriggerRequestString(ITriggerRequestPayload tr)
     {
         return "trigReq #" + tr.getUID() + "[" +
-            getTriggerTypeString(tr.getTriggerType()) + "/" +
+            getTriggerTypeString(tr.getTriggerType()) + "-" +
+            tr.getTriggerConfigID() + "/" +
             getSourceString(tr.getSourceID()) +
             "]";
     }
@@ -730,22 +779,58 @@ public abstract class PayloadChecker
                                                IUTCTime first1, IUTCTime last1,
                                                boolean verbose)
     {
-        boolean isContained =
-            first0.longValue() <= first1.longValue() &&
-            last0.longValue() >= last1.longValue();
+        boolean isPoint = first1.longValue() == last1.longValue();
 
-        if (!isContained && verbose) {
+        String intvl1;
+        if (isPoint) {
+            intvl1 = "value " + first1.longValue();
+        } else {
+            intvl1 = "interval [" + first1 + "-" + last1 + "]";
+        }
+
+        if (first0.longValue() > last0.longValue()) {
+            LOG.error("Invalid " + descr0 + " interval [" + first0 + "-" +
+                      last0 + "]");
+            return false;
+        } else if (first1.longValue() > last1.longValue()) {
+            LOG.error("Invalid " + descr1 + " " + intvl1);
+            return false;
+        }
+
+        if (verbose) {
             long firstDiff =
                 first0.longValue() - first1.longValue();
             long lastDiff = last0.longValue() - last1.longValue();
 
-            LOG.error(descr0 + " interval [" + first0 + "-" + last0 +
-                      " does not contain " + descr1 + " interval [" + first1 +
-                      "-" + last1 + "] diff [" + firstDiff + "-" + lastDiff +
-                      "]");
+            if (first1.longValue() > last0.longValue()) {
+                LOG.error(descr0 + " interval [" + first0 + "-" + last0 +
+                          "] is greater than " + descr1 + " " + intvl1 +
+                          " diff [" + firstDiff + "-" + lastDiff + "]");
+            } else if (last1.longValue() < first0.longValue()) {
+                LOG.error(descr0 + " interval [" + first0 + "-" + last0 +
+                          "] is less than " + descr1 + " " + intvl1 +
+                          " diff [" + firstDiff + "-" + lastDiff + "]");
+            } else if (first1.longValue() < first0.longValue()) {
+                if (last1.longValue() >= last0.longValue()) {
+                    LOG.error(descr0 + " interval [" + first0 + "-" + last0 +
+                              "] is encapsulated by " + descr1 + " " + intvl1 +
+                              " diff [" + firstDiff + "-" + lastDiff + "]");
+                } else {
+                    LOG.error(descr0 + " interval [" + first0 + "-" + last0 +
+                              "] overlaps the lower end of " + descr1 +
+                              " " + intvl1 + " diff [" + firstDiff + "-" +
+                              lastDiff + "]");
+                }
+            } else if (last1.longValue() > last0.longValue()) {
+                LOG.error(descr0 + " interval [" + first0 + "-" + last0 +
+                          "] overlaps the upper end of " + descr1 +
+                          " " + intvl1 + " diff [" + firstDiff + "-" +
+                          lastDiff + "]");
+            }
         }
 
-        return isContained;
+        return first0.longValue() <= first1.longValue() &&
+            last0.longValue() >= last1.longValue();
     }
 
     /**

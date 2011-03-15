@@ -31,4 +31,11 @@ public interface ITriggerRequestPayload extends ICompositePayload
      *  @return the request.
      */
     IReadoutRequest getReadoutRequest();
+
+    /**
+     * Get the trigger name for the trigger type.
+     *
+     * @return trigger name
+     */
+    public String getTriggerName();
 }
