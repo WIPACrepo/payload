@@ -14,6 +14,7 @@ import icecube.daq.payload.test.MockTriggerRequest;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
 import icecube.daq.util.IDOMRegistry;
+import icecube.daq.payload.IUTCTime;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ import java.util.Set;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+
 
 public class EventPayload_v6Test
     extends LoggingCase
@@ -437,7 +439,117 @@ public class EventPayload_v6Test
             }
         }
     }
+    public void testMethods()
+	throws Exception
+    {	
+          final int uid = 12;
+        final long firstTime = 1111L;
+        final long lastTime = 2222L;
+        final int runNum = 444;
+        final int subrunNum = 555;
 
+        final int trigUID = 666;
+        final int trigType = 777;
+        final int trigCfgId = 888;
+        final int trigSrcId = 999;
+        final long trigFirstTime = firstTime + 1;
+        final long trigLastTime = lastTime - 1;
+
+        final long halfTime = firstTime + (lastTime - firstTime) / 2L;
+
+        final int type1 = 100;
+        final long firstTime1 = firstTime + 3;
+        final long lastTime1 = halfTime - 3;
+        final long domId1 = 103;
+        final int srcId1 = 104;
+
+        final int type2 = 200;
+        final long firstTime2 = halfTime + 3;
+        final long lastTime2 = lastTime - 3;
+        final long domId2 = -1;
+        final int srcId2 = -1;
+
+        final long hitTime1 = firstTime + 12;
+        final int hitType1 = 23;
+        final int hitCfgId1 = 24;
+        final int hitSrcId1 = 25;
+        final long hitDomId1 = 1126L;
+        final int hitMode1 = 27;
+
+        final long hitTime2 = halfTime + 12;
+        final int hitType2 = 33;
+        final int hitCfgId2 = 34;
+        final int hitSrcId2 = 35;
+        final long hitDomId2 = 2109L;
+        final int hitMode2 = 37;
+
+        final long hitTime3 = lastTime - 12;
+        final int hitType3 = 43;
+        final int hitCfgId3 = 44;
+        final int hitSrcId3 = 45;
+        final long hitDomId3 = 3109L;
+        final int hitMode3 = 47;
+
+        ArrayList hitList = new ArrayList();
+        hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
+                                    hitDomId1, hitMode1));
+        hitList.add(new MockHitData(hitTime2, hitType2, hitCfgId2, hitSrcId2,
+                                    hitDomId2, hitMode2));
+        hitList.add(new MockHitData(hitTime3, hitType3, hitCfgId3, hitSrcId3,
+                                    hitDomId3, hitMode3));
+
+        MockReadoutRequest mockReq =
+            new MockReadoutRequest(trigUID, trigSrcId);
+        mockReq.addElement(type1, firstTime1, lastTime1, domId1, srcId1);
+        mockReq.addElement(type2, firstTime2, lastTime2, domId2, srcId2);
+
+        MockTriggerRequest trigReq =
+            new MockTriggerRequest(trigFirstTime, trigUID, trigType, trigCfgId,
+                                   trigSrcId, trigFirstTime, trigLastTime,
+                                   hitList, mockReq);
+
+        List<IEventHitRecord> hitRecList = new ArrayList<IEventHitRecord>();
+        hitRecList.add(new MockDeltaHitRecord((byte) 1, (short) 23, hitTime1,
+                                              (short) 45, 67, 89,
+                                              new byte[] { (byte) 123 }));
+        hitRecList.add(new MockDeltaHitRecord((byte) 2, (short) 34, hitTime2,
+                                              (short) 56, 78, 90,
+                                              new byte[] { (byte) 45,
+                                                           (byte) 5 }));
+
+        hitRecList.add(new MockDeltaHitRecord((byte) 3, (short) 45, hitTime3,
+                                              (short) 67, 89, 100,
+                                              new byte[] { (byte) 6,
+                                                           (byte) 7,
+                                                           (byte) 8 }));
+
+        IDOMRegistry domRegistry = new MockDOMRegistry();
+
+        ByteBuffer buf =
+            TestUtil.createEventv6(uid, firstTime, lastTime, YEAR, runNum,
+                                   subrunNum, trigReq, hitRecList, false,
+                                   domRegistry);
+
+        EventPayload_v6 evt = new EventPayload_v6(buf, 0);
+	EventPayload_v6 evt1 = new EventPayload_v6(buf, 0, 20, firstTime);
+	//EventPayload_v6 evt2 = new EventPayload_v6(uid,(IUTCTime) 1111,(IUTCTime) 2222, YEAR, runNum, subrunNum, trigReq, hitRecList);
+   	assertEquals("Expected Payload Name: ", "EventV6",
+                 evt.getPayloadName());	
+	assertNotNull("String returned", evt.getExtraString());
+	//assertNotNull("Integer returned", evt.loadHitRecords( buf, 1, lastTime));
+	 try {
+        assertEquals("Expected value is 64: ", 64,
+                 evt.getHitRecordLength());
+        } catch (Error err) {
+        if (!err.getMessage().equals("Hit records have not been loaded")) {
+            throw err;
+        }
+        }
+	evt.loadPayload();
+	assertEquals("Expected value is 64: ", 64,
+                 evt.getHitRecordLength());
+	
+    }
     public static void main(String[] args)
     {
         TestRunner.run(suite());

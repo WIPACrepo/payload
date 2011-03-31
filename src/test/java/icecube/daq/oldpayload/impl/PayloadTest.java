@@ -563,6 +563,26 @@ public class PayloadTest
 
         pay.recycle();
     }
+    public void testMethods()
+    {
+ 	final int payLen = 16;
+        final long payTime = 67890L;
+
+        ByteBuffer buf = ByteBuffer.allocate(payLen);
+        buf.putInt(0);
+        buf.putInt(MyPayload.PAYLOAD_TYPE);
+        buf.putLong(payTime);
+
+        MyPayload pay = new MyPayload();
+	try {
+            pay.getFromPool();
+        } catch (Error err) {
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
+        }
+	assertNotNull("object from the object pool", pay.getPoolable());
+    }
 
     public static void main(String[] args)
     {

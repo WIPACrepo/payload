@@ -8,6 +8,7 @@ import icecube.daq.payload.test.MockReadoutRequest;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
+import icecube.daq.splicer.Spliceable;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -537,6 +538,58 @@ public class MonitorTest
                              (int) newBuf.get(j) & 0xff);
             }
         }
+    }
+	
+       public void testMethods()
+	throws Exception
+    {  
+        final long utcTime = 876543210L;
+        final long domId = 0xfedcba987654L;
+        final long domClock = 123456789L;
+
+        byte[] data = new byte[53];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = (byte) (i + 1);
+        }
+
+        ByteBuffer buf =
+            TestUtil.createMonitorGeneric(utcTime, domId, domClock, data,
+                                          false);
+	//Spliceable spl = new Spliceable();
+
+        GenericMonitor moni = new GenericMonitor(buf, 0);
+	GenericMonitor moni1 = new GenericMonitor(buf, 0,30,utcTime);
+        moni.loadPayload();
+
+        assertNotNull("Monitor",moni.computeBufferLength());
+	assertNotNull("Monitor",moni.getMonitorString());
+	assertNotNull("Monitor",moni.compareSpliceable(moni));
+	
+	try {
+            moni.dispose();
+        } catch (Error err) {
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
+        }
+
+	try {
+            moni.deepCopy();
+        } catch (Error err) {
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
+        }
+	try {
+            moni.getPayloadTimeUTC();
+        } catch (Error err) {
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
+        }
+	moni.preloadSpliceableFields(buf,0,30);
+	moni.recycle();
+	
     }
 
     public static void main(String[] args)

@@ -12,6 +12,7 @@ import icecube.daq.payload.test.MockReadoutRequest;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
+import icecube.daq.payload.PayloadException;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -302,6 +303,99 @@ public class TriggerRequestTest
                              (int) newBuf.get(i) & 0xff);
             }
         }
+    }
+    public void testMethods()
+	throws Exception
+    {    final int uid = 34;
+        final int trigType = 98;
+        final int cfgId = 385;
+        final int srcId = 12;
+        final long firstTime = 1000L;
+        final long lastTime = 2000L;
+
+        final int rrType = 100;
+        final long rrFirstTime = 1001L;
+        final long rrLastTime = 1002L;
+        final long rrDomId = 103;
+        final int rrSrcId = 104;
+
+        final long hitTime = 1011L;
+        final int hitType = 30;
+        final int hitCfgId = 33;
+        final int hitSrcId = 36;
+        final long hitDomId = 333L;
+        final int hitMode = 39;
+
+        MockReadoutRequest mockReq = new MockReadoutRequest(uid, srcId);
+        mockReq.addElement(new ReadoutRequestElement(rrType, rrSrcId,
+                                                     rrFirstTime, rrLastTime,
+                                                     rrDomId));
+
+        ArrayList hitList = new ArrayList();
+        hitList.add(new MockHit(hitTime, hitType, hitCfgId, hitSrcId, hitDomId,
+                                hitMode));
+
+        ByteBuffer buf =
+            TestUtil.createTriggerRequest(firstTime, uid, trigType, cfgId,
+                                          srcId, firstTime, lastTime, hitList,
+                                          mockReq);
+
+        TriggerRequest req = new TriggerRequest(buf, 0);
+	TriggerRequest req1 = new TriggerRequest(buf, 0, 50, firstTime);
+	try {
+        req.dispose();
+        } catch (Error err) {
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
+        }
+	try {
+        req.getHitList();
+        } catch (Error err) {
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
+        }
+	try {
+        req.getNumData();
+        } catch (Error err) {
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
+        }
+	try {
+        req. writeDataBytes( buf, 0);
+        } catch (Error err) {
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
+        }	
+	try {
+            req.preloadSpliceableFields(buf,0,0);
+        } catch (PayloadException err) {
+        if (!err.getMessage().equals("Cannot load field at offset 18 from 0-byte buffer")) {
+            throw err;
+        }
+        }
+	assertNotNull("TriggerRequest ",req.toString());
+	req.preloadSpliceableFields(buf,0,50);
+	assertEquals("Expected value is 0: ", 0,
+                 req.compareSpliceable(req));
+	try {
+        assertNotNull("TriggerRequest ",req.computeBufferLength());
+        } catch (Error err) {
+        if (!err.getMessage().equals("TriggerRequest has not been loaded")) {
+            throw err;
+        }
+        }
+	req.loadPayload();
+	assertNotNull("TriggerRequest ",req.computeBufferLength());
+
+	assertNotNull("TriggerRequest object is returned",req.deepCopy());
+	assertNotNull("Payload Interface Type is returned",req.getPayloadInterfaceType());
+	assertEquals("Expected Payload Name: ", "TriggerRequest",
+                 req.getPayloadName());	
+	
     }
  
     public static void main(String[] args)

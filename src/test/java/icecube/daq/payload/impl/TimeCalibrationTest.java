@@ -154,7 +154,70 @@ public class TimeCalibrationTest
             }
         }
     }
+	
+    public void testMethods()
+	throws Exception
+    {
+	final long utcTime = 876543210L;
+        final long domId = 0xfedcba987654L;
 
+        final int pktLen = 123;
+
+        final long dorTX = 456L;
+        final long dorRX = 789L;
+        short[] dorWaveForm = new short[64];
+        for (int i = 0; i < dorWaveForm.length; i++) {
+            dorWaveForm[i] = (short) (47 + i);
+        }
+
+        final long domTX = 987L;
+        final long domRX = 654L;
+        short[] domWaveForm = new short[64];
+        for (int i = 0; i < domWaveForm.length; i++) {
+            domWaveForm[i] = (short) (96 + i);
+        }
+
+        final long seconds = 10203040L;
+        final byte quality = (byte) ' ';
+        final long syncTime = 7890L;
+
+        ByteBuffer buf =
+            TestUtil.createTimeCalibration(utcTime, domId, pktLen, dorTX, dorRX,
+                                           dorWaveForm, domTX, domRX,
+                                           domWaveForm, seconds, quality,
+                                           syncTime);
+
+        TimeCalibration tcal = new TimeCalibration(buf, 0);
+	 TimeCalibration tcal1 = new TimeCalibration(buf, 0, 50, utcTime);
+	assertEquals("Expected Payload Name: ", "TimeCalibration",
+                 tcal.getPayloadName());
+	assertNotNull("TimeCalibration ",tcal.toString());
+	assertNotNull("TimeCalibration ",tcal.compareSpliceable(tcal));
+	assertEquals("Expected buffer length ", 338, tcal.computeBufferLength());
+	try {
+            tcal.dispose();
+        } catch (Error err) {
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
+        }
+        try {
+            tcal.deepCopy();
+        } catch (Error err) {
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
+        }	
+	try {
+            tcal.getPayloadTimeUTC();
+        } catch (Error err) {
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
+        }	
+
+    }
+ 
     public static void main(String[] args)
     {
         TestRunner.run(suite());
