@@ -147,6 +147,12 @@ public class ReadoutDataRecordTest
         for (int i = 0; i < buf.limit(); i++) {
             assertEquals("Bad byte #" + i, buf.get(i), newBuf.get(i));
         }
+
+	assertEquals("Record size should be equal",30, rdRec.getTotalRecordSize());
+	assertNotNull("Poolable returned", rdRec.getPoolable());
+	assertEquals("Check if data has been loaded",true, rdRec.isDataLoaded());
+	assertNotNull("String returned", rdRec.toString());
+	assertNotNull("Data String returned", rdRec.toDataString());
     }
 
     public static void main(String[] args)
