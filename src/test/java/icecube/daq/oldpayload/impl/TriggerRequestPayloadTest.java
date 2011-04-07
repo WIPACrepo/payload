@@ -65,7 +65,7 @@ public class TriggerRequestPayloadTest
         assertEquals("Bad initial trigger type", -1, req.getTriggerType());
         assertNull("Bad initial source ID", req.getSourceID());
         assertNull("Bad initial readout request", req.getReadoutRequest());
-
+	
         req.dispose();
     }
 
@@ -184,6 +184,14 @@ public class TriggerRequestPayloadTest
             System.err.println("Ignoring implementation bug");
             cce.printStackTrace();
         }
+
+	assertEquals("Bad Hash code",-3 , req.hashCode());
+	assertEquals("Compare null object",1 , req.compareTo(null));
+	assertNull("Trigger name string returned",req.getTriggerName());
+	assertNotNull("Poolable returned",req.getPoolable());
+	assertNotNull("String returned",req.toString());
+	
+
     }
 
     public void testCreateFromBuffer()
