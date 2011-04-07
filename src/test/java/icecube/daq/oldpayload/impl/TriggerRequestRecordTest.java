@@ -97,9 +97,9 @@ public class TriggerRequestRecordTest
         assertEquals("Bad last UTC time",
                      lastTime, reqRec.mt_lastTime.longValue());
 	assertNotNull("Poolable returned", reqRec.getPoolable());
-	assertNotNull("Poolable returned", reqRec.getTriggerName());
-	assertNotNull("Poolable returned", reqRec.toString());
-	assertNotNull("Poolable returned", reqRec.toDataString());
+	assertNotNull("Trigger name returned", reqRec.getTriggerName());
+	assertNotNull("String returned", reqRec.toString());
+	assertNotNull("String returned", reqRec.toDataString());
 
 	reqRec.setTypeNames(names);
         reqRec.recycle();
