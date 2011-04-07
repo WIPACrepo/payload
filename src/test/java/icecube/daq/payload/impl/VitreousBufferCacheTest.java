@@ -69,10 +69,11 @@ public class VitreousBufferCacheTest
 	assertEquals(" ReturnBufferEntryCount should be 0", 0, vbc.getReturnBufferEntryCount());
 	assertEquals(" getReturnBufferTime should be 0", 0, vbc.getReturnBufferTime());
 	assertEquals(" Boolean values should be equal", false, vbc.getIsCacheBounded());
-	//vbc.returnBuffer(buf);
+	
 	assertEquals(" Integers should be equal", maxBytes, vbc1.getMaxAquiredBytes());
 	assertNotNull("String returned", vbc.toString());
 
+	
 	vbc.returnBuffer(16);
 	vbc.receiveByteBuffer(buf);
 	
