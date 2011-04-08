@@ -5,6 +5,7 @@ import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.IReadoutRequestElement;
+import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDOMID;
@@ -173,7 +174,9 @@ public class TriggerRequestFactoryTest
         mockReq.addElement(type1, firstTime1, lastTime1, domId1, srcId1);
         mockReq.addElement(type2, firstTime2, lastTime2, domId2, srcId2);
 
-	List list = new ArrayList();
+	List<IWriteablePayload> list = new ArrayList();
+
+	ReadoutRequest rReq = new ReadoutRequest(firstTime1, uid, srcId);
 	
         TriggerRequestFactory req = new TriggerRequestFactory(new FooCache());
 	
@@ -184,7 +187,17 @@ public class TriggerRequestFactoryTest
 	throw err;
 	}
 	}
-
+	
+	assertNotNull("TriggerRequestPayload returned", req.createPayload( uid, type1, 1, srcId, firstTime1, lastTime1, rReq, list));
+	
+	try{
+	assertNotNull("returns spliceable", req.createSpliceable( buf));
+	} catch(Error err){
+	if(!err.getMessage().equals("Cannot create trigger request")){
+	throw err;
+	}
+	}
+	assertNotNull("returns readout request", req.createReadoutRequest(firstTime1, uid, srcId));
     }
 
     public static void main(String[] args)
