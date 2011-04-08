@@ -1,7 +1,7 @@
 package icecube.daq.oldpayload.impl;
 
 import icecube.daq.oldpayload.test.MockDestination;
-import icecube.daq.payload.IReadoutRequest;
+import icecube.daq.payload.impl.ReadoutRequest;
 import icecube.daq.payload.IReadoutRequestElement;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.test.LoggingCase;
