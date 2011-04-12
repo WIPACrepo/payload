@@ -58,7 +58,7 @@ public class ReadoutRequestElementTest
         creList.add(new ReadoutRequestElement(rrType, rrSrcId, rrFirstTime,
                                               rrLastTime, rrDomId));
 	ByteBuffer buf =
-            TestUtil.createReadoutRequest(utcTime, uid, srcId1, creList);
+            TestUtil.createReadoutRequest(utcTime, uid, srcId, creList);
 
 	ReadoutRequestElement rReq = new ReadoutRequestElement( buf, 0);
 
@@ -77,8 +77,6 @@ public class ReadoutRequestElementTest
 	throw err;
 	}
 	}
-
-	ReadoutRequestElement rReq3 = new ReadoutRequestElement( buf1, 0);
 
 	assertEquals("READOUT_TYPE_GLOBAL","GLOBAL",rReq.getTypeString(0));
 	assertEquals("READOUT_TYPE_II_GLOBAL","IT_GLOBAL",rReq.getTypeString(1));

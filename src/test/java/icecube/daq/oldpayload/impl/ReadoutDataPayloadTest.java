@@ -117,7 +117,11 @@ public class ReadoutDataPayloadTest
             System.err.println("Ignoring implementation bug");
             cce.printStackTrace();
         }
-    }
+
+	assertEquals("Number of hits", 0,rdp.getNumHits());
+	assertNotNull("Poolable returned",rdp.getPoolable());
+	assertNotNull("String returned",rdp.toString());    
+}
 
     public void testCreateFromBuffer()
         throws Exception
