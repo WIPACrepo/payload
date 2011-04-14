@@ -31,7 +31,7 @@ public class MasterPayloadFactoryTest
         return new TestSuite(MasterPayloadFactoryTest.class);
     }
 
-    public void testReadLen()
+    public void testCreate()
         throws Exception
     {
         final int payLen = 16;
