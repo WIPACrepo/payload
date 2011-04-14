@@ -182,7 +182,24 @@ public class PayloadFactoryTest
 
 	assertNotNull("returns spliceable ", pfo.createSpliceable( buf));
 	assertNotNull("returns Iwriteable ", pfo.getPayload( buf, 0));
+		
+	try {
+        assertNotNull("returns Iwriteable ", pfo.getPayload( buf, 1));
+        } catch (PayloadException err) {
+        if (!err.getMessage().equals("Payload length specifies 44544 bytes, but only 173 bytes are available")) {
+            throw err;
+        }
+        }
+	
 
+	try {
+        assertNotNull("returns Iwriteable ", pfo.getPayload( null, 0));
+        } catch (PayloadException err) {
+        if (!err.getMessage().equals("ByteBuffer is null")) {
+            throw err;
+        }
+        }
+	
 	try {
         pfo.invalidateSpliceables( dataList);
         } catch (Error err) {
