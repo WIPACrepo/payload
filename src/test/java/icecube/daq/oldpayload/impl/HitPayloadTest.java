@@ -11,6 +11,8 @@ import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.impl.SourceID;
+import icecube.daq.payload.impl.DOMID;
+import icecube.daq.payload.impl.UTCTime;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockDOMID;
 import icecube.daq.payload.test.MockSourceID;
@@ -206,6 +208,7 @@ public class HitPayloadTest
         HitPayload hit = new HitPayload();
         // XXX should use MockSourceID here
         hit.initialize(new SourceID(srcId), trigType, cfgId, domHit);
+	hit.initialize(new SourceID(srcId), trigType, cfgId, new UTCTime(utcTime), trigMode, new DOMID(domId));
 
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());
         assertEquals("Bad trigger type", trigType, hit.getTriggerType());
