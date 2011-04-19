@@ -523,6 +523,7 @@ public class MonitorTest
                                            speScalar, mpeScalar, false);
 
         HardwareMonitor moni = new HardwareMonitor(buf, 0);
+	HardwareMonitor moni1 = new HardwareMonitor(buf, 0, 50, utcTime);
         moni.loadPayload();
 
         ByteBuffer newBuf = ByteBuffer.allocate(buf.limit());
@@ -538,6 +539,9 @@ public class MonitorTest
                              (int) newBuf.get(j) & 0xff);
             }
         }
+	assertEquals("Payload Name", "HardwareMonitor", moni.getPayloadName());
+	assertEquals("Record length", 64, moni.getRecordLength());
+	assertNotNull("String retuned", moni.toString());
     }
 	
        public void testMethods()
@@ -564,6 +568,8 @@ public class MonitorTest
         assertNotNull("Monitor",moni.computeBufferLength());
 	assertNotNull("Monitor",moni.getMonitorString());
 	assertNotNull("Monitor",moni.compareSpliceable(moni));
+	assertEquals("Payload Name", "GenericMonitor", moni.getPayloadName());
+	assertNotNull("String retuned", moni.toString());
 	
 	try {
             moni.dispose();
