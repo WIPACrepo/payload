@@ -158,6 +158,21 @@ public class DomHitDeltaCompressedFormatRecordTest
 
         hitRec.recycle();
         assertFalse("Data should NOT be loaded", hitRec.isDataLoaded());
+	assertEquals("returns the type of record", 9, hitRec.getRecordType());
+	assertEquals("returns the version", 1, hitRec.getVersion());
+	assertEquals("returns the PedestalFlag", (short)31, hitRec.getPedestalFlag());
+	assertNotNull("returns trigger flags",hitRec.getWord0());
+	assertNotNull("returns peak info",hitRec.getWord2());
+	assertNotNull("returns current object",hitRec.getRecord());
+	assertNotNull("returns Beacon and SPE/MPE bits",hitRec.getTriggerMode((short)1));
+	assertEquals("returns boolean", false, hitRec.isDataLoaded());
+	assertNotNull("LocalCoincidenceMode returned", hitRec.getLocalCoincidenceMode( 1, buf));
+	assertNotNull("Returns poolable object",hitRec.getPoolable());
+	assertNotNull("copy of the object which implements this interface",hitRec.deepCopy());
+	assertEquals("LocalCoincidenceMode returned", 3, hitRec.getLocalCoincidenceMode());
+	assertNotNull("String returned",hitRec.toString());
+
+	hitRec.initialize(new DomHitDeltaCompressedFormatRecord());
     }
 
     public void testCreateBigEndian()

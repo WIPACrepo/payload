@@ -355,6 +355,18 @@ public class DomHitEngineeringFormatRecordTest
 
             assertEquals("Bad byte #" + i, buf.get(i), newBuf.get(i));
         }
+	assertEquals("true if data is loaded",true,hitRec.isDataLoaded());
+	assertNotNull("Returns poolable object",hitRec.getPoolable());
+	assertNotNull("Returns record which contains hit data",hitRec.getRecord());
+	assertNotNull("String returned",hitRec.toString());
+	assertNotNull("Data String returned",hitRec.toDataString());
+	try {
+        hitRec.writeData( 0, buf);
+        } catch (Error err) {
+        if (!err.getMessage().equals("this method is not implemented yet")) {
+            throw err;
+        }
+        }
     }
 
     public static void main(String[] args)
