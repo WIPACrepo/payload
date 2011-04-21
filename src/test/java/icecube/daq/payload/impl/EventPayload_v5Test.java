@@ -13,6 +13,7 @@ import icecube.daq.payload.test.MockTriggerRequest;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
 import icecube.daq.util.IDOMRegistry;
+import icecube.daq.oldpayload.impl.TriggerRequestPayload;
 import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IDOMID;
@@ -32,7 +33,93 @@ import java.util.Set;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+class FooCache
+    implements IByteBufferCache
+{
+    public FooCache()
+    {
+    }
 
+    public ByteBuffer acquireBuffer(int len)
+    {
+        return ByteBuffer.allocate(len);
+    }
+
+    public void destinationClosed()
+    {
+        // do nothing
+    }
+
+    public void flush()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getCurrentAquiredBuffers()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public long getCurrentAquiredBytes()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public boolean getIsCacheBounded()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public long getMaxAquiredBytes()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public String getName()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getTotalBuffersAcquired()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getTotalBuffersCreated()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getTotalBuffersReturned()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public long getTotalBytesInCache()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public boolean isBalanced()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void receiveByteBuffer(ByteBuffer x0)
+    {
+        // do nothing
+    }
+
+    public void returnBuffer(ByteBuffer x0)
+    {
+        // do nothing
+    }
+
+    public void returnBuffer(int x0)
+    {
+        // do nothing
+    }
+}
 
 public class EventPayload_v5Test
     extends LoggingCase
@@ -499,6 +586,7 @@ public class EventPayload_v5Test
 
         EventPayload_v5 evt = new EventPayload_v5(buf, 0);
 	TemporaryHit hit = new TemporaryHit(payloadList);
+      // TriggerRecord trec = new TriggerRecord(new TriggerRequestPayload());
 	
  	try {
         evt.dispose();
@@ -594,6 +682,20 @@ public class EventPayload_v5Test
         }	
 	try {
         hit.loadPayload();
+        } catch (Error err) {
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
+        }
+	try {
+        hit.setCache(new FooCache());
+        } catch (Error err) {
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
+        }
+	try {
+        hit.writePayload(true, 1, buf);
         } catch (Error err) {
         if (!err.getMessage().equals("Unimplemented")) {
             throw err;

@@ -427,6 +427,7 @@ public class EventPayload_v3Test
                  evt.getPayloadName());	
 	assertNotNull("Event V3 ",evt.getReadoutDataPayloads());
 	assertNotNull("Event V3 ",evt.getTriggerRequestPayload());
+	assertNotNull("String returned ",evt.toString());
     }
 
     public static void main(String[] args)

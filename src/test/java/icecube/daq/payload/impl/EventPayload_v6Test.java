@@ -15,6 +15,7 @@ import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
 import icecube.daq.util.IDOMRegistry;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.PayloadException;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -536,7 +537,21 @@ public class EventPayload_v6Test
    	assertEquals("Expected Payload Name: ", "EventV6",
                  evt.getPayloadName());	
 	assertNotNull("String returned", evt.getExtraString());
-	//assertNotNull("Integer returned", evt.loadHitRecords( buf, 1, lastTime));
+	try{
+	assertNotNull("Integer returned", evt.loadHitRecords( buf, 1, lastTime));
+	} catch (PayloadException err) {
+        if (!err.getMessage().equals("Expected 204 bytes of raw data, not 12")) {
+            throw err;
+        }
+        }
+	try{
+	assertNotNull("Integer returned", evt.loadHitRecords( buf, 0, lastTime));
+	} catch (PayloadException err) {
+        if (!err.getMessage().equals("Unknown hit record type 22")) {
+            throw err;
+        }
+        }
+	assertNotNull("String returned", evt.getExtraString());
 	 try {
         assertEquals("Expected value is 64: ", 64,
                  evt.getHitRecordLength());

@@ -445,6 +445,7 @@ setVerbose(true);
 	assertEquals("Expected Payload Name: ", "EventV4",
                  evt.getPayloadName());	
 	assertNotNull("Event V4 ",evt.getReadoutDataPayloads());
+	assertNotNull("String returned ",evt.toString());
 
     }
 
