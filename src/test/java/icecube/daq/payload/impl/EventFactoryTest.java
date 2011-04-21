@@ -2,6 +2,7 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IHitData;
 import icecube.daq.payload.IByteBufferCache;
+//import icecube.daq.util.IDOMRegistry;
 import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.IUTCTime;
@@ -30,6 +31,30 @@ import java.io.IOException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
+
+/*class MockDomRegistry
+    implements IDomRegistry
+{
+    public MockDomRegistry()
+    {
+    }
+    public short getChannelId(String mbid)
+    {
+        throw new Error("Unimplemented");
+    }
+    public int getStringMajor(String mbid)
+    {
+        throw new Error("Unimplemented");
+    }
+    public Set<String> keys()
+    {
+        throw new Error("Unimplemented");
+    }
+    public double distanceBetweenDOMs(String mbid0, String mbid1)
+    {
+        throw new Error("Unimplemented");
+    }
+}*/
 
 class FooCache
     implements IByteBufferCache
@@ -142,7 +167,7 @@ public class EventFactoryTest
 	final int id = 1;
 	final long lasttime = 876543210L;
 	final long firsttime = 123456789L;
-	List dataList ;
+	List dataList = new ArrayList();
 	
 
 	SourceID srcId = new SourceID(id);
@@ -150,7 +175,8 @@ public class EventFactoryTest
 	UTCTime lastTime = new UTCTime(lasttime);
 	TriggerRequestPayload trigReq= new TriggerRequestPayload();
        
-	EventFactory efo = new EventFactory(new FooCache(),1);
+	EventFactory efo2 = new EventFactory(new FooCache(),5);
+	EventFactory efo = new EventFactory(new FooCache(),4);
 	try {
         EventFactory efo1 = new EventFactory(new FooCache(),3);
         } catch (PayloadException err) {
@@ -159,10 +185,16 @@ public class EventFactoryTest
         }
         }
 
-	efo.setByteBufferCache(new FooCache());
-	//assertNotNull("Loadable payload ", efo.createPayload( 1, srcId, firstTime, lastTime, 2010, 1, 1, trigReq, dataList));
+	//efo.setByteBufferCache(new FooCache());
+	try {
+	assertNotNull("Loadable payload ", efo2.createPayload( 1, srcId, firstTime, lastTime, (short)2010, 1, 1, trigReq, dataList));
+	} catch (Error err) {
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
+        }
+	//assertNotNull("Loadable payload ", efo.createPayload( 0, new SourceID(1234), firstTime, lastTime, (short)2010, 1, 1, trigReq, dataList));
 	
-
     }
 
     
