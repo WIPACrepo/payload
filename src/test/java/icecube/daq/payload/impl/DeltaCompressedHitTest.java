@@ -66,9 +66,14 @@ public class DeltaCompressedHitTest
 
         final int srcId = 2011;
 
+	ByteBuffer buf1 = ByteBuffer.allocate(270);
+
         DeltaCompressedHit hit =
             new DeltaCompressedHit(new MockSourceID(srcId), domId, utcTime,
                                    buf, 0);
+	//DeltaHitRecord hitRec =  new DeltaHitRecord( buf1,10 , utcTime);
+
+
         assertEquals("Bad payload type", hit.getPayloadType(),
                      PayloadRegistry.PAYLOAD_ID_DELTA_HIT);
         assertEquals("Bad unloaded triggerMode",
@@ -91,7 +96,7 @@ public class DeltaCompressedHitTest
             assertEquals("Bad data byte #" + i,
                          dataBytes[i], compressedData[i]);
         }
-
+	//assertEquals("Name of hit type","Delta",hitRec.getTypeName());
         hit.recycle();
     }
 
@@ -192,6 +197,9 @@ System.err.println("--- NEW\n"+icecube.daq.payload.impl.BasePayload.toHexString(
 	DeltaCompressedHit hit1 =
             new DeltaCompressedHit(new MockSourceID(srcId), domId, utcTime,
                                    buf, 32);
+	DeltaCompressedHit hit2 =
+            new DeltaCompressedHit(new MockSourceID(srcId), domId, utcTime,
+                                   buf, 38);
 	assertEquals("Expected data length : ", 83,
                  hit1.getHitDataLength());
 	assertNotNull("DeltaCompressedHit ",hit1.getHitRecord((short)1));

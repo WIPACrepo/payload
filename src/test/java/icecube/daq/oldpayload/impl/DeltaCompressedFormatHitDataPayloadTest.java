@@ -1,7 +1,9 @@
 package icecube.daq.oldpayload.impl;
 
+import icecube.daq.payload.ISourceID;
 import icecube.daq.oldpayload.impl.DomHitDeltaCompressedFormatPayload;
 import icecube.daq.oldpayload.impl.DomHitDeltaCompressedFormatRecord;
+import icecube.daq.payload.impl.SourceID;
 import icecube.daq.oldpayload.test.MockDestination;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.test.LoggingCase;
@@ -92,6 +94,7 @@ public class DeltaCompressedFormatHitDataPayloadTest
         assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
 
         DomHitDeltaCompressedFormatRecord hitRec = hit.getPayloadRecord();
+	DeltaCompressedFormatHitDataPayloadFactory dhit = new DeltaCompressedFormatHitDataPayloadFactory();
 
         byte[] compressedData = hitRec.getCompressedData();
         assertNotNull("Compressed data array is null", compressedData);
@@ -101,7 +104,8 @@ public class DeltaCompressedFormatHitDataPayloadTest
             assertEquals("Bad data byte #" + i,
                          dataBytes[i], compressedData[i]);
         }
-
+	
+	assertNotNull("Payload returned", dhit.createPayload(new SourceID(srcId), 1, new DomHitDeltaCompressedFormatPayload()));
         hit.recycle();
     }
 

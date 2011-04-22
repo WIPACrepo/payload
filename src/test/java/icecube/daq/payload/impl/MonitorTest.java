@@ -52,11 +52,16 @@ public class MonitorTest
                                             (i == 0));
 
             ASCIIMonitor moni = new ASCIIMonitor(buf, 0);
+	    ASCIIMonitor moni1 = new ASCIIMonitor(buf, 0, 50, utcTime);
+
             moni.loadPayload();
 
             assertEquals("Bad DOM ID", domId, moni.getDomId());
             assertEquals("Bad DOM clock", domClock, moni.getDomClock());
             assertEquals("Bad ascii data", str, moni.getString());
+            assertEquals("Payload name","ASCIIMonitor",moni.getPayloadName());
+	    assertEquals("Record length", 26,moni.getRecordLength());
+	    assertNotNull("String returned",moni.toString());
 
             moni.recycle();
         }
