@@ -92,6 +92,9 @@ public class DeltaCompressedFormatHitDataPayloadTest
         assertEquals("Bad trigger type", trigType, hit.getTriggerType());
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());
         assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
+	assertNotNull("delta compressed hit returned",hit.getHitRecord());
+	assertNotNull("String returned",hit.toString());
+	assertEquals("integrated charge", -1.0, hit.getIntegratedCharge());
 
         DomHitDeltaCompressedFormatRecord hitRec = hit.getPayloadRecord();
 	DeltaCompressedFormatHitDataPayloadFactory dhit = new DeltaCompressedFormatHitDataPayloadFactory();

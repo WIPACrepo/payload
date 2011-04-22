@@ -5,7 +5,6 @@ import icecube.daq.payload.test.TestUtil;
 import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.test.MockHitData;
 import icecube.daq.payload.test.MockReadoutRequest;
-import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockTriggerRequest;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.ISourceID;
@@ -105,7 +104,8 @@ public class DOMHitReadoutDataTest
 	assertNotNull("Return number of hits", did.getNumHits());
 	assertEquals("Expected Payload Name: ", "DOMHitReadoutData",
                  did.getPayloadName());
-	
+	//assertEquals("buffer length", 1, did.computeBufferLength());
+	//assertEquals("writeHitBytes", 1, did.writeHitBytes( buf, 0));
 	
     }
 
