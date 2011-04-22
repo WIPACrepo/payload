@@ -112,6 +112,8 @@ public class DomHitDeltaCompressedFormatPayloadTest
 	assertNotNull("DOMId", hit.getDOMID());
 	assertNotNull("Poolable", hit.getPoolable());
 	assertNotNull("String", hit.toString());
+	assertEquals("LocalCoincidenceMode returned", 2, hit.getLocalCoincidenceMode());
+	assertNotNull("String returned",hit.toString());
         hit.recycle();
     }
 
