@@ -71,10 +71,7 @@ public class DeltaCompressedHitTest
         DeltaCompressedHit hit =
             new DeltaCompressedHit(new MockSourceID(srcId), domId, utcTime,
                                    buf, 0);
-	//DeltaHitRecord hitRec =  new DeltaHitRecord( buf1,10 , utcTime);
-
-
-        assertEquals("Bad payload type", hit.getPayloadType(),
+	assertEquals("Bad payload type", hit.getPayloadType(),
                      PayloadRegistry.PAYLOAD_ID_DELTA_HIT);
         assertEquals("Bad unloaded triggerMode",
                      TestUtil.getEngFmtTriggerMode(trigFlags),
@@ -96,7 +93,7 @@ public class DeltaCompressedHitTest
             assertEquals("Bad data byte #" + i,
                          dataBytes[i], compressedData[i]);
         }
-	//assertEquals("Name of hit type","Delta",hitRec.getTypeName());
+	
         hit.recycle();
     }
 

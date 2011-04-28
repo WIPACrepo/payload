@@ -104,9 +104,7 @@ public class DOMHitReadoutDataTest
 	assertNotNull("Return number of hits", did.getNumHits());
 	assertEquals("Expected Payload Name: ", "DOMHitReadoutData",
                  did.getPayloadName());
-	//assertEquals("buffer length", 1, did.computeBufferLength());
-	//assertEquals("writeHitBytes", 1, did.writeHitBytes( buf, 0));
-	
+		
     }
 
   
