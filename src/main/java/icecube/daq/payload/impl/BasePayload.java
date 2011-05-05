@@ -194,8 +194,8 @@ public abstract class BasePayload
     public abstract int getPayloadType();
 
     /**
-     * Unimplemented
-     * @return Error
+     * Get the UTC time for this payload as an object
+     * @return UTCTime object for this payload
      */
     public IUTCTime getPayloadTimeUTC()
     {
