@@ -306,12 +306,30 @@ class TriggerRecord
     }
 
     /**
+     * Return the configuration ID.
+     * @return trigger configuration ID
+     */
+    public int getConfigID()
+    {
+        return cfgId;
+    }
+
+    /**
      * Get trigger starting time
      * @return starting time
      */
     public long getFirstTime()
     {
         return startTime;
+    }
+
+    /**
+     * Get list of indexes into full hit record list.
+     * @return list of hit indexes
+     */
+    public int[] getHitRecordIndexList()
+    {
+        return indices;
     }
 
     /**
@@ -345,6 +363,15 @@ class TriggerRecord
     public int getSourceID()
     {
         return srcId;
+    }
+
+    /**
+     * Return the trigger type.
+     * @return trigger type
+     */
+    public int getType()
+    {
+        return type;
     }
 
     /**
