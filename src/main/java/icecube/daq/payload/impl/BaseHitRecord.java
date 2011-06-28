@@ -59,6 +59,15 @@ public abstract class BaseHitRecord
     }
 
     /**
+     * Get this hit's channel ID
+     * @return channel ID
+     */
+    public short getChannelID()
+    {
+        return chanId;
+    }
+
+    /**
      * Get this hit's UTC time
      * @return value
      */

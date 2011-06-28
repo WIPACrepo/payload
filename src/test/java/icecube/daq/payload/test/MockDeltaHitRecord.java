@@ -30,9 +30,8 @@ public class MockDeltaHitRecord
         System.arraycopy(data, 0, this.data, 0, data.length);
     }
 
-    private int getChannelID(long domId)
+    public short getChannelID()
     {
-//System.err.println("Not getting channel ID for DOM " + domId);
         return chanId;
     }
 
@@ -52,11 +51,8 @@ public class MockDeltaHitRecord
             return false;
         }
 
-        if (chanId != getChannelID(hit.getDOMID().longValue())) {
-            return false;
-        }
-
-        return true;
+        String mbid = String.format("%012x", hit.getDOMID().longValue());
+        return (chanId == domRegistry.getChannelId(mbid));
     }
 
     public int writeRecord(ByteBuffer buf, int offset, long baseTime)
