@@ -1,7 +1,7 @@
 /*
  * class: IPayload
  *
- * Version $Id: IPayload.java 5096 2010-07-15 20:14:48Z dglo $
+ * Version $Id: IPayload.java 13128 2011-06-28 23:38:14Z dglo $
  *
  * Date: September 17 2004
  *
@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
 /**
  * Basic interface defining a trigger primitive payload
  *
- * @version $Id: IPayload.java 5096 2010-07-15 20:14:48Z dglo $
+ * @version $Id: IPayload.java 13128 2011-06-28 23:38:14Z dglo $
  * @author hellwig, dwharton
  */
 public interface IPayload
@@ -54,6 +54,12 @@ public interface IPayload
      * @return time
      */
     IUTCTime getPayloadTimeUTC();
+
+    /**
+     * gets the UTC time for this payload as a long value
+     * @return time
+     */
+    long getUTCTime();
 
     /**
      * Set the buffer cache for this payload.

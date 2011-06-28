@@ -115,6 +115,11 @@ public class MockHitData
         return trigType;
     }
 
+    public long getUTCTime()
+    {
+        return utcTime;
+    }
+
     public int length()
     {
         return length;

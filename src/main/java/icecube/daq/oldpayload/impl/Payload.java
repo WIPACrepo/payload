@@ -1,7 +1,7 @@
 /*
  * class: Payload
  *
- * Version $Id: Payload.java 4574 2009-08-28 21:32:32Z dglo $
+ * Version $Id: Payload.java 13128 2011-06-28 23:38:14Z dglo $
  *
  * Date: September 21 2004
  *
@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
  * Payload implements the IPayload interface and the Spliceable interface
  * It contains trigger information that is send through the DAQ system
  *
- * @version $Id: Payload.java 4574 2009-08-28 21:32:32Z dglo $
+ * @version $Id: Payload.java 13128 2011-06-28 23:38:14Z dglo $
  * @author hellwig,dwharton
  *
  * 8/24/2005 dbw
@@ -218,6 +218,17 @@ public abstract class Payload
      */
     public void setPayloadTimeUTC(IUTCTime tUTCTime) {
         mttime = (IUTCTime) tUTCTime.deepCopy();
+    }
+
+    /**
+     * gets the UTC time value of a payload
+     */
+    public long getUTCTime() {
+        if (mttime == null) {
+            return -1L;
+        }
+
+        return mttime.longValue();
     }
 
     /**

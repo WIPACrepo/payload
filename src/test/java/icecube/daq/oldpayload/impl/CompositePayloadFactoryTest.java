@@ -83,6 +83,11 @@ class MockPayload
         return type;
     }
 
+    public long getUTCTime()
+    {
+        return time;
+    }
+
     boolean isCopy()
     {
         return isCopy;

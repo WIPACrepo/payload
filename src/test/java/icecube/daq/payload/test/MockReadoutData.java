@@ -137,6 +137,11 @@ public class MockReadoutData
         throw new Error("Unimplemented");
     }
 
+    public long getUTCTime()
+    {
+        return firstTime;
+    }
+
     public boolean isLastPayloadOfGroup()
     {
         throw new Error("Unimplemented");

@@ -145,6 +145,11 @@ public class MockHit
         return trigType;
     }
 
+    public long getUTCTime()
+    {
+        return utcTime;
+    }
+
     public int length()
     {
         throw new Error("Unimplemented");

@@ -114,6 +114,15 @@ class MockHitData
         return trigType;
     }
 
+    public long getUTCTime()
+    {
+        if (utcTime == null) {
+            throw new Error("UTC time has not been set");
+        }
+
+        return utcTime.longValue();
+    }
+
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */

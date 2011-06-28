@@ -182,6 +182,11 @@ public class MockTriggerRequest
         return uid;
     }
 
+    public long getUTCTime()
+    {
+        return utcTime;
+    }
+
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */

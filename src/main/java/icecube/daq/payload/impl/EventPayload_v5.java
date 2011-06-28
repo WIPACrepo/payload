@@ -104,6 +104,11 @@ class TemporaryHit
         throw new Error("Unimplemented");
     }
 
+    public long getUTCTime()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public void loadPayload()
         throws IOException, DataFormatException
     {
