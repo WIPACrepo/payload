@@ -59,9 +59,9 @@ public class TriggerRequest
 
     /** list of trigger names */
     private static String[] TYPE_NAMES = new String[] {
-        "SimpMaj", "Calib", "MinBias", "Thruput", "Cluster", "SyncBrd",
+        "SMT", "Calib", "MinBias", "Thruput", "Cluster", "SyncBrd",
         "TrigBrd", "AmMFrag20", "AmVol", "AmM18", "AmM24", "AmStr", "AmRand",
-        "PhysMinBias", "??Trig14??", "Volume", "??Trig16??", "MplcityStr",
+        "PhysMBT", "??Trig14??", "Volume", "??Trig16??", "MplcityStr",
         "??Trig18??", "??Trig19??", "Volume", "Cylinder", "SlowMP",
         "??Trig22??", "??Trig23??", "??Trig24??", "??Trig25??", "??Trig26??",
         "??Trig27??", "??Trig28??", "??Trig29??", "FixedRate"
@@ -339,7 +339,7 @@ public class TriggerRequest
      *
      * @return trigger name
      */
-    public String getTriggerName(int type)
+    public static String getTriggerName(int type, int cfgId, int uid)
     {
         if (type == -1 && cfgId == -1 && uid >= 0) {
             return "Merged";
@@ -361,7 +361,7 @@ public class TriggerRequest
      */
     public String getTriggerName()
     {
-        return getTriggerName(trigType);
+        return getTriggerName(trigType, cfgId, uid);
     }
 
     /**

@@ -403,8 +403,9 @@ class TriggerRecord
      */
     public String toString()
     {
-        return "TriggerRecord[type " + type + " cfg " + cfgId +
-            " src " + srcId + " [" + startTime + "-" + endTime +
+        final String trigName = TriggerRequest.getTriggerName(type, cfgId, 0);
+        return "TriggerRecord[type " + trigName + " cfg " + cfgId +
+            " src " + new SourceID(srcId) + " [" + startTime + "-" + endTime +
             "] hits*" + getNumHits() + "]";
     }
 }
