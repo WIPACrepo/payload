@@ -114,6 +114,10 @@ class FooHitDataPayload
     {
 	throw new Error("Unimplemented");
     }
+    public long getUTCTime()
+    {
+	throw new Error("Unimplemented");
+    }
 }
 
 class FooDomHit
@@ -138,6 +142,10 @@ class FooDomHit
     public int getTriggerMode()
     {
 	return 1;
+    }
+    public long getUTCTime()
+    {
+	throw new Error("Unimplemented");
     }
     public void loadPayload()
 	throws IOException, DataFormatException

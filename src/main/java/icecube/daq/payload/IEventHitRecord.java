@@ -10,6 +10,11 @@ import java.nio.ByteBuffer;
 public interface IEventHitRecord
 {
     /**
+     * Get this hit's channel ID
+     * @return channel ID
+     */
+    short getChannelID();
+    /**
      * Get the time for this hit.
      * @return hit time
      */

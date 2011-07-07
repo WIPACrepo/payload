@@ -9,6 +9,7 @@ import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.PayloadException;
+import icecube.daq.payload.test.MockBufferCache;
 import icecube.daq.payload.test.MockReadoutRequest;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockHitData;
@@ -56,93 +57,6 @@ import junit.textui.TestRunner;
     }
 }*/
 
-class FooCache
-    implements IByteBufferCache
-{
-    public FooCache()
-    {
-    }
-
-    public ByteBuffer acquireBuffer(int len)
-    {
-        return ByteBuffer.allocate(len);
-    }
-
-    public void destinationClosed()
-    {
-        // do nothing
-    }
-
-    public void flush()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int getCurrentAquiredBuffers()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public long getCurrentAquiredBytes()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public boolean getIsCacheBounded()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public long getMaxAquiredBytes()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public String getName()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int getTotalBuffersAcquired()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int getTotalBuffersCreated()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int getTotalBuffersReturned()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public long getTotalBytesInCache()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public boolean isBalanced()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public void receiveByteBuffer(ByteBuffer x0)
-    {
-        // do nothing
-    }
-
-    public void returnBuffer(ByteBuffer x0)
-    {
-        // do nothing
-    }
-
-    public void returnBuffer(int x0)
-    {
-        // do nothing
-    }
-}
 public class EventFactoryTest
     extends LoggingCase
 {
@@ -175,17 +89,17 @@ public class EventFactoryTest
 	UTCTime lastTime = new UTCTime(lasttime);
 	TriggerRequestPayload trigReq= new TriggerRequestPayload();
        
-	EventFactory efo2 = new EventFactory(new FooCache(),5);
-	EventFactory efo = new EventFactory(new FooCache(),4);
+	EventFactory efo2 = new EventFactory(new MockBufferCache(),5);
+	EventFactory efo = new EventFactory(new MockBufferCache(),4);
 	try {
-        EventFactory efo1 = new EventFactory(new FooCache(),3);
+        EventFactory efo1 = new EventFactory(new MockBufferCache(),3);
         } catch (PayloadException err) {
         if (!err.getMessage().equals("Illegal event version 3")) {
             throw err;
         }
         }
 
-	//efo.setByteBufferCache(new FooCache());
+	//efo.setByteBufferCache(new MockBufferCache());
 	try {
 	assertNotNull("Loadable payload ", efo2.createPayload( 1, srcId, firstTime, lastTime, (short)2010, 1, 1, trigReq, dataList));
 	} catch (Error err) {

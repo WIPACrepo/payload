@@ -5,6 +5,7 @@ import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadChecker;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.test.LoggingCase;
+import icecube.daq.payload.test.MockBufferCache;
 import icecube.daq.payload.test.MockDeltaHitRecord;
 import icecube.daq.payload.test.MockHitData;
 import icecube.daq.payload.test.MockReadoutRequest;
@@ -33,93 +34,6 @@ import java.util.Set;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-class FooCache
-    implements IByteBufferCache
-{
-    public FooCache()
-    {
-    }
-
-    public ByteBuffer acquireBuffer(int len)
-    {
-        return ByteBuffer.allocate(len);
-    }
-
-    public void destinationClosed()
-    {
-        // do nothing
-    }
-
-    public void flush()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int getCurrentAquiredBuffers()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public long getCurrentAquiredBytes()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public boolean getIsCacheBounded()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public long getMaxAquiredBytes()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public String getName()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int getTotalBuffersAcquired()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int getTotalBuffersCreated()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int getTotalBuffersReturned()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public long getTotalBytesInCache()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public boolean isBalanced()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public void receiveByteBuffer(ByteBuffer x0)
-    {
-        // do nothing
-    }
-
-    public void returnBuffer(ByteBuffer x0)
-    {
-        // do nothing
-    }
-
-    public void returnBuffer(int x0)
-    {
-        // do nothing
-    }
-}
 
 public class EventPayload_v5Test
     extends LoggingCase
@@ -152,6 +66,10 @@ public class EventPayload_v5Test
    	{
             throw new Error("Unimplemented");
 	}
+    	public long getUTCTime()
+   	{
+            throw new Error("Unimplemented");
+    	}
 	public Object deepCopy()
 	{
             throw new Error("Unimplemented");
@@ -688,7 +606,7 @@ public class EventPayload_v5Test
         }
         }
 	try {
-        hit.setCache(new FooCache());
+        hit.setCache(new MockBufferCache());
         } catch (Error err) {
         if (!err.getMessage().equals("Unimplemented")) {
             throw err;

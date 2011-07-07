@@ -20,10 +20,20 @@ public interface IEventTriggerRecord
     void computeIndices(IDOMRegistry domRegistry, List<IEventHitRecord> hitRecList)
         throws PayloadException;
     /**
+     * Return the configuration ID.
+     * @return trigger configuration ID
+     */
+    int getConfigID();
+    /**
      * Return the starting time for this trigger.
      * @return starting time
      */
     long getFirstTime();
+    /**
+     * Get list of indexes into full hit record list.
+     * @return list of hit indices
+     */
+    int[] getHitRecordIndexList();
     /**
      * Return the ending time for this trigger.
      * @return ending time
@@ -34,6 +44,11 @@ public interface IEventTriggerRecord
      * @return source ID
      */
     int getSourceID();
+    /**
+     * Return the trigger type.
+     * @return trigger type
+     */
+    int getType();
     /**
      * Return the number of bytes in this record.
      * @return number of bytes

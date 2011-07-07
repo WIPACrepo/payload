@@ -7,6 +7,7 @@ import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.payload.test.MockBufferCache;
 import icecube.daq.payload.test.MockReadoutRequest;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockHitData;
@@ -77,95 +78,12 @@ class FooWriteablePayload
     {
         throw new Error("Unimplemented");
     }
+    public long getUTCTime()
+    {
+        throw new Error("Unimplemented");
+    }
 }
 
-class FooCache
-    implements IByteBufferCache
-{
-    public FooCache()
-    {
-    }
-
-    public ByteBuffer acquireBuffer(int len)
-    {
-        return ByteBuffer.allocate(len);
-    }
-
-    public void destinationClosed()
-    {
-        // do nothing
-    }
-
-    public void flush()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int getCurrentAquiredBuffers()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public long getCurrentAquiredBytes()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public boolean getIsCacheBounded()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public long getMaxAquiredBytes()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public String getName()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int getTotalBuffersAcquired()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int getTotalBuffersCreated()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int getTotalBuffersReturned()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public long getTotalBytesInCache()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public boolean isBalanced()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public void receiveByteBuffer(ByteBuffer x0)
-    {
-        // do nothing
-    }
-
-    public void returnBuffer(ByteBuffer x0)
-    {
-        // do nothing
-    }
-
-    public void returnBuffer(int x0)
-    {
-        // do nothing
-    }
-}
 public class ByteBufferPayloadDestinationTest
     extends LoggingCase
 {
@@ -217,11 +135,11 @@ public class ByteBufferPayloadDestinationTest
         ByteBuffer buf =
             TestUtil.createReadoutDataPayload(uid, payNum, isLast, srcId,
                                               firstTime, lastTime, hitList);
-	FooCache foo = new FooCache();
+	MockBufferCache foo = new MockBufferCache();
 	ByteBuffer buf1 =foo.acquireBuffer(16); 
-	ByteBufferPayloadDestination bpd = new ByteBufferPayloadDestination(foo,new FooCache());
+	ByteBufferPayloadDestination bpd = new ByteBufferPayloadDestination(foo,new MockBufferCache());
 	try{
-	ByteBufferPayloadDestination bpd1 = new ByteBufferPayloadDestination(new FooCache(),null);
+	ByteBufferPayloadDestination bpd1 = new ByteBufferPayloadDestination(new MockBufferCache(),null);
 	}catch(Error err){
 	if(!err.getMessage().equals("Buffer cache is null")){
 	throw err;	

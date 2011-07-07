@@ -73,6 +73,11 @@ class MockEventHitRecord
     {
     }
 
+    public short getChannelID()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public long getHitTime()
     {
         throw new Error("Unimplemented");

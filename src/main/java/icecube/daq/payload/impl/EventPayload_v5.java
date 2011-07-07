@@ -104,6 +104,11 @@ class TemporaryHit
         throw new Error("Unimplemented");
     }
 
+    public long getUTCTime()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public void loadPayload()
         throws IOException, DataFormatException
     {
@@ -301,12 +306,30 @@ class TriggerRecord
     }
 
     /**
+     * Return the configuration ID.
+     * @return trigger configuration ID
+     */
+    public int getConfigID()
+    {
+        return cfgId;
+    }
+
+    /**
      * Get trigger starting time
      * @return starting time
      */
     public long getFirstTime()
     {
         return startTime;
+    }
+
+    /**
+     * Get list of indexes into full hit record list.
+     * @return list of hit indexes
+     */
+    public int[] getHitRecordIndexList()
+    {
+        return indices;
     }
 
     /**
@@ -340,6 +363,15 @@ class TriggerRecord
     public int getSourceID()
     {
         return srcId;
+    }
+
+    /**
+     * Return the trigger type.
+     * @return trigger type
+     */
+    public int getType()
+    {
+        return type;
     }
 
     /**
@@ -398,8 +430,9 @@ class TriggerRecord
      */
     public String toString()
     {
-        return "TriggerRecord[type " + type + " cfg " + cfgId +
-            " src " + srcId + " [" + startTime + "-" + endTime +
+        final String trigName = TriggerRequest.getTriggerName(type, cfgId, 0);
+        return "TriggerRecord[type " + trigName + " cfg " + cfgId +
+            " src " + new SourceID(srcId) + " [" + startTime + "-" + endTime +
             "] hits*" + getNumHits() + "]";
     }
 }
