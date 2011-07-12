@@ -103,6 +103,7 @@ public class TriggerRequestRecordTest
 
         reqRec.setTypeNames(names);
         reqRec.recycle();
+
         assertFalse("Data should not be loaded", reqRec.isDataLoaded());
     }
 

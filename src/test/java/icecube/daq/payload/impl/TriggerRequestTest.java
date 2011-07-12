@@ -304,6 +304,7 @@ public class TriggerRequestTest
             }
         }
     }
+
     public void testMethods()
         throws Exception
     {    final int uid = 34;
