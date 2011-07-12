@@ -452,7 +452,7 @@ public class EventPayload_v6Test
     public void testMethods()
         throws Exception
     {
-          final int uid = 12;
+        final int uid = 12;
         final long firstTime = 1111L;
         final long lastTime = 2222L;
         final int runNum = 444;
@@ -543,35 +543,35 @@ public class EventPayload_v6Test
         EventPayload_v6 evt = new EventPayload_v6(buf, 0);
         EventPayload_v6 evt1 = new EventPayload_v6(buf, 0, 20, firstTime);
 
-           assertEquals("Expected Payload Name: ", "EventV6",
-                 evt.getPayloadName());
+        assertEquals("Expected Payload Name: ", "EventV6",
+                     evt.getPayloadName());
         assertNotNull("String returned", evt.getExtraString());
         try{
-        assertNotNull("Integer returned", evt.loadHitRecords( buf, 1, lastTime));
+            assertNotNull("Integer returned", evt.loadHitRecords( buf, 1, lastTime));
         } catch (PayloadException err) {
-        if (!err.getMessage().equals("Expected 204 bytes of raw data, not 12")) {
-            throw err;
-        }
+            if (!err.getMessage().equals("Expected 204 bytes of raw data, not 12")) {
+                throw err;
+            }
         }
         try{
-        assertNotNull("Integer returned", evt.loadHitRecords( buf, 0, lastTime));
+            assertNotNull("Integer returned", evt.loadHitRecords( buf, 0, lastTime));
         } catch (PayloadException err) {
-        if (!err.getMessage().equals("Unknown hit record type 22")) {
-            throw err;
-        }
+            if (!err.getMessage().equals("Unknown hit record type 22")) {
+                throw err;
+            }
         }
         assertNotNull("String returned", evt.getExtraString());
-         try {
-        assertEquals("Expected value is 64: ", 64,
-                 evt.getHitRecordLength());
+        try {
+            assertEquals("Expected value is 64: ", 64,
+                         evt.getHitRecordLength());
         } catch (Error err) {
-        if (!err.getMessage().equals("Hit records have not been loaded")) {
-            throw err;
-        }
+            if (!err.getMessage().equals("Hit records have not been loaded")) {
+                throw err;
+            }
         }
         evt.loadPayload();
         assertEquals("Expected value is 64: ", 64,
-                 evt.getHitRecordLength());
+                     evt.getHitRecordLength());
     }
 
     public static void main(String[] args)
