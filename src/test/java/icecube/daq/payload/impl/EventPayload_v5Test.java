@@ -6,6 +6,7 @@ import icecube.daq.payload.PayloadChecker;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockBufferCache;
+import icecube.daq.payload.test.MockDOMRegistry;
 import icecube.daq.payload.test.MockDeltaHitRecord;
 import icecube.daq.payload.test.MockHitData;
 import icecube.daq.payload.test.MockReadoutRequest;
@@ -13,7 +14,6 @@ import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockTriggerRequest;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
-import icecube.daq.util.IDOMRegistry;
 import icecube.daq.oldpayload.impl.TriggerRequestPayload;
 import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.IUTCTime;
@@ -122,35 +122,6 @@ public class EventPayload_v5Test
         }
     }
 
-    class MockDOMRegistry
-        implements IDOMRegistry
-    {
-        public short getChannelId(String mbid)
-        {
-            if(mbid.equals("000000000466")==true)
-                return (short)23;
-            else if(mbid.equals("00000000083d")==true)
-                return (short)34;
-            else
-                return (short)12;
-        }
-
-        public int getStringMajor(String mbid)
-        {
-            throw new Error("Unimplemented");
-        }
-
-        public Set<String> keys()
-        {
-            throw new Error("Unimplemented");
-        }
-
-        public double distanceBetweenDOMs(String mbid0, String mbid1)
-        {
-            throw new Error("Unimplemented");
-        }
-    }
-
     /** Get the current year */
     private static final short YEAR =
         (short) (new GregorianCalendar()).get(GregorianCalendar.YEAR);
@@ -193,9 +164,10 @@ public class EventPayload_v5Test
         final int hitSrcId1 = 25;
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
+        final short hitChanId1 = 28;
 
         MockDeltaHitRecord hitRec =
-            new MockDeltaHitRecord((byte) 0, (short) 12, hitTime1, (short) 34,
+            new MockDeltaHitRecord((byte) 0, (short) 12, hitTime1, hitChanId1,
                                    56, 78, new byte[0]);
 
         MockReadoutRequest mockReq =
@@ -227,7 +199,8 @@ public class EventPayload_v5Test
         assertEquals("Bad run number", runNum, evt.getRunNumber());
         assertEquals("Bad subrun number", subrunNum, evt.getSubrunNumber());
 
-        IDOMRegistry domRegistry = new MockDOMRegistry();
+        MockDOMRegistry domRegistry = new MockDOMRegistry();
+        domRegistry.addChannelId(hitDomId1, hitChanId1);
 
         ByteBuffer buf =
             TestUtil.createEventv5(uid, firstTime, lastTime, YEAR, runNum,
@@ -275,6 +248,7 @@ public class EventPayload_v5Test
         final int hitSrcId1 = 25;
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
+        final short hitChanId1 = 28;
 
         final long hitTime2 = halfTime + 5;
         final int hitType2 = 33;
@@ -282,6 +256,7 @@ public class EventPayload_v5Test
         final int hitSrcId2 = 35;
         final long hitDomId2 = 2109L;
         final int hitMode2 = 37;
+        final short hitChanId2 = 38;
 
         ArrayList hitList = new ArrayList();
         hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
@@ -300,15 +275,17 @@ public class EventPayload_v5Test
                                    hitList, mockReq);
 
         List<IEventHitRecord> hitRecList = new ArrayList<IEventHitRecord>();
-        hitRecList.add(new MockDeltaHitRecord((byte) 1, (short) 23, hitTime1,
+        hitRecList.add(new MockDeltaHitRecord((byte) 1, hitChanId1, hitTime1,
                                               (short) 45, 67, 89,
                                               new byte[] { (byte) 123 }));
-        hitRecList.add(new MockDeltaHitRecord((byte) 2, (short) 34, hitTime2,
+        hitRecList.add(new MockDeltaHitRecord((byte) 2, hitChanId2, hitTime2,
                                               (short) 56, 78, 90,
                                               new byte[] { (byte) 45,
                                                            (byte) 5 }));
 
-        IDOMRegistry domRegistry = new MockDOMRegistry();
+        MockDOMRegistry domRegistry = new MockDOMRegistry();
+        domRegistry.addChannelId(hitDomId1, hitChanId1);
+        domRegistry.addChannelId(hitDomId2, hitChanId2);
 
         ByteBuffer buf =
             TestUtil.createEventv5(uid, firstTime, lastTime, YEAR, runNum,
@@ -370,6 +347,7 @@ public class EventPayload_v5Test
         final int hitSrcId1 = 25;
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
+        final short hitChanId1 = 28;
 
         final long hitTime2 = halfTime + 7;
         final int hitType2 = -1;
@@ -377,6 +355,7 @@ public class EventPayload_v5Test
         final int hitSrcId2 = 35;
         final long hitDomId2 = 2109L;
         final int hitMode2 = 37;
+        final short hitChanId2 = 38;
 
         ArrayList hitList = new ArrayList();
         hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
@@ -395,15 +374,17 @@ public class EventPayload_v5Test
                                    hitList, mockReq);
 
         List<IEventHitRecord> hitRecList = new ArrayList<IEventHitRecord>();
-        hitRecList.add(new MockDeltaHitRecord((byte) 1, (short) 23, hitTime1,
+        hitRecList.add(new MockDeltaHitRecord((byte) 1, hitChanId1, hitTime1,
                                               (short) 45, 67, 89,
                                               new byte[] { (byte) 123 }));
-        hitRecList.add(new MockDeltaHitRecord((byte) 2, (short) 34, hitTime2,
+        hitRecList.add(new MockDeltaHitRecord((byte) 2, hitChanId2, hitTime2,
                                               (short) 56, 78, 90,
                                               new byte[] { (byte) 45,
                                                            (byte) 5 }));
 
-        IDOMRegistry domRegistry = new MockDOMRegistry();
+        MockDOMRegistry domRegistry = new MockDOMRegistry();
+        domRegistry.addChannelId(hitDomId1, hitChanId1);
+        domRegistry.addChannelId(hitDomId2, hitChanId2);
 
         ByteBuffer buf =
             TestUtil.createEventv5(uid, firstTime, lastTime, YEAR, runNum,
@@ -466,6 +447,7 @@ public class EventPayload_v5Test
         final int hitSrcId1 = 25;
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
+        final short hitChanId1 = 28;
 
         final long hitTime2 = halfTime + 7;
         final int hitType2 = -1;
@@ -473,6 +455,7 @@ public class EventPayload_v5Test
         final int hitSrcId2 = 35;
         final long hitDomId2 = 2109L;
         final int hitMode2 = 37;
+        final short hitChanId2 = 38;
 
         ArrayList hitList = new ArrayList();
         hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
@@ -491,15 +474,17 @@ public class EventPayload_v5Test
                                    hitList, mockReq);
 
         List<IEventHitRecord> hitRecList = new ArrayList<IEventHitRecord>();
-        hitRecList.add(new MockDeltaHitRecord((byte) 1, (short) 23, hitTime1,
+        hitRecList.add(new MockDeltaHitRecord((byte) 1, hitChanId1, hitTime1,
                                               (short) 45, 67, 89,
                                               new byte[] { (byte) 123 }));
-        hitRecList.add(new MockDeltaHitRecord((byte) 2, (short) 34, hitTime2,
+        hitRecList.add(new MockDeltaHitRecord((byte) 2, hitChanId2, hitTime2,
                                               (short) 56, 78, 90,
                                               new byte[] { (byte) 45,
                                                            (byte) 5 }));
 
-        IDOMRegistry domRegistry = new MockDOMRegistry();
+        MockDOMRegistry domRegistry = new MockDOMRegistry();
+        domRegistry.addChannelId(hitDomId1, hitChanId1);
+        domRegistry.addChannelId(hitDomId2, hitChanId2);
 
         ByteBuffer buf =
             TestUtil.createEventv5(uid, firstTime, lastTime, YEAR, runNum,

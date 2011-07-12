@@ -6,6 +6,7 @@ import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadChecker;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.test.LoggingCase;
+import icecube.daq.payload.test.MockDOMRegistry;
 import icecube.daq.payload.test.MockDeltaHitRecord;
 import icecube.daq.payload.test.MockHitData;
 import icecube.daq.payload.test.MockReadoutRequest;
@@ -28,41 +29,9 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
 
-
 public class EventPayload_v6Test
     extends LoggingCase
 {
-    class MockDOMRegistry
-        implements IDOMRegistry
-    {
-        public short getChannelId(String mbid)
-        {
-                  if(mbid.equals("000000000466")==true)
-                return (short)23;
-            else if(mbid.equals("00000000083d")==true)
-                return (short)34;
-            else if(mbid.equals("000000000c25")==true)
-                return (short)45;
-            else
-                return (short)12;
-        }
-
-        public int getStringMajor(String mbid)
-        {
-            throw new Error("Unimplemented");
-        }
-
-        public Set<String> keys()
-        {
-            throw new Error("Unimplemented");
-        }
-
-        public double distanceBetweenDOMs(String mbid0, String mbid1)
-        {
-            throw new Error("Unimplemented");
-        }
-    }
-
     /** Get the current year */
     private static final short YEAR =
         (short) (new GregorianCalendar()).get(GregorianCalendar.YEAR);
@@ -108,6 +77,7 @@ public class EventPayload_v6Test
         final int hitSrcId1 = 25;
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
+        final short hitChanId1 = 28;
 
         MockReadoutRequest mockReq =
             new MockReadoutRequest(uid, trigSrcId);
@@ -121,6 +91,9 @@ public class EventPayload_v6Test
         ArrayList<IEventHitRecord> hitRecList =
             new ArrayList<IEventHitRecord>();
 
+        MockDOMRegistry domRegistry = new MockDOMRegistry();
+        domRegistry.addChannelId(hitDomId1, hitChanId1);
+
         MockDeltaHitRecord hitRec =
             new MockDeltaHitRecord((byte) 0, (short) 12, hitTime1, (short) 34,
                                    56, 78, new byte[0]);
@@ -130,6 +103,8 @@ public class EventPayload_v6Test
             new EventPayload_v6(uid, new MockUTCTime(firstTime),
                                 new MockUTCTime(lastTime), YEAR, runNum,
                                 subrunNum, trigReq, hitRecList);
+
+        evt.setDOMRegistry(domRegistry);
 
         assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
@@ -144,7 +119,7 @@ public class EventPayload_v6Test
 
         final int expLen = evt.getPayloadLength();
 
-        ByteBuffer newBuf = ByteBuffer.allocate(expLen);/*
+        ByteBuffer newBuf = ByteBuffer.allocate(expLen);
         for (int b = 0; b < 2; b++) {
             final boolean loaded = (b == 1);
             final int written = evt.writePayload(loaded, 0, newBuf);
@@ -156,10 +131,10 @@ public class EventPayload_v6Test
                          (byte) 0, newBuf.get(OFFSET_ZIPBYTE));
         }
 
-        evt.recycle();*/
+        evt.recycle();
     }
 
-    public void ZZZtestCreateCompressed()
+    public void testCreateCompressed()
         throws Exception
     {
         final int uid = 12;
@@ -182,6 +157,7 @@ public class EventPayload_v6Test
         final int hitSrcId1 = 25;
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
+        final short hitChanId1 = 28;
 
         MockReadoutRequest mockReq =
             new MockReadoutRequest(uid, trigSrcId);
@@ -192,6 +168,9 @@ public class EventPayload_v6Test
                                    trigSrcId, firstTime, lastTime, null,
                                    mockReq);
 
+        MockDOMRegistry domRegistry = new MockDOMRegistry();
+        domRegistry.addChannelId(hitDomId1, hitChanId1);
+
         for (int r = 1; r < 100; r++) {
             ArrayList<IEventHitRecord> hitRecList =
                 new ArrayList<IEventHitRecord>();
@@ -199,7 +178,7 @@ public class EventPayload_v6Test
             for (int i = 0; i < r; i++) {
                 MockDeltaHitRecord hitRec =
                     new MockDeltaHitRecord((byte) 0, (short) 12, hitTime1 + i,
-                                           (short) (34 + i), 56 + i, 78 + i,
+                                           hitChanId1, 56 + i, 78 + i,
                                            new byte[0]);
                 hitRecList.add(hitRec);
             }
@@ -208,6 +187,8 @@ public class EventPayload_v6Test
                 new EventPayload_v6(uid, new MockUTCTime(firstTime),
                                     new MockUTCTime(lastTime), YEAR, runNum,
                                     subrunNum, trigReq, hitRecList);
+
+            evt.setDOMRegistry(domRegistry);
 
             assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
@@ -244,7 +225,7 @@ public class EventPayload_v6Test
         }
     }
 
-    public void ZZZtestCreateFromBuffer()
+    public void testCreateFromBuffer()
         throws Exception
     {
         final int uid = 12;
@@ -280,6 +261,7 @@ public class EventPayload_v6Test
         final int hitSrcId1 = 25;
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
+        final short hitChanId1 = 28;
 
         final long hitTime2 = lastTime - 11;
         final int hitType2 = 33;
@@ -287,6 +269,7 @@ public class EventPayload_v6Test
         final int hitSrcId2 = 35;
         final long hitDomId2 = 2109L;
         final int hitMode2 = 37;
+        final short hitChanId2 = 38;
 
         ArrayList hitList = new ArrayList();
         hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
@@ -305,15 +288,17 @@ public class EventPayload_v6Test
                                    hitList, mockReq);
 
         List<IEventHitRecord> hitRecList = new ArrayList<IEventHitRecord>();
-        hitRecList.add(new MockDeltaHitRecord((byte) 1, (short) 23, hitTime1,
+        hitRecList.add(new MockDeltaHitRecord((byte) 1, hitChanId1, hitTime1,
                                               (short) 45, 67, 89,
                                               new byte[] { (byte) 123 }));
-        hitRecList.add(new MockDeltaHitRecord((byte) 2, (short) 34, hitTime2,
+        hitRecList.add(new MockDeltaHitRecord((byte) 2, hitChanId2, hitTime2,
                                               (short) 56, 78, 90,
                                               new byte[] { (byte) 45,
                                                            (byte) 5 }));
 
-        IDOMRegistry domRegistry = new MockDOMRegistry();
+        MockDOMRegistry domRegistry = new MockDOMRegistry();
+        domRegistry.addChannelId(hitDomId1, hitChanId1);
+        domRegistry.addChannelId(hitDomId2, hitChanId2);
 
         ByteBuffer buf =
             TestUtil.createEventv6(uid, firstTime, lastTime, YEAR, runNum,
@@ -373,6 +358,7 @@ public class EventPayload_v6Test
         final int hitSrcId1 = 25;
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
+        final short hitChanId1 = (short) 28;
 
         final long hitTime2 = halfTime + 12;
         final int hitType2 = 33;
@@ -380,6 +366,7 @@ public class EventPayload_v6Test
         final int hitSrcId2 = 35;
         final long hitDomId2 = 2109L;
         final int hitMode2 = 37;
+        final short hitChanId2 = (short) 38;
 
         final long hitTime3 = lastTime - 12;
         final int hitType3 = 43;
@@ -387,6 +374,7 @@ public class EventPayload_v6Test
         final int hitSrcId3 = 45;
         final long hitDomId3 = 3109L;
         final int hitMode3 = 47;
+        final short hitChanId3 = (short) 48;
 
         ArrayList hitList = new ArrayList();
         hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
@@ -407,21 +395,24 @@ public class EventPayload_v6Test
                                    hitList, mockReq);
 
         List<IEventHitRecord> hitRecList = new ArrayList<IEventHitRecord>();
-        hitRecList.add(new MockDeltaHitRecord((byte) 1, (short) 23, hitTime1,
+        hitRecList.add(new MockDeltaHitRecord((byte) 1, hitChanId1, hitTime1,
                                               (short) 45, 67, 89,
                                               new byte[] { (byte) 123 }));
-        hitRecList.add(new MockDeltaHitRecord((byte) 2, (short) 34, hitTime2,
+        hitRecList.add(new MockDeltaHitRecord((byte) 2, hitChanId2, hitTime2,
                                               (short) 56, 78, 90,
                                               new byte[] { (byte) 45,
                                                            (byte) 5 }));
 
-        hitRecList.add(new MockDeltaHitRecord((byte) 3, (short) 45, hitTime3,
+        hitRecList.add(new MockDeltaHitRecord((byte) 3, hitChanId3, hitTime3,
                                               (short) 67, 89, 100,
                                               new byte[] { (byte) 6,
                                                            (byte) 7,
                                                            (byte) 8 }));
 
-        IDOMRegistry domRegistry = new MockDOMRegistry();
+        MockDOMRegistry domRegistry = new MockDOMRegistry();
+        domRegistry.addChannelId(hitDomId1, hitChanId1);
+        domRegistry.addChannelId(hitDomId2, hitChanId2);
+        domRegistry.addChannelId(hitDomId3, hitChanId3);
 
         ByteBuffer buf =
             TestUtil.createEventv6(uid, firstTime, lastTime, YEAR, runNum,
@@ -431,7 +422,7 @@ public class EventPayload_v6Test
         EventPayload_v6 evt = new EventPayload_v6(buf, 0);
         evt.loadPayload();
 
-        evt.setDOMRegistry(new MockDOMRegistry());
+        evt.setDOMRegistry(domRegistry);
 
         assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
@@ -485,6 +476,7 @@ public class EventPayload_v6Test
         final int hitSrcId1 = 25;
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
+        final short hitChanId1 = 28;
 
         final long hitTime2 = halfTime + 12;
         final int hitType2 = 33;
@@ -492,6 +484,7 @@ public class EventPayload_v6Test
         final int hitSrcId2 = 35;
         final long hitDomId2 = 2109L;
         final int hitMode2 = 37;
+        final short hitChanId2 = 38;
 
         final long hitTime3 = lastTime - 12;
         final int hitType3 = 43;
@@ -499,6 +492,7 @@ public class EventPayload_v6Test
         final int hitSrcId3 = 45;
         final long hitDomId3 = 3109L;
         final int hitMode3 = 47;
+        final short hitChanId3 = 48;
 
         ArrayList hitList = new ArrayList();
         hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
@@ -519,21 +513,24 @@ public class EventPayload_v6Test
                                    hitList, mockReq);
 
         List<IEventHitRecord> hitRecList = new ArrayList<IEventHitRecord>();
-        hitRecList.add(new MockDeltaHitRecord((byte) 1, (short) 23, hitTime1,
+        hitRecList.add(new MockDeltaHitRecord((byte) 1, hitChanId1, hitTime1,
                                               (short) 45, 67, 89,
                                               new byte[] { (byte) 123 }));
-        hitRecList.add(new MockDeltaHitRecord((byte) 2, (short) 34, hitTime2,
+        hitRecList.add(new MockDeltaHitRecord((byte) 2, hitChanId2, hitTime2,
                                               (short) 56, 78, 90,
                                               new byte[] { (byte) 45,
                                                            (byte) 5 }));
 
-        hitRecList.add(new MockDeltaHitRecord((byte) 3, (short) 45, hitTime3,
+        hitRecList.add(new MockDeltaHitRecord((byte) 3, hitChanId3, hitTime3,
                                               (short) 67, 89, 100,
                                               new byte[] { (byte) 6,
                                                            (byte) 7,
                                                            (byte) 8 }));
 
-        IDOMRegistry domRegistry = new MockDOMRegistry();
+        MockDOMRegistry domRegistry = new MockDOMRegistry();
+        domRegistry.addChannelId(hitDomId1, hitChanId1);
+        domRegistry.addChannelId(hitDomId2, hitChanId2);
+        domRegistry.addChannelId(hitDomId3, hitChanId3);
 
         ByteBuffer buf =
             TestUtil.createEventv6(uid, firstTime, lastTime, YEAR, runNum,
@@ -561,8 +558,10 @@ public class EventPayload_v6Test
             }
         }
         assertNotNull("String returned", evt.getExtraString());
+
+        final int expLen = 66;
         try {
-            assertEquals("Expected value is 64: ", 64,
+            assertEquals("Expected value is " + expLen, expLen,
                          evt.getHitRecordLength());
         } catch (Error err) {
             if (!err.getMessage().equals("Hit records have not been loaded")) {
@@ -570,7 +569,7 @@ public class EventPayload_v6Test
             }
         }
         evt.loadPayload();
-        assertEquals("Expected value is 64: ", 64,
+        assertEquals("Expected value is " + expLen, expLen,
                      evt.getHitRecordLength());
     }
 
