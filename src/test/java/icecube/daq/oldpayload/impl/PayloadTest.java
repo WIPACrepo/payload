@@ -401,7 +401,7 @@ public class PayloadTest
 
         pay.recycle();
     }
-
+/*
     public void testWriteDestination()
         throws Exception
     {
@@ -433,7 +433,7 @@ public class PayloadTest
 
         pay.recycle();
     }
-
+*/
     public void testDeepCopy()
         throws Exception
     {

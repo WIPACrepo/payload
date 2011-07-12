@@ -51,8 +51,7 @@ public class MockTriggerRequest
         this.rReq = rReq;
     }
 
-    public Object deepCopy()
-        throws PayloadException
+    public Object deepCopy() throws PayloadException
     {
         if (failDeepCopy) {
             return null;

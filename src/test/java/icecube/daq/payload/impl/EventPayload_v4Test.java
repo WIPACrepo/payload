@@ -67,7 +67,6 @@ public class EventPayload_v4Test
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
 
-setVerbose(true);
         MockReadoutRequest mockReq =
             new MockReadoutRequest(uid, trigSrcId);
         mockReq.addElement(rrType, firstTime, lastTime, rrDomId, rrSrcId);

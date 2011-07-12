@@ -44,7 +44,7 @@ public class ReadoutDataRecordTest
 
         ReadoutDataRecord rdRec = new ReadoutDataRecord();
         rdRec.initialize(uid, payNum, isLast, new MockSourceID(srcId),
-                       new MockUTCTime(firstTime), new MockUTCTime(lastTime));
+                         new MockUTCTime(firstTime), new MockUTCTime(lastTime));
 
         assertNotNull("Null source ID", rdRec.mt_sourceid);
         assertEquals("Bad source ID", srcId, rdRec.mt_sourceid.getSourceID());

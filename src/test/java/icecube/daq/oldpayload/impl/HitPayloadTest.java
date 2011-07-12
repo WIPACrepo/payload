@@ -327,7 +327,7 @@ public class HitPayloadTest
             }
         }
     }
-
+/*
     public void testWriteData()
         throws Exception
     {
@@ -360,7 +360,7 @@ public class HitPayloadTest
             }
         }
     }
-
+*/
     public static void main(String[] args)
     {
         TestRunner.run(suite());

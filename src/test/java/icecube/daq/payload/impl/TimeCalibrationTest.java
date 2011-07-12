@@ -188,32 +188,32 @@ public class TimeCalibrationTest
                                            syncTime);
 
         TimeCalibration tcal = new TimeCalibration(buf, 0);
-        TimeCalibration tcal1 = new TimeCalibration(buf, 0, 50, utcTime);
+         TimeCalibration tcal1 = new TimeCalibration(buf, 0, 50, utcTime);
         assertEquals("Expected Payload Name: ", "TimeCalibration",
-                     tcal.getPayloadName());
+                 tcal.getPayloadName());
         assertNotNull("TimeCalibration ",tcal.toString());
         assertNotNull("TimeCalibration ",tcal.compareSpliceable(tcal));
         assertEquals("Expected buffer length ", 338, tcal.computeBufferLength());
         try {
             tcal.dispose();
         } catch (Error err) {
-            if (!err.getMessage().equals("Unimplemented")) {
-                throw err;
-            }
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
         }
         try {
             tcal.deepCopy();
         } catch (Error err) {
-            if (!err.getMessage().equals("Unimplemented")) {
-                throw err;
-            }
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
         }
         try {
             tcal.getPayloadTimeUTC();
         } catch (Error err) {
-            if (!err.getMessage().equals("Unimplemented")) {
-                throw err;
-            }
+        if (!err.getMessage().equals("Unimplemented")) {
+            throw err;
+        }
         }
     }
 

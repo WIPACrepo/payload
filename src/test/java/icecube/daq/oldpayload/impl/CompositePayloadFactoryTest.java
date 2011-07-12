@@ -85,7 +85,7 @@ class MockPayload
 
     public long getUTCTime()
     {
-        return time;
+        throw new Error("Unimplemented");
     }
 
     boolean isCopy()

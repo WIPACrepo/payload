@@ -393,9 +393,9 @@ public class TriggerRequestPayloadTest
                              0, cmpTR.compareTo(req));
             } else {
                 assertFalse("Bad " + cmpDiff + " inequality",
-                           cmpTR.equals(req));
+                            cmpTR.equals(req));
                 assertFalse("Bad " + cmpDiff + " inequality",
-                           req.equals(cmpTR));
+                            req.equals(cmpTR));
                 assertTrue("Bad " + cmpDiff + " comparison",
                            req.compareTo(cmpTR) < 0);
                 assertTrue("Bad " + cmpDiff + " reverse comparison",
@@ -455,7 +455,7 @@ public class TriggerRequestPayloadTest
             }
         }
     }
-
+/*
     public void testWriteData()
         throws Exception
     {
@@ -510,7 +510,7 @@ public class TriggerRequestPayloadTest
             }
         }
     }
-
+*/
     public static void main(String[] args)
     {
         TestRunner.run(suite());
