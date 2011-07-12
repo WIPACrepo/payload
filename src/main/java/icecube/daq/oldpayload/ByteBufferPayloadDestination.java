@@ -3,6 +3,7 @@ package icecube.daq.oldpayload;
 import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.IByteBufferReceiver;
 import icecube.daq.payload.IWriteablePayload;
+import icecube.daq.payload.PayloadException;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -85,7 +86,13 @@ public class ByteBufferPayloadDestination extends PayloadDestination   {
         }
 
         tBuffer.clear();
-        int iWrittenLength = tPayload.writePayload(bWriteLoaded,0,tBuffer);
+        int iWrittenLength;
+        try {
+            iWrittenLength = tPayload.writePayload(bWriteLoaded,0,tBuffer);
+        } catch (PayloadException pe) {
+            throw new RuntimeException("Cannot write buffer", pe);
+        }
+
         if (iPayloadLength != iWrittenLength) {
             throw new RuntimeException("Problem when acquireBuffer iPayloadLength: " +
                     iPayloadLength + " iWrittenLength: " + iWrittenLength + " tBuffer: " +

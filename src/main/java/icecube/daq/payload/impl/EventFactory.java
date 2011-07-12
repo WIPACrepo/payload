@@ -71,8 +71,12 @@ public class EventFactory
             throw new Error("Unimplemented");
         }
 
-        ITriggerRequestPayload reqCopy =
-            (ITriggerRequestPayload) trigReq.deepCopy();
+        ITriggerRequestPayload reqCopy;
+        try {
+            reqCopy = (ITriggerRequestPayload) trigReq.deepCopy();
+        } catch (PayloadException pe) {
+            throw new Error("Cannot deep-copy trigger request", pe);
+        }
 
         ArrayList copyList;
         if (dataList == null) {
@@ -80,7 +84,11 @@ public class EventFactory
         } else {
             copyList = new ArrayList();
             for (Object obj : dataList) {
-                copyList.add(((ILoadablePayload) obj).deepCopy());
+                try {
+                    copyList.add(((ILoadablePayload) obj).deepCopy());
+                } catch (PayloadException pe) {
+                    throw new Error("Cannot deep-copy data list", pe);
+                }
             }
         }
 

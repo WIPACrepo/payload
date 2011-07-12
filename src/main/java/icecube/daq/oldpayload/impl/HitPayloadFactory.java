@@ -3,6 +3,9 @@ package icecube.daq.oldpayload.impl;
 import icecube.daq.payload.IDomHit;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IHitDataPayload;
+import icecube.daq.payload.PayloadException;
+
+import java.io.IOException;
 
 /**
  * This Factory class produces HitPayload's from
@@ -37,10 +40,14 @@ public class HitPayloadFactory extends PayloadFactory {
      * @exception IOException if there is an error reading the ByteBuffer
      * @exception DataFormatException...is thrown if the format of the data is incorrect.
      */
-    public Payload createPayload(ISourceID tSourceID, int iTriggerType, int iTriggerConfigID, IDomHit tPayload) {
+    public Payload createPayload(ISourceID tSourceID, int iTriggerType, int iTriggerConfigID, IDomHit tPayload) throws IOException {
         HitPayload tNewPayload = (HitPayload) mt_PoolablePayloadFactory.getPoolable();
-        tNewPayload.initialize((ISourceID) tSourceID.deepCopy(),
-                               iTriggerType, iTriggerConfigID, tPayload);
+        try {
+            tNewPayload.initialize((ISourceID) tSourceID.deepCopy(),
+                                   iTriggerType, iTriggerConfigID, tPayload);
+        } catch (PayloadException pe) {
+            throw new IOException("Cannot initialize payload", pe);
+        }
         return tNewPayload;
     }
 

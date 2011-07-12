@@ -150,6 +150,7 @@ public class CompositePayloadFactoryTest
     }
 
     public void testDeepCopyNull()
+        throws IOException
     {
         CompositePayloadFactory factory = new CompositePayloadFactory();
 
@@ -158,6 +159,7 @@ public class CompositePayloadFactoryTest
     }
 
     public void testDeepCopyNothing()
+        throws IOException
     {
         Vector<MockPayload> v = new Vector<MockPayload>();
 
@@ -169,6 +171,7 @@ public class CompositePayloadFactoryTest
     }
 
     public void testDeepCopyFail()
+        throws IOException
     {
         Vector<MockPayload> v = new Vector<MockPayload>();
         v.add(new MockPayload(true));
@@ -192,6 +195,7 @@ public class CompositePayloadFactoryTest
     }
 
     public void testDeepCopy()
+        throws IOException
     {
         Vector<MockPayload> v = new Vector<MockPayload>();
         v.add(new MockPayload());
@@ -227,6 +231,7 @@ public class CompositePayloadFactoryTest
     }
 
     public void testDeepCopyArrayList()
+        throws IOException
     {
         ArrayList<MockPayload> v = new ArrayList<MockPayload>();
         v.add(new MockPayload());

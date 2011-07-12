@@ -6,6 +6,7 @@ import icecube.daq.payload.IPayload;
 import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
+import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.Poolable;
 
 import java.io.IOException;
@@ -145,7 +146,11 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
         for (int ii=0; ii < mt_Payloads.size(); ii++) {
             IWriteablePayload tPayload =
                 (IWriteablePayload) mt_Payloads.get(ii);
-            tPayload.writePayload(bWriteLoaded, iCurrentOffset, tBuffer);
+            try {
+                tPayload.writePayload(bWriteLoaded, iCurrentOffset, tBuffer);
+            } catch (PayloadException pe) {
+                throw new IOException("Cannot write composite#" + ii, pe);
+            }
             iCurrentOffset += tPayload.getPayloadLength();
         }
         iBytesWritten = iCurrentOffset - iOffset;

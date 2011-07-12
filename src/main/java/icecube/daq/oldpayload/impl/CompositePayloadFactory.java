@@ -1,7 +1,9 @@
 package icecube.daq.oldpayload.impl;
 
 import icecube.daq.payload.ILoadablePayload;
+import icecube.daq.payload.PayloadException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
@@ -48,7 +50,7 @@ public class CompositePayloadFactory extends PayloadFactory {
      * @param tPayloads list of Payloads which to make 'deep-copies'
      * @return list containing the same ordered list of 'deep-copied' payloads.
      */
-    public static List deepCopyPayloadList(List tPayloads) {
+    public static List deepCopyPayloadList(List tPayloads) throws IOException {
         boolean bDeepCopyOK = false;
         List tPayloadsCopy = null;
         if (tPayloads != null) {
@@ -59,7 +61,14 @@ public class CompositePayloadFactory extends PayloadFactory {
                     ILoadablePayload tPay =
                         (ILoadablePayload) tPayloads.get(ii);
                     if (tPay != null) {
-                        Object tCopy = tPay.deepCopy();
+                        Object tCopy;
+                        try {
+                            tCopy = tPay.deepCopy();
+                        } catch (PayloadException pe) {
+                            throw new IOException("Cannot deep-copy payload",
+                                                  pe);
+                        }
+
                         if (tCopy == null) {
                             mtLog.error("Cannot deep-copy composite payload " +
                                         (ii + 1) + " of " + tPayloads.size() +

@@ -6,7 +6,9 @@ import icecube.daq.payload.IReadoutRequestElement;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.PayloadException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.zip.DataFormatException;
 
@@ -53,23 +55,27 @@ public class TriggerRequestPayloadFactory extends CompositePayloadFactory {
             IUTCTime        tLastTimeUTC,
             List            tPayloads,
             IReadoutRequest tRequest
-    ) {
+    ) throws IOException {
         TriggerRequestPayload tTriggerRequestPayload = null;
         List tPayloadsCopy =
             CompositePayloadFactory.deepCopyPayloadList(tPayloads);
         if (tPayloadsCopy != null) {
             tTriggerRequestPayload = (TriggerRequestPayload) mt_PoolablePayloadFactory.getPoolable();
-            tTriggerRequestPayload.initialize( iUID, iTriggerType, iTriggerConfigID,
-                                               (ISourceID) tRequestorSourceID.deepCopy(),
-                                               (IUTCTime) tFirstTimeUTC.deepCopy(),
-                                               (IUTCTime) tLastTimeUTC.deepCopy(),
-                                               tPayloadsCopy,
-                                               tRequest);
+            try {
+                tTriggerRequestPayload.initialize( iUID, iTriggerType, iTriggerConfigID,
+                                                   (ISourceID) tRequestorSourceID.deepCopy(),
+                                                   (IUTCTime) tFirstTimeUTC.deepCopy(),
+                                                   (IUTCTime) tLastTimeUTC.deepCopy(),
+                                                   tPayloadsCopy,
+                                                   tRequest);
+            } catch (PayloadException pe) {
+                throw new IOException("Cannot initialize payload", pe);
+            }
         }
         return tTriggerRequestPayload;
     }
 
-    public Payload createPayload(ITriggerRequestPayload payload) throws DataFormatException {
+    public Payload createPayload(ITriggerRequestPayload payload) throws DataFormatException, IOException {
         return createPayload(payload.getUID(), payload.getTriggerType(), payload.getTriggerConfigID(),
                 payload.getSourceID(), payload.getFirstTimeUTC(), payload.getLastTimeUTC(),
                 payload.getPayloads(), payload.getReadoutRequest());
@@ -82,7 +88,7 @@ public class TriggerRequestPayloadFactory extends CompositePayloadFactory {
      * @param iTriggerUID the unique id of the generated trigger.
      * @param tRequestElements the consituent readout-request-elements
      */
-    public static IReadoutRequest createReadoutRequest(ISourceID tSourceID, int iTriggerUID, List tRequestElements) {
+    public static IReadoutRequest createReadoutRequest(ISourceID tSourceID, int iTriggerUID, List tRequestElements) throws IOException {
         return ReadoutRequestPayloadFactory.createReadoutRequest(tSourceID, iTriggerUID, tRequestElements);
     }
 
@@ -102,8 +108,7 @@ public class TriggerRequestPayloadFactory extends CompositePayloadFactory {
             IUTCTime     tLastTime,
             IDOMID       tIDomId,
             ISourceID    tISourceId
-        ) {
+        ) throws IOException {
         return ReadoutRequestPayloadFactory.createReadoutRequestElement( iReadoutType, tFirstTime, tLastTime, tIDomId, tISourceId);
-
     }
 }

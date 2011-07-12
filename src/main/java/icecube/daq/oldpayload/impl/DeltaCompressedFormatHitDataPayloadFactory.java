@@ -1,6 +1,9 @@
 package icecube.daq.oldpayload.impl;
 
 import icecube.daq.payload.ISourceID;
+import icecube.daq.payload.PayloadException;
+
+import java.io.IOException;
 
 /**
  * This Factory class produces DeltaCompressedFormatHitDataPayload from
@@ -40,11 +43,15 @@ public class DeltaCompressedFormatHitDataPayloadFactory extends PayloadFactory {
      * NOTE2: deep-copy is NOT used on this payload, because this is the final destination
      *        of the 'external payload' of the DomHitDeltaCompressedFormatPayload.
      */
-    public Payload createPayload(ISourceID tSourceID, int iTriggerConfigID, DomHitDeltaCompressedFormatPayload tPayload) {
+    public Payload createPayload(ISourceID tSourceID, int iTriggerConfigID, DomHitDeltaCompressedFormatPayload tPayload) throws IOException {
         //-note: DomHitDeltaCompressedFormatPayload is not deepCopy'd but is contained
         DeltaCompressedFormatHitDataPayload tNewPayload = (DeltaCompressedFormatHitDataPayload) mt_PoolablePayloadFactory.getPoolable();
-        tNewPayload.initialize((ISourceID) tSourceID.deepCopy(),
-                               iTriggerConfigID, tPayload);
+        try {
+            tNewPayload.initialize((ISourceID) tSourceID.deepCopy(),
+                                   iTriggerConfigID, tPayload);
+        } catch (PayloadException pe) {
+            throw new IOException("Cannot initialize payload", pe);
+        }
         return tNewPayload;
     }
 

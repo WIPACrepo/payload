@@ -1,7 +1,9 @@
 package icecube.daq.oldpayload.test;
 
+import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.oldpayload.PayloadDestination;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class MockDestination
@@ -78,6 +80,12 @@ public class MockDestination
         expandToFit(8);
 
         buf.putLong(v);
+    }
+
+    public int writePayload(IWriteablePayload tPayload)
+        throws IOException
+    {
+        throw new Error("Unimplemented");
     }
 
     public void writeShort(int v)

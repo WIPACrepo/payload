@@ -1002,7 +1002,12 @@ public abstract class PayloadChecker
             System.err.println("Couldn't dump payload " + pay);
             ioe.printStackTrace();
             buf = null;
+        } catch (PayloadException pe) {
+            System.err.println("Couldn't dump payload " + pay);
+            pe.printStackTrace();
+            buf = null;
         }
+
         if (buf == null) {
             return null;
         }
