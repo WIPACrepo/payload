@@ -401,39 +401,7 @@ public class PayloadTest
 
         pay.recycle();
     }
-/*
-    public void testWriteDestination()
-        throws Exception
-    {
-        final int payLen = 16;
-        final long payTime = 1L;
 
-        ByteBuffer buf = ByteBuffer.allocate(payLen);
-        buf.putInt(payLen);
-        buf.putInt(MyPayload.PAYLOAD_TYPE);
-        buf.putLong(payTime);
-
-        MockDestination mockDest = new MockDestination();
-
-        MyPayload pay = new MyPayload();
-        assertEquals("Unexpected length for empty write",
-                     0, pay.writePayload(false, mockDest));
-
-        pay.initialize(0, buf, new MyFactory());
-        pay.loadSpliceablePayload();
-
-        final int written = pay.writePayload(false, mockDest);
-
-        assertEquals("Bad number of bytes written", buf.limit(), written);
-
-        ByteBuffer newBuf = mockDest.getByteBuffer();
-        for (int i = 0; i < buf.limit(); i++) {
-            assertEquals("Bad byte #" + i, buf.get(i), newBuf.get(i));
-        }
-
-        pay.recycle();
-    }
-*/
     public void testDeepCopy()
         throws Exception
     {

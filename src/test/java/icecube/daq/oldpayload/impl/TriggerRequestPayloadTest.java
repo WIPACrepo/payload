@@ -455,62 +455,7 @@ public class TriggerRequestPayloadTest
             }
         }
     }
-/*
-    public void testWriteData()
-        throws Exception
-    {
-        final int uid = 34;
-        final int trigType = 98;
-        final int cfgId = 385;
-        final int srcId = 12;
-        final long firstTime = 1000L;
-        final long lastTime = 2000L;
 
-        final int rrType = 100;
-        final long rrFirstTime = 1001L;
-        final long rrLastTime = 1002L;
-        final long rrDomId = 103;
-        final int rrSrcId = 104;
-
-        final long hitTime = 1011L;
-        final int hitType = 30;
-        final int hitCfgId = 33;
-        final int hitSrcId = 36;
-        final long hitDomId = 333L;
-        final int hitMode = 39;
-
-        MockReadoutRequest mockReq = new MockReadoutRequest(uid, srcId);
-        mockReq.addElement(makeElement(rrType, rrFirstTime, rrLastTime,
-                                       rrDomId, rrSrcId));
-
-        ArrayList hitList = new ArrayList();
-        hitList.add(new MockHit(hitTime, hitType, hitCfgId, hitSrcId, hitDomId,
-                                hitMode));
-
-        ByteBuffer buf =
-            TestUtil.createTriggerRequest(firstTime, uid, trigType, cfgId,
-                                          srcId, firstTime, lastTime, hitList,
-                                          mockReq);
-
-        TriggerRequestPayload req = new TriggerRequestPayload();
-        req.initialize(0, buf, null);
-        req.loadPayload();
-
-        MockDestination mockDest = new MockDestination();
-        for (int b = 0; b < 2; b++) {
-            mockDest.reset();
-
-            final int written = req.writePayload((b == 1), mockDest);
-
-            assertEquals("Bad number of bytes written", buf.limit(), written);
-
-            ByteBuffer newBuf = mockDest.getByteBuffer();
-            for (int i = 0; i < buf.limit(); i++) {
-                assertEquals("Bad byte #" + i, buf.get(i), newBuf.get(i));
-            }
-        }
-    }
-*/
     public static void main(String[] args)
     {
         TestRunner.run(suite());

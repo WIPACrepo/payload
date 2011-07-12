@@ -327,40 +327,7 @@ public class HitPayloadTest
             }
         }
     }
-/*
-    public void testWriteData()
-        throws Exception
-    {
-        final long utcTime = 98765L;
-        final int trigType = 17;
-        final int cfgId = 31;
-        final int srcId = 1234;
-        final long domId = 123456L;
-        final int trigMode = 765;
 
-        ByteBuffer buf =
-            TestUtil.createSimpleHit(utcTime, trigType, cfgId, srcId, domId,
-                                     trigMode);
-
-        HitPayload hit = new HitPayload();
-        hit.initialize(0, buf, null);
-        hit.loadPayload();
-
-        MockDestination mockDest = new MockDestination();
-        for (int b = 0; b < 2; b++) {
-            mockDest.reset();
-
-            final int written = hit.writePayload((b == 1), mockDest);
-
-            assertEquals("Bad number of bytes written", buf.limit(), written);
-
-            ByteBuffer newBuf = mockDest.getByteBuffer();
-            for (int i = 0; i < buf.limit(); i++) {
-                assertEquals("Bad byte #" + i, buf.get(i), newBuf.get(i));
-            }
-        }
-    }
-*/
     public static void main(String[] args)
     {
         TestRunner.run(suite());

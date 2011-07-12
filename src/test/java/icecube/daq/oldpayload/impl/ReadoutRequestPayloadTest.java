@@ -271,62 +271,6 @@ public class ReadoutRequestPayloadTest
             }
         }
     }
-    /*
-    public void testWriteData()
-        throws Exception
-    {
-        final long utcTime = 65432L;
-
-        final int uid = 34;
-        final int srcId = 12;
-
-        final int type1 = 100;
-        final long firstTime1 = 101L;
-        final long lastTime1 = 102L;
-        final long domId1 = 103L;
-        final int srcId1 = 104;
-
-        final int type2 = 200;
-        final long firstTime2 = 201L;
-        final long lastTime2 = 202L;
-        final long domId2 = -1;
-        final int srcId2 = -1;
-
-        ArrayList mockList = new ArrayList();
-        mockList.add(new MockReadoutRequestElement(type1, firstTime1,
-                                                   lastTime1, domId1, srcId1));
-        mockList.add(new MockReadoutRequestElement(type2, firstTime2,
-                                                   lastTime2, domId2, srcId2));
-
-        ByteBuffer buf = TestUtil.createReadoutRequest(utcTime, uid, srcId,
-                                                       mockList);
-        ReadoutRequestPayload req = new ReadoutRequestPayload();
-        req.initialize(0, buf, null);
-        req.loadPayload();
-
-        MockDestination mockDest = new MockDestination();
-        for (int b = 0; b < 3; b++) {
-            mockDest.reset();
-
-            final boolean loaded;
-            final int written;
-            if (b == 0) {
-                loaded = false;
-                written = req.writePayload(mockDest);
-            } else {
-                loaded = (b == 1);
-                written = req.writePayload(loaded, mockDest);
-            }
-
-            assertEquals("Bad number of bytes written", buf.limit(), written);
-
-            ByteBuffer newBuf = mockDest.getByteBuffer();
-            for (int i = 0; i < buf.limit(); i++) {
-                assertEquals("Bad " + (loaded ? "loaded" : "copied") +
-                             " byte #" + i, buf.get(i), newBuf.get(i));
-            }
-        }
-    }*/
 
     public static void main(String[] args)
     {
