@@ -33,7 +33,7 @@ public class TriggerRequestPayloadFactoryTest
     {
         super(name);
     }
- 
+
     public static Test suite()
     {
         return new TestSuite(TriggerRequestPayloadFactoryTest.class);
@@ -61,25 +61,24 @@ public class TriggerRequestPayloadFactoryTest
         final long domId2 = -1;
         final int srcId2 = -1;
 
-	String names[]= new String[5];
-	List requestElements= new ArrayList();
+        String names[]= new String[5];
+        List requestElements= new ArrayList();
 
         MockReadoutRequest mockReq = new MockReadoutRequest(uid, srcId);
         mockReq.addElement(type1, firstTime1, lastTime1, domId1, srcId1);
         mockReq.addElement(type2, firstTime2, lastTime2, domId2, srcId2);
 
-	TriggerRequestPayload trp = new TriggerRequestPayload();
+        TriggerRequestPayload trp = new TriggerRequestPayload();
 
         TriggerRequestPayloadFactory rpf = new TriggerRequestPayloadFactory();
 
-	assertNull("No Payload is returned", rpf.createPayload(trp));
-	assertNotNull("Readout Request Element returned",rpf.createReadoutRequestElement( 1,
-            new MockUTCTime(firstTime), new MockUTCTime(lastTime), new MockDOMID(domId1), new MockSourceID(srcId)));
-   
+        assertNull("No Payload is returned", rpf.createPayload(trp));
+        assertNotNull("Readout Request Element returned",rpf.createReadoutRequestElement( 1,
+                                                                                          new MockUTCTime(firstTime), new MockUTCTime(lastTime), new MockDOMID(domId1), new MockSourceID(srcId)));
+
         assertNotNull("Readout Request object returned", rpf.createReadoutRequest( new MockSourceID(srcId), 1, requestElements));
     }
 
-    
     public static void main(String[] args)
     {
         TestRunner.run(suite());

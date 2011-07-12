@@ -70,10 +70,10 @@ public class EngineeringHitTest
         hit.recycle();
     }
 
-     public void testMethods()
-	throws Exception
+    public void testMethods()
+        throws Exception
     {
-	final long domId = 123456L;
+        final long domId = 123456L;
         final long utcTime = 98765L;
 
         final int atwdChip = 1;
@@ -101,41 +101,39 @@ public class EngineeringHitTest
         EngineeringHit hit =
             new EngineeringHit(new MockSourceID(srcId), domId, utcTime, buf, 0);
 
-	assertEquals("Expected Payload Name: ", "EngineeringHit",
-                 hit.getPayloadName());
-	assertEquals("Expected Hit data length Name: ", 146,
-                 hit.getHitDataLength());
-	assertEquals("Expected BufferLength: ", 146,
-                 hit.computeBufferLength());
-	assertEquals("Expected Local Coincidence Mode: ", -1,
-                 hit.getLocalCoincidenceMode());
+        assertEquals("Expected Payload Name: ", "EngineeringHit",
+                     hit.getPayloadName());
+        assertEquals("Expected Hit data length Name: ", 146,
+                     hit.getHitDataLength());
+        assertEquals("Expected BufferLength: ", 146,
+                     hit.computeBufferLength());
+        assertEquals("Expected Local Coincidence Mode: ", -1,
+                     hit.getLocalCoincidenceMode());
 
-	try {
+        try {
             int k = hit.loadBody(buf,0,utcTime,true);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
-        }
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
 
-	try {
+        try {
             int k = hit.putBody(buf,0);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
+        try {
             hit.writeHitRecord(buf,0);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	assertNotNull("IEventhitrecord is returned",hit.getHitRecord((short)12));
-	assertNotNull("EngineeringHit",hit.toString());
-        
-	
+        assertNotNull("IEventhitrecord is returned",hit.getHitRecord((short)12));
+        assertNotNull("EngineeringHit",hit.toString());
     }
 
     public static void main(String[] args)

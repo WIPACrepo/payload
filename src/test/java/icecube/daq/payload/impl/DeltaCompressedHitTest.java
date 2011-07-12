@@ -66,12 +66,12 @@ public class DeltaCompressedHitTest
 
         final int srcId = 2011;
 
-	ByteBuffer buf1 = ByteBuffer.allocate(270);
+        ByteBuffer buf1 = ByteBuffer.allocate(270);
 
         DeltaCompressedHit hit =
             new DeltaCompressedHit(new MockSourceID(srcId), domId, utcTime,
                                    buf, 0);
-	assertEquals("Bad payload type", hit.getPayloadType(),
+        assertEquals("Bad payload type", hit.getPayloadType(),
                      PayloadRegistry.PAYLOAD_ID_DELTA_HIT);
         assertEquals("Bad unloaded triggerMode",
                      TestUtil.getEngFmtTriggerMode(trigFlags),
@@ -93,7 +93,7 @@ public class DeltaCompressedHitTest
             assertEquals("Bad data byte #" + i,
                          dataBytes[i], compressedData[i]);
         }
-	
+
         hit.recycle();
     }
 
@@ -129,7 +129,7 @@ public class DeltaCompressedHitTest
                                     hasFADC, hasATWD, atwdSize, isATWD_B,
                                     isPeakUpper, peakSample, prePeakCnt,
                                     peakCnt, postPeakCnt, dataBytes);
-System.err.println("--- OLD\n"+icecube.daq.payload.impl.BasePayload.toHexString(buf, 0));
+        System.err.println("--- OLD\n"+icecube.daq.payload.impl.BasePayload.toHexString(buf, 0));
         final int srcId = 2011;
 
         DeltaCompressedHit hit =
@@ -139,20 +139,20 @@ System.err.println("--- OLD\n"+icecube.daq.payload.impl.BasePayload.toHexString(
 
         ByteBuffer newBuf = ByteBuffer.allocate(buf.limit() + 4);
         final int written = hit.writeHitData(newBuf, 0);
-System.err.println("--- NEW\n"+icecube.daq.payload.impl.BasePayload.toHexString(newBuf, 0));
+        System.err.println("--- NEW\n"+icecube.daq.payload.impl.BasePayload.toHexString(newBuf, 0));
         assertEquals("Bad number of bytes written", newBuf.limit(), written);
 
         for (int i = 0; i < buf.limit(); i++) {
             assertEquals("Bad byte #" + i, buf.get(i), newBuf.get(i));
         }
     }
-	
+
     public void testMethods()
         throws Exception
     {
         final long domId = 887654432L;
         final long utcTime = 554433L;
-	 final short version = 1;
+        final short version = 1;
         final short pedestal = 31;
         final long domClock = 103254L;
         final boolean isCompressed = true;
@@ -179,55 +179,54 @@ System.err.println("--- NEW\n"+icecube.daq.payload.impl.BasePayload.toHexString(
                                     hasFADC, hasATWD, atwdSize, isATWD_B,
                                     isPeakUpper, peakSample, prePeakCnt,
                                     peakCnt, postPeakCnt, dataBytes);
-	
-	final int srcId = 2011;
 
-	try {
-        DeltaCompressedHit hit =
-            new DeltaCompressedHit(new MockSourceID(srcId), domId, utcTime,
-                                   buf, 1);
+        final int srcId = 2011;
+
+        try {
+            DeltaCompressedHit hit =
+                new DeltaCompressedHit(new MockSourceID(srcId), domId, utcTime,
+                                       buf, 1);
         } catch (PayloadException err) {
-        if (!err.getMessage().equals("First word should be 1, not 0")) {
-            throw err;
+            if (!err.getMessage().equals("First word should be 1, not 0")) {
+                throw err;
+            }
         }
-        }
-	DeltaCompressedHit hit1 = 
-	    new DeltaCompressedHit(new MockSourceID(srcId), domId, utcTime, 
-				   buf, 32);
-	DeltaCompressedHit hit2 = 
-	    new DeltaCompressedHit(new MockSourceID(srcId), domId, utcTime, 
-				   buf, 32);
-	assertEquals("Expected data length : ", 83,
-                 hit1.getHitDataLength());
-	assertNotNull("DeltaCompressedHit ",hit1.getHitRecord((short)1));
-	assertEquals("Expected Payload Name: ", "DeltaHit",
-                 hit1.getPayloadName());
-	assertEquals("Expected coincidence mode: ", 2,
-                 hit1.getLocalCoincidenceMode());
-	 try {
+        DeltaCompressedHit hit1 =
+            new DeltaCompressedHit(new MockSourceID(srcId), domId, utcTime,
+                                   buf, 32);
+        DeltaCompressedHit hit2 =
+            new DeltaCompressedHit(new MockSourceID(srcId), domId, utcTime,
+                                   buf, 32);
+        assertEquals("Expected data length : ", 83,
+                     hit1.getHitDataLength());
+        assertNotNull("DeltaCompressedHit ",hit1.getHitRecord((short)1));
+        assertEquals("Expected Payload Name: ", "DeltaHit",
+                     hit1.getPayloadName());
+        assertEquals("Expected coincidence mode: ", 2,
+                     hit1.getLocalCoincidenceMode());
+        try {
             hit1.loadBody(buf, 0, utcTime, true);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
-        }
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
         try {
-        hit1.putBody(buf, 0);
+            hit1.putBody(buf, 0);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        hit1.writeHitRecord(buf, 0);
+        try {
+            hit1.writeHitRecord(buf, 0);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	assertNotNull("DeltaHit ",hit1.toString());
-	assertNotNull("DeltaHit ",hit1.computeBufferLength());
-		
+        assertNotNull("DeltaHit ",hit1.toString());
+        assertNotNull("DeltaHit ",hit1.computeBufferLength());
     }
 
     public static void main(String[] args)

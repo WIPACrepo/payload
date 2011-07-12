@@ -151,9 +151,9 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException,PayloadException {
         int iBytesWritten = 0;
         //-Check to make sure if this is a payload that has been loaded with backing
-	if(tDestBuffer == null)   {
-	    throw new PayloadException("Byte Buffer should not be null");
-	}
+        if(tDestBuffer == null)   {
+            throw new PayloadException("Byte Buffer should not be null");
+        }
         if ( super.mtbuffer != null && !bWriteLoaded) {
             iBytesWritten =  super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {

@@ -35,16 +35,14 @@ public class DeltaCompressedFormatHitDataPayloadFactoryTest
 
     public void testBasic()
         throws Exception
-    {	
-	final int srcId = 3131;
+    {
+        final int srcId = 3131;
 
-	DeltaCompressedFormatHitDataPayload hit =
-            new DeltaCompressedFormatHitDataPayload();	
+        DeltaCompressedFormatHitDataPayload hit =
+            new DeltaCompressedFormatHitDataPayload();
 
         DeltaCompressedFormatHitDataPayloadFactory hit1 =
             new DeltaCompressedFormatHitDataPayloadFactory();
-
-	       
     }
 
     public static void main(String[] args)

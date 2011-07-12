@@ -71,8 +71,6 @@ public class TriggerRequestRecordTest
         final long domId2 = -1;
         final int srcId2 = -1;
 
-	String names[]= new String[5];
-
         MockReadoutRequest mockReq = new MockReadoutRequest(uid, srcId);
         mockReq.addElement(type1, firstTime1, lastTime1, domId1, srcId1);
         mockReq.addElement(type2, firstTime2, lastTime2, domId2, srcId2);
@@ -96,12 +94,14 @@ public class TriggerRequestRecordTest
                      firstTime, reqRec.mt_firstTime.longValue());
         assertEquals("Bad last UTC time",
                      lastTime, reqRec.mt_lastTime.longValue());
-	assertNotNull("Poolable returned", reqRec.getPoolable());
-	assertNotNull("Trigger name returned", reqRec.getTriggerName());
-	assertNotNull("String returned", reqRec.toString());
-	assertNotNull("String returned", reqRec.toDataString());
+        assertNotNull("Poolable returned", reqRec.getPoolable());
+        assertNotNull("Trigger name returned", reqRec.getTriggerName());
+        assertNotNull("String returned", reqRec.toString());
+        assertNotNull("String returned", reqRec.toDataString());
 
-	reqRec.setTypeNames(names);
+        String names[] = new String[5];
+
+        reqRec.setTypeNames(names);
         reqRec.recycle();
         assertFalse("Data should not be loaded", reqRec.isDataLoaded());
     }

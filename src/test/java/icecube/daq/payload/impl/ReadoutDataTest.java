@@ -147,16 +147,16 @@ public class ReadoutDataTest
 
         HitDataReadoutData rdp = new HitDataReadoutData(buf, 0);
 
-	try{
-	assertEquals("Buffer length returned", 1, rdp.computeBufferLength());
-	} catch( Error err ) {
-	if( !err.getMessage().equals("HitDataReadoutData has not been loaded") ){
-	    throw err;
-	}
-	}
-	
+        try{
+            assertEquals("Buffer length returned", 1, rdp.computeBufferLength());
+        } catch( Error err ) {
+            if( !err.getMessage().equals("HitDataReadoutData has not been loaded") ){
+                throw err;
+            }
+        }
+
         rdp.loadPayload();
-	assertEquals("Buffer length returned", 174, rdp.computeBufferLength());
+        assertEquals("Buffer length returned", 174, rdp.computeBufferLength());
 
 //        assertEquals("Bad payload type",
 //                     PayloadRegistry.PAYLOAD_ID_READOUT_DATA,
@@ -177,7 +177,7 @@ public class ReadoutDataTest
 //                     isLast, rdp.isLastPayloadOfGroup());
 
         assertNotNull("Non-null hit list", rdp.getHitList());
-	assertNotNull("Copied object returned", rdp.deepCopy());
+        assertNotNull("Copied object returned", rdp.deepCopy());
 
         List rdpHits = rdp.getHitList();
         assertEquals("Bad number of hits", 2, rdpHits.size());
@@ -246,7 +246,6 @@ public class ReadoutDataTest
             }
         }
     }
-
 
     public static void main(String[] args)
     {

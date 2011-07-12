@@ -390,7 +390,6 @@ public abstract class BasePayload
         return strBuf.toString();
     }
 
-   
     /**
      * Write this payload's data to the byte buffer
      * @param writeLoaded ignored
@@ -405,9 +404,9 @@ public abstract class BasePayload
         final int totLen = getPayloadLength();
 
         final int bufRemain = buf.limit() - (offset + totLen);
-	if(buf == null)    {
-	    throw new PayloadException("ByteBuffer must not be null");
-	}
+        if(buf == null)    {
+            throw new PayloadException("ByteBuffer must not be null");
+        }
         if (isConstantSize() && bufRemain < 0) {
             throw new IOException("Buffer is " + -bufRemain +
                                   " bytes too short (offset=" + offset +

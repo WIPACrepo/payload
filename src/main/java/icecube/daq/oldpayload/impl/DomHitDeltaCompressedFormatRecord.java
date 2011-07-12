@@ -605,15 +605,15 @@ public class DomHitDeltaCompressedFormatRecord implements ICopyable, IWriteableP
      *         in the Engineering trigger mode:
      *         1 = CPU / Forced trigger
      *         2 = SPE / MPE trigger (NORMAL)
-     *         3 = Flasher 
+     *         3 = Flasher
      *         4 = IceTop MBT
      */
     public static short getTriggerMode(short trigFlags) {
         if ((trigFlags & 0x1000) != 0) return 4;
-    	if ((trigFlags & 0x0010) != 0) return 3;
-    	if ((trigFlags & 0x0003) != 0) return 2;
-    	if ((trigFlags & 0x0004) != 0) return 1;
-    	return 0;
+            if ((trigFlags & 0x0010) != 0) return 3;
+            if ((trigFlags & 0x0003) != 0) return 2;
+            if ((trigFlags & 0x0004) != 0) return 1;
+            return 0;
     }
 
     /**

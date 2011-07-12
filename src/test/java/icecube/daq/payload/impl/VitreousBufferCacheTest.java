@@ -33,50 +33,47 @@ public class VitreousBufferCacheTest
     public void testBasic()
         throws Exception
     {
-	String name = "Cache";
-	final long maxBytes = 78910L;
+        String name = "Cache";
+        final long maxBytes = 78910L;
 
-	VitreousBufferCache vbc = new VitreousBufferCache(name);
-	VitreousBufferCache vbc1 = new VitreousBufferCache(name, maxBytes);
+        VitreousBufferCache vbc = new VitreousBufferCache(name);
+        VitreousBufferCache vbc1 = new VitreousBufferCache(name, maxBytes);
 
-	assertEquals("Name returned", name, vbc.getName());
-	vbc.flush();
-	vbc.destinationClosed();
-	
-       
+        assertEquals("Name returned", name, vbc.getName());
+        vbc.flush();
+        vbc.destinationClosed();
     }
+
     public void testBuffer()
         throws Exception
     {
-	String name = "Cache";
-	final long maxBytes = 78910L;
+        String name = "Cache";
+        final long maxBytes = 78910L;
 
-	VitreousBufferCache vbc = new VitreousBufferCache(name);
-	VitreousBufferCache vbc1 = new VitreousBufferCache(name, maxBytes);
+        VitreousBufferCache vbc = new VitreousBufferCache(name);
+        VitreousBufferCache vbc1 = new VitreousBufferCache(name, maxBytes);
 
-	ByteBuffer buf = ByteBuffer.allocate(16);
+        ByteBuffer buf = ByteBuffer.allocate(16);
 
-	assertEquals(" buffers should be equal", buf, vbc.acquireBuffer(16));
-	assertEquals(" Integers should be equal", 1, vbc.getCurrentAquiredBuffers());
-	assertEquals(" Integers should be equal", 16, vbc.getCurrentAquiredBytes());
-	assertEquals(" Integers should be equal", 1, vbc.getTotalBuffersAcquired());
-	assertEquals(" Integers should be equal", 1, vbc.getTotalBuffersCreated());
-	assertEquals(" Integers should be equal", 0, vbc.getTotalBuffersReturned());
+        assertEquals(" buffers should be equal", buf, vbc.acquireBuffer(16));
+        assertEquals(" Integers should be equal", 1, vbc.getCurrentAquiredBuffers());
+        assertEquals(" Integers should be equal", 16, vbc.getCurrentAquiredBytes());
+        assertEquals(" Integers should be equal", 1, vbc.getTotalBuffersAcquired());
+        assertEquals(" Integers should be equal", 1, vbc.getTotalBuffersCreated());
+        assertEquals(" Integers should be equal", 0, vbc.getTotalBuffersReturned());
 
-	assertEquals(" Integers should be equal", 0, vbc1.getTotalBytesInCache());
-	assertEquals(" Boolean values should be equal", false, vbc.isBalanced());
-	assertEquals(" Integers should be equal", 0, vbc.getReturnBufferCount());
-	assertEquals(" ReturnBufferEntryCount should be 0", 0, vbc.getReturnBufferEntryCount());
-	assertEquals(" getReturnBufferTime should be 0", 0, vbc.getReturnBufferTime());
-	assertEquals(" Boolean values should be equal", false, vbc.getIsCacheBounded());
-	
-	assertEquals(" Integers should be equal", maxBytes, vbc1.getMaxAquiredBytes());
-	assertNotNull("String returned", vbc.toString());
+        assertEquals(" Integers should be equal", 0, vbc1.getTotalBytesInCache());
+        assertEquals(" Boolean values should be equal", false, vbc.isBalanced());
+        assertEquals(" Integers should be equal", 0, vbc.getReturnBufferCount());
+        assertEquals(" ReturnBufferEntryCount should be 0", 0, vbc.getReturnBufferEntryCount());
+        assertEquals(" getReturnBufferTime should be 0", 0, vbc.getReturnBufferTime());
+        assertEquals(" Boolean values should be equal", false, vbc.getIsCacheBounded());
 
-	
-	vbc.returnBuffer(16);
-	vbc.receiveByteBuffer(buf);
-	
+        assertEquals(" Integers should be equal", maxBytes, vbc1.getMaxAquiredBytes());
+        assertNotNull("String returned", vbc.toString());
+
+        vbc.returnBuffer(16);
+        vbc.receiveByteBuffer(buf);
     }
 
     public static void main(String[] args)

@@ -20,8 +20,6 @@ import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.oldpayload.impl.TriggerRequestPayload;
 
-
-
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,8 +50,8 @@ public class PayloadFactoryTest
 
     public void testCreate()
         throws Exception
-    {   
-	final int uid = 12;
+    {
+        final int uid = 12;
         final int payNum = 1;
         final boolean isLast = true;
         final int srcId = 34;
@@ -73,68 +71,65 @@ public class PayloadFactoryTest
         final int hitSrcId2 = 35;
         final long hitDomId2 = 2109L;
         final int hitMode2 = 37;
-	List dataList= new ArrayList();
+        List dataList= new ArrayList();
 
         ArrayList hitList = new ArrayList();
         hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
                                     hitDomId1, hitMode1));
         hitList.add(new MockHitData(hitTime2, hitType2, hitCfgId2, hitSrcId2,
                                     hitDomId2, hitMode2));
-	
+
         ByteBuffer buf =
             TestUtil.createReadoutDataPayload(uid, payNum, isLast, srcId,
                                               firstTime, lastTime, hitList);
-       
-	PayloadFactory pfo = new PayloadFactory(new MockBufferCache());
-	try {
-        pfo.backingBufferShift( dataList, 0, 0);
+
+        PayloadFactory pfo = new PayloadFactory(new MockBufferCache());
+        try {
+            pfo.backingBufferShift( dataList, 0, 0);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
-        }
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
 
-	assertNotNull("returns spliceable ", pfo.createSpliceable( buf));
-	assertNotNull("returns Iwriteable ", pfo.getPayload( buf, 0));
-		
-	try {
-        assertNotNull("returns Iwriteable ", pfo.getPayload( buf, 1));
+        assertNotNull("returns spliceable ", pfo.createSpliceable( buf));
+        assertNotNull("returns Iwriteable ", pfo.getPayload( buf, 0));
+
+        try {
+            assertNotNull("returns Iwriteable ", pfo.getPayload( buf, 1));
         } catch (PayloadException err) {
-        if (!err.getMessage().equals("Payload length specifies 44544 bytes, but only 173 bytes are available")) {
-            throw err;
+            if (!err.getMessage().equals("Payload length specifies 44544 bytes, but only 173 bytes are available")) {
+                throw err;
+            }
         }
-        }
-	
 
-	try {
-        assertNotNull("returns Iwriteable ", pfo.getPayload( null, 0));
+
+        try {
+            assertNotNull("returns Iwriteable ", pfo.getPayload( null, 0));
         } catch (PayloadException err) {
-        if (!err.getMessage().equals("ByteBuffer is null")) {
-            throw err;
+            if (!err.getMessage().equals("ByteBuffer is null")) {
+                throw err;
+            }
         }
-        }
-	
-	try {
-        pfo.invalidateSpliceables( dataList);
+
+        try {
+            pfo.invalidateSpliceables( dataList);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
-        }
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
 
-	//pfo.setByteBufferCache(new MockBufferCache());
+        //pfo.setByteBufferCache(new MockBufferCache());
 
-	try {
-        pfo.skipSpliceable( buf);
+        try {
+            pfo.skipSpliceable( buf);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-
     }
-
-    
 
     public static void main(String[] args)
     {

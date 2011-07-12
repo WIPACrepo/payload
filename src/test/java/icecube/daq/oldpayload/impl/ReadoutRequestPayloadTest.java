@@ -44,8 +44,8 @@ public class ReadoutRequestPayloadTest
 
         final int uid = 34;
         final int srcId = 12;
-	final int payNum = 1;
-	final long domId = 123456L;
+        final int payNum = 1;
+        final long domId = 123456L;
         final boolean isLast = true;
 
         final int type1 = 100;
@@ -60,7 +60,7 @@ public class ReadoutRequestPayloadTest
         final long domId2 = -1;
         final int srcId2 = -1;
 
-	final long hitTime1 = 1122L;
+        final long hitTime1 = 1122L;
         final int hitType1 = 23;
         final int hitCfgId1 = 24;
         final int hitSrcId1 = 25;
@@ -71,7 +71,7 @@ public class ReadoutRequestPayloadTest
         hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
                                     hitDomId1, hitMode1));
 
-	ByteBuffer buf =
+        ByteBuffer buf =
             TestUtil.createReadoutDataPayload(uid, payNum, isLast, srcId,
                                               firstTime1, lastTime1, hitList);
 
@@ -114,35 +114,35 @@ public class ReadoutRequestPayloadTest
                           elem.getSourceID().getSourceID()));
         }
 
-	try {
-        req.getEmbeddedLength();
+        try {
+            req.getEmbeddedLength();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        req.length();
+        try {
+            req.length();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        req.putBody( buf, 0);
+        try {
+            req.putBody( buf, 0);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        req.addElement( type1, srcId, firstTime1, lastTime1, domId);
+        try {
+            req.addElement( type1, srcId, firstTime1, lastTime1, domId);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	assertNotNull("String returned",req.toString());
+        assertNotNull("String returned",req.toString());
 
         try {
             req.recycle();

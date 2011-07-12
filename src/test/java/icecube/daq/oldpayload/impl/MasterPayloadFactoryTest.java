@@ -43,23 +43,22 @@ public class MasterPayloadFactoryTest
         buf.putLong(payTime);
 
         MasterPayloadFactory factory = new MasterPayloadFactory();
-        
-	try{
-	assertNotNull("returns Payload factory",factory.getPayloadFactory(0));
-	}catch(Error err){
-	if(!err.getMessage().equals("Unimplemented (iType=0)")){
-	throw err;
-	}
-	}
-	assertNotNull("returns Payload factory",factory.getPayloadFactory(1));
-	assertNotNull("returns Payload factory",factory.getPayloadFactory(8));
-	assertNotNull("returns Payload factory",factory.getPayloadFactory(9));
-	assertNotNull("returns Payload factory",factory.getPayloadFactory(11));
 
-	assertEquals("returns the previous value", false, factory.setCreateSeperateBuffers(true));
-	assertNotNull("returns Payload ",factory.createPayload( 0, buf, true));
-	assertEquals("returns spliceable length", 16, factory.readSpliceableLength( 0, buf));
-	
+        try{
+            assertNotNull("returns Payload factory",factory.getPayloadFactory(0));
+        }catch(Error err){
+            if(!err.getMessage().equals("Unimplemented (iType=0)")){
+                throw err;
+            }
+        }
+        assertNotNull("returns Payload factory",factory.getPayloadFactory(1));
+        assertNotNull("returns Payload factory",factory.getPayloadFactory(8));
+        assertNotNull("returns Payload factory",factory.getPayloadFactory(9));
+        assertNotNull("returns Payload factory",factory.getPayloadFactory(11));
+
+        assertEquals("returns the previous value", false, factory.setCreateSeperateBuffers(true));
+        assertNotNull("returns Payload ",factory.createPayload( 0, buf, true));
+        assertEquals("returns spliceable length", 16, factory.readSpliceableLength( 0, buf));
     }
 
     public static void main(String[] args)

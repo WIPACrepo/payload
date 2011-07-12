@@ -92,12 +92,12 @@ public class DeltaCompressedFormatHitDataPayloadTest
         assertEquals("Bad trigger type", trigType, hit.getTriggerType());
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());
         assertEquals("Bad DOM ID", domId, hit.getDOMID().longValue());
-	assertNotNull("delta compressed hit returned",hit.getHitRecord());
-	assertNotNull("String returned",hit.toString());
-	assertEquals("integrated charge", -1.0, hit.getIntegratedCharge());
+        assertNotNull("delta compressed hit returned",hit.getHitRecord());
+        assertNotNull("String returned",hit.toString());
+        assertEquals("integrated charge", -1.0, hit.getIntegratedCharge());
 
         DomHitDeltaCompressedFormatRecord hitRec = hit.getPayloadRecord();
-	DeltaCompressedFormatHitDataPayloadFactory dhit = new DeltaCompressedFormatHitDataPayloadFactory();
+        DeltaCompressedFormatHitDataPayloadFactory dhit = new DeltaCompressedFormatHitDataPayloadFactory();
 
         byte[] compressedData = hitRec.getCompressedData();
         assertNotNull("Compressed data array is null", compressedData);
@@ -107,8 +107,8 @@ public class DeltaCompressedFormatHitDataPayloadTest
             assertEquals("Bad data byte #" + i,
                          dataBytes[i], compressedData[i]);
         }
-	
-	hit.recycle();
+
+        hit.recycle();
     }
 
     public void testCreateCopy()
@@ -314,148 +314,148 @@ public class DeltaCompressedFormatHitDataPayloadTest
         }
     }
     /*
-    public void testWriteData()
-        throws Exception
-    {
-        final long utcTime = 554433L;
-        final int trigType = 3;
-        final int configId = 31;
-        final int srcId = 3131;
-        final long domId = 887654432L;
-        final short version = 1;
-        final short pedestal = 31;
-        final long domClock = 103254L;
-        final boolean isCompressed = true;
-        final int trigFlags = 7;
-        final int lcFlags = 2;
-        final boolean hasFADC = false;
-        final boolean hasATWD = true;
-        final int atwdSize = 3;
-        final boolean isATWD_B = false;
-        final boolean isPeakUpper = true;
-        final int peakSample = 15;
-        final int prePeakCnt = 511;
-        final int peakCnt = 511;
-        final int postPeakCnt = 511;
+      public void testWriteData()
+      throws Exception
+      {
+      final long utcTime = 554433L;
+      final int trigType = 3;
+      final int configId = 31;
+      final int srcId = 3131;
+      final long domId = 887654432L;
+      final short version = 1;
+      final short pedestal = 31;
+      final long domClock = 103254L;
+      final boolean isCompressed = true;
+      final int trigFlags = 7;
+      final int lcFlags = 2;
+      final boolean hasFADC = false;
+      final boolean hasATWD = true;
+      final int atwdSize = 3;
+      final boolean isATWD_B = false;
+      final boolean isPeakUpper = true;
+      final int peakSample = 15;
+      final int prePeakCnt = 511;
+      final int peakCnt = 511;
+      final int postPeakCnt = 511;
 
-        byte[] dataBytes = new byte[29];
-        for (int i = 0; i < dataBytes.length; i++) {
-            dataBytes[i] = (byte) i;
-        }
+      byte[] dataBytes = new byte[29];
+      for (int i = 0; i < dataBytes.length; i++) {
+      dataBytes[i] = (byte) i;
+      }
 
-        ByteBuffer buf =
-            TestUtil.createDeltaHitData(utcTime, trigType, configId, srcId,
-                                        domId, version, pedestal, domClock,
-                                        isCompressed, trigFlags, lcFlags,
-                                        hasFADC, hasATWD, atwdSize, isATWD_B,
-                                        isPeakUpper, peakSample, prePeakCnt,
-                                        peakCnt, postPeakCnt, dataBytes);
+      ByteBuffer buf =
+      TestUtil.createDeltaHitData(utcTime, trigType, configId, srcId,
+      domId, version, pedestal, domClock,
+      isCompressed, trigFlags, lcFlags,
+      hasFADC, hasATWD, atwdSize, isATWD_B,
+      isPeakUpper, peakSample, prePeakCnt,
+      peakCnt, postPeakCnt, dataBytes);
 
-        DeltaCompressedFormatHitDataPayload hit =
-            new DeltaCompressedFormatHitDataPayload();
-        hit.initialize(0, buf);
-        hit.loadPayload();
+      DeltaCompressedFormatHitDataPayload hit =
+      new DeltaCompressedFormatHitDataPayload();
+      hit.initialize(0, buf);
+      hit.loadPayload();
 
-        MockDestination mockDest = new MockDestination();
-        for (int b = 0; b < 3; b++) {
-            mockDest.reset();
+      MockDestination mockDest = new MockDestination();
+      for (int b = 0; b < 3; b++) {
+      mockDest.reset();
 
-            final boolean loaded;
-            final int written;
-            if (b == 0) {
-                loaded = false;
-                written = hit.writePayload(mockDest);
-            } else {
-                loaded = (b == 1);
-                written = hit.writePayload(loaded, mockDest);
-            }
+      final boolean loaded;
+      final int written;
+      if (b == 0) {
+      loaded = false;
+      written = hit.writePayload(mockDest);
+      } else {
+      loaded = (b == 1);
+      written = hit.writePayload(loaded, mockDest);
+      }
 
-            assertEquals("Bad number of bytes written", buf.limit(), written);
+      assertEquals("Bad number of bytes written", buf.limit(), written);
 
-            ByteBuffer newBuf = mockDest.getByteBuffer();
-            for (int i = 0; i < buf.limit(); i++) {
-                assertEquals("Bad " + (loaded ? "loaded" : "copied") +
-                             " byte #" + i, buf.get(i), newBuf.get(i));
-            }
-        }
-    }*/
+      ByteBuffer newBuf = mockDest.getByteBuffer();
+      for (int i = 0; i < buf.limit(); i++) {
+      assertEquals("Bad " + (loaded ? "loaded" : "copied") +
+      " byte #" + i, buf.get(i), newBuf.get(i));
+      }
+      }
+      }*/
     /*
-    public void testWriteDataCopy()
-        throws Exception
-    {
-        final long utcTime = 554433L;
-        final int configId = 31;
-        final int srcId = 3131;
-        final long domId = 887654432L;
-        final short version = 1;
-        final short pedestal = 31;
-        final long domClock = 103254L;
-        final boolean isCompressed = true;
-        final int trigFlags = 7;
-        final int lcFlags = 2;
-        final boolean hasFADC = false;
-        final boolean hasATWD = true;
-        final int atwdSize = 3;
-        final boolean isATWD_B = false;
-        final boolean isPeakUpper = true;
-        final int peakSample = 15;
-        final int prePeakCnt = 511;
-        final int peakCnt = 511;
-        final int postPeakCnt = 511;
+      public void testWriteDataCopy()
+      throws Exception
+      {
+      final long utcTime = 554433L;
+      final int configId = 31;
+      final int srcId = 3131;
+      final long domId = 887654432L;
+      final short version = 1;
+      final short pedestal = 31;
+      final long domClock = 103254L;
+      final boolean isCompressed = true;
+      final int trigFlags = 7;
+      final int lcFlags = 2;
+      final boolean hasFADC = false;
+      final boolean hasATWD = true;
+      final int atwdSize = 3;
+      final boolean isATWD_B = false;
+      final boolean isPeakUpper = true;
+      final int peakSample = 15;
+      final int prePeakCnt = 511;
+      final int peakCnt = 511;
+      final int postPeakCnt = 511;
 
-        byte[] dataBytes = new byte[29];
-        for (int i = 0; i < dataBytes.length; i++) {
-            dataBytes[i] = (byte) i;
-        }
+      byte[] dataBytes = new byte[29];
+      for (int i = 0; i < dataBytes.length; i++) {
+      dataBytes[i] = (byte) i;
+      }
 
-        ByteBuffer recBuf =
-            TestUtil.createDeltaHit(domId, utcTime, version, pedestal,
-                                    domClock, isCompressed, trigFlags, lcFlags,
-                                    hasFADC, hasATWD, atwdSize, isATWD_B,
-                                    isPeakUpper, peakSample, prePeakCnt,
-                                    peakCnt, postPeakCnt, dataBytes);
+      ByteBuffer recBuf =
+      TestUtil.createDeltaHit(domId, utcTime, version, pedestal,
+      domClock, isCompressed, trigFlags, lcFlags,
+      hasFADC, hasATWD, atwdSize, isATWD_B,
+      isPeakUpper, peakSample, prePeakCnt,
+      peakCnt, postPeakCnt, dataBytes);
 
-        DomHitDeltaCompressedFormatPayload domHit =
-            new DomHitDeltaCompressedFormatPayload();
-        domHit.initialize(0, recBuf);
-        domHit.loadPayload();
+      DomHitDeltaCompressedFormatPayload domHit =
+      new DomHitDeltaCompressedFormatPayload();
+      domHit.initialize(0, recBuf);
+      domHit.loadPayload();
 
-        DeltaCompressedFormatHitDataPayload hit =
-            new DeltaCompressedFormatHitDataPayload();
-        hit.initialize(new MockSourceID(srcId), configId, domHit);
-        hit.loadPayload();
+      DeltaCompressedFormatHitDataPayload hit =
+      new DeltaCompressedFormatHitDataPayload();
+      hit.initialize(new MockSourceID(srcId), configId, domHit);
+      hit.loadPayload();
 
-        ByteBuffer buf =
-            TestUtil.createDeltaHitData(utcTime, -1, configId, srcId,
-                                        domId, version, pedestal, domClock,
-                                        isCompressed, trigFlags, lcFlags,
-                                        hasFADC, hasATWD, atwdSize, isATWD_B,
-                                        isPeakUpper, peakSample, prePeakCnt,
-                                        peakCnt, postPeakCnt, dataBytes);
+      ByteBuffer buf =
+      TestUtil.createDeltaHitData(utcTime, -1, configId, srcId,
+      domId, version, pedestal, domClock,
+      isCompressed, trigFlags, lcFlags,
+      hasFADC, hasATWD, atwdSize, isATWD_B,
+      isPeakUpper, peakSample, prePeakCnt,
+      peakCnt, postPeakCnt, dataBytes);
 
-        MockDestination mockDest = new MockDestination();
-        for (int b = 0; b < 3; b++) {
-            mockDest.reset();
+      MockDestination mockDest = new MockDestination();
+      for (int b = 0; b < 3; b++) {
+      mockDest.reset();
 
-            final boolean loaded;
-            final int written;
-            if (b == 0) {
-                loaded = false;
-                written = hit.writePayload(mockDest);
-            } else {
-                loaded = (b == 1);
-                written = hit.writePayload(loaded, mockDest);
-            }
+      final boolean loaded;
+      final int written;
+      if (b == 0) {
+      loaded = false;
+      written = hit.writePayload(mockDest);
+      } else {
+      loaded = (b == 1);
+      written = hit.writePayload(loaded, mockDest);
+      }
 
-            assertEquals("Bad number of bytes written", buf.limit(), written);
+      assertEquals("Bad number of bytes written", buf.limit(), written);
 
-            ByteBuffer newBuf = mockDest.getByteBuffer();
-            for (int i = 0; i < buf.limit(); i++) {
-                assertEquals("Bad " + (loaded ? "loaded" : "copied") +
-                             " byte #" + i, buf.get(i), newBuf.get(i));
-            }
-        }
-    }*/
+      ByteBuffer newBuf = mockDest.getByteBuffer();
+      for (int i = 0; i < buf.limit(); i++) {
+      assertEquals("Bad " + (loaded ? "loaded" : "copied") +
+      " byte #" + i, buf.get(i), newBuf.get(i));
+      }
+      }
+      }*/
 
     public static void main(String[] args)
     {

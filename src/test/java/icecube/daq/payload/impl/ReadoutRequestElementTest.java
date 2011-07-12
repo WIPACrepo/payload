@@ -47,50 +47,49 @@ public class ReadoutRequestElementTest
         final long utcTime = 1000L;
         final int uid = 34;
         final int srcId = 12;
-		
-	final int rrType = 100;
+
+        final int rrType = 100;
         final long rrFirstTime = 1001L;
         final long rrLastTime = 1002L;
         final long rrDomId = 103;
         final int rrSrcId = 104;
-	
+
         List creList = new ArrayList();
         creList.add(new ReadoutRequestElement(rrType, rrSrcId, rrFirstTime,
                                               rrLastTime, rrDomId));
-	ByteBuffer buf =
+        ByteBuffer buf =
             TestUtil.createReadoutRequest(utcTime, uid, srcId, creList);
 
-	ReadoutRequestElement rReq = new ReadoutRequestElement( buf, 0);
+        ReadoutRequestElement rReq = new ReadoutRequestElement( buf, 0);
 
-	try{
-        ReadoutRequestElement rReq1 = new ReadoutRequestElement( buf, 32);
-	}catch(PayloadException err){
-	if(!err.getMessage().equals("Readout request element buffer must be at least 32 bytes long, not 30")){
-	throw err;
-	}
-	}
+        try{
+            ReadoutRequestElement rReq1 = new ReadoutRequestElement( buf, 32);
+        }catch(PayloadException err){
+            if(!err.getMessage().equals("Readout request element buffer must be at least 32 bytes long, not 30")){
+                throw err;
+            }
+        }
 
-       	try{
-        ReadoutRequestElement rReq2 = new ReadoutRequestElement( null, 0);
-	}catch(PayloadException err){
-	if(!err.getMessage().equals("ByteBuffer is null")){
-	throw err;
-	}
-	}
+        try{
+            ReadoutRequestElement rReq2 = new ReadoutRequestElement( null, 0);
+        }catch(PayloadException err){
+            if(!err.getMessage().equals("ByteBuffer is null")){
+                throw err;
+            }
+        }
 
-	assertEquals("READOUT_TYPE_GLOBAL","GLOBAL",rReq.getTypeString(0));
-	assertEquals("READOUT_TYPE_II_GLOBAL","IT_GLOBAL",rReq.getTypeString(1));
-	assertEquals("READOUT_TYPE_IT_GLOBAL","II_GLOBAL",rReq.getTypeString(2));
-	assertEquals("READOUT_TYPE_II_STRING","II_STRING",rReq.getTypeString(3));
-	assertEquals("READOUT_TYPE_II_MODULE","II_MODULE",rReq.getTypeString(4));
-	assertEquals("READOUT_TYPE_IT_MODULE","IT_MODULE",rReq.getTypeString(5));
-	assertEquals("BAD READOUT TYPE","UNKNOWN",rReq.getTypeString(6));
+        assertEquals("READOUT_TYPE_GLOBAL","GLOBAL",rReq.getTypeString(0));
+        assertEquals("READOUT_TYPE_II_GLOBAL","IT_GLOBAL",rReq.getTypeString(1));
+        assertEquals("READOUT_TYPE_IT_GLOBAL","II_GLOBAL",rReq.getTypeString(2));
+        assertEquals("READOUT_TYPE_II_STRING","II_STRING",rReq.getTypeString(3));
+        assertEquals("READOUT_TYPE_II_MODULE","II_MODULE",rReq.getTypeString(4));
+        assertEquals("READOUT_TYPE_IT_MODULE","IT_MODULE",rReq.getTypeString(5));
+        assertEquals("BAD READOUT TYPE","UNKNOWN",rReq.getTypeString(6));
 
-	assertNotNull("String returned",rReq.toString());
-  
+        assertNotNull("String returned",rReq.toString());
     }
 
-   public static void main(String[] args)
+    public static void main(String[] args)
     {
         TestRunner.run(suite());
     }

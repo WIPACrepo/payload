@@ -312,7 +312,7 @@ public class SimpleHit
      * @return number of bytes written
      */
     public int writePayload(boolean writeLoaded, int offset, ByteBuffer buf)
-	throws PayloadException
+        throws PayloadException
     {
         writePayloadToBuffer(buf, offset, getUTCTime(), trigType, cfgId, srcId,
                              domId, trigMode);
@@ -336,9 +336,9 @@ public class SimpleHit
                                             int cfgId, int srcId, long domId,
                                             short trigMode) throws PayloadException
     {
-	if(buf == null)    {
-	    throw new PayloadException("ByteBuffer must not be null");
-	}
+        if(buf == null)    {
+            throw new PayloadException("ByteBuffer must not be null");
+        }
         buf.putInt(offset + OFFSET_LENGTH, LENGTH);
         buf.putInt(offset + OFFSET_TYPE,
                    PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT);

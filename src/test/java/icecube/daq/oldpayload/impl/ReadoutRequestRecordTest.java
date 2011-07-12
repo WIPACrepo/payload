@@ -41,7 +41,7 @@ public class ReadoutRequestRecordTest
     {
         final int uid = 34;
         final int srcId = 12;
-	
+
         final int type1 = 100;
         final long firstTime1 = 101L;
         final long lastTime1 = 102L;
@@ -54,7 +54,7 @@ public class ReadoutRequestRecordTest
         final long domId2 = -1;
         final int srcId2 = -1;
 
-	ArrayList mockList = new ArrayList();
+        ArrayList mockList = new ArrayList();
         mockList.add(new MockReadoutRequestElement(type1, firstTime1,
                                                    lastTime1, domId1, srcId1));
         mockList.add(new MockReadoutRequestElement(type2, firstTime2,
@@ -103,13 +103,13 @@ public class ReadoutRequestRecordTest
         assertFalse("Data should not be loaded", req.isDataLoaded());
     }
 
-     public void testBasic()
+    public void testBasic()
         throws Exception
     {
         final int uid = 34;
         final int srcId = 12;
-	final int payNum = 1;
-	final long domId = 123456L;
+        final int payNum = 1;
+        final long domId = 123456L;
         final boolean isLast = true;
 
         final int type1 = 100;
@@ -123,8 +123,8 @@ public class ReadoutRequestRecordTest
         final long lastTime2 = 202L;
         final long domId2 = -1;
         final int srcId2 = -1;
-	
-	final long hitTime1 = 1122L;
+
+        final long hitTime1 = 1122L;
         final int hitType1 = 23;
         final int hitCfgId1 = 24;
         final int hitSrcId1 = 25;
@@ -134,10 +134,10 @@ public class ReadoutRequestRecordTest
         ArrayList hitList = new ArrayList();
         hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
                                     hitDomId1, hitMode1));
-	
-	ByteBuffer buf =
+
+        ByteBuffer buf =
             TestUtil.createReadoutDataPayload(uid, payNum, isLast, srcId,
-                                              firstTime1, lastTime1, hitList);	
+                                              firstTime1, lastTime1, hitList);
         ArrayList mockList = new ArrayList();
         mockList.add(new MockReadoutRequestElement(type1, firstTime1,
                                                    lastTime1, domId1, srcId1));
@@ -146,42 +146,40 @@ public class ReadoutRequestRecordTest
 
         ReadoutRequestRecord req =
             (ReadoutRequestRecord) ReadoutRequestRecord.getFromPool();
-        
+
         req.initialize(uid, new MockSourceID(srcId), new Vector(mockList));
 
-	try {
-        req.getEmbeddedLength();
+        try {
+            req.getEmbeddedLength();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        req.length();
+        try {
+            req.length();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        req.putBody( buf, 0);
+        try {
+            req.putBody( buf, 0);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        req.addElement( type1, srcId, firstTime1, lastTime1, domId);
+        try {
+            req.addElement( type1, srcId, firstTime1, lastTime1, domId);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	assertNotNull("Poolable returned",req.getPoolable());
-	assertNotNull("String returned",req.toString());
-	assertNotNull("ReadoutRequestElementRecord returned",req.getUseableReadoutRequestElementRecord());
-        
-
+        assertNotNull("Poolable returned",req.getPoolable());
+        assertNotNull("String returned",req.toString());
+        assertNotNull("ReadoutRequestElementRecord returned",req.getUseableReadoutRequestElementRecord());
     }
 
     public void testCreateFromRequest()

@@ -39,7 +39,6 @@ public class TriggerRequestFactoryTest
         super(name);
     }
 
-   
     public static Test suite()
     {
         return new TestSuite(TriggerRequestFactoryTest.class);
@@ -48,7 +47,6 @@ public class TriggerRequestFactoryTest
     public void testCreate()
         throws Exception
     {
-       
         final int type1 = 100;
         final long firstTime1 = 1010L;
         final long lastTime1 = 1020L;
@@ -60,8 +58,8 @@ public class TriggerRequestFactoryTest
         final long lastTime2 = 2020L;
         final long domId2 = -1;
         final int srcId2 = -1;
-        
-	final int uid = 12;
+
+        final int uid = 12;
         final int payNum = 1;
         final boolean isLast = true;
         final int srcId = 34;
@@ -78,39 +76,39 @@ public class TriggerRequestFactoryTest
         ArrayList hitList = new ArrayList();
         hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
                                     hitDomId1, hitMode1));
-        
+
         ByteBuffer buf =
             TestUtil.createReadoutDataPayload(uid, payNum, isLast, srcId,
                                               firstTime, lastTime, hitList);
-	
+
         MockReadoutRequest mockReq = new MockReadoutRequest(uid, srcId);
         mockReq.addElement(type1, firstTime1, lastTime1, domId1, srcId1);
         mockReq.addElement(type2, firstTime2, lastTime2, domId2, srcId2);
 
-	List<IWriteablePayload> list = new ArrayList();
+        List<IWriteablePayload> list = new ArrayList();
 
-	ReadoutRequest rReq = new ReadoutRequest(firstTime1, uid, srcId);
-	
+        ReadoutRequest rReq = new ReadoutRequest(firstTime1, uid, srcId);
+
         TriggerRequestFactory req = new TriggerRequestFactory(new MockBufferCache());
-	
-	try{
-	assertNotNull("TriggerRequestPayload returned", req.createPayload( buf, 0));
-	} catch(Error err){
-	if(!err.getMessage().equals("Cannot create trigger request")){
-	throw err;
-	}
-	}
-	
-	assertNotNull("TriggerRequestPayload returned", req.createPayload( uid, type1, 1, srcId, firstTime1, lastTime1, rReq, list));
-	
-	try{
-	assertNotNull("returns spliceable", req.createSpliceable( buf));
-	} catch(Error err){
-	if(!err.getMessage().equals("Cannot create trigger request")){
-	throw err;
-	}
-	}
-	assertNotNull("returns readout request", req.createReadoutRequest(firstTime1, uid, srcId));
+
+        try{
+            assertNotNull("TriggerRequestPayload returned", req.createPayload( buf, 0));
+        } catch(Error err){
+            if(!err.getMessage().equals("Cannot create trigger request")){
+                throw err;
+            }
+        }
+
+        assertNotNull("TriggerRequestPayload returned", req.createPayload( uid, type1, 1, srcId, firstTime1, lastTime1, rReq, list));
+
+        try{
+            assertNotNull("returns spliceable", req.createSpliceable( buf));
+        } catch(Error err){
+            if(!err.getMessage().equals("Cannot create trigger request")){
+                throw err;
+            }
+        }
+        assertNotNull("returns readout request", req.createReadoutRequest(firstTime1, uid, srcId));
     }
 
     public static void main(String[] args)

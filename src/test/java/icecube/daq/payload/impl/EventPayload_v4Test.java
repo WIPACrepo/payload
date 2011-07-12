@@ -67,7 +67,6 @@ public class EventPayload_v4Test
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
 
-setVerbose(true);
         MockReadoutRequest mockReq =
             new MockReadoutRequest(uid, trigSrcId);
         mockReq.addElement(rrType, firstTime, lastTime, rrDomId, rrSrcId);
@@ -306,9 +305,10 @@ setVerbose(true);
             }
         }
     }
-      public void testMethods()
-	throws Exception
-    {	
+
+    public void testMethods()
+        throws Exception
+    {
         final int uid = 12;
         final int srcId = 34;
         final long firstTime = 1234L;
@@ -370,83 +370,82 @@ setVerbose(true);
                                    runNum, subrunNum, trigReq, hitList);
 
         EventPayload_v4 evt = new EventPayload_v4(buf, 0);
-	EventPayload_v4 evt1 = new EventPayload_v4(buf, 0, 20, firstTime);
+        EventPayload_v4 evt1 = new EventPayload_v4(buf, 0, 20, firstTime);
         try {
+            assertNotNull("Event V4 ",evt.computeBufferLength());
+        } catch (Error err) {
+            if (!err.getMessage().equals("EventV4 has not been loaded")) {
+                throw err;
+            }
+        }
+        evt.loadPayload();
         assertNotNull("Event V4 ",evt.computeBufferLength());
+        try {
+            evt.dispose();
         } catch (Error err) {
-        if (!err.getMessage().equals("EventV4 has not been loaded")) {
-            throw err;
-        }
-        }
-	evt.loadPayload();
-	assertNotNull("Event V4 ",evt.computeBufferLength());
- 	try {
-        evt.dispose();
-        } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
-        }
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
         try {
-        evt.deepCopy();
+            evt.deepCopy();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        evt.getHitList();
+        try {
+            evt.getHitList();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        evt.getHitRecords();
+        try {
+            evt.getHitRecords();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        evt.getPayloads();
+        try {
+            evt.getPayloads();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	try {
-        evt.getTriggerConfigID();
+        try {
+            evt.getTriggerConfigID();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	try {
-        evt.getTriggerRecords();
+        try {
+            evt.getTriggerRecords();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        evt.getTriggerType();
+        try {
+            evt.getTriggerType();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	assertEquals("Expected value is -1: ", -1,
-                 evt.getEventConfigID());
-	assertEquals("Expected value is -1: ", -1,
-                 evt.getEventType());
-	assertEquals("Expected value is 4: ", 4,
-                 evt.getEventVersion());
-	assertEquals("Expected Payload Name: ", "EventV4",
-                 evt.getPayloadName());	
-	assertNotNull("Event V4 ",evt.getReadoutDataPayloads());
-	assertNotNull("String returned ",evt.toString());
-
+        assertEquals("Expected value is -1: ", -1,
+                     evt.getEventConfigID());
+        assertEquals("Expected value is -1: ", -1,
+                     evt.getEventType());
+        assertEquals("Expected value is 4: ", 4,
+                     evt.getEventVersion());
+        assertEquals("Expected Payload Name: ", "EventV4",
+                     evt.getPayloadName());
+        assertNotNull("Event V4 ",evt.getReadoutDataPayloads());
+        assertNotNull("String returned ",evt.toString());
     }
 
     public static void main(String[] args)

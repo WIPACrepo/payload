@@ -44,7 +44,7 @@ public class ReadoutDataRecordTest
 
         ReadoutDataRecord rdRec = new ReadoutDataRecord();
         rdRec.initialize(uid, payNum, isLast, new MockSourceID(srcId),
-                       new MockUTCTime(firstTime), new MockUTCTime(lastTime));
+                         new MockUTCTime(firstTime), new MockUTCTime(lastTime));
 
         assertNotNull("Null source ID", rdRec.mt_sourceid);
         assertEquals("Bad source ID", srcId, rdRec.mt_sourceid.getSourceID());
@@ -148,11 +148,11 @@ public class ReadoutDataRecordTest
             assertEquals("Bad byte #" + i, buf.get(i), newBuf.get(i));
         }
 
-	assertEquals("Record size should be equal",30, rdRec.getTotalRecordSize());
-	assertNotNull("Poolable returned", rdRec.getPoolable());
-	assertEquals("Check if data has been loaded",true, rdRec.isDataLoaded());
-	assertNotNull("String returned", rdRec.toString());
-	assertNotNull("Data String returned", rdRec.toDataString());
+        assertEquals("Record size should be equal",30, rdRec.getTotalRecordSize());
+        assertNotNull("Poolable returned", rdRec.getPoolable());
+        assertEquals("Check if data has been loaded",true, rdRec.isDataLoaded());
+        assertNotNull("String returned", rdRec.toString());
+        assertNotNull("Data String returned", rdRec.toDataString());
     }
 
     public static void main(String[] args)

@@ -367,9 +367,9 @@ public abstract class AbstractEventPayload
     {
         int iBytesWritten = 0;
         //-If backing then use it..
-	if(tDestBuffer == null)   {
-	    throw new PayloadException("Byte Buffer should not be null");
-	}
+        if(tDestBuffer == null)   {
+            throw new PayloadException("Byte Buffer should not be null");
+        }
         if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten =  super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
@@ -397,7 +397,6 @@ public abstract class AbstractEventPayload
         return iBytesWritten;
     }
 
-   
     /**
      * Return string description of the object.
      *

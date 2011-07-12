@@ -118,10 +118,10 @@ public class ReadoutDataPayloadTest
             cce.printStackTrace();
         }
 
-	assertEquals("Number of hits", 0,rdp.getNumHits());
-	assertNotNull("Poolable returned",rdp.getPoolable());
-	assertNotNull("String returned",rdp.toString());    
-}
+        assertEquals("Number of hits", 0,rdp.getNumHits());
+        assertNotNull("Poolable returned",rdp.getPoolable());
+        assertNotNull("String returned",rdp.toString());
+    }
 
     public void testCreateFromBuffer()
         throws Exception

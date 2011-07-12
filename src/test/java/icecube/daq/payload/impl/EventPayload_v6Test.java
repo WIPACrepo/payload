@@ -37,14 +37,14 @@ public class EventPayload_v6Test
     {
         public short getChannelId(String mbid)
         {
-      	    if(mbid.equals("000000000466")==true)
+                  if(mbid.equals("000000000466")==true)
                 return (short)23;
-	    else if(mbid.equals("00000000083d")==true)
+            else if(mbid.equals("00000000083d")==true)
                 return (short)34;
-	    else if(mbid.equals("000000000c25")==true)
-                return (short)45;	     
-	    else
-		return (short)12;
+            else if(mbid.equals("000000000c25")==true)
+                return (short)45;
+            else
+                return (short)12;
         }
 
         public int getStringMajor(String mbid)
@@ -448,9 +448,10 @@ public class EventPayload_v6Test
             }
         }
     }
+
     public void testMethods()
-	throws Exception
-    {	
+        throws Exception
+    {
           final int uid = 12;
         final long firstTime = 1111L;
         final long lastTime = 2222L;
@@ -540,27 +541,27 @@ public class EventPayload_v6Test
                                    domRegistry);
 
         EventPayload_v6 evt = new EventPayload_v6(buf, 0);
-	EventPayload_v6 evt1 = new EventPayload_v6(buf, 0, 20, firstTime);
-	
-   	assertEquals("Expected Payload Name: ", "EventV6",
-                 evt.getPayloadName());	
-	assertNotNull("String returned", evt.getExtraString());
-	try{
-	assertNotNull("Integer returned", evt.loadHitRecords( buf, 1, lastTime));
-	} catch (PayloadException err) {
+        EventPayload_v6 evt1 = new EventPayload_v6(buf, 0, 20, firstTime);
+
+           assertEquals("Expected Payload Name: ", "EventV6",
+                 evt.getPayloadName());
+        assertNotNull("String returned", evt.getExtraString());
+        try{
+        assertNotNull("Integer returned", evt.loadHitRecords( buf, 1, lastTime));
+        } catch (PayloadException err) {
         if (!err.getMessage().equals("Expected 204 bytes of raw data, not 12")) {
             throw err;
         }
         }
-	try{
-	assertNotNull("Integer returned", evt.loadHitRecords( buf, 0, lastTime));
-	} catch (PayloadException err) {
+        try{
+        assertNotNull("Integer returned", evt.loadHitRecords( buf, 0, lastTime));
+        } catch (PayloadException err) {
         if (!err.getMessage().equals("Unknown hit record type 22")) {
             throw err;
         }
         }
-	assertNotNull("String returned", evt.getExtraString());
-	 try {
+        assertNotNull("String returned", evt.getExtraString());
+         try {
         assertEquals("Expected value is 64: ", 64,
                  evt.getHitRecordLength());
         } catch (Error err) {
@@ -568,11 +569,11 @@ public class EventPayload_v6Test
             throw err;
         }
         }
-	evt.loadPayload();
-	assertEquals("Expected value is 64: ", 64,
+        evt.loadPayload();
+        assertEquals("Expected value is 64: ", 64,
                  evt.getHitRecordLength());
-	
     }
+
     public static void main(String[] args)
     {
         TestRunner.run(suite());

@@ -18,7 +18,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -306,7 +305,7 @@ public class TriggerRequestTest
         }
     }
     public void testMethods()
-	throws Exception
+        throws Exception
     {    final int uid = 34;
         final int trigType = 98;
         final int cfgId = 385;
@@ -342,63 +341,62 @@ public class TriggerRequestTest
                                           mockReq);
 
         TriggerRequest req = new TriggerRequest(buf, 0);
-	TriggerRequest req1 = new TriggerRequest(buf, 0, 50, firstTime);
-	try {
-        req.dispose();
+        TriggerRequest req1 = new TriggerRequest(buf, 0, 50, firstTime);
+        try {
+            req.dispose();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        req.getHitList();
+        try {
+            req.getHitList();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        req.getNumData();
+        try {
+            req.getNumData();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        req. writeDataBytes( buf, 0);
+        try {
+            req. writeDataBytes( buf, 0);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	try {
+        try {
             req.preloadSpliceableFields(buf,0,0);
         } catch (PayloadException err) {
-        if (!err.getMessage().equals("Cannot load field at offset 18 from 0-byte buffer")) {
-            throw err;
+            if (!err.getMessage().equals("Cannot load field at offset 18 from 0-byte buffer")) {
+                throw err;
+            }
         }
-        }
-	assertNotNull("TriggerRequest ",req.toString());
-	req.preloadSpliceableFields(buf,0,50);
-	assertEquals("Expected value is 0: ", 0,
-                 req.compareSpliceable(req));
-	try {
-        assertNotNull("TriggerRequest ",req.computeBufferLength());
+        assertNotNull("TriggerRequest ",req.toString());
+        req.preloadSpliceableFields(buf,0,50);
+        assertEquals("Expected value is 0: ", 0,
+                     req.compareSpliceable(req));
+        try {
+            assertNotNull("TriggerRequest ",req.computeBufferLength());
         } catch (Error err) {
-        if (!err.getMessage().equals("TriggerRequest has not been loaded")) {
-            throw err;
+            if (!err.getMessage().equals("TriggerRequest has not been loaded")) {
+                throw err;
+            }
         }
-        }
-	req.loadPayload();
-	assertNotNull("TriggerRequest ",req.computeBufferLength());
+        req.loadPayload();
+        assertNotNull("TriggerRequest ",req.computeBufferLength());
 
-	assertNotNull("TriggerRequest object is returned",req.deepCopy());
-	assertNotNull("Payload Interface Type is returned",req.getPayloadInterfaceType());
-	assertEquals("Expected Payload Name: ", "TriggerRequest",
-                 req.getPayloadName());	
-	
+        assertNotNull("TriggerRequest object is returned",req.deepCopy());
+        assertNotNull("Payload Interface Type is returned",req.getPayloadInterfaceType());
+        assertEquals("Expected Payload Name: ", "TriggerRequest",
+                     req.getPayloadName());
     }
- 
+
     public static void main(String[] args)
     {
         TestRunner.run(suite());

@@ -183,11 +183,12 @@ public class ReadoutRequestTest
             }
         }
     }
+
     public void testMethods()
-	throws Exception
+        throws Exception
     {
-	final long utcTime = 1000L;
-	final int uid = 34;
+        final long utcTime = 1000L;
+        final int uid = 34;
         final int srcId = 12;
 
         final int rrType = 100;
@@ -204,22 +205,20 @@ public class ReadoutRequestTest
             TestUtil.createReadoutRequest(utcTime, uid, srcId, creList);
 
         ReadoutRequest rReq = new ReadoutRequest(buf, 0, buf.capacity(), utcTime);
-	ReadoutRequest rReq1 = new ReadoutRequest(buf, 0, utcTime);
+        ReadoutRequest rReq1 = new ReadoutRequest(buf, 0, utcTime);
 
-	assertEquals("Expected Payload Name: ", "ReadoutRequest",
-                 rReq.getPayloadName());
-	
-	try {
+        assertEquals("Expected Payload Name: ", "ReadoutRequest",
+                     rReq.getPayloadName());
+
+        try {
             rReq.dispose();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	assertEquals("Expected value: ", 46, rReq.loadBody(buf, 0, utcTime, false));
-	assertNotNull("ReadoutRequest",rReq.toString());
-	
-	
+        assertEquals("Expected value: ", 46, rReq.loadBody(buf, 0, utcTime, false));
+        assertNotNull("ReadoutRequest",rReq.toString());
     }
 
     public static void main(String[] args)

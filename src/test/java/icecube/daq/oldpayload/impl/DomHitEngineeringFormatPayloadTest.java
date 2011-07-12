@@ -72,25 +72,25 @@ public class DomHitEngineeringFormatPayloadTest
             new DomHitEngineeringFormatPayload();
         hit.initialize(0, buf);
         hit.loadPayload();
-	hit.loadEnvelope();
+        hit.loadEnvelope();
 
         assertEquals("Bad DOM ID", domId, hit.getDomId());
         assertEquals("Bad hit time",
                      utcTime, hit.getTimestamp());
         assertEquals("Bad trigger mode", trigMode, hit.getTriggerMode());
-	assertNotNull("UTCTime returned",hit.getHitTimeUTC());
-	assertNotNull("DOMID returned",hit.getDOMID());
-	assertNotNull("DomHitEngineeringFormatRecord object returned",hit.getPayloadRecord());
-	assertEquals("LocalCoincidenceMode returned", -1, hit.getLocalCoincidenceMode());
-	assertNotNull("Returns poolable object",hit.getPoolable());
-	assertNotNull("Returns poolable object",hit.getFromPool());
-	assertNotNull("DOMID returned",hit.getDomIdAsString());
-	assertNotNull("String returned",hit.toString());
-	assertNotNull("Data String returned",hit.toDataString());
+        assertNotNull("UTCTime returned",hit.getHitTimeUTC());
+        assertNotNull("DOMID returned",hit.getDOMID());
+        assertNotNull("DomHitEngineeringFormatRecord object returned",hit.getPayloadRecord());
+        assertEquals("LocalCoincidenceMode returned", -1, hit.getLocalCoincidenceMode());
+        assertNotNull("Returns poolable object",hit.getPoolable());
+        assertNotNull("Returns poolable object",hit.getFromPool());
+        assertNotNull("DOMID returned",hit.getDomIdAsString());
+        assertNotNull("String returned",hit.toString());
+        assertNotNull("Data String returned",hit.toDataString());
 
-	hit.writeUTCTime( utcTime, 1, buf);
-	hit.reloadPayload();
-	hit.dispose();
+        hit.writeUTCTime( utcTime, 1, buf);
+        hit.reloadPayload();
+        hit.dispose();
 
         hit.recycle();
     }

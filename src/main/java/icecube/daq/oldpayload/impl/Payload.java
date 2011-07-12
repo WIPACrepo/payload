@@ -1,7 +1,7 @@
 /*
  * class: Payload
  *
- * Version $Id: Payload.java 13157 2011-07-12 17:19:24Z seshadrivija $
+ * Version $Id: Payload.java 13160 2011-07-12 19:44:45Z dglo $
  *
  * Date: September 21 2004
  *
@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * Payload implements the IPayload interface and the Spliceable interface
  * It contains trigger information that is send through the DAQ system
  *
- * @version $Id: Payload.java 13157 2011-07-12 17:19:24Z seshadrivija $
+ * @version $Id: Payload.java 13160 2011-07-12 19:44:45Z dglo $
  * @author hellwig,dwharton
  *
  * 8/24/2005 dbw
@@ -303,9 +303,9 @@ public abstract class Payload
         if (mtbuffer == null) {
             return 0;
         }
-	if(tDestBuffer == null)   {
-	    throw new PayloadException("Byte Buffer should not be null");
-	}
+        if(tDestBuffer == null)   {
+            throw new PayloadException("Byte Buffer should not be null");
+        }
         synchronized (mtbuffer) {
             int iSrcPosition = mioffset;
             int iDestPosition = iDestOffset;

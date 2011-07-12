@@ -106,14 +106,14 @@ public class DomHitDeltaCompressedFormatPayloadTest
             assertEquals("Bad data byte #" + i,
                          dataBytes[i], compressedData[i]);
         }
-	assertEquals("Payload type",
-                    17, hit.getPayloadType());
-	assertNotNull("UTC Time", hit.getHitTimeUTC());
-	assertNotNull("DOMId", hit.getDOMID());
-	assertNotNull("Poolable", hit.getPoolable());
-	assertNotNull("String", hit.toString());
-	assertEquals("LocalCoincidenceMode returned", 2, hit.getLocalCoincidenceMode());
-	assertNotNull("String returned",hit.toString());
+        assertEquals("Payload type",
+                     17, hit.getPayloadType());
+        assertNotNull("UTC Time", hit.getHitTimeUTC());
+        assertNotNull("DOMId", hit.getDOMID());
+        assertNotNull("Poolable", hit.getPoolable());
+        assertNotNull("String", hit.toString());
+        assertEquals("LocalCoincidenceMode returned", 2, hit.getLocalCoincidenceMode());
+        assertNotNull("String returned",hit.toString());
         hit.recycle();
     }
 

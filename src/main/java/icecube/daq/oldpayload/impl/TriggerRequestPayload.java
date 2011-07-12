@@ -417,9 +417,9 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException,PayloadException {
         int iBytesWritten = 0;
         //-If backing then use it..
-	if(tDestBuffer == null)    {
-	    throw new PayloadException("Byte Buffer should not be null");
-	}
+        if(tDestBuffer == null)    {
+            throw new PayloadException("Byte Buffer should not be null");
+        }
         if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             iBytesWritten =  super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);

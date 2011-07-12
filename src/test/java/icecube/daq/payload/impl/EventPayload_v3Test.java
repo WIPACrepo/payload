@@ -285,11 +285,12 @@ public class EventPayload_v3Test
                              " byte #" + i, buf.get(i), newBuf.get(i));
             }
         }
-	
     }
+
     public void testMethods()
-	throws Exception
-    {	final int uid = 12;
+        throws Exception
+    {
+        final int uid = 12;
         final int srcId = 2034;
         final long firstTime = 1111L;
         final long lastTime = 2222L;
@@ -351,83 +352,83 @@ public class EventPayload_v3Test
                                    runNum, subrunNum, trigReq, hitList);
 
         EventPayload_v3 evt = new EventPayload_v3(buf, 0);
-	EventPayload_v3 evt1 = new EventPayload_v3(buf, 0, 20, firstTime);
+        EventPayload_v3 evt1 = new EventPayload_v3(buf, 0, 20, firstTime);
         try {
+            assertNotNull("Event V3 ",evt.computeBufferLength());
+        } catch (Error err) {
+            if (!err.getMessage().equals("EventV3 has not been loaded")) {
+                throw err;
+            }
+        }
+        evt.loadPayload();
         assertNotNull("Event V3 ",evt.computeBufferLength());
+        try {
+            evt.dispose();
         } catch (Error err) {
-        if (!err.getMessage().equals("EventV3 has not been loaded")) {
-            throw err;
-        }
-        }
-	evt.loadPayload();
-	assertNotNull("Event V3 ",evt.computeBufferLength());
- 	try {
-        evt.dispose();
-        } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
-        }
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
         try {
-        evt.deepCopy();
+            evt.deepCopy();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        evt.getHitList();
+        try {
+            evt.getHitList();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        evt.getHitRecords();
+        try {
+            evt.getHitRecords();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        evt.getPayloads();
+        try {
+            evt.getPayloads();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	try {
-        evt.getTriggerConfigID();
+        try {
+            evt.getTriggerConfigID();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	try {
-        evt.getTriggerRecords();
+        try {
+            evt.getTriggerRecords();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        evt.getTriggerType();
+        try {
+            evt.getTriggerType();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	assertEquals("Expected value is -1: ", -1,
-                 evt.getEventConfigID());
-	assertEquals("Expected value is -1: ", -1,
-                 evt.getYear());
-	assertEquals("Expected value is 3: ", 3,
-                 evt.getEventVersion());
-	assertEquals("Expected Payload Name: ", "EventV3",
-                 evt.getPayloadName());	
-	assertNotNull("Event V3 ",evt.getReadoutDataPayloads());
-	assertNotNull("Event V3 ",evt.getTriggerRequestPayload());
-	assertNotNull("String returned ",evt.toString());
+        assertEquals("Expected value is -1: ", -1,
+                     evt.getEventConfigID());
+        assertEquals("Expected value is -1: ", -1,
+                     evt.getYear());
+        assertEquals("Expected value is 3: ", 3,
+                     evt.getEventVersion());
+        assertEquals("Expected Payload Name: ", "EventV3",
+                     evt.getPayloadName());
+        assertNotNull("Event V3 ",evt.getReadoutDataPayloads());
+        assertNotNull("Event V3 ",evt.getTriggerRequestPayload());
+        assertNotNull("String returned ",evt.toString());
     }
 
     public static void main(String[] args)

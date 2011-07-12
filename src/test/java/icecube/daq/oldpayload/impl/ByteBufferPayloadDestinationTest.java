@@ -41,12 +41,12 @@ class FooWriteablePayload
         throw new Error("Unimplemented");
     }
     public int writePayload(boolean writeLoaded, IPayloadDestination pDest)
-         throws IOException
+        throws IOException
     {
-	return 1; 	
+        return 1;
     }
     public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
-         throws IOException
+        throws IOException
     {
         return 1;
     }
@@ -104,7 +104,7 @@ public class ByteBufferPayloadDestinationTest
 
     public void testCreate()
         throws Exception
-    {   
+    {
         final int uid = 12;
         final int payNum = 1;
         final boolean isLast = true;
@@ -131,50 +131,45 @@ public class ByteBufferPayloadDestinationTest
                                     hitDomId1, hitMode1));
         hitList.add(new MockHitData(hitTime2, hitType2, hitCfgId2, hitSrcId2,
                                     hitDomId2, hitMode2));
-	
+
         ByteBuffer buf =
             TestUtil.createReadoutDataPayload(uid, payNum, isLast, srcId,
                                               firstTime, lastTime, hitList);
-	MockBufferCache foo = new MockBufferCache();
-	ByteBuffer buf1 =foo.acquireBuffer(16); 
-	ByteBufferPayloadDestination bpd = new ByteBufferPayloadDestination(foo,new MockBufferCache());
-	try{
-	ByteBufferPayloadDestination bpd1 = new ByteBufferPayloadDestination(new MockBufferCache(),null);
-	}catch(Error err){
-	if(!err.getMessage().equals("Buffer cache is null")){
-	throw err;	
-	}
-	}
-	try{
-	bpd.notifyByteBufferReceiver(buf);
-	}catch(Error err){
-	if(!err.getMessage().equals("Unimplemented")){
-	throw err;	
-	}
-	}
+        MockBufferCache foo = new MockBufferCache();
+        ByteBuffer buf1 =foo.acquireBuffer(16);
+        ByteBufferPayloadDestination bpd = new ByteBufferPayloadDestination(foo,new MockBufferCache());
+        try{
+            ByteBufferPayloadDestination bpd1 = new ByteBufferPayloadDestination(new MockBufferCache(),null);
+        }catch(Error err){
+            if(!err.getMessage().equals("Buffer cache is null")){
+                throw err;
+            }
+        }
+        try{
+            bpd.notifyByteBufferReceiver(buf);
+        }catch(Error err){
+            if(!err.getMessage().equals("Unimplemented")){
+                throw err;
+            }
+        }
 
-	
-	bpd.recycleByteBuffer(buf);
-	bpd.close();
-	try{
-	assertEquals("writePayload", bpd.writePayload(new FooWriteablePayload()));
-	}catch(IOException ioe){
-	if(!ioe.getMessage().equals("This PayloadDestination is not valid")){
-	throw ioe;
-	}
-	}
-	try{
-	assertEquals("writePayload", bpd.writePayload(true, new FooWriteablePayload()));
-	}catch(IOException ioe){
-	if(!ioe.getMessage().equals("This PayloadDestination is not valid")){
-	throw ioe;
-	}
-	}
-	
-
+        bpd.recycleByteBuffer(buf);
+        bpd.close();
+        try{
+            assertEquals("writePayload", bpd.writePayload(new FooWriteablePayload()));
+        }catch(IOException ioe){
+            if(!ioe.getMessage().equals("This PayloadDestination is not valid")){
+                throw ioe;
+            }
+        }
+        try{
+            assertEquals("writePayload", bpd.writePayload(true, new FooWriteablePayload()));
+        }catch(IOException ioe){
+            if(!ioe.getMessage().equals("This PayloadDestination is not valid")){
+                throw ioe;
+            }
+        }
     }
-
-    
 
     public static void main(String[] args)
     {

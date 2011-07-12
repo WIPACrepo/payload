@@ -97,7 +97,7 @@ class MockEventHitRecord
     public int writeRecord(ByteBuffer x0, int i1, long x2)
         throws PayloadException
     {
-       // throw new Error("Unimplemented");
+        // throw new Error("Unimplemented");
         return 1;
     }
 }
@@ -147,7 +147,7 @@ class MockDOMHit
     }
 
     public int loadBody(ByteBuffer buf, int offset, long utcTime,
-                                 boolean isEmbedded)
+                        boolean isEmbedded)
         throws PayloadException
     {
         throw new Error("Unimplemented");
@@ -177,12 +177,12 @@ public class HitRecordListTest
     public void testconstructor()
         throws PayloadException
     {
-	MockSourceID srcId = new MockSourceID(123);
+        MockSourceID srcId = new MockSourceID(123);
         MockDOMRegistry reg = new MockDOMRegistry();
 
-	long goodDOM = 12345678L;
+        long goodDOM = 12345678L;
         int goodChanId = 12;
-	
+
         reg.addEntry(goodDOM, goodChanId);
 
         ArrayList<DOMHit> hitList = new ArrayList<DOMHit>();
@@ -190,14 +190,14 @@ public class HitRecordListTest
 
         HitRecordList recList =
             new HitRecordList(reg, 12345, 1, srcId, hitList);
-	final int expLen = recList.computeBufferLength();
-    	ByteBuffer buf = ByteBuffer.allocate(expLen);
+        final int expLen = recList.computeBufferLength();
+        ByteBuffer buf = ByteBuffer.allocate(expLen);
 
- 	HitRecordList recList1 = new HitRecordList(buf, 0, expLen, 12345);
+        HitRecordList recList1 = new HitRecordList(buf, 0, expLen, 12345);
     }
 
-    @Test 
-    public void testMethods()
+    @Test
+        public void testMethods()
         throws PayloadException
     {
         MockSourceID srcId = new MockSourceID(123);
@@ -208,7 +208,7 @@ public class HitRecordListTest
 
         long goodDOM = 12345678L;
         int goodChanId = 12;
-	
+
         reg.addEntry(goodDOM, goodChanId);
 
         ArrayList<DOMHit> hitList = new ArrayList<DOMHit>();
@@ -217,55 +217,55 @@ public class HitRecordListTest
         HitRecordList recList =
             new HitRecordList(reg, 12345, 1, srcId, hitList);
 
-	assertEquals("Expected Payload Name: ", "HitRecordList",
-                 recList.getPayloadName());
+        assertEquals("Expected Payload Name: ", "HitRecordList",
+                     recList.getPayloadName());
         assertEquals("Expected Payload Type: ", 23,
-                 recList.getPayloadType());
+                     recList.getPayloadType());
         assertEquals("Expected UniqueID: ", 1,
-                 recList.getUID());
+                     recList.getUID());
         assertEquals("Expected value is -1: ", -1,
-                 recList.compareSpliceable(null));
+                     recList.compareSpliceable(null));
         assertEquals("Expected value is 0: ", 0,
-                 recList.compareSpliceable(recList));
+                     recList.compareSpliceable(recList));
         assertNotNull("Iterator list should not be empty ",recList.iterator());
-     
+
         assertEquals("Expected BufferLength: ", 29,
-                 recList.computeBufferLength());
+                     recList.computeBufferLength());
         assertNotNull("HitRecList ",recList.toString());
         recList.recycle();
         assertNotNull("HitRecList ",recList.toString());
         recList.preloadSpliceableFields(buf,0,0);
-     
+
         assertNotNull("Number of bytes loaded returned",recList.loadBody(buf,1,12345,false));
         assertNotNull("Number of bytes loaded returned",recList.loadBody(buf,0,12345,true));
         try {
             recList.dispose();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
-        }
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
         try {
-        recList.deepCopy();
+            recList.deepCopy();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	
+
 
     }
 
     @Test
     public void testputBody()
-	throws Exception
+        throws Exception
     {
         MockSourceID srcId = new MockSourceID(123);
         MockDOMRegistry reg = new MockDOMRegistry();
 
         long goodDOM = 12345678L;
         int goodChanId = 12;
-	
+
         reg.addEntry(goodDOM, goodChanId);
 
         ArrayList<DOMHit> hitList = new ArrayList<DOMHit>();
@@ -275,21 +275,20 @@ public class HitRecordListTest
             new HitRecordList(reg, 12345, 1, srcId, hitList);
 
         final int expLen = recList.computeBufferLength();
-    	ByteBuffer buf = ByteBuffer.allocate(expLen);
+        ByteBuffer buf = ByteBuffer.allocate(expLen);
         int rtnval = recList.writePayload(true,0,buf);
         assertEquals("The allocated byteBuffer length and the length to which it is filled should be same",
-	    rtnval,expLen);
+                     rtnval,expLen);
         HitRecordList newList = new HitRecordList(buf, 0);
         assertEquals("The Lists should have same uid",
-	    recList.getUID(),newList.getUID());
-   } 
-
+                     recList.getUID(),newList.getUID());
+    }
 
     @Test
     public void testDOM_wo_chanid()
         throws PayloadException
     {
-       
+
         MockSourceID srcId = new MockSourceID(123);
         MockDOMRegistry reg = new MockDOMRegistry();
 
@@ -309,15 +308,15 @@ public class HitRecordListTest
         HitRecordList recList =
             new HitRecordList(reg, 12345, 1, srcId, hitList);
 
-        assertTrue("HitRecordList should have bad DOMs",recList.hasBadDOMs());              
+        assertTrue("HitRecordList should have bad DOMs",recList.hasBadDOMs());
         assertEquals("Expected two bad DOMs", 2, recList.getBadDOMs().size());
         assertEquals("Unexpected bad DOM 1", MockDOMRegistry.makeDOMString(badDOM),
-                 recList.getBadDOMs().get(0));
+                     recList.getBadDOMs().get(0));
         assertEquals("Unexpected bad DOM 2", MockDOMRegistry.makeDOMString(badDOM2),
-                 recList.getBadDOMs().get(1));
-        
+                     recList.getBadDOMs().get(1));
+
     }
-   
+
     @Test
     public void testGoodList()
         throws PayloadException
@@ -335,11 +334,11 @@ public class HitRecordListTest
 
         HitRecordList recList =
             new HitRecordList(reg, 12345, 1, srcId, hitList);
-             
+
         assertFalse("HitRecordList should not have bad DOMs",recList.hasBadDOMs());
         assertNull("HitRecordList should return null for bad DOM list",recList.getBadDOMs());
     }
-    
+
     @Test
     public void testBadList()
         throws PayloadException
@@ -361,11 +360,9 @@ public class HitRecordListTest
         HitRecordList recList =
             new HitRecordList(reg, 12345, 1, srcId, hitList);
 
-        assertTrue("HitRecordList should have bad DOMs",recList.hasBadDOMs());              
+        assertTrue("HitRecordList should have bad DOMs",recList.hasBadDOMs());
         assertEquals("Expected one bad DOM", 1, recList.getBadDOMs().size());
         assertEquals("Unexpected bad DOM", MockDOMRegistry.makeDOMString(badDOM),
-                 recList.getBadDOMs().get(0));
-       
-        
+                     recList.getBadDOMs().get(0));
     }
 }

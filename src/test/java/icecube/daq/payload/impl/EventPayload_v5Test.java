@@ -38,89 +38,88 @@ import junit.textui.TestRunner;
 public class EventPayload_v5Test
     extends LoggingCase
 {
-    
     class MockIHitPayload
-        implements IHitPayload 
+        implements IHitPayload
     {
-   	 public IDOMID getDOMID()
-    	{
-	    return new DOMID(12345678);
-   	}
-    	public IUTCTime getHitTimeUTC()
-   	{
-	    return new UTCTime(1111);
-    	}
-    	public double getIntegratedCharge()
-    	{
-	    throw new Error("Unimplemented");
-    	}	
-	public ISourceID getSourceID()
-	{
+        public IDOMID getDOMID()
+        {
+            return new DOMID(12345678);
+        }
+        public IUTCTime getHitTimeUTC()
+        {
+            return new UTCTime(1111);
+        }
+        public double getIntegratedCharge()
+        {
             throw new Error("Unimplemented");
-	}
-	public int getTriggerType()
-	{
+        }
+        public ISourceID getSourceID()
+        {
             throw new Error("Unimplemented");
-	}
+        }
+        public int getTriggerType()
+        {
+            throw new Error("Unimplemented");
+        }
         public int getTriggerConfigID()
-   	{
+        {
             throw new Error("Unimplemented");
-	}
-    	public long getUTCTime()
-   	{
+        }
+        public long getUTCTime()
+        {
             throw new Error("Unimplemented");
-    	}
-	public Object deepCopy()
-	{
+        }
+        public Object deepCopy()
+        {
             throw new Error("Unimplemented");
-	}
-	public ByteBuffer getPayloadBacking()
-	{
+        }
+        public ByteBuffer getPayloadBacking()
+        {
             throw new Error("Unimplemented");
-	}
+        }
         public int getPayloadLength()
-	{
+        {
             throw new Error("Unimplemented");
-	}
+        }
         public int getPayloadType()
-	{
+        {
             throw new Error("Unimplemented");
-	}
+        }
         public int getPayloadInterfaceType()
-	{
+        {
             throw new Error("Unimplemented");
-	}
+        }
         public IUTCTime getPayloadTimeUTC()
-	{
+        {
             throw new Error("Unimplemented");
-	}
+        }
         public void dispose()
-	{
+        {
             throw new Error("Unimplemented");
-	}
-	public void recycle()
-	{
+        }
+        public void recycle()
+        {
             throw new Error("Unimplemented");
-	}
+        }
         public int writePayload(boolean writeLoaded, IPayloadDestination pDest)
             throws IOException
-	{
+        {
             throw new Error("Unimplemented");
-	} 
+        }
         public void loadPayload()
-	    throws IOException, DataFormatException
-	{
+            throws IOException, DataFormatException
+        {
             throw new Error("Unimplemented");
-	}
+        }
         public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
             throws IOException
-	{
+        {
             throw new Error("Unimplemented");
-	}
+        }
         public void setCache(IByteBufferCache cache)
-	{
+        {
             throw new Error("Unimplemented");
-	}
+        }
     }
 
     class MockDOMRegistry
@@ -128,12 +127,12 @@ public class EventPayload_v5Test
     {
         public short getChannelId(String mbid)
         {
-	    if(mbid.equals("000000000466")==true)
+            if(mbid.equals("000000000466")==true)
                 return (short)23;
-	    else if(mbid.equals("00000000083d")==true)
+            else if(mbid.equals("00000000083d")==true)
                 return (short)34;
-	    else
-		return (short)12;
+            else
+                return (short)12;
         }
 
         public int getStringMajor(String mbid)
@@ -432,9 +431,9 @@ public class EventPayload_v5Test
     }
 
     public void testMethods()
-	throws Exception
-    {	
-         final int uid = 12;
+        throws Exception
+    {
+        final int uid = 12;
         final long firstTime = 1111L;
         final long lastTime = 2222L;
         final int runNum = 444;
@@ -505,193 +504,192 @@ public class EventPayload_v5Test
         ByteBuffer buf =
             TestUtil.createEventv5(uid, firstTime, lastTime, YEAR, runNum,
                                    subrunNum, trigReq, hitRecList, domRegistry);
-	MockIHitPayload payloadList = new MockIHitPayload();
+        MockIHitPayload payloadList = new MockIHitPayload();
 
         EventPayload_v5 evt = new EventPayload_v5(buf, 0);
-	TemporaryHit hit = new TemporaryHit(payloadList);
-      // TriggerRecord trec = new TriggerRecord(new TriggerRequestPayload());
-	
- 	try {
-        evt.dispose();
+        TemporaryHit hit = new TemporaryHit(payloadList);
+        // TriggerRecord trec = new TriggerRecord(new TriggerRequestPayload());
+
+        try {
+            evt.dispose();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
-        }
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
         try {
-        evt.deepCopy();
+            evt.deepCopy();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
-        }
-        }
-	try {
-        hit.dispose();
-        } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
-        }
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
         try {
-        hit.deepCopy();
+            hit.dispose();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	
-	try {
-        hit.getIntegratedCharge();
+        try {
+            hit.deepCopy();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	try {
-        hit.getPayloadBacking();
+
+        try {
+            hit.getIntegratedCharge();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        hit.getPayloadInterfaceType();
+        try {
+            hit.getPayloadBacking();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        hit.getPayloadLength();
+        try {
+            hit.getPayloadInterfaceType();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        hit.getPayloadTimeUTC();
+        try {
+            hit.getPayloadLength();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        hit.getPayloadType();
+        try {
+            hit.getPayloadTimeUTC();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	try {
-        hit.getSourceID();
+        try {
+            hit.getPayloadType();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        hit.getTriggerConfigID();
+        try {
+            hit.getSourceID();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        hit.getTriggerType();
+        try {
+            hit.getTriggerConfigID();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	try {
-        hit.loadPayload();
+        try {
+            hit.getTriggerType();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        hit.setCache(new MockBufferCache());
+        try {
+            hit.loadPayload();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        hit.writePayload(true, 1, buf);
+        try {
+            hit.setCache(new MockBufferCache());
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	try {
-        hit.recycle();
+        try {
+            hit.writePayload(true, 1, buf);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	
-	try {
-        evt.getHitList();
+        try {
+            hit.recycle();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        evt.getTriggerType();
+
+        try {
+            evt.getHitList();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        evt.getTriggerRequestPayload();
+        try {
+            evt.getTriggerType();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	try {
-        evt.getTriggerConfigID();
+        try {
+            evt.getTriggerRequestPayload();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	try {
-        evt.getPayloads();
+        try {
+            evt.getTriggerConfigID();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	try {
-        evt.getReadoutDataPayloads();
+        try {
+            evt.getPayloads();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }	
-	try {
-        evt.getSourceID();
+        try {
+            evt.getReadoutDataPayloads();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
+        try {
+            evt.getSourceID();
+        } catch (Error err) {
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-	assertNotNull("Temporary hit ",hit.toString());	
-	assertNotNull("Temporary hit ",hit.getDOMID());
-	assertNotNull("Temporary hit ",hit.getHitTimeUTC());
-	assertEquals("Expected Null string","",evt.getExtraString());
-	assertNotNull("Firsttime returned",evt.getFirstTime());
-	assertNotNull("Event V5 ",evt.getLastTimeUTC());
-	assertNotNull("Event V5 ",evt.getRunNumber());
-	assertEquals("Expected Payload Name: ", "EventV5",
-                 evt.getPayloadName());
-	assertNotNull("Event V5 ",evt.getYear());
-		
+        assertNotNull("Temporary hit ",hit.toString());
+        assertNotNull("Temporary hit ",hit.getDOMID());
+        assertNotNull("Temporary hit ",hit.getHitTimeUTC());
+        assertEquals("Expected Null string","",evt.getExtraString());
+        assertNotNull("Firsttime returned",evt.getFirstTime());
+        assertNotNull("Event V5 ",evt.getLastTimeUTC());
+        assertNotNull("Event V5 ",evt.getRunNumber());
+        assertEquals("Expected Payload Name: ", "EventV5",
+                     evt.getPayloadName());
+        assertNotNull("Event V5 ",evt.getYear());
     }
 
     public static void main(String[] args)

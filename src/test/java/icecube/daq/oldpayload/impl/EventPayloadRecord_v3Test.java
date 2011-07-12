@@ -72,12 +72,12 @@ public class EventPayloadRecord_v3Test
         assertEquals("Bad event type", type, evtRec.getEventType());
         assertEquals("Bad run number", runNum, evtRec.getRunNumber());
         assertEquals("Bad subrun number", subrunNum, evtRec.getSubrunNumber());
-	assertEquals("Byte length", 38, evtRec.getByteLength());
-	assertEquals("Byte length", -1, evtRec.getEventConfigID());
-	assertNotNull("EventPayloadRecord object returned", evtRec.getFromPool());
-	assertNotNull("Poolable object returned", evtRec.getPoolable());
-	assertNotNull("Data String returned ",evtRec.toDataString());
-	assertNotNull("String returned ",evtRec.toString());
+        assertEquals("Byte length", 38, evtRec.getByteLength());
+        assertEquals("Byte length", -1, evtRec.getEventConfigID());
+        assertNotNull("EventPayloadRecord object returned", evtRec.getFromPool());
+        assertNotNull("Poolable object returned", evtRec.getPoolable());
+        assertNotNull("Data String returned ",evtRec.toDataString());
+        assertNotNull("String returned ",evtRec.toString());
         evtRec.dispose();
         assertFalse("Data should NOT be loaded", evtRec.isDataLoaded());
     }

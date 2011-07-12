@@ -97,22 +97,22 @@ public class UTCTimeTest
     }
     public void testMethods()
     {
-	final long timeVal = 1000L;
+        final long timeVal = 1000L;
 
         UTCTime time = new UTCTime(timeVal);
 
-	try {
-        time.getPoolable();
+        try {
+            time.getPoolable();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	assertNotNull("UTCTime ",time.toString());
-	assertEquals("Expected Hash code: ", 1000,
-             time.hashCode());
-	assertEquals("Expected boolean value: ", false,
-             time.equals(0));
+        assertNotNull("UTCTime ",time.toString());
+        assertEquals("Expected Hash code: ", 1000,
+                     time.hashCode());
+        assertEquals("Expected boolean value: ", false,
+                     time.equals(0));
     }
 
     public static void main(String[] args)

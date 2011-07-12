@@ -39,8 +39,8 @@ public class DOMHitReadoutDataTest
     public void testCreate()
         throws Exception
     {
-	final int uid = 12;
-	final int srcId = 2034;
+        final int uid = 12;
+        final int srcId = 2034;
         final long firsttime = 1111L;
         final long lasttime = 2222L;
 
@@ -63,51 +63,49 @@ public class DOMHitReadoutDataTest
                                     hitDomId1, hitMode1));
         hitList.add(new MockHitData(hitTime2, hitType2, hitCfgId2, hitSrcId2,
                                     hitDomId2, hitMode2));
-	byte[] bytes = new byte[50];
+        byte[] bytes = new byte[50];
         ByteBuffer buf = ByteBuffer.wrap(bytes);
 
-	SourceID sid = new SourceID(srcId);
-	UTCTime firstTime = new UTCTime(firsttime);
-	UTCTime lastTime = new UTCTime(lasttime);
+        SourceID sid = new SourceID(srcId);
+        UTCTime firstTime = new UTCTime(firsttime);
+        UTCTime lastTime = new UTCTime(lasttime);
 
-	DOMHitReadoutData did = new DOMHitReadoutData(uid, sid, firstTime, lastTime, hitList);
-	
-	try {
-        did.getDataPayloads();
+        DOMHitReadoutData did = new DOMHitReadoutData(uid, sid, firstTime, lastTime, hitList);
+
+        try {
+            did.getDataPayloads();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
-        }
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
         try {
-        did.deepCopy();
+            did.deepCopy();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        did.getHitList();
+        try {
+            did.getHitList();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        did.loadHits(buf, 0, 0);
+        try {
+            did.loadHits(buf, 0, 0);
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	
-	assertNotNull("Return number of hits", did.getNumHits());
-	assertEquals("Expected Payload Name: ", "DOMHitReadoutData",
-                 did.getPayloadName());
-		
+
+        assertNotNull("Return number of hits", did.getNumHits());
+        assertEquals("Expected Payload Name: ", "DOMHitReadoutData",
+                     did.getPayloadName());
     }
 
-  
     public static void main(String[] args)
     {
         TestRunner.run(suite());

@@ -67,24 +67,21 @@ public class ReadoutDataFactoryTest
                                     hitDomId1, hitMode1));
         hitList.add(new MockHitData(hitTime2, hitType2, hitCfgId2, hitSrcId2,
                                     hitDomId2, hitMode2));
-	
+
         ByteBuffer buf =
             TestUtil.createReadoutDataPayload(uid, payNum, isLast, srcId,
                                               firstTime, lastTime, hitList);
-	ReadoutDataFactory rdf = new ReadoutDataFactory(new MockBufferCache());
-	try{
-	assertNotNull("Creating payload", rdf.createPayload(buf, -1));
-	}catch(Error err){
-	if(!err.getMessage().equals("Cannot create readout data")){
-	throw err;	
-	}
-	}
-	assertNotNull("Creating payload", rdf.createPayload(buf, 0));
-	assertNotNull("Spliceable returned", rdf.createSpliceable(buf));
-
+        ReadoutDataFactory rdf = new ReadoutDataFactory(new MockBufferCache());
+        try{
+            assertNotNull("Creating payload", rdf.createPayload(buf, -1));
+        }catch(Error err){
+            if(!err.getMessage().equals("Cannot create readout data")){
+                throw err;
+            }
+        }
+        assertNotNull("Creating payload", rdf.createPayload(buf, 0));
+        assertNotNull("Spliceable returned", rdf.createSpliceable(buf));
     }
-
-    
 
     public static void main(String[] args)
     {

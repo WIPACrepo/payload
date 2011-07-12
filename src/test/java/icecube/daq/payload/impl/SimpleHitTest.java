@@ -32,10 +32,10 @@ public class SimpleHitTest
     }
 
     public void testBasic()
-	throws Exception
+        throws Exception
     {
-	final long domId = 123456L;
-	final int srcId = 2011;
+        final long domId = 123456L;
+        final int srcId = 2011;
         final long utcTime = 98765L;
 
         final int atwdChip = 1;
@@ -58,49 +58,46 @@ public class SimpleHitTest
             TestUtil.createOldEngHitRecord(atwdChip, trigMode, domClock,
                                            fadcSamples, atwdSamples);
 
-        
-
         SimpleHit hit =
             new SimpleHit( buf, 0, 50, utcTime);
 
-	assertEquals("Expected Payload Name: ", "SimpleHit",
-                 hit.getPayloadName());
-	assertEquals("Expected Payload Type: ", 1,
-                 hit.getPayloadType());
-	assertEquals("Expected trigger config ID: ", 131075,
-                 hit.getTriggerConfigID());
-	try {
-        assertEquals("returns error", 1,hit.loadBody( buf, 0, utcTime, false));
+        assertEquals("Expected Payload Name: ", "SimpleHit",
+                     hit.getPayloadName());
+        assertEquals("Expected Payload Type: ", 1,
+                     hit.getPayloadType());
+        assertEquals("Expected trigger config ID: ", 131075,
+                     hit.getTriggerConfigID());
+        try {
+            assertEquals("returns error", 1,hit.loadBody( buf, 0, utcTime, false));
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
-        assertEquals("returns error", 1,hit.putBody( buf, 0));
+        try {
+            assertEquals("returns error", 1,hit.putBody( buf, 0));
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
+        try {
             hit.dispose();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	try {
+        try {
             hit.getIntegratedCharge();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	
-	assertNotNull("String returned",hit.toString());
+
+        assertNotNull("String returned",hit.toString());
         assertNotNull("ByteBuffer returned",hit.getBuffer(new MockBufferCache(), utcTime, 1, 1, srcId, domId, (short)trigMode));
-	
     }
 
     public static void main(String[] args)

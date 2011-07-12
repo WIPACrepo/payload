@@ -151,7 +151,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
         iBytesWritten = iCurrentOffset - iOffset;
         return iBytesWritten;
     }
-    
+
     /**
      * get timeordered list of all hits contained in Composite, this
      * is the unique list of  Payload's which are IHitPayload's

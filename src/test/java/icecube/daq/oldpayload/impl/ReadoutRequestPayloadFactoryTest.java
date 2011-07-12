@@ -43,13 +43,13 @@ public class ReadoutRequestPayloadFactoryTest
     {
         final int uid = 34;
         final int srcId = 12;
-	final int payNum = 1;
-	final long domId = 123456L;
+        final int payNum = 1;
+        final long domId = 123456L;
         final boolean isLast = true;
-	final long firstTime1 = 101L;
+        final long firstTime1 = 101L;
         final long lastTime1 = 102L;
 
-	final long hitTime1 = 1122L;
+        final long hitTime1 = 1122L;
         final int hitType1 = 23;
         final int hitCfgId1 = 24;
         final int hitSrcId1 = 25;
@@ -59,22 +59,20 @@ public class ReadoutRequestPayloadFactoryTest
         ArrayList hitList = new ArrayList();
         hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
                                     hitDomId1, hitMode1));
-	
-	ByteBuffer buf =
+
+        ByteBuffer buf =
             TestUtil.createReadoutDataPayload(uid, payNum, isLast, srcId,
-                                              firstTime1, lastTime1, hitList);	
+                                              firstTime1, lastTime1, hitList);
 
         ReadoutRequestPayloadFactory req =
             new ReadoutRequestPayloadFactory();
 
-	//ReadoutRequest rReq = new ReadoutRequest();
+        //ReadoutRequest rReq = new ReadoutRequest();
 
-	assertNotNull("Payload returned", req.createPayload( 0, buf));
-	//assertNotNull("Payload returned", req.createPayload( firstTime1, rReq));
-        
+        assertNotNull("Payload returned", req.createPayload( 0, buf));
+        //assertNotNull("Payload returned", req.createPayload( firstTime1, rReq));
     }
 
-    
     public static void main(String[] args)
     {
         TestRunner.run(suite());

@@ -20,8 +20,6 @@ import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.oldpayload.impl.TriggerRequestPayload;
 
-
-
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,30 +29,6 @@ import java.io.IOException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
-
-/*class MockDomRegistry
-    implements IDomRegistry
-{
-    public MockDomRegistry()
-    {
-    }
-    public short getChannelId(String mbid)
-    {
-        throw new Error("Unimplemented");
-    }
-    public int getStringMajor(String mbid)
-    {
-        throw new Error("Unimplemented");
-    }
-    public Set<String> keys()
-    {
-        throw new Error("Unimplemented");
-    }
-    public double distanceBetweenDOMs(String mbid0, String mbid1)
-    {
-        throw new Error("Unimplemented");
-    }
-}*/
 
 public class EventFactoryTest
     extends LoggingCase
@@ -76,41 +50,37 @@ public class EventFactoryTest
 
     public void testCreate()
         throws Exception
-    {   
-	final int id = 1;
-	final long lasttime = 876543210L;
-	final long firsttime = 123456789L;
-	List dataList = new ArrayList();
-	
+    {
+        final int id = 1;
+        final long lasttime = 876543210L;
+        final long firsttime = 123456789L;
+        List dataList = new ArrayList();
 
-	SourceID srcId = new SourceID(id);
-	UTCTime firstTime = new UTCTime(firsttime);
-	UTCTime lastTime = new UTCTime(lasttime);
-	TriggerRequestPayload trigReq= new TriggerRequestPayload();
-       
-	EventFactory efo2 = new EventFactory(new MockBufferCache(),5);
-	EventFactory efo = new EventFactory(new MockBufferCache(),4);
-	try {
-        EventFactory efo1 = new EventFactory(new MockBufferCache(),3);
+        SourceID srcId = new SourceID(id);
+        UTCTime firstTime = new UTCTime(firsttime);
+        UTCTime lastTime = new UTCTime(lasttime);
+        TriggerRequestPayload trigReq= new TriggerRequestPayload();
+
+        EventFactory efo2 = new EventFactory(new MockBufferCache(),5);
+        EventFactory efo = new EventFactory(new MockBufferCache(),4);
+        try {
+            EventFactory efo1 = new EventFactory(new MockBufferCache(),3);
         } catch (PayloadException err) {
-        if (!err.getMessage().equals("Illegal event version 3")) {
-            throw err;
-        }
+            if (!err.getMessage().equals("Illegal event version 3")) {
+                throw err;
+            }
         }
 
-	//efo.setByteBufferCache(new MockBufferCache());
-	try {
-	assertNotNull("Loadable payload ", efo2.createPayload( 1, srcId, firstTime, lastTime, (short)2010, 1, 1, trigReq, dataList));
-	} catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+        //efo.setByteBufferCache(new MockBufferCache());
+        try {
+            assertNotNull("Loadable payload ", efo2.createPayload( 1, srcId, firstTime, lastTime, (short)2010, 1, 1, trigReq, dataList));
+        } catch (Error err) {
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-	//assertNotNull("Loadable payload ", efo.createPayload( 0, new SourceID(1234), firstTime, lastTime, (short)2010, 1, 1, trigReq, dataList));
-	
+        //assertNotNull("Loadable payload ", efo.createPayload( 0, new SourceID(1234), firstTime, lastTime, (short)2010, 1, 1, trigReq, dataList));
     }
-
-    
 
     public static void main(String[] args)
     {

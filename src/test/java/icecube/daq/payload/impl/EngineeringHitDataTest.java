@@ -57,44 +57,43 @@ public class EngineeringHitDataTest
 
         final int srcId = 2011;
 
-	try {
-	EngineeringHitData hit1 =
-            new EngineeringHitData(buf, 0, 262169, utcTime);
-	}
-	catch(Error err) {
-	if (!err.getMessage().equals("Engineering hit sub ID should be 2, not 33752069")) {
-            throw err;
-	}
-	}
+        try {
+            EngineeringHitData hit1 =
+                new EngineeringHitData(buf, 0, 262169, utcTime);
+        }
+        catch(Error err) {
+            if (!err.getMessage().equals("Engineering hit sub ID should be 2, not 33752069")) {
+                throw err;
+            }
+        }
 
-	try {
-	EngineeringHitData hit2 =
-            new EngineeringHitData(buf, 0, 48, utcTime);
-	}
-	catch(Error err) {
-	if (!err.getMessage().equals("Engineering hit sub length should be 24, not 262145")) {
-            throw err;
-	}
-	}
-	try {
-       // hit.getDOMID();
+        try {
+            EngineeringHitData hit2 =
+                new EngineeringHitData(buf, 0, 48, utcTime);
+        }
+        catch(Error err) {
+            if (!err.getMessage().equals("Engineering hit sub length should be 24, not 262145")) {
+                throw err;
+            }
+        }
+        try {
+            // hit.getDOMID();
         } catch (Error err) {
-        if (!err.getMessage().equals("Unimplemented")) {
-            throw err;
+            if (!err.getMessage().equals("Unimplemented")) {
+                throw err;
+            }
         }
-        }
-       // assertEquals("Bad payload type", hit.getPayloadType(),
-         //            PayloadRegistry.PAYLOAD_ID_ENGFORMAT_HIT);
+        // assertEquals("Bad payload type", hit.getPayloadType(),
+        //              PayloadRegistry.PAYLOAD_ID_ENGFORMAT_HIT);
 
         //assertEquals("Bad DOM ID", domId, hit.getDomId());
         //assertEquals("Bad hit time",
-                   //  utcTime, hit.getTimestamp());
+        //  utcTime, hit.getTimestamp());
         //assertEquals("Bad trigger mode", trigMode, hit.getTriggerMode());
 
-       // hit.recycle();
+        // hit.recycle();
     }
 
-  
     public static void main(String[] args)
     {
         TestRunner.run(suite());

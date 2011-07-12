@@ -154,11 +154,11 @@ public class TimeCalibrationTest
             }
         }
     }
-	
+
     public void testMethods()
-	throws Exception
+        throws Exception
     {
-	final long utcTime = 876543210L;
+        final long utcTime = 876543210L;
         final long domId = 0xfedcba987654L;
 
         final int pktLen = 123;
@@ -188,13 +188,13 @@ public class TimeCalibrationTest
                                            syncTime);
 
         TimeCalibration tcal = new TimeCalibration(buf, 0);
-	 TimeCalibration tcal1 = new TimeCalibration(buf, 0, 50, utcTime);
-	assertEquals("Expected Payload Name: ", "TimeCalibration",
+         TimeCalibration tcal1 = new TimeCalibration(buf, 0, 50, utcTime);
+        assertEquals("Expected Payload Name: ", "TimeCalibration",
                  tcal.getPayloadName());
-	assertNotNull("TimeCalibration ",tcal.toString());
-	assertNotNull("TimeCalibration ",tcal.compareSpliceable(tcal));
-	assertEquals("Expected buffer length ", 338, tcal.computeBufferLength());
-	try {
+        assertNotNull("TimeCalibration ",tcal.toString());
+        assertNotNull("TimeCalibration ",tcal.compareSpliceable(tcal));
+        assertEquals("Expected buffer length ", 338, tcal.computeBufferLength());
+        try {
             tcal.dispose();
         } catch (Error err) {
         if (!err.getMessage().equals("Unimplemented")) {
@@ -207,17 +207,16 @@ public class TimeCalibrationTest
         if (!err.getMessage().equals("Unimplemented")) {
             throw err;
         }
-        }	
-	try {
+        }
+        try {
             tcal.getPayloadTimeUTC();
         } catch (Error err) {
         if (!err.getMessage().equals("Unimplemented")) {
             throw err;
         }
-        }	
-
+        }
     }
- 
+
     public static void main(String[] args)
     {
         TestRunner.run(suite());

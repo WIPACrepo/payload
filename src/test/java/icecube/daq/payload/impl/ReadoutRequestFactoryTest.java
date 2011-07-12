@@ -45,8 +45,8 @@ public class ReadoutRequestFactoryTest
     public void testCreate()
         throws Exception
     {
-      	final long utcTime = 1000L;
-	final int uid = 34;
+        final long utcTime = 1000L;
+        final int uid = 34;
         final int srcId = 12;
 
         final int rrType = 100;
@@ -63,13 +63,11 @@ public class ReadoutRequestFactoryTest
             TestUtil.createReadoutRequest(utcTime, uid, srcId, creList);
 
         ReadoutRequestFactory rReq = new ReadoutRequestFactory(new MockBufferCache());
-     	
-	assertNotNull("returns ReadoutRequest",rReq.createPayload( buf, 0));
-	assertNotNull("returns ReadoutRequest",rReq.createPayload( utcTime, uid, srcId));
-	assertNotNull("returns Spliceable",rReq.createSpliceable( buf));
-    }
 
-    
+        assertNotNull("returns ReadoutRequest",rReq.createPayload( buf, 0));
+        assertNotNull("returns ReadoutRequest",rReq.createPayload( utcTime, uid, srcId));
+        assertNotNull("returns Spliceable",rReq.createSpliceable( buf));
+    }
 
     public static void main(String[] args)
     {

@@ -217,7 +217,8 @@ public class HitPayloadTest
         HitPayload hit = new HitPayload();
         // XXX should use MockSourceID here
         hit.initialize(new SourceID(srcId), trigType, cfgId, domHit);
-	hit.initialize(new SourceID(srcId), trigType, cfgId, new UTCTime(utcTime), trigMode, new DOMID(domId));
+        hit.initialize(new SourceID(srcId), trigType, cfgId,
+                       new UTCTime(utcTime), trigMode, new DOMID(domId));
 
         assertEquals("Bad source ID", srcId, hit.getSourceID().getSourceID());
         assertEquals("Bad trigger type", trigType, hit.getTriggerType());

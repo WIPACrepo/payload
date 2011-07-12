@@ -28,7 +28,7 @@ import org.apache.commons.logging.LogFactory;
  * Temporary simple hit
  */
 class TemporaryHit
-    implements IHitPayload 
+    implements IHitPayload
 {
     private IDOMID domId;
     private IUTCTime hitTime;

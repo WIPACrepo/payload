@@ -308,7 +308,6 @@ public class DomHitDeltaCompressedFormatPayload extends Payload implements IDomH
         return writePayload(false, iDestOffset, tDestBuffer);
     }
 
-  
     /**
      * Get the numeric DOM ID.
      */

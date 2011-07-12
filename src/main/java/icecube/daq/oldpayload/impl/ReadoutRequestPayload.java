@@ -186,9 +186,9 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      */
     public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException, PayloadException {
         int iLength = 0;
-	if(tDestBuffer == null)    {
-	    throw new PayloadException("ByteBuffer must not be null");
-	}
+        if(tDestBuffer == null)    {
+            throw new PayloadException("ByteBuffer must not be null");
+        }
         if (mtbuffer != null && !bWriteLoaded ) {
             iLength = super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
@@ -206,7 +206,7 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
         }
         return iLength;
     }
-   
+
     /**
      * This method de-initializes this object in preparation for reuse.
      */

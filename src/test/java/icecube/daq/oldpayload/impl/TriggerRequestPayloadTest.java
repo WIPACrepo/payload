@@ -65,7 +65,7 @@ public class TriggerRequestPayloadTest
         assertEquals("Bad initial trigger type", -1, req.getTriggerType());
         assertNull("Bad initial source ID", req.getSourceID());
         assertNull("Bad initial readout request", req.getReadoutRequest());
-	
+
         req.dispose();
     }
 
@@ -185,13 +185,11 @@ public class TriggerRequestPayloadTest
             cce.printStackTrace();
         }
 
-	assertEquals("Bad Hash code",-3 , req.hashCode());
-	assertEquals("Compare null object",1 , req.compareTo(null));
-	assertNull("Trigger name string returned",req.getTriggerName());
-	assertNotNull("Poolable returned",req.getPoolable());
-	assertNotNull("String returned",req.toString());
-	
-
+        assertEquals("Bad Hash code",-3 , req.hashCode());
+        assertEquals("Compare null object",1 , req.compareTo(null));
+        assertNull("Trigger name string returned",req.getTriggerName());
+        assertNotNull("Poolable returned",req.getPoolable());
+        assertNotNull("String returned",req.toString());
     }
 
     public void testCreateFromBuffer()
@@ -395,9 +393,9 @@ public class TriggerRequestPayloadTest
                              0, cmpTR.compareTo(req));
             } else {
                 assertFalse("Bad " + cmpDiff + " inequality",
-                           cmpTR.equals(req));
+                            cmpTR.equals(req));
                 assertFalse("Bad " + cmpDiff + " inequality",
-                           req.equals(cmpTR));
+                            req.equals(cmpTR));
                 assertTrue("Bad " + cmpDiff + " comparison",
                            req.compareTo(cmpTR) < 0);
                 assertTrue("Bad " + cmpDiff + " reverse comparison",
