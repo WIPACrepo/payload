@@ -457,7 +457,7 @@ public class TriggerRequestPayloadTest
             }
         }
     }
-
+/*
     public void testWriteData()
         throws Exception
     {
@@ -512,7 +512,7 @@ public class TriggerRequestPayloadTest
             }
         }
     }
-
+*/
     public static void main(String[] args)
     {
         TestRunner.run(suite());

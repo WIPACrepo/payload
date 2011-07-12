@@ -17,16 +17,7 @@ public interface IWriteablePayload
      * "Return" bytes to the buffer manager.
      */
     void recycle();
-    /**
-     * Should not be used
-     * @param writeLoaded deprecated
-     * @param pDest deprecated
-     * @return deprecated
-     * @throws IOException if there is a problem
-     * @deprecated
-     */
-    int writePayload(boolean writeLoaded, IPayloadDestination pDest)
-        throws IOException;
+
     /**
      * Write this payload's binary representation to the ByteBuffer.
      * @param writeLoaded if <tt>false</tt>, write the original data
@@ -36,5 +27,5 @@ public interface IWriteablePayload
      * @throws IOException if there is a problem
      */
     int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
-        throws IOException;
+        throws IOException,PayloadException;
 }

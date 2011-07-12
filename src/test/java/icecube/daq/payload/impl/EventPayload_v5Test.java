@@ -128,7 +128,12 @@ public class EventPayload_v5Test
     {
         public short getChannelId(String mbid)
         {
-            throw new Error("Unimplemented");
+	    if(mbid.equals("000000000466")==true)
+                return (short)23;
+	    else if(mbid.equals("00000000083d")==true)
+                return (short)34;
+	    else
+		return (short)12;
         }
 
         public int getStringMajor(String mbid)

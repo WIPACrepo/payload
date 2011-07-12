@@ -216,8 +216,7 @@ public class ReadoutRequestTest
             throw err;
         }
         }
-	assertEquals("Expected BufferLength: ", 29,
-                 rReq.computeBufferLength());
+	assertEquals("Expected value: ", 46, rReq.loadBody(buf, 0, utcTime, false));
 	assertNotNull("ReadoutRequest",rReq.toString());
 	
 	

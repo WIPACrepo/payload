@@ -291,7 +291,10 @@ public class EngineeringHitData
                                            byte atwdFmt23, byte origMode,
                                            byte[] waveformData)
         throws PayloadException
-    {
+    {   
+	if(buf == null)    {
+	    throw new PayloadException("ByteBuffer must not be null");
+	}
         if (clockBytes == null || clockBytes.length != 6) {
             throw new PayloadException("Clock array must contain 6 bytes");
         }

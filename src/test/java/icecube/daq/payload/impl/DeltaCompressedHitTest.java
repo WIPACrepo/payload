@@ -191,12 +191,12 @@ System.err.println("--- NEW\n"+icecube.daq.payload.impl.BasePayload.toHexString(
             throw err;
         }
         }
-	DeltaCompressedHit hit1 =
-            new DeltaCompressedHit(new MockSourceID(srcId), domId, utcTime,
-                                   buf, 32);
-	DeltaCompressedHit hit2 =
-            new DeltaCompressedHit(new MockSourceID(srcId), domId, utcTime,
-                                   buf, 38);
+	DeltaCompressedHit hit1 = 
+	    new DeltaCompressedHit(new MockSourceID(srcId), domId, utcTime, 
+				   buf, 32);
+	DeltaCompressedHit hit2 = 
+	    new DeltaCompressedHit(new MockSourceID(srcId), domId, utcTime, 
+				   buf, 32);
 	assertEquals("Expected data length : ", 83,
                  hit1.getHitDataLength());
 	assertNotNull("DeltaCompressedHit ",hit1.getHitRecord((short)1));

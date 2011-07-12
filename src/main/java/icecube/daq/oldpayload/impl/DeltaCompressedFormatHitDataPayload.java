@@ -11,6 +11,7 @@ import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.DOMID;
 import icecube.daq.payload.impl.SourceID;
 import icecube.daq.payload.impl.UTCTime;
+import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.Poolable;
 
 import java.io.IOException;
@@ -293,53 +294,7 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
         super.mbPayloadCreated = true;
     }
 
-    /**
-     * This method writes this payload to the PayloadDestination.
-     *
-     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
-     *                                     false to write data normally (depending on backing)
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the destination.
-     *
-     * @throws IOException if an error occurs during the process
-     */
-    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
-        int iBytesWritten = 0;
-        //-label the output as needed (open the formatted section)
-        if (tDestination.doLabel()) tDestination.label("[DeltaCompressedFormatHitPayload] {").indent();
-        if (!bWriteLoaded && mtbuffer != null) {
-            //-write out the bytebuffer based data without loading it
-            iBytesWritten = super.writePayload(bWriteLoaded, tDestination);
-        } else {
-            //-make sure the data is loaded before writing
-            try {
-                loadPayload();
-            } catch (DataFormatException tException  ) {
-                //-wrapper the DataFormatException from the loadPayload
-                throw new IOException("DataFormatException caught during DeltaCompressedFormatHitPayload.writePayload()");
-            }
-            //-write the Payload envelope
-            super.mt_PayloadEnvelope.writeData(tDestination);
-
-            //-the new IHitPayload fields go here too
-            tDestination.writeInt(   TRIGGER_TYPE      ,mi_TriggerType            );
-            tDestination.writeInt(   TRIGGER_CONFIG_ID ,mi_TriggerConfigID        );
-            tDestination.writeInt(   SOURCE_ID         ,mt_sourceId.getSourceID() );
-            tDestination.writeLong(  DOM_ID            ,mt_domID.longValue() );
-
-            //-write the DeltaCompressedFormatRecord
-            mt_DeltaFormatRecord.writeData(tDestination);
-            //-don't bother to compute this here, this has already been computed before-hand
-            // in order to fill in the PayloadEnvelope.
-            iBytesWritten = super.mt_PayloadEnvelope.miPayloadLen;
-
-        }
-        //-label the output as needed (close the formatted section)
-        if (tDestination.doLabel()) tDestination.undent().label("} [DeltaCompressedFormatHitPayload]");
-        //-return the number of bytes written out by this formatted data.
-        return iBytesWritten;
-    }
-
+ 
     /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
@@ -352,9 +307,12 @@ public class DeltaCompressedFormatHitDataPayload extends AbstractTriggerPayload 
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
+    public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException,PayloadException {
         int iBytesWritten = 0;
         //-Check to make sure if this is a payload that has been loaded with backing
+	if(tDestBuffer == null)   {
+	    throw new PayloadException("Byte Buffer should not be null");
+	}
         if (super.mtbuffer != null && !bWriteLoaded) {
             iBytesWritten =  super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {

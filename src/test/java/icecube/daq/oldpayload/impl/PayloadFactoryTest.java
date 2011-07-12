@@ -5,6 +5,7 @@ import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.Poolable;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockBufferCache;
+import icecube.daq.payload.PayloadException;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -49,7 +50,7 @@ class FooPayload
     }
 
     public int writePayload(int offset, ByteBuffer buf)
-        throws IOException
+        throws IOException, PayloadException
     {
         return writePayload(false, offset, buf);
     }

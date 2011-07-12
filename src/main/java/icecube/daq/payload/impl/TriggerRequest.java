@@ -188,7 +188,7 @@ public class TriggerRequest
      * Return a copy of this object.
      * @return copied object
      */
-    public Object deepCopy()
+    public Object deepCopy() throws PayloadException
     {
         if (!isLoaded()) {
             throw new Error(getPayloadName() + " has not been loaded");

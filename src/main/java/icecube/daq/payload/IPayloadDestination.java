@@ -2,6 +2,7 @@ package icecube.daq.payload;
 
 import java.io.DataOutput;
 import java.io.IOException;
+import icecube.daq.payload.PayloadException;
 import java.nio.ByteBuffer;
 
 /**
@@ -334,8 +335,7 @@ public interface IPayloadDestination
      *
      * @throws IOException if an error occurs during the process
      */
-    int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload)
-        throws IOException;
+
 
     /**
      * This methods proxies the call to write Payload to allow the whole
@@ -355,7 +355,7 @@ public interface IPayloadDestination
      */
     int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload,
                      int iDestOffset, ByteBuffer tDestBuffer)
-        throws IOException;
+        throws IOException,PayloadException;
 
 
 }

@@ -9,6 +9,7 @@ import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
+import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.Poolable;
 import icecube.daq.payload.impl.DOMID;
@@ -147,9 +148,12 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
+    public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException,PayloadException {
         int iBytesWritten = 0;
         //-Check to make sure if this is a payload that has been loaded with backing
+	if(tDestBuffer == null)   {
+	    throw new PayloadException("Byte Buffer should not be null");
+	}
         if ( super.mtbuffer != null && !bWriteLoaded) {
             iBytesWritten =  super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
@@ -183,47 +187,6 @@ public class HitPayload  extends AbstractTriggerPayload implements IHitPayload, 
         }
         return iBytesWritten;
     }
-
-    /**
-     * This method writes this payload to the PayloadDestination.
-     *
-     * @param bWriteLoaded boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the ByteBuffer.
-     *
-     * @throws IOException if an error occurs during the process
-     */
-    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
-        int iBytesWritten = 0;
-        if (tDestination.doLabel()) tDestination.label("[HitPayload]=>").indent();
-        //-Check to make sure if this is a payload that has been loaded with backing
-        if ( super.mtbuffer != null && !bWriteLoaded) {
-            iBytesWritten =  super.writePayload(bWriteLoaded, tDestination);
-        } else {
-            if (super.mtbuffer != null) {
-                try {
-                    loadPayload();
-                } catch ( DataFormatException tException) {
-                    throw new IOException("DataFormatException Caught during load");
-                }
-            }
-            //-create the new payload from both the envelope and the hit payload
-            //-Write out the PayloadEnvelope
-            // NOTE: the initialize method has already filled in the appropriate lengths
-            //       and the time (utc) has already been initialized.
-            mt_PayloadEnvelope.writeData( tDestination );
-            //-Write out the 'subpayload'
-            tDestination.writeInt(   TRIGGER_TYPE      ,mi_TriggerType            );
-            tDestination.writeInt(   TRIGGER_CONFIG_ID ,mi_TriggerConfigID        );
-            tDestination.writeInt(   SOURCE_ID         ,mt_sourceId.getSourceID() );
-            tDestination.writeLong(  DOM_ID            ,mt_domID.longValue() );
-            tDestination.writeShort( TRIGGER_MODE      ,msi_TriggerMode           );
-            iBytesWritten = mt_PayloadEnvelope.miPayloadLen;
-        }
-        if (tDestination.doLabel()) tDestination.undent().label("<=[HitPayload] bytes="+iBytesWritten);
-        return iBytesWritten;
-    }
-
 
     /**
      * Loads the DomHitEngineeringFormatPayload if not already loaded

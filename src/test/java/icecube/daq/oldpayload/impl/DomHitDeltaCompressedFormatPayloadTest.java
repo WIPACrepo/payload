@@ -175,7 +175,7 @@ public class DomHitDeltaCompressedFormatPayloadTest
             }
         }
     }
-
+/*
     public void testWriteData()
         throws Exception
     {
@@ -237,7 +237,7 @@ public class DomHitDeltaCompressedFormatPayloadTest
             }
         }
     }
-
+*/
     public static void main(String[] args)
     {
         TestRunner.run(suite());

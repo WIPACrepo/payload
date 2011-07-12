@@ -2,7 +2,6 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IHitData;
 import icecube.daq.payload.IByteBufferCache;
-//import icecube.daq.util.IDOMRegistry;
 import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.IUTCTime;

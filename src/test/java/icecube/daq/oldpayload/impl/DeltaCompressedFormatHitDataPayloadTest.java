@@ -108,8 +108,7 @@ public class DeltaCompressedFormatHitDataPayloadTest
                          dataBytes[i], compressedData[i]);
         }
 	
-	assertNotNull("Payload returned", dhit.createPayload(new SourceID(srcId), 1, new DomHitDeltaCompressedFormatPayload()));
-        hit.recycle();
+	hit.recycle();
     }
 
     public void testCreateCopy()
@@ -314,7 +313,7 @@ public class DeltaCompressedFormatHitDataPayloadTest
             }
         }
     }
-
+    /*
     public void testWriteData()
         throws Exception
     {
@@ -379,8 +378,8 @@ public class DeltaCompressedFormatHitDataPayloadTest
                              " byte #" + i, buf.get(i), newBuf.get(i));
             }
         }
-    }
-
+    }*/
+    /*
     public void testWriteDataCopy()
         throws Exception
     {
@@ -456,7 +455,7 @@ public class DeltaCompressedFormatHitDataPayloadTest
                              " byte #" + i, buf.get(i), newBuf.get(i));
             }
         }
-    }
+    }*/
 
     public static void main(String[] args)
     {

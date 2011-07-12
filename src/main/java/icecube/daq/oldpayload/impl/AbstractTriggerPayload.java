@@ -3,6 +3,7 @@ package icecube.daq.oldpayload.impl;
 import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerPayload;
+import icecube.daq.payload.PayloadException;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -50,19 +51,9 @@ public abstract class AbstractTriggerPayload  extends Payload implements ITrigge
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(int iOffset, ByteBuffer tBuffer) throws IOException {
+    public int writePayload(int iOffset, ByteBuffer tBuffer) throws IOException ,PayloadException{
         return writePayload(false, iOffset, tBuffer);
     }
 
-    /**
-     * This method writes this payload to the PayloadDestination.
-     *
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the ByteBuffer.
-     *
-     * @throws IOException if an error occurs during the process
-     */
-    public int writePayload(IPayloadDestination tDestination) throws IOException {
-        return writePayload(false, tDestination);
-    }
+
 }

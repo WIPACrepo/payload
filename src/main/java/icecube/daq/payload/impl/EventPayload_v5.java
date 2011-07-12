@@ -28,12 +28,12 @@ import org.apache.commons.logging.LogFactory;
  * Temporary simple hit
  */
 class TemporaryHit
-    implements IHitPayload
+    implements IHitPayload 
 {
     private IDOMID domId;
     private IUTCTime hitTime;
 
-    public TemporaryHit(IHitPayload hit)
+    public TemporaryHit(IHitPayload hit) throws PayloadException
     {
         domId = (IDOMID) hit.getDOMID().deepCopy();
         hitTime = (IUTCTime) hit.getHitTimeUTC().deepCopy();
@@ -121,12 +121,6 @@ class TemporaryHit
     }
 
     public void setCache(IByteBufferCache x0)
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int writePayload(boolean b0, IPayloadDestination x1)
-        throws IOException
     {
         throw new Error("Unimplemented");
     }

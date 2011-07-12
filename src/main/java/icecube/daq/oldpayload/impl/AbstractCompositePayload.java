@@ -151,33 +151,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
         iBytesWritten = iCurrentOffset - iOffset;
         return iBytesWritten;
     }
-    /**
-     * This method writes this payload to the PayloadDestination.
-     *
-     * @param bWriteLoaded boolean to indicate if 'loaded' payloads should be written
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the destination.
-     *
-     * @throws IOException if an error occurs during the process
-     */
-    protected int writeCompositePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
-        int iBytesWritten = 0;
-        if (tDestination.doLabel()) tDestination.label("[writeCompositePayload(bWriteLoaded="+(bWriteLoaded?"true":"false")+")]=>").indent();
-        mt_CompositeEnvelope.writeData(tDestination);
-        iBytesWritten += CompositePayloadEnvelope.SIZE_COMPOSITE_ENVELOPE;
-        int iSize = mt_Payloads.size();
-        //-write out each of the individual payloads
-        for (int ii=0; ii < iSize; ii++) {
-            Payload tPayload = (Payload) mt_Payloads.get(ii);
-            if (tDestination.doLabel()) tDestination.label("[CompositePayload("+(ii+1)+" of "+iSize+")]=>").indent();
-            tPayload.writePayload(bWriteLoaded, tDestination);
-            if (tDestination.doLabel()) tDestination.undent().label("<=[CompositePayload("+(ii+1)+" of "+iSize+")]");
-            iBytesWritten += tPayload.getPayloadLength();
-        }
-        if (tDestination.doLabel()) tDestination.undent().label("<=[writeCompositePayload] bytes="+iBytesWritten);
-        return iBytesWritten;
-    }
-
+    
     /**
      * get timeordered list of all hits contained in Composite, this
      * is the unique list of  Payload's which are IHitPayload's

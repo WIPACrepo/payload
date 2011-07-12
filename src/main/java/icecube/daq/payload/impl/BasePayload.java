@@ -390,17 +390,7 @@ public abstract class BasePayload
         return strBuf.toString();
     }
 
-    /**
-     * Unimplemented
-     * @param writeLoaded ignored
-     * @param dest ignored
-     * @return Error
-     */
-    public int writePayload(boolean writeLoaded, IPayloadDestination dest)
-    {
-        throw new Error("Unimplemented");
-    }
-
+   
     /**
      * Write this payload's data to the byte buffer
      * @param writeLoaded ignored
@@ -410,11 +400,14 @@ public abstract class BasePayload
      * @throws IOException if there is a problem
      */
     public int writePayload(boolean writeLoaded, int offset, ByteBuffer buf)
-        throws IOException
+        throws IOException, PayloadException
     {
         final int totLen = getPayloadLength();
 
         final int bufRemain = buf.limit() - (offset + totLen);
+	if(buf == null)    {
+	    throw new PayloadException("ByteBuffer must not be null");
+	}
         if (isConstantSize() && bufRemain < 0) {
             throw new IOException("Buffer is " + -bufRemain +
                                   " bytes too short (offset=" + offset +

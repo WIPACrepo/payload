@@ -1,7 +1,7 @@
 /*
  * class: Payload
  *
- * Version $Id: Payload.java 13148 2011-07-07 21:50:08Z dglo $
+ * Version $Id: Payload.java 13157 2011-07-12 17:19:24Z seshadrivija $
  *
  * Date: September 21 2004
  *
@@ -16,6 +16,7 @@ import icecube.daq.payload.IPayload;
 import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
+import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.Poolable;
 import icecube.daq.payload.impl.UTCTime;
 import icecube.daq.splicer.Spliceable;
@@ -31,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * Payload implements the IPayload interface and the Spliceable interface
  * It contains trigger information that is send through the DAQ system
  *
- * @version $Id: Payload.java 13148 2011-07-07 21:50:08Z dglo $
+ * @version $Id: Payload.java 13157 2011-07-12 17:19:24Z seshadrivija $
  * @author hellwig,dwharton
  *
  * 8/24/2005 dbw
@@ -216,7 +217,7 @@ public abstract class Payload
     /**
      * gets the UTC time tag of a payload
      */
-    public void setPayloadTimeUTC(IUTCTime tUTCTime) {
+    public void setPayloadTimeUTC(IUTCTime tUTCTime) throws PayloadException{
         mttime = (IUTCTime) tUTCTime.deepCopy();
     }
 
@@ -298,11 +299,13 @@ public abstract class Payload
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
+    public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException, PayloadException {
         if (mtbuffer == null) {
             return 0;
         }
-
+	if(tDestBuffer == null)   {
+	    throw new PayloadException("Byte Buffer should not be null");
+	}
         synchronized (mtbuffer) {
             int iSrcPosition = mioffset;
             int iDestPosition = iDestOffset;
@@ -315,32 +318,6 @@ public abstract class Payload
     }
 
     /**
-     * This method writes the Payload from a 'loaded' internal representation
-     * if it has one instead of from the ByteBuffer backing if it is able to.
-     * This is useful for altering payload's for testing (after loading) or
-     * for making use of specialized PayloadDestinations which can document
-     * the output if necessary.
-     *
-     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the ByteBuffer.
-     *
-     * @throws IOException if an error occurs during the process
-     */
-    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
-        int iLength = 0;
-        if (tDestination.doLabel()) tDestination.label("[Payload]=>").indent();
-        if (mtbuffer != null) {
-            // synchronized (mtbuffer) {
-            // }
-            tDestination.write(mioffset, mtbuffer, milength);
-            iLength = milength;
-        }
-        if (tDestination.doLabel()) tDestination.undent().label("<=[Payload] bytes="+iLength);
-        return iLength;
-    }
-
-    /**
      * This method writes this payload to the destination ByteBuffer
      * at the specified offset and returns the length of bytes written to the destination.
      * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
@@ -350,17 +327,7 @@ public abstract class Payload
      *
      * @throws IOException if an error occurs during the process
      */
-    public abstract int writePayload(int iOffset, ByteBuffer tBuffer) throws IOException;
-
-    /**
-     * This method writes this payload to the PayloadDestination.
-     *
-     * @param tDestination PayloadDestination to which to write the payload
-     * @return the length in bytes which was written to the ByteBuffer.
-     *
-     * @throws IOException if an error occurs during the process
-     */
-    public abstract int writePayload(IPayloadDestination tDestination) throws IOException;
+    public abstract int writePayload(int iOffset, ByteBuffer tBuffer) throws IOException,PayloadException;
 
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
@@ -449,7 +416,7 @@ public abstract class Payload
      *
      * @return Payload which is a deep copy of this Payload
      */
-    public Object deepCopy() {
+    public Object deepCopy() throws PayloadException{
         IByteBufferCache tBBCache = (mtParentPayloadFactory != null ? mtParentPayloadFactory.getByteBufferCache() : null);
         //-get the length for copy to ByteBuffer
         int iLength = getPayloadLength();

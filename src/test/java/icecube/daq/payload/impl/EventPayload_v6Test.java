@@ -17,6 +17,7 @@ import icecube.daq.util.IDOMRegistry;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
 
+import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -36,7 +37,14 @@ public class EventPayload_v6Test
     {
         public short getChannelId(String mbid)
         {
-            throw new Error("Unimplemented");
+      	    if(mbid.equals("000000000466")==true)
+                return (short)23;
+	    else if(mbid.equals("00000000083d")==true)
+                return (short)34;
+	    else if(mbid.equals("000000000c25")==true)
+                return (short)45;	     
+	    else
+		return (short)12;
         }
 
         public int getStringMajor(String mbid)
