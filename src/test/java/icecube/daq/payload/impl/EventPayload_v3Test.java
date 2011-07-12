@@ -289,8 +289,7 @@ public class EventPayload_v3Test
 
     public void testMethods()
         throws Exception
-    {
-        final int uid = 12;
+    {        final int uid = 12;
         final int srcId = 2034;
         final long firstTime = 1111L;
         final long lastTime = 2222L;

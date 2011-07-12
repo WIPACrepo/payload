@@ -271,7 +271,7 @@ public class ReadoutRequestPayloadTest
             }
         }
     }
-    /*
+
     public void testWriteData()
         throws Exception
     {
@@ -326,7 +326,7 @@ public class ReadoutRequestPayloadTest
                              " byte #" + i, buf.get(i), newBuf.get(i));
             }
         }
-    }*/
+    }
 
     public static void main(String[] args)
     {

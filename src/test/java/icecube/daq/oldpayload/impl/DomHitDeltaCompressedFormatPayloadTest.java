@@ -107,7 +107,7 @@ public class DomHitDeltaCompressedFormatPayloadTest
                          dataBytes[i], compressedData[i]);
         }
         assertEquals("Payload type",
-                     17, hit.getPayloadType());
+                    17, hit.getPayloadType());
         assertNotNull("UTC Time", hit.getHitTimeUTC());
         assertNotNull("DOMId", hit.getDOMID());
         assertNotNull("Poolable", hit.getPoolable());
@@ -175,7 +175,7 @@ public class DomHitDeltaCompressedFormatPayloadTest
             }
         }
     }
-/*
+
     public void testWriteData()
         throws Exception
     {
@@ -237,7 +237,7 @@ public class DomHitDeltaCompressedFormatPayloadTest
             }
         }
     }
-*/
+
     public static void main(String[] args)
     {
         TestRunner.run(suite());

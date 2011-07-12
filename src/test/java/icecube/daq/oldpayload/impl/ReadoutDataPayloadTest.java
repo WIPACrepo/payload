@@ -258,7 +258,7 @@ public class ReadoutDataPayloadTest
             }
         }
     }
-/*
+
     public void testWriteData()
         throws Exception
     {
@@ -311,7 +311,7 @@ public class ReadoutDataPayloadTest
             }
         }
     }
-*/
+
     public static void main(String[] args)
     {
         TestRunner.run(suite());

@@ -99,10 +99,11 @@ public class TriggerRequestRecordTest
         assertNotNull("String returned", reqRec.toString());
         assertNotNull("String returned", reqRec.toDataString());
 
-        String names[] = new String[5];
+        String names[]= new String[5];
 
         reqRec.setTypeNames(names);
         reqRec.recycle();
+
         assertFalse("Data should not be loaded", reqRec.isDataLoaded());
     }
 

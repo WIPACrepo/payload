@@ -111,8 +111,9 @@ public class EngineeringHitRecordTest
         assertNotNull("EngineeringHitRecord ",hitRec.getRawDataString());
         assertEquals("Expected Name: ", "Engineering",
                      hitRec.getTypeName());
-        assertNotNull("EngineeringHitRecord ",hitRec.writeRecord(buf, 0, 12345));
-    }
+        assertNotNull("EngineeringHitRecord",
+                      hitRec.writeRecord(buf, 0, 12345));
+   }
 
     public static Test suite()
     {

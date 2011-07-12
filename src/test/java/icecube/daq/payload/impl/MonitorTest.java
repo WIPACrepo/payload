@@ -275,8 +275,8 @@ public class MonitorTest
 
                 ByteBuffer buf =
                     TestUtil.createMonitorConfigChange(utcTime, domId, domClock,
-                                                       slowCtl, states[c].code,
-                                                       daqId, value, (i == 0));
+                                                      slowCtl, states[c].code,
+                                                      daqId, value, (i == 0));
 
                 ConfigChangeMonitor moni = new ConfigChangeMonitor(buf, 0);
                 moni.loadPayload();

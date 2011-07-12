@@ -38,21 +38,22 @@ import junit.textui.TestRunner;
 public class EventPayload_v5Test
     extends LoggingCase
 {
+
     class MockIHitPayload
         implements IHitPayload
     {
-        public IDOMID getDOMID()
-        {
+            public IDOMID getDOMID()
+            {
             return new DOMID(12345678);
-        }
-        public IUTCTime getHitTimeUTC()
-        {
+           }
+            public IUTCTime getHitTimeUTC()
+           {
             return new UTCTime(1111);
-        }
-        public double getIntegratedCharge()
-        {
+            }
+            public double getIntegratedCharge()
+            {
             throw new Error("Unimplemented");
-        }
+            }
         public ISourceID getSourceID()
         {
             throw new Error("Unimplemented");
@@ -62,13 +63,13 @@ public class EventPayload_v5Test
             throw new Error("Unimplemented");
         }
         public int getTriggerConfigID()
-        {
+           {
             throw new Error("Unimplemented");
         }
-        public long getUTCTime()
-        {
+            public long getUTCTime()
+           {
             throw new Error("Unimplemented");
-        }
+            }
         public Object deepCopy()
         {
             throw new Error("Unimplemented");
@@ -370,6 +371,7 @@ public class EventPayload_v5Test
         final int hitSrcId1 = 25;
         final long hitDomId1 = 1126L;
         final int hitMode1 = 27;
+        final short hitChanId1 = 28;
 
         final long hitTime2 = halfTime + 7;
         final int hitType2 = -1;
@@ -377,6 +379,7 @@ public class EventPayload_v5Test
         final int hitSrcId2 = 35;
         final long hitDomId2 = 2109L;
         final int hitMode2 = 37;
+        final short hitChanId2 = 38;
 
         ArrayList hitList = new ArrayList();
         hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
@@ -395,15 +398,17 @@ public class EventPayload_v5Test
                                    hitList, mockReq);
 
         List<IEventHitRecord> hitRecList = new ArrayList<IEventHitRecord>();
-        hitRecList.add(new MockDeltaHitRecord((byte) 1, (short) 23, hitTime1,
+        hitRecList.add(new MockDeltaHitRecord((byte) 1, hitChanId1, hitTime1,
                                               (short) 45, 67, 89,
                                               new byte[] { (byte) 123 }));
-        hitRecList.add(new MockDeltaHitRecord((byte) 2, (short) 34, hitTime2,
+        hitRecList.add(new MockDeltaHitRecord((byte) 2, hitChanId2, hitTime2,
                                               (short) 56, 78, 90,
                                               new byte[] { (byte) 45,
                                                            (byte) 5 }));
 
-        IDOMRegistry domRegistry = new MockDOMRegistry();
+        MockDOMRegistry domRegistry = new MockDOMRegistry();
+        domRegistry.addChannelId(hitDomId1, hitChanId1);
+        domRegistry.addChannelId(hitDomId2, hitChanId2);
 
         ByteBuffer buf =
             TestUtil.createEventv5(uid, firstTime, lastTime, YEAR, runNum,

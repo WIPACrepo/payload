@@ -94,7 +94,7 @@ public class DomHitEngineeringFormatPayloadTest
 
         hit.recycle();
     }
-/*
+
     public void testWriteData()
         throws Exception
     {
@@ -172,7 +172,7 @@ public class DomHitEngineeringFormatPayloadTest
 
         hit.recycle();
     }
-*/
+
     public static void main(String[] args)
     {
         TestRunner.run(suite());

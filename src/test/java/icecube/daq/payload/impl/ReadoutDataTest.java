@@ -158,23 +158,23 @@ public class ReadoutDataTest
         rdp.loadPayload();
         assertEquals("Buffer length returned", 174, rdp.computeBufferLength());
 
-//        assertEquals("Bad payload type",
-//                     PayloadRegistry.PAYLOAD_ID_READOUT_DATA,
-//                     rdp.getPayloadType());
-//        assertEquals("Bad payload UTC time",
-//                     firstTime, rdp.getPayloadTimeUTC().longValue());
-//        assertEquals("Bad trigger type", -1, rdp.getTriggerType());
-//        assertEquals("Bad config ID", -1, rdp.getTriggerConfigID());
+        //        assertEquals("Bad payload type",
+        //                     PayloadRegistry.PAYLOAD_ID_READOUT_DATA,
+        //                     rdp.getPayloadType());
+        //        assertEquals("Bad payload UTC time",
+        //                     firstTime, rdp.getPayloadTimeUTC().longValue());
+        //        assertEquals("Bad trigger type", -1, rdp.getTriggerType());
+        //        assertEquals("Bad config ID", -1, rdp.getTriggerConfigID());
         assertEquals("Bad source ID", srcId, rdp.getSourceID().getSourceID());
         assertEquals("Bad first UTC time",
                      firstTime, rdp.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
                      lastTime, rdp.getLastTimeUTC().longValue());
         assertEquals("Bad request UID", uid, rdp.getRequestUID());
-//        assertEquals("Bad payload number",
-//                     payNum, rdp.getReadoutDataNumber());
-//        assertEquals("Bad isLastPayload value",
-//                     isLast, rdp.isLastPayloadOfGroup());
+        //        assertEquals("Bad payload number",
+        //                     payNum, rdp.getReadoutDataNumber());
+        //        assertEquals("Bad isLastPayload value",
+        //                     isLast, rdp.isLastPayloadOfGroup());
 
         assertNotNull("Non-null hit list", rdp.getHitList());
         assertNotNull("Copied object returned", rdp.deepCopy());
@@ -187,8 +187,8 @@ public class ReadoutDataTest
 
             assertEquals("Bad hit time", (i == 0 ? hitTime1 : hitTime2),
                          hit.getHitTimeUTC().longValue());
-//            assertEquals("Bad hit type", (i == 0 ? hitType1 : hitType2),
-//                         hit.getTriggerType());
+            //            assertEquals("Bad hit type", (i == 0 ? hitType1 : hitType2),
+            //                         hit.getTriggerType());
             assertEquals("Bad hit DOM ID", (i == 0 ? hitDomId1 : hitDomId2),
                          (hit.getDOMID() == null ? -1L :
                           hit.getDOMID().longValue()));
