@@ -50,7 +50,7 @@ public class EventPayload_v6Test
         return new TestSuite(EventPayload_v6Test.class);
     }
 
-    public void ZZZtestCreate()
+    public void testCreate()
         throws Exception
     {
         final int uid = 12;
@@ -124,7 +124,7 @@ public class EventPayload_v6Test
         evt.recycle();
     }
 
-    public void ZZZtestCreateCompressed()
+    public void testCreateCompressed()
         throws Exception
     {
         final int uid = 12;
@@ -209,7 +209,7 @@ public class EventPayload_v6Test
         }
     }
 
-    public void ZZZtestCreateFromBuffer()
+    public void testCreateFromBuffer()
         throws Exception
     {
         final int uid = 12;
