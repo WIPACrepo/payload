@@ -14,7 +14,6 @@ import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockTriggerRequest;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
-import icecube.daq.oldpayload.impl.TriggerRequestPayload;
 import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IDOMID;
@@ -29,7 +28,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -167,7 +165,7 @@ public class EventPayload_v5Test
         final short hitChanId1 = 28;
 
         MockDeltaHitRecord hitRec =
-            new MockDeltaHitRecord((byte) 0, (short) 12, hitTime1, hitChanId1,
+            new MockDeltaHitRecord((byte) 0, hitChanId1, hitTime1, (short) 34,
                                    56, 78, new byte[0]);
 
         MockReadoutRequest mockReq =
@@ -493,7 +491,6 @@ public class EventPayload_v5Test
 
         EventPayload_v5 evt = new EventPayload_v5(buf, 0);
         TemporaryHit hit = new TemporaryHit(payloadList);
-        // TriggerRecord trec = new TriggerRecord(new TriggerRequestPayload());
 
         try {
             evt.dispose();
