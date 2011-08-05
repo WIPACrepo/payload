@@ -44,7 +44,7 @@ public class ReadoutDataPayloadFactory extends CompositePayloadFactory {
         IUTCTime        tFirstTimeUTC,
         IUTCTime        tLastTimeUTC,
         List            tDataPayloads
-    ) throws IOException {
+    ) throws PayloadException {
         ReadoutDataPayload tPayload = null;
         boolean bDeepCopyOk = true;
         List tDataPayloadsCopy =  null;
@@ -59,18 +59,14 @@ public class ReadoutDataPayloadFactory extends CompositePayloadFactory {
         //-create the ReadoutDataPayload
         if (bDeepCopyOk) {
             tPayload = (ReadoutDataPayload) ReadoutDataPayload.getFromPool();
-            try {
-                tPayload.initialize(
-                                    iUID,
-                                    iPayloadNum,
-                                    bPayloadLast,
-                                    (ISourceID) tSourceID.deepCopy(),
-                                    (IUTCTime) tFirstTimeUTC.deepCopy(),
-                                    (IUTCTime) tLastTimeUTC.deepCopy(),
-                                    tDataPayloadsCopy);
-            } catch (PayloadException pe) {
-                throw new IOException("Cannot initialize payload", pe);
-            }
+            tPayload.initialize(
+                                iUID,
+                                iPayloadNum,
+                                bPayloadLast,
+                                (ISourceID) tSourceID.deepCopy(),
+                                (IUTCTime) tFirstTimeUTC.deepCopy(),
+                                (IUTCTime) tLastTimeUTC.deepCopy(),
+                                tDataPayloadsCopy);
         }
         return tPayload;
     }

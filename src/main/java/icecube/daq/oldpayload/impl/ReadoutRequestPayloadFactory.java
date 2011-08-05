@@ -7,7 +7,6 @@ import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.zip.DataFormatException;
@@ -50,14 +49,10 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
      * @param tReadoutRequest IReadoutRequest which is used to construct the payload.
      * @return the ReadoutRequestPayload constructed from the IReadoutRequest.
      */
-    public Payload createPayload(IUTCTime tTime, IReadoutRequest tReadoutRequest) throws DataFormatException, IOException {
+    public Payload createPayload(IUTCTime tTime, IReadoutRequest tReadoutRequest) throws DataFormatException, PayloadException {
         // ReadoutRequestPayload tPayload = (ReadoutRequestPayload) ReadoutRequestPayload.getFromPool();
         ReadoutRequestPayload tPayload = (ReadoutRequestPayload) mt_PoolablePayloadFactory.getPoolable();
-        try {
-            tPayload.initialize((IUTCTime) tTime.deepCopy(), tReadoutRequest);
-        } catch (PayloadException pe) {
-            throw new IOException("Cannot initialize payload", pe);
-        }
+        tPayload.initialize((IUTCTime) tTime.deepCopy(), tReadoutRequest);
         return tPayload;
     }
 
@@ -70,13 +65,9 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
      *                              subsequently 'owned' by the output IReadoutRequest.
      * @return the output request
      */
-    public static IReadoutRequest createReadoutRequest(ISourceID tSourceID, int iTriggerUID, List tRequestElements) throws IOException {
+    public static IReadoutRequest createReadoutRequest(ISourceID tSourceID, int iTriggerUID, List tRequestElements) throws PayloadException {
         ReadoutRequestRecord tRequest = (ReadoutRequestRecord) ReadoutRequestRecord.getFromPool();
-        try {
-            tRequest.initialize(iTriggerUID,(ISourceID) tSourceID.deepCopy(),tRequestElements);
-        } catch (PayloadException pe) {
-            throw new IOException("Cannot initialize payload", pe);
-        }
+        tRequest.initialize(iTriggerUID,(ISourceID) tSourceID.deepCopy(),tRequestElements);
         return tRequest;
     }
 
@@ -90,18 +81,14 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
             IUTCTime     tLastTime,
             IDOMID       tIDomId,
             ISourceID    tISourceId
-        ) throws IOException {
+        ) throws PayloadException {
         ReadoutRequestElementRecord tElement = (ReadoutRequestElementRecord) ReadoutRequestElementRecord.getFromPool();
-        try {
-            tElement.initialize(iReadoutType,
-                                (IUTCTime) tFirstTime.deepCopy(),
-                                (IUTCTime) tLastTime.deepCopy(),
-                                (tIDomId != null ? (IDOMID) tIDomId.deepCopy() : null),
-                                (tISourceId != null ? (ISourceID) tISourceId.deepCopy() : null)
-                                );
-        } catch (PayloadException pe) {
-            throw new IOException("Cannot initialize payload", pe);
-        }
+        tElement.initialize(iReadoutType,
+                            (IUTCTime) tFirstTime.deepCopy(),
+                            (IUTCTime) tLastTime.deepCopy(),
+                            (tIDomId != null ? (IDOMID) tIDomId.deepCopy() : null),
+                            (tISourceId != null ? (ISourceID) tISourceId.deepCopy() : null)
+                            );
         return tElement;
     }
 }
