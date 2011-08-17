@@ -24,6 +24,9 @@ public class EventPayload_v3
     extends BasePayload
     implements IEventPayload
 {
+
+    /** Length of composite header */
+    public static final int LEN_COMPOSITE_HEADER = 8;
     /** Internal event record type */
     public static final short RECORD_TYPE = 10;
 
@@ -43,7 +46,8 @@ public class EventPayload_v3
     private static final int OFFSET_RUNNUMBER = 30;
     /** Offset of subrun number field */
     private static final int OFFSET_SUBRUNNUMBER = 34;
-
+    /** Offset of composite data (within composite data section) */
+    public static final int OFFSET_COMPDATA = 8;
     /** Offset of composite data section */
     private static final int OFFSET_COMPOSITE = 38;
 
@@ -53,11 +57,8 @@ public class EventPayload_v3
     private static final int OFFSET_COMPTYPE = 4;
     /** Offset of number of composites (within composite data section) */
     private static final int OFFSET_COMPNUM = 6;
-    /** Offset of composite data (within composite data section) */
-    public static final int OFFSET_COMPDATA = 8;
 
-    /** Length of composite header */
-    public static final int LEN_COMPOSITE_HEADER = 8;
+
 
     /** unique ID */
     private int uid;

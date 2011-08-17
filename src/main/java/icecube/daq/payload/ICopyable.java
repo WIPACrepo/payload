@@ -1,8 +1,8 @@
 package icecube.daq.payload;
-import icecube.daq.payload.PayloadException;
 
 /**
  * Object which can be deep-copied.
+ * @ throws PayloadException when something goes wrong
  */
 public interface ICopyable
 {

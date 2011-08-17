@@ -25,7 +25,8 @@ public interface IWriteablePayload
      * @param buf buffer where payload is written
      * @return number of bytes written
      * @throws IOException if there is a problem
+     * @throws PayloadException if there is a problem
      */
     int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
-        throws IOException,PayloadException;
+        throws IOException, PayloadException;
 }

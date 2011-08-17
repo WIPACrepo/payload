@@ -2,7 +2,8 @@ package icecube.daq.payload;
 /*
  * class: IReadoutSPRequestElement
  *
- * Version $Id: IReadoutRequestElement.java,v 1.3 2005/01/25 18:11:25 dwharton Exp $
+ * Version $Id: IReadoutRequestElement.java,v 1.3 
+ *     2005/01/25 18:11:25 dwharton Exp $
  *
  * Date: November 5 2004
  *
@@ -16,7 +17,8 @@ package icecube.daq.payload;
  * NOTE: This is integral to the trigger system so it has been
  *       moved to the trigger package.
  *
- * @version $Id: IReadoutRequestElement.java,v 1.3 2005/01/25 18:11:25 dwharton Exp $
+ * @version $Id: IReadoutRequestElement.java,v 1.3 
+ *     2005/01/25 18:11:25 dwharton Exp $
  * @author hellwig,dwharton
  */
 public interface IReadoutRequestElement

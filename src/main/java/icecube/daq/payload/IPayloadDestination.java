@@ -2,7 +2,6 @@ package icecube.daq.payload;
 
 import java.io.DataOutput;
 import java.io.IOException;
-import icecube.daq.payload.PayloadException;
 import java.nio.ByteBuffer;
 
 /**
@@ -352,10 +351,11 @@ public interface IPayloadDestination
      * @return the length in bytes which was written to the ByteBuffer.
      *
      * @throws IOException if an error occurs during the process
+     * @throws PayloadException if an error occurs during the process
      */
-    int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload,
+    int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload, 
                      int iDestOffset, ByteBuffer tDestBuffer)
-        throws IOException,PayloadException;
+        throws IOException, PayloadException;
 
 
 }

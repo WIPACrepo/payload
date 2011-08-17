@@ -310,6 +310,7 @@ public class SimpleHit
      * @param offset index of first byte
      * @param buf byte buffer
      * @return number of bytes written
+     * @throws PayloadException if anything goes wrong
      */
     public int writePayload(boolean writeLoaded, int offset, ByteBuffer buf)
         throws PayloadException
@@ -330,15 +331,23 @@ public class SimpleHit
      * @param srcId source ID
      * @param domId DOM ID
      * @param trigMode trigger mode
+     * @throws PayloadException if anything goes wrong
      */
     public static void writePayloadToBuffer(ByteBuffer buf, int offset,
                                             long utcTime, int trigType,
                                             int cfgId, int srcId, long domId,
-                                            short trigMode) throws PayloadException
+                                            short trigMode) 
+        throws PayloadException
     {
+<<<<<<< .mine
+        if (buf == null)    {
+            throw new PayloadException("ByteBuffer must not be null");
+        }
+=======
         if(buf == null)    {
             throw new PayloadException("ByteBuffer must not be null");
         }
+>>>>>>> .r13271
         buf.putInt(offset + OFFSET_LENGTH, LENGTH);
         buf.putInt(offset + OFFSET_TYPE,
                    PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT);

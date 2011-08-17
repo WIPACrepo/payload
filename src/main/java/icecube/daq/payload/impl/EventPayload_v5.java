@@ -7,7 +7,6 @@ import icecube.daq.payload.IEventPayload;
 import icecube.daq.payload.IEventTriggerRecord;
 import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.ILoadablePayload;
-import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;

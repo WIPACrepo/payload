@@ -113,6 +113,7 @@ public class EventFactory
      * @param hitRecList list of hit records
      * @param domRegistry used to map each hit's DOM ID to the channel ID
      * @return new event
+     * @throws PayloadException if anything goes wrong
      */
     public ILoadablePayload createPayload(int uid, IUTCTime firstTime,
                                           IUTCTime lastTime, short year,

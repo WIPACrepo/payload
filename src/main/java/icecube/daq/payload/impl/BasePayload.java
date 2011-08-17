@@ -2,7 +2,6 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.IPayload;
-import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
 
@@ -397,6 +396,7 @@ public abstract class BasePayload
      * @param buf byte buffer
      * @return number of bytes written
      * @throws IOException if there is a problem
+     * @throws PayloadException if there is a problem
      */
     public int writePayload(boolean writeLoaded, int offset, ByteBuffer buf)
         throws IOException, PayloadException
@@ -404,9 +404,15 @@ public abstract class BasePayload
         final int totLen = getPayloadLength();
 
         final int bufRemain = buf.limit() - (offset + totLen);
+<<<<<<< .mine
+        if (buf == null)    {
+            throw new PayloadException("ByteBuffer must not be null");
+        }
+=======
         if(buf == null)    {
             throw new PayloadException("ByteBuffer must not be null");
         }
+>>>>>>> .r13271
         if (isConstantSize() && bufRemain < 0) {
             throw new IOException("Buffer is " + -bufRemain +
                                   " bytes too short (offset=" + offset +

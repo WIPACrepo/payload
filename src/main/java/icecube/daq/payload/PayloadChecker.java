@@ -48,7 +48,7 @@ abstract class XMLConfig
     {
         StringBuilder str = new StringBuilder();
 
-        for (Iterator iter = branch.nodeIterator(); iter.hasNext(); ) {
+        for (Iterator iter = branch.nodeIterator(); iter.hasNext();) {
             Node node = (Node) iter.next();
 
             if (node.getNodeType() != Node.TEXT_NODE) {
@@ -121,7 +121,7 @@ class TriggerConfigEntry
                 put("AmandaRandomTrigger", new String[0]);
                 put("AmandaStringTrigger", new String[0]);
                 put("AmandaVolumeTrigger", new String[0]);
-                put("CalibrationTrigger", new String[] { "hitType" });
+                put("CalibrationTrigger", new String[] {"hitType" });
                 put("ClusterTrigger",
                     new String[] {
                         "coherenceLength", "multiplicity", "timeWindow",
@@ -129,22 +129,22 @@ class TriggerConfigEntry
                     });
                 put("CylinderTrigger",
                     new String[] {
-                        "multiplicity", "simpleMultiplicity", "radius", "height",
-                        "timeWindow", "domSet",
+                        "multiplicity", "simpleMultiplicity", "radius",
+                        "height", "timeWindow", "domSet",
                     });
-                put("MinBiasTrigger", new String[] { "prescale" });
+                put("MinBiasTrigger", new String[] {"prescale" });
                 put("MultiplicityStringTrigger",
                     new String[] {
                         "maxLength", "numberOfVetoTopDoms", "string",
                         "threshold", "timeWindow",
                     });
                 put("PhysicsMinBiasTrigger",
-                    new String[] { "deadtime", "prescale" });
+                    new String[] {"deadtime", "prescale" });
                 put("SimpleMajorityTrigger",
-                    new String[] { "threshold", "timeWindow", "domSet" });
+                    new String[] {"threshold", "timeWindow", "domSet" });
                 put("SlowMPTrigger", new String[0]);
                 put("ThroughputTrigger", new String[0]);
-                put("TrigBoardTrigger", new String[] { "prescale" });
+                put("TrigBoardTrigger", new String[] {"prescale" });
                 put("VolumeTrigger",
                     new String[] {
                         "timeWindow", "multiplicity", "coherenceLength",
@@ -173,7 +173,7 @@ class TriggerConfigEntry
      */
     TriggerConfigEntry(Branch top)
     {
-        for (Iterator iter = top.nodeIterator(); iter.hasNext(); ) {
+        for (Iterator iter = top.nodeIterator(); iter.hasNext();) {
             Node node = (Node) iter.next();
 
             if (node.getNodeType() != Node.ELEMENT_NODE) {
@@ -209,7 +209,7 @@ class TriggerConfigEntry
         String pName = null;
         int pVal = 0;
 
-        for (Iterator iter = top.nodeIterator(); iter.hasNext(); ) {
+        for (Iterator iter = top.nodeIterator(); iter.hasNext();) {
             Node node = (Node) iter.next();
 
             if (node.getNodeType() != Node.ELEMENT_NODE) {
@@ -462,7 +462,8 @@ public abstract class PayloadChecker
             typeNames[entry.getType()] = entry.getName();
         }
 
-        icecube.daq.oldpayload.impl.TriggerRequestRecord.setTypeNames(typeNames);
+        icecube.daq.oldpayload.impl.TriggerRequestRecord.
+            setTypeNames(typeNames);
         icecube.daq.payload.impl.TriggerRequest.setTypeNames(typeNames);
     }
 

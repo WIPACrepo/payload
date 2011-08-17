@@ -94,7 +94,7 @@ public class HitRecordList
             final int chanId = reg.getChannelId(domStr);
             if (chanId == -1) {
                 if (DOM_wo_chanId == null) {
-                    DOM_wo_chanId= new ArrayList<String>();
+                    DOM_wo_chanId = new ArrayList<String>();
                 }
 
                 DOM_wo_chanId.add(domStr);
@@ -203,7 +203,7 @@ public class HitRecordList
      */
     public boolean hasBadDOMs()
     {
-      return DOM_wo_chanId != null;
+        return DOM_wo_chanId != null;
     }
 
     /**

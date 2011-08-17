@@ -244,11 +244,10 @@ public final class SourceIdRegistry
             return STRING_HUB_SOURCE_ID + id;
         } else if (name.compareTo(DAQCmdInterface.DAQ_SIMULATION_HUB) == 0) {
             return SIMULATION_HUB_SOURCE_ID + id;
-        } else if (name.compareTo(DAQCmdInterface.DAQ_SECONDARY_BUILDERS) == 0)
+        } else if (name.compareTo(DAQCmdInterface.DAQ_SECONDARY_BUILDERS) == 0) 
         {
             return SECONDARY_BUILDERS_SOURCE_ID + id;
-        } else if (name.compareTo(DAQCmdInterface.DAQ_TRACK_ENGINE) == 0)
-        {
+        } else if (name.compareTo(DAQCmdInterface.DAQ_TRACK_ENGINE) == 0) {
             return TRACK_ENGINE_SOURCE_ID + id;
         }
 

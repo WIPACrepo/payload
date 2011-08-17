@@ -40,7 +40,7 @@ public class EngineeringHitRecord
     private static final int OFFSET_DATA = 12;
 
     /** length of waveforms encoded in each ATWD format nybble */
-    private static final int waveformLength[] = new int[] { 32, 64, 16, 128 };
+    private static final int waveformLength[] = new int {32, 64, 16, 128 };
 
     /**
      * Create an engineering-format hit record
@@ -148,15 +148,14 @@ public class EngineeringHitRecord
         }
 
         if (CHECK_DATA_LENGTH) {
-            byte[] affArray = new byte[] { atwdFmt01, atwdFmt23 };
+            byte[] affArray = new byte[] {atwdFmt01, atwdFmt23 };
 
             int expLen = calculateDataLength(lenFADC, affArray, 0);
 
             if (data.length != expLen) {
                 throw new PayloadException("Expected " + expLen +
-                                           " bytes of data, not " + data.length +
-                                           " for FADC " + lenFADC + " AFF0 " +
-                                           atwdFmt01 + " AFF1 " + atwdFmt23);
+                    " bytes of data, not " + data.length + " for FADC " +
+                    lenFADC + " AFF0 " + atwdFmt01 + " AFF1 " + atwdFmt23);
             }
         }
 
@@ -177,6 +176,7 @@ public class EngineeringHitRecord
      * Get ATWD data for the specified channel.
      * @param channel ATWD channel
      * @return waveform data
+     * @throws PayloadException if anything goes wrong
      */
     public int[] getATWDData(int channel)
         throws PayloadException
