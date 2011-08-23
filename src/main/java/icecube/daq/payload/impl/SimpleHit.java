@@ -339,15 +339,9 @@ public class SimpleHit
                                             short trigMode) 
         throws PayloadException
     {
-<<<<<<< .mine
-        if (buf == null)    {
-            throw new PayloadException("ByteBuffer must not be null");
-        }
-=======
         if(buf == null)    {
             throw new PayloadException("ByteBuffer must not be null");
         }
->>>>>>> .r13271
         buf.putInt(offset + OFFSET_LENGTH, LENGTH);
         buf.putInt(offset + OFFSET_TYPE,
                    PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT);

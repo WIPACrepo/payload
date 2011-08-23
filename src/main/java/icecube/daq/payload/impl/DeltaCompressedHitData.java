@@ -289,15 +289,9 @@ public class DeltaCompressedHitData
         final int payLen = computeLength(data.length);
 
         final int leftOver = buf.limit() - (offset + payLen);
-<<<<<<< .mine
-        if (buf == null) {
-            throw new PayloadException("ByteBuffer must not be null");
-        }
-=======
         if(buf == null)    {
             throw new PayloadException("ByteBuffer must not be null");
         }
->>>>>>> .r13271
         if (leftOver < 0) {
             throw new PayloadException("Delta compressed hit data length is " +
                                        payLen +
