@@ -1096,9 +1096,23 @@ public class EventPayload_v5
             subStr = " sub " + subrunNum;
         }
 
+        int numHitRecs;
+        if (hitRecList == null) {
+            numHitRecs = -1;
+        } else {
+            numHitRecs = hitRecList.size();
+        }
+
+        int numTrigRecs;
+        if (trigRecList == null) {
+            numTrigRecs = -1;
+        } else {
+            numTrigRecs = trigRecList.size();
+        }
+
         return "EventPayload_v" + getEventVersion() + "[#" + uid +
             " [" + firstTime + "-" + lastTime + "] yr " + year +
-            " run " + runNum + subStr + " hitRecs*" + hitRecList.size() +
-            " trigRecs*" + trigRecList.size() + getExtraString() + "]";
+            " run " + runNum + subStr + " hitRecs*" + numHitRecs +
+            " trigRecs*" + numTrigRecs + getExtraString() + "]";
     }
 }
