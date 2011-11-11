@@ -161,7 +161,13 @@ public class TriggerRequest
 
         TriggerRequest tr = (TriggerRequest) spliceable;
 
-        return uid - tr.uid;
+        if (firstTime < tr.firstTime) {
+            return -1;
+        } else if (firstTime > tr.firstTime) {
+            return 1;
+        }
+
+        return 0;
     }
 
     /**

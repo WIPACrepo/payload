@@ -421,11 +421,24 @@ public abstract class PayloadChecker
     /** Trigger configuration data. */
     private static TriggerConfig triggerConfig;
 
+    /** Has an expected run number been set? */
+    private static boolean hasRunNumber;
+    /** Expected run number */
+    private static int runNumber;
+
     /**
      * Cannot create an instance of a utility class
      */
     private PayloadChecker()
     {
+    }
+
+    /**
+     * Unset run number
+     */
+    public static void clearRunNumber()
+    {
+        hasRunNumber = false;
     }
 
     /**
@@ -952,6 +965,17 @@ public abstract class PayloadChecker
         }
     }
 
+    /**
+     * Set run number.
+     *
+     * @param runNum run number
+     */
+    public static void setRunNumber(int runNum)
+    {
+        hasRunNumber = true;
+        runNumber = runNum;
+    }
+
     private static String toHexString(ByteBuffer bb)
     {
         StringBuffer buf = new StringBuffer();
@@ -1060,6 +1084,10 @@ public abstract class PayloadChecker
             valid = validateEventRecords(evt, evtDesc, verbose);
         } else {
             valid = validateEventTrigReqAndHits(evt, evtDesc, verbose);
+        }
+
+        if (valid && hasRunNumber) {
+            valid |= evt.getRunNumber() == runNumber;
         }
 
         return valid;

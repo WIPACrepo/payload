@@ -114,7 +114,14 @@ public class HitRecordList
             return getClass().getName().compareTo(spl.getClass().getName());
         }
 
-        return uid - ((HitRecordList) spl).uid;
+        final long otherTime = ((HitRecordList) spl).getUTCTime();
+        if (getUTCTime() < otherTime) {
+            return -1;
+        } else if (getUTCTime() > otherTime) {
+            return 1;
+        }
+
+        return 0;
     }
 
     /**
