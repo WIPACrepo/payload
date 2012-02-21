@@ -9,6 +9,12 @@ import icecube.daq.payload.Poolable;
 public class DOMID
     implements IDOMID, Poolable
 {
+    /** Used to quickly build DOMID strings */
+    private static final char[] hexChars = new char[] {
+        '0', '1', '2', '3', '4', '5', '6', '7',
+        '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
+    };
+
     /** DOM mainboard ID */
     private long domId;
 
@@ -117,11 +123,12 @@ public class DOMID
      */
     public static String toString(long domId)
     {
-        String str = Long.toHexString(domId);
-        while (str.length() < 12) {
-            str = "0" + str;
+        char[] buf = new char[12];
+        for (int i = 11; i >= 0; i--) {
+            buf[i] = hexChars[(int) (domId % 16L)];
+            domId /= 16;
         }
-        return str;
+        return new String(buf);
     }
 
     /**
