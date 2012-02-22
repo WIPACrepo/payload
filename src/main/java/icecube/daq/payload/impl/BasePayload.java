@@ -432,7 +432,7 @@ public abstract class BasePayload
             bodyLen = putBody(buf, offset + OFFSET_PAYLOAD);
         } catch (PayloadException pe) {
             throw new IOException("Cannot write " + getPayloadName() +
-                                  " body: " + pe);
+                                  " body", pe);
         }
 
         final int finalLen = OFFSET_PAYLOAD + bodyLen;
