@@ -376,6 +376,6 @@ public class ReadoutRequest
     public String toString()
     {
         return "ReadoutRequest[time " + getUTCTime() + " uid " + uid +
-            " src " + getSourceID() + " elem*" + elemData.size() + "]";
+            " src " + getSourceID() + " elem*" + elemData.size();
     }
 }

@@ -1,8 +1,7 @@
 /*
  * interface: IPayloadDestinationCollectionController
  *
- * Version $Id: IPayloadDestinationCollectionController.java 
- *     4574 2009-08-28 21:32:32Z dglo $
+ * Version $Id: IPayloadDestinationCollectionController.java 4574 2009-08-28 21:32:32Z dglo $
  *
  * Date: October 19 2005
  *
@@ -15,8 +14,7 @@ package icecube.daq.payload;
  * This interface defines an object the will create and control a
  *  PayloadDestinationCollection.
  *
- * @version $Id: IPayloadDestinationCollectionController.java 
- *     4574 2009-08-28 21:32:32Z dglo $
+ * @version $Id: IPayloadDestinationCollectionController.java 4574 2009-08-28 21:32:32Z dglo $
  * @author pat
  */
 public interface IPayloadDestinationCollectionController

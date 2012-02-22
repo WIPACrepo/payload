@@ -72,23 +72,17 @@ public final class DOMHitFactory
         final long domId = buf.getLong(offset + OFFSET_DOMID);
         final long utcTime = buf.getLong(offset + OFFSET_UTCTIME);
 
-        final ByteOrder origOrder = buf.order();
+        buf.order(ByteOrder.BIG_ENDIAN);
 
-        try {
-            buf.order(ByteOrder.BIG_ENDIAN);
-
-            switch (type) {
-            case TYPE_ENG_HIT:
-                return new EngineeringHit(srcId, domId, utcTime, buf, hdrBytes);
-            case TYPE_DELTA_HIT:
-            case TYPE_DELTA_PAYLOAD:
-                return new DeltaCompressedHit(srcId, domId, utcTime, buf,
-                                              hdrBytes);
-            default:
-                throw new PayloadException("Unknown DOM hit type #" + type);
-            }
-        } finally {
-            buf.order(origOrder);
+        switch (type) {
+        case TYPE_ENG_HIT:
+            return new EngineeringHit(srcId, domId, utcTime, buf, hdrBytes);
+        case TYPE_DELTA_HIT:
+        case TYPE_DELTA_PAYLOAD:
+            return new DeltaCompressedHit(srcId, domId, utcTime, buf,
+                                          hdrBytes);
+        default:
+            throw new PayloadException("Unknown DOM hit type #" + type);
         }
     }
 }

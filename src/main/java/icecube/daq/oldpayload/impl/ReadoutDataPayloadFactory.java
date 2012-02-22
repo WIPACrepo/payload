@@ -3,9 +3,7 @@ package icecube.daq.oldpayload.impl;
 import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadException;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -44,14 +42,13 @@ public class ReadoutDataPayloadFactory extends CompositePayloadFactory {
         IUTCTime        tFirstTimeUTC,
         IUTCTime        tLastTimeUTC,
         List            tDataPayloads
-    ) throws PayloadException {
+    ) {
         ReadoutDataPayload tPayload = null;
         boolean bDeepCopyOk = true;
         List tDataPayloadsCopy =  null;
         //-make deep copy of input Payloads
         if (tDataPayloads != null) {
-            tDataPayloadsCopy =
-                CompositePayloadFactory.deepCopyPayloadList(tDataPayloads);
+            tDataPayloadsCopy = CompositePayloadFactory.deepCopyPayloadList(tDataPayloads);
             if (tDataPayloadsCopy == null) {
                 bDeepCopyOk = false;
             }
@@ -60,13 +57,13 @@ public class ReadoutDataPayloadFactory extends CompositePayloadFactory {
         if (bDeepCopyOk) {
             tPayload = (ReadoutDataPayload) ReadoutDataPayload.getFromPool();
             tPayload.initialize(
-                                iUID,
-                                iPayloadNum,
-                                bPayloadLast,
-                                (ISourceID) tSourceID.deepCopy(),
-                                (IUTCTime) tFirstTimeUTC.deepCopy(),
-                                (IUTCTime) tLastTimeUTC.deepCopy(),
-                                tDataPayloadsCopy);
+                iUID,
+                iPayloadNum,
+                bPayloadLast,
+                (ISourceID) tSourceID.deepCopy(),
+                (IUTCTime) tFirstTimeUTC.deepCopy(),
+                (IUTCTime) tLastTimeUTC.deepCopy(),
+                tDataPayloadsCopy);
         }
         return tPayload;
     }

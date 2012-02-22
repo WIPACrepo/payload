@@ -106,14 +106,7 @@ public class DomHitDeltaCompressedFormatPayloadTest
             assertEquals("Bad data byte #" + i,
                          dataBytes[i], compressedData[i]);
         }
-        assertEquals("Payload type",
-                     17, hit.getPayloadType());
-        assertNotNull("UTC Time", hit.getHitTimeUTC());
-        assertNotNull("DOMId", hit.getDOMID());
-        assertNotNull("Poolable", hit.getPoolable());
-        assertNotNull("String", hit.toString());
-        assertEquals("LocalCoincidenceMode returned", 2, hit.getLocalCoincidenceMode());
-        assertNotNull("String returned",hit.toString());
+
         hit.recycle();
     }
 
@@ -169,6 +162,68 @@ public class DomHitDeltaCompressedFormatPayloadTest
 
             assertEquals("Bad number of bytes written", buf.limit(), written);
 
+            for (int i = 0; i < buf.limit(); i++) {
+                assertEquals("Bad " + (loaded ? "loaded" : "copied") +
+                             " byte #" + i, buf.get(i), newBuf.get(i));
+            }
+        }
+    }
+
+    public void testWriteData()
+        throws Exception
+    {
+        final long domId = 887654432L;
+        final long utcTime = 554433L;
+        final short version = 1;
+        final short pedestal = 31;
+        final long domClock = 103254L;
+        final boolean isCompressed = true;
+        final int trigFlags = 7;
+        final int lcFlags = 2;
+        final boolean hasFADC = false;
+        final boolean hasATWD = true;
+        final int atwdSize = 3;
+        final boolean isATWD_B = false;
+        final boolean isPeakUpper = true;
+        final int peakSample = 15;
+        final int prePeakCnt = 511;
+        final int peakCnt = 511;
+        final int postPeakCnt = 511;
+
+        byte[] dataBytes = new byte[25];
+        for (int i = 0; i < dataBytes.length; i++) {
+            dataBytes[i] = (byte) i;
+        }
+
+        ByteBuffer buf =
+            TestUtil.createDeltaHit(domId, utcTime, version, pedestal,
+                                    domClock, isCompressed, trigFlags, lcFlags,
+                                    hasFADC, hasATWD, atwdSize, isATWD_B,
+                                    isPeakUpper, peakSample, prePeakCnt,
+                                    peakCnt, postPeakCnt, dataBytes);
+
+        DomHitDeltaCompressedFormatPayload hit =
+            new DomHitDeltaCompressedFormatPayload();
+        hit.initialize(0, buf);
+        hit.loadPayload();
+
+        MockDestination mockDest = new MockDestination();
+        for (int b = 0; b < 3; b++) {
+            mockDest.reset();
+
+            final boolean loaded;
+            final int written;
+            if (b == 0) {
+                loaded = false;
+                written = hit.writePayload(mockDest);
+            } else {
+                loaded = (b == 1);
+                written = hit.writePayload(loaded, mockDest);
+            }
+
+            assertEquals("Bad number of bytes written", buf.limit(), written);
+
+            ByteBuffer newBuf = mockDest.getByteBuffer();
             for (int i = 0; i < buf.limit(); i++) {
                 assertEquals("Bad " + (loaded ? "loaded" : "copied") +
                              " byte #" + i, buf.get(i), newBuf.get(i));

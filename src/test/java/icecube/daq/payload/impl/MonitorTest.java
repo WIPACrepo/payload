@@ -8,7 +8,6 @@ import icecube.daq.payload.test.MockReadoutRequest;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
-import icecube.daq.splicer.Spliceable;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -52,16 +51,11 @@ public class MonitorTest
                                             (i == 0));
 
             ASCIIMonitor moni = new ASCIIMonitor(buf, 0);
-            ASCIIMonitor moni1 = new ASCIIMonitor(buf, 0, 50, utcTime);
-
             moni.loadPayload();
 
             assertEquals("Bad DOM ID", domId, moni.getDomId());
             assertEquals("Bad DOM clock", domClock, moni.getDomClock());
             assertEquals("Bad ascii data", str, moni.getString());
-            assertEquals("Payload name","ASCIIMonitor",moni.getPayloadName());
-            assertEquals("Record length", 26,moni.getRecordLength());
-            assertNotNull("String returned",moni.toString());
 
             moni.recycle();
         }
@@ -275,8 +269,8 @@ public class MonitorTest
 
                 ByteBuffer buf =
                     TestUtil.createMonitorConfigChange(utcTime, domId, domClock,
-                                                       slowCtl, states[c].code,
-                                                       daqId, value, (i == 0));
+                                                      slowCtl, states[c].code,
+                                                      daqId, value, (i == 0));
 
                 ConfigChangeMonitor moni = new ConfigChangeMonitor(buf, 0);
                 moni.loadPayload();
@@ -528,7 +522,6 @@ public class MonitorTest
                                            speScalar, mpeScalar, false);
 
         HardwareMonitor moni = new HardwareMonitor(buf, 0);
-        HardwareMonitor moni1 = new HardwareMonitor(buf, 0, 50, utcTime);
         moni.loadPayload();
 
         ByteBuffer newBuf = ByteBuffer.allocate(buf.limit());
@@ -544,62 +537,6 @@ public class MonitorTest
                              (int) newBuf.get(j) & 0xff);
             }
         }
-        assertEquals("Payload Name", "HardwareMonitor", moni.getPayloadName());
-        assertEquals("Record length", 64, moni.getRecordLength());
-        assertNotNull("String retuned", moni.toString());
-    }
-
-    public void testMethods()
-        throws Exception
-    {
-        final long utcTime = 876543210L;
-        final long domId = 0xfedcba987654L;
-        final long domClock = 123456789L;
-
-        byte[] data = new byte[53];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = (byte) (i + 1);
-        }
-
-        ByteBuffer buf =
-            TestUtil.createMonitorGeneric(utcTime, domId, domClock, data,
-                                          false);
-        //Spliceable spl = new Spliceable();
-
-        GenericMonitor moni = new GenericMonitor(buf, 0);
-        GenericMonitor moni1 = new GenericMonitor(buf, 0,30,utcTime);
-        moni.loadPayload();
-
-        assertNotNull("Monitor",moni.computeBufferLength());
-        assertNotNull("Monitor",moni.getMonitorString());
-        assertNotNull("Monitor",moni.compareSpliceable(moni));
-        assertEquals("Payload Name", "GenericMonitor", moni.getPayloadName());
-        assertNotNull("String retuned", moni.toString());
-
-        try {
-            moni.dispose();
-        } catch (Error err) {
-            if (!err.getMessage().equals("Unimplemented")) {
-                throw err;
-            }
-        }
-
-        try {
-            moni.deepCopy();
-        } catch (Error err) {
-            if (!err.getMessage().equals("Unimplemented")) {
-                throw err;
-            }
-        }
-        try {
-            moni.getPayloadTimeUTC();
-        } catch (Error err) {
-            if (!err.getMessage().equals("Unimplemented")) {
-                throw err;
-            }
-        }
-        moni.preloadSpliceableFields(buf,0,30);
-        moni.recycle();
     }
 
     public static void main(String[] args)

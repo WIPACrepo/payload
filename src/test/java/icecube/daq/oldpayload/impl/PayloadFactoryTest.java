@@ -4,8 +4,6 @@ import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.Poolable;
 import icecube.daq.payload.test.LoggingCase;
-import icecube.daq.payload.test.MockBufferCache;
-import icecube.daq.payload.PayloadException;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -50,9 +48,97 @@ class FooPayload
     }
 
     public int writePayload(int offset, ByteBuffer buf)
-        throws IOException, PayloadException
+        throws IOException
     {
         return writePayload(false, offset, buf);
+    }
+}
+
+class FooCache
+    implements IByteBufferCache
+{
+    public FooCache()
+    {
+    }
+
+    public ByteBuffer acquireBuffer(int len)
+    {
+        return ByteBuffer.allocate(len);
+    }
+
+    public void destinationClosed()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void flush()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getCurrentAquiredBuffers()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public long getCurrentAquiredBytes()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public boolean getIsCacheBounded()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public long getMaxAquiredBytes()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public String getName()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getTotalBuffersAcquired()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getTotalBuffersCreated()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getTotalBuffersReturned()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public long getTotalBytesInCache()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public boolean isBalanced()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void receiveByteBuffer(ByteBuffer x0)
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public void returnBuffer(ByteBuffer x0)
+    {
+        // do nothing
+    }
+
+    public void returnBuffer(int x0)
+    {
+        // do nothing
     }
 }
 
@@ -62,7 +148,7 @@ class FooFactory
     FooFactory()
     {
         setPoolablePayloadFactory(new FooPayload());
-        setByteBufferCache(new MockBufferCache());
+        setByteBufferCache(new FooCache());
     }
 }
 

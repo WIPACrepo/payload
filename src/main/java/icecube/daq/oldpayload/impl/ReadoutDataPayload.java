@@ -6,7 +6,6 @@ import icecube.daq.payload.IReadoutDataPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
-import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.Poolable;
 
@@ -122,7 +121,7 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
         IUTCTime        tFirstTimeUTC,
         IUTCTime        tLastTimeUTC,
         List            tPayloads
-    ) throws PayloadException{
+    ) {
         mt_ReadoutDataRecord = (ReadoutDataRecord) ReadoutDataRecord.getFromPool();
         //-Payload portion
         // This is the composite portion of this payload
@@ -312,12 +311,9 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException,PayloadException {
+    public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         int iBytesWritten = 0;
         //-If backing then use it..
-        if(tDestBuffer == null)    {
-            throw new PayloadException("Byte Buffer should not be null");
-        }
         if (mtbuffer != null && !bWriteLoaded) {
             //-If there is backing for this Payload, copy the backing to the destination
             try {
@@ -348,6 +344,48 @@ public class ReadoutDataPayload extends AbstractCompositePayload implements IRea
                 iBytesWritten += writeCompositePayload(bWriteLoaded, iDestOffset + mi_CompositeEnvelopeOffset, tDestBuffer);
             }
         }
+        return iBytesWritten;
+    }
+
+    /**
+     * This method writes this payload to the PayloadDestination.
+     *
+     * @param bWriteLoaded true to write loaded data (even if bytebuffer backing exists)
+     *                                     false to write data normally (depending on backing)
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the destination.
+     *
+     * @throws IOException if an error occurs during the process
+     */
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
+        if (tDestination.doLabel()) tDestination.label("[ReadoutDataPayload]=>").indent();
+        int iBytesWritten = 0;
+        //-If backing then use it..
+        if (mtbuffer != null && !bWriteLoaded) {
+            //-If there is backing for this Payload, copy the backing to the destination
+            iBytesWritten = super.writePayload(bWriteLoaded ,tDestination);
+        } else {
+            if (super.mtbuffer != null) {
+                try {
+                    loadPayload();
+                } catch ( DataFormatException tException) {
+                    throw new IOException("DataFormatException Caught during load");
+                }
+            }
+            if (mt_ReadoutDataRecord != null && mt_PayloadEnvelope != null) {
+                //-if this has been initialized without backing, then use the contained objects
+                // to write to the destination.
+                //-Write the payload-envelope
+                mt_PayloadEnvelope.writeData(tDestination);
+                iBytesWritten += PayloadEnvelope.SIZE_ENVELOPE;
+                //-write the readout-data-request-record
+                mt_ReadoutDataRecord.writeData(tDestination);
+                iBytesWritten += ReadoutDataRecord.SIZE_RECORD;
+                //-write the composite payload portion
+                iBytesWritten += writeCompositePayload(bWriteLoaded ,tDestination);
+            }
+        }
+        if (tDestination.doLabel()) tDestination.undent().label("<=[ReadoutDataPayload]");
         return iBytesWritten;
     }
 

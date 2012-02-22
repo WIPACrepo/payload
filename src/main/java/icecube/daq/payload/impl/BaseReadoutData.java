@@ -20,8 +20,6 @@ public abstract class BaseReadoutData
     implements ILoadablePayload, IReadoutDataPayload, IWriteablePayload,
                Spliceable
 {
-    /** Length of composite header */
-    public static final int LEN_COMPOSITE_HEADER = 8;
     /** Offset of byte-order check field */
     private static final int OFFSET_ORDERCHK = 0;
     /** Offset of unique ID field */
@@ -37,14 +35,17 @@ public abstract class BaseReadoutData
     /** Offset of ending time field */
     private static final int OFFSET_LASTTIME = 22;
 
-    /** Offset of composite data */
-    public static final int OFFSET_COMPDATA = 38;
     /** Offset of composite length */
     private static final int OFFSET_COMPLEN = 30;
     /** Offset of composite type */
     private static final int OFFSET_COMPTYPE = 34;
     /** Offset of number of composites */
     private static final int OFFSET_COMPNUM = 36;
+    /** Offset of composite data */
+    public static final int OFFSET_COMPDATA = 38;
+
+    /** Length of composite header */
+    public static final int LEN_COMPOSITE_HEADER = 8;
 
     /** unique ID */
     private int uid;

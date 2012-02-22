@@ -1,7 +1,7 @@
 /*
  * class: IPayload
  *
- * Version $Id: IPayload.java 13148 2011-07-07 21:50:08Z dglo $
+ * Version $Id: IPayload.java 13128 2011-06-28 23:38:14Z dglo $
  *
  * Date: September 17 2004
  *
@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
 /**
  * Basic interface defining a trigger primitive payload
  *
- * @version $Id: IPayload.java 13148 2011-07-07 21:50:08Z dglo $
+ * @version $Id: IPayload.java 13128 2011-06-28 23:38:14Z dglo $
  * @author hellwig, dwharton
  */
 public interface IPayload

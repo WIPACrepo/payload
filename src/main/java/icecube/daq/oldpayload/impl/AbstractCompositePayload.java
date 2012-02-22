@@ -6,7 +6,6 @@ import icecube.daq.payload.IPayload;
 import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
-import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.Poolable;
 
 import java.io.IOException;
@@ -146,14 +145,36 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
         for (int ii=0; ii < mt_Payloads.size(); ii++) {
             IWriteablePayload tPayload =
                 (IWriteablePayload) mt_Payloads.get(ii);
-            try {
-                tPayload.writePayload(bWriteLoaded, iCurrentOffset, tBuffer);
-            } catch (PayloadException pe) {
-                throw new IOException("Cannot write composite#" + ii, pe);
-            }
+            tPayload.writePayload(bWriteLoaded, iCurrentOffset, tBuffer);
             iCurrentOffset += tPayload.getPayloadLength();
         }
         iBytesWritten = iCurrentOffset - iOffset;
+        return iBytesWritten;
+    }
+    /**
+     * This method writes this payload to the PayloadDestination.
+     *
+     * @param bWriteLoaded boolean to indicate if 'loaded' payloads should be written
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the destination.
+     *
+     * @throws IOException if an error occurs during the process
+     */
+    protected int writeCompositePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
+        int iBytesWritten = 0;
+        if (tDestination.doLabel()) tDestination.label("[writeCompositePayload(bWriteLoaded="+(bWriteLoaded?"true":"false")+")]=>").indent();
+        mt_CompositeEnvelope.writeData(tDestination);
+        iBytesWritten += CompositePayloadEnvelope.SIZE_COMPOSITE_ENVELOPE;
+        int iSize = mt_Payloads.size();
+        //-write out each of the individual payloads
+        for (int ii=0; ii < iSize; ii++) {
+            Payload tPayload = (Payload) mt_Payloads.get(ii);
+            if (tDestination.doLabel()) tDestination.label("[CompositePayload("+(ii+1)+" of "+iSize+")]=>").indent();
+            tPayload.writePayload(bWriteLoaded, tDestination);
+            if (tDestination.doLabel()) tDestination.undent().label("<=[CompositePayload("+(ii+1)+" of "+iSize+")]");
+            iBytesWritten += tPayload.getPayloadLength();
+        }
+        if (tDestination.doLabel()) tDestination.undent().label("<=[writeCompositePayload] bytes="+iBytesWritten);
         return iBytesWritten;
     }
 

@@ -141,8 +141,7 @@ public class PayloadFactory
             pay = MonitorFactory.getPayload(buf, offset, len, utcTime);
             break;
         case PayloadRegistry.PAYLOAD_ID_READOUT_REQUEST:
-            pay = new ReadoutRequest(buf, offset, len, utcTime);
-            break;
+            throw new Error("Unimplemented (PAYLOAD_ID_READOUT_REQUEST)");
         case PayloadRegistry.PAYLOAD_ID_TRIGGER_REQUEST:
             pay = new TriggerRequest(buf, offset, len, utcTime);
             break;

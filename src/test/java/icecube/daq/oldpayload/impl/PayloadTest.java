@@ -6,7 +6,6 @@ import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.Poolable;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockUTCTime;
-import icecube.daq.payload.PayloadException;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -75,7 +74,7 @@ class MyPayload
     }
 
     public int writePayload(int offset, ByteBuffer buf)
-        throws IOException, PayloadException
+        throws IOException
     {
         return writePayload(false, offset, buf);
     }
@@ -285,7 +284,7 @@ public class PayloadTest
                      payLen, pay.readSpliceableLength(0, buf));
     }
 
-    public void testSetTime() throws PayloadException
+    public void testSetTime()
     {
         final long payTime = 97531L;
 
@@ -299,7 +298,7 @@ public class PayloadTest
         pay.dispose();
     }
 
-    public void testCompareSpliceable() throws PayloadException
+    public void testCompareSpliceable()
     {
         final long payTime = 97531L;
 
@@ -396,6 +395,38 @@ public class PayloadTest
         assertEquals("Bad number of bytes written", payLen, written);
 
         for (int i = 0; i < payLen; i++) {
+            assertEquals("Bad byte #" + i, buf.get(i), newBuf.get(i));
+        }
+
+        pay.recycle();
+    }
+
+    public void testWriteDestination()
+        throws Exception
+    {
+        final int payLen = 16;
+        final long payTime = 1L;
+
+        ByteBuffer buf = ByteBuffer.allocate(payLen);
+        buf.putInt(payLen);
+        buf.putInt(MyPayload.PAYLOAD_TYPE);
+        buf.putLong(payTime);
+
+        MockDestination mockDest = new MockDestination();
+
+        MyPayload pay = new MyPayload();
+        assertEquals("Unexpected length for empty write",
+                     0, pay.writePayload(false, mockDest));
+
+        pay.initialize(0, buf, new MyFactory());
+        pay.loadSpliceablePayload();
+
+        final int written = pay.writePayload(false, mockDest);
+
+        assertEquals("Bad number of bytes written", buf.limit(), written);
+
+        ByteBuffer newBuf = mockDest.getByteBuffer();
+        for (int i = 0; i < buf.limit(); i++) {
             assertEquals("Bad byte #" + i, buf.get(i), newBuf.get(i));
         }
 
@@ -531,27 +562,6 @@ public class PayloadTest
         clearMessages();
 
         pay.recycle();
-    }
-
-    public void testMethods()
-    {
-        final int payLen = 16;
-        final long payTime = 67890L;
-
-        ByteBuffer buf = ByteBuffer.allocate(payLen);
-        buf.putInt(0);
-        buf.putInt(MyPayload.PAYLOAD_TYPE);
-        buf.putLong(payTime);
-
-        MyPayload pay = new MyPayload();
-        try {
-            pay.getFromPool();
-        } catch (Error err) {
-            if (!err.getMessage().equals("Unimplemented")) {
-                throw err;
-            }
-        }
-        assertNotNull("object from the object pool", pay.getPoolable());
     }
 
     public static void main(String[] args)

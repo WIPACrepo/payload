@@ -2,8 +2,6 @@ package icecube.daq.oldpayload;
 
 import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IWriteablePayload;
-import icecube.daq.payload.PayloadException;
-
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -17,7 +15,38 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
     protected boolean mb_doLabel;
 
     /**
-     * This methods proxies the call to write Phttp://www.facebook.com/#!/raghuraman.bayload to allow the whole
+     * This methods proxies the call to write Payload to allow the whole
+     * payload to be passed to the payload destination to allow it to
+     * be invoke the write method itself, or to pass the payload by refernce
+     * to the target.
+     *
+     * @param tPayload Payload to which to write to this destination
+     * @return the length in bytes which was written to the ByteBuffer.
+     *
+     * @throws IOException if an error occurs during the process
+     */
+    public int writePayload(IWriteablePayload tPayload) throws IOException {
+        return writePayload(false, tPayload);
+    }
+
+    /**
+     * This methods proxies the call to write Payload to allow the whole
+     * payload to be passed to the payload destination to allow it to
+     * be invoke the write method itself, or to pass the payload by refernce
+     * to the target.
+     *
+     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tPayload Payload to which to write to this destination
+     * @return the length in bytes which was written to the ByteBuffer.
+     *
+     * @throws IOException if an error occurs during the process
+     */
+    public int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload) throws IOException {
+        return tPayload.writePayload(bWriteLoaded, this);
+    }
+
+    /**
+     * This methods proxies the call to write Payload to allow the whole
      * payload to be passed to the payload destination to allow it to
      * be invoke the write method itself, or to pass the payload by refernce
      * to the target.
@@ -30,7 +59,7 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload, int iDestOffset, ByteBuffer tDestBuffer) throws IOException,PayloadException {
+    public int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         return tPayload.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
     }
     //

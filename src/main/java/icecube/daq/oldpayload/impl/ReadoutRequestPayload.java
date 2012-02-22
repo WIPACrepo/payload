@@ -5,7 +5,6 @@ import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.Poolable;
 import icecube.daq.payload.impl.UTCTime;
@@ -169,8 +168,19 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(int iDestOffset, ByteBuffer tDestBuffer) throws IOException,PayloadException {
+    public int writePayload(int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         return writePayload(false, iDestOffset, tDestBuffer);
+    }
+    /**
+     * This method writes this payload to the PayloadDestination.
+     *
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
+     *
+     * @throws IOException if an error occurs during the process
+     */
+    public int writePayload(IPayloadDestination tDestination) throws IOException {
+        return writePayload(false, tDestination);
     }
 
     /**
@@ -184,11 +194,8 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException, PayloadException {
+    public int writePayload(boolean bWriteLoaded, int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         int iLength = 0;
-        if(tDestBuffer == null)    {
-            throw new PayloadException("ByteBuffer must not be null");
-        }
         if (mtbuffer != null && !bWriteLoaded ) {
             iLength = super.writePayload(bWriteLoaded, iDestOffset, tDestBuffer);
         } else {
@@ -206,7 +213,36 @@ public class ReadoutRequestPayload extends Payload implements IReadoutRequest {
         }
         return iLength;
     }
-
+    /**
+     * This method writes this payload to the PayloadDestination.
+     *
+     * @param bWriteLoaded boolean to indicate if writing out the loaded payload even if there is bytebuffer support.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
+     *
+     * @throws IOException if an error occurs during the process
+     */
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
+        if (tDestination.doLabel()) tDestination.label("[ReadoutRequestPayload]=>").indent();
+        int iLength = 0;
+        if (mtbuffer != null && !bWriteLoaded ) {
+            iLength = super.writePayload(bWriteLoaded, tDestination);
+        } else {
+            if (super.mtbuffer != null) {
+                try {
+                    loadPayload();
+                } catch ( DataFormatException tException) {
+                    throw new IOException("DataFormatException Caught during load");
+                }
+            }
+            //-Payload Envelope has been initialized already
+            super.mt_PayloadEnvelope.writeData(tDestination);
+            mt_ReadoutRequestRecord.writeData(tDestination);
+            iLength = PayloadEnvelope.SIZE_ENVELOPE + mt_ReadoutRequestRecord.getTotalRecordSize();
+        }
+        if (tDestination.doLabel()) tDestination.undent().label("<=[ReadoutRequestPayload]").indent();
+        return iLength;
+    }
     /**
      * This method de-initializes this object in preparation for reuse.
      */

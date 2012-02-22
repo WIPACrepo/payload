@@ -24,9 +24,6 @@ public class TriggerRequest
     extends BasePayload
     implements ILoadablePayload, ITriggerRequestPayload, Spliceable
 {
-
-    /** Length of composite header */
-    public static final int LEN_COMPOSITE_HEADER = 8;
     /** Internal trigger request record type */
     public static final short RECORD_TYPE = 4;
 
@@ -47,16 +44,18 @@ public class TriggerRequest
 
     /** Offset of readout request field */
     private static final int OFFSET_RDOUTREQ = 34;
-    /** Offset of composite data (within composite data section) */
-    public static final int OFFSET_COMPDATA = 8;
+
     /** Offset of composite length (within composite data section) */
     private static final int OFFSET_COMPLEN = 0;
     /** Offset of composite type (within composite data section) */
     private static final int OFFSET_COMPTYPE = 4;
     /** Offset of number of composites (within composite data section) */
     private static final int OFFSET_COMPNUM = 6;
+    /** Offset of composite data (within composite data section) */
+    public static final int OFFSET_COMPDATA = 8;
 
-
+    /** Length of composite header */
+    public static final int LEN_COMPOSITE_HEADER = 8;
 
     /** list of trigger names */
     private static String[] TYPE_NAMES = new String[] {
@@ -65,7 +64,7 @@ public class TriggerRequest
         "PhysMBT", "??Trig14??", "Volume", "??Trig16??", "MplcityStr",
         "??Trig18??", "??Trig19??", "Volume", "Cylinder", "SlowMP",
         "??Trig22??", "??Trig23??", "??Trig24??", "??Trig25??", "??Trig26??",
-        "??Trig27??", "??Trig28??", "??Trig29??", "FixedRate",
+        "??Trig27??", "??Trig28??", "??Trig29??", "FixedRate"
     };
 
     /** unique ID */
@@ -188,9 +187,8 @@ public class TriggerRequest
     /**
      * Return a copy of this object.
      * @return copied object
-     * @throws PayloadException if anything goes wrong
      */
-    public Object deepCopy() throws PayloadException
+    public Object deepCopy()
     {
         if (!isLoaded()) {
             throw new Error(getPayloadName() + " has not been loaded");

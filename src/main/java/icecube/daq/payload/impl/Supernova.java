@@ -222,23 +222,21 @@ public class Supernova
         final ByteOrder origOrder = buf.order();
         final int origPos = buf.position();
 
-        try {
-            buf.order(ByteOrder.BIG_ENDIAN);
+        buf.order(ByteOrder.BIG_ENDIAN);
 
-            final int blockLen = buf.getShort(pos + OFFSET_BLOCKLEN);
-            fmtId = buf.getShort(pos + OFFSET_FORMATID);
+        final int blockLen = buf.getShort(pos + OFFSET_BLOCKLEN);
+        fmtId = buf.getShort(pos + OFFSET_FORMATID);
 
-            clockBytes = new byte[6];
-            buf.position(pos + OFFSET_DOMCLOCK);
-            buf.get(clockBytes, 0, clockBytes.length);
+        clockBytes = new byte[6];
+        buf.position(pos + OFFSET_DOMCLOCK);
+        buf.get(clockBytes, 0, clockBytes.length);
 
-            scalarData = new byte[blockLen - HEADER_LEN];
-            buf.position(pos + OFFSET_SCALARDATA);
-            buf.get(scalarData, 0, scalarData.length);
-        } finally {
-            buf.position(origPos);
-            buf.order(origOrder);
-        }
+        scalarData = new byte[blockLen - HEADER_LEN];
+        buf.position(pos + OFFSET_SCALARDATA);
+        buf.get(scalarData, 0, scalarData.length);
+
+        buf.position(origPos);
+        buf.order(origOrder);
 
         return OFFSET_SCALARDATA + scalarData.length;
     }

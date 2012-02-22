@@ -71,12 +71,8 @@ public class EventFactory
             throw new Error("Unimplemented");
         }
 
-        ITriggerRequestPayload reqCopy;
-        try {
-            reqCopy = (ITriggerRequestPayload) trigReq.deepCopy();
-        } catch (PayloadException pe) {
-            throw new Error("Cannot deep-copy trigger request", pe);
-        }
+        ITriggerRequestPayload reqCopy =
+            (ITriggerRequestPayload) trigReq.deepCopy();
 
         ArrayList copyList;
         if (dataList == null) {
@@ -84,11 +80,7 @@ public class EventFactory
         } else {
             copyList = new ArrayList();
             for (Object obj : dataList) {
-                try {
-                    copyList.add(((ILoadablePayload) obj).deepCopy());
-                } catch (PayloadException pe) {
-                    throw new Error("Cannot deep-copy data list", pe);
-                }
+                copyList.add(((ILoadablePayload) obj).deepCopy());
             }
         }
 
@@ -113,7 +105,6 @@ public class EventFactory
      * @param hitRecList list of hit records
      * @param domRegistry used to map each hit's DOM ID to the channel ID
      * @return new event
-     * @throws PayloadException if anything goes wrong
      */
     public ILoadablePayload createPayload(int uid, IUTCTime firstTime,
                                           IUTCTime lastTime, short year,

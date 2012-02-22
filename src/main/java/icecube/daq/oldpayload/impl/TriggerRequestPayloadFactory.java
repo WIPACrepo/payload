@@ -6,7 +6,6 @@ import icecube.daq.payload.IReadoutRequestElement;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadException;
 
 import java.util.List;
 import java.util.zip.DataFormatException;
@@ -54,7 +53,7 @@ public class TriggerRequestPayloadFactory extends CompositePayloadFactory {
             IUTCTime        tLastTimeUTC,
             List            tPayloads,
             IReadoutRequest tRequest
-    ) throws PayloadException {
+    ) {
         TriggerRequestPayload tTriggerRequestPayload = null;
         List tPayloadsCopy =
             CompositePayloadFactory.deepCopyPayloadList(tPayloads);
@@ -70,7 +69,7 @@ public class TriggerRequestPayloadFactory extends CompositePayloadFactory {
         return tTriggerRequestPayload;
     }
 
-    public Payload createPayload(ITriggerRequestPayload payload) throws DataFormatException, PayloadException {
+    public Payload createPayload(ITriggerRequestPayload payload) throws DataFormatException {
         return createPayload(payload.getUID(), payload.getTriggerType(), payload.getTriggerConfigID(),
                 payload.getSourceID(), payload.getFirstTimeUTC(), payload.getLastTimeUTC(),
                 payload.getPayloads(), payload.getReadoutRequest());
@@ -83,7 +82,7 @@ public class TriggerRequestPayloadFactory extends CompositePayloadFactory {
      * @param iTriggerUID the unique id of the generated trigger.
      * @param tRequestElements the consituent readout-request-elements
      */
-    public static IReadoutRequest createReadoutRequest(ISourceID tSourceID, int iTriggerUID, List tRequestElements) throws PayloadException {
+    public static IReadoutRequest createReadoutRequest(ISourceID tSourceID, int iTriggerUID, List tRequestElements) {
         return ReadoutRequestPayloadFactory.createReadoutRequest(tSourceID, iTriggerUID, tRequestElements);
     }
 
@@ -103,7 +102,8 @@ public class TriggerRequestPayloadFactory extends CompositePayloadFactory {
             IUTCTime     tLastTime,
             IDOMID       tIDomId,
             ISourceID    tISourceId
-        ) throws PayloadException {
+        ) {
         return ReadoutRequestPayloadFactory.createReadoutRequestElement( iReadoutType, tFirstTime, tLastTime, tIDomId, tISourceId);
+
     }
 }

@@ -7,6 +7,7 @@ import icecube.daq.payload.IEventPayload;
 import icecube.daq.payload.IEventTriggerRecord;
 import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.ILoadablePayload;
+import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
@@ -32,7 +33,7 @@ class TemporaryHit
     private IDOMID domId;
     private IUTCTime hitTime;
 
-    public TemporaryHit(IHitPayload hit) throws PayloadException
+    public TemporaryHit(IHitPayload hit)
     {
         domId = (IDOMID) hit.getDOMID().deepCopy();
         hitTime = (IUTCTime) hit.getHitTimeUTC().deepCopy();
@@ -120,6 +121,12 @@ class TemporaryHit
     }
 
     public void setCache(IByteBufferCache x0)
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int writePayload(boolean b0, IPayloadDestination x1)
+        throws IOException
     {
         throw new Error("Unimplemented");
     }

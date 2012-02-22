@@ -2,7 +2,6 @@ package icecube.daq.payload;
 
 /**
  * Object which can be deep-copied.
- * @ throws PayloadException when something goes wrong
  */
 public interface ICopyable
 {
@@ -11,6 +10,5 @@ public interface ICopyable
      * @return Object which is a copy of the object which implements this
      *                interface.
      */
-    Object deepCopy() throws PayloadException;
+    Object deepCopy();
 }
-

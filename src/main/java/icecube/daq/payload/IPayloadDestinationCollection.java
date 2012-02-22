@@ -1,8 +1,7 @@
 /*
  * interface: IPayloadDestinationCollection
  *
- * Version $Id: IPayloadDestinationCollection.java
- *    4574 2009-08-28 21:32:32Z dglo $
+ * Version $Id: IPayloadDestinationCollection.java 4574 2009-08-28 21:32:32Z dglo $
  *
  * Date: October 19 2005
  *
@@ -17,8 +16,7 @@ import java.util.Collection;
 /**
  * This interface defines a collection of PayloadDestinations.
  *
- * @version $Id: IPayloadDestinationCollection.java 
- *     4574 2009-08-28 21:32:32Z dglo $
+ * @version $Id: IPayloadDestinationCollection.java 4574 2009-08-28 21:32:32Z dglo $
  * @author pat
  */
 public interface IPayloadDestinationCollection

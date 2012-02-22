@@ -3,7 +3,6 @@ package icecube.daq.oldpayload.impl;
 import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.test.LoggingCase;
 
 import java.io.IOException;
@@ -151,7 +150,6 @@ public class CompositePayloadFactoryTest
     }
 
     public void testDeepCopyNull()
-        throws PayloadException
     {
         CompositePayloadFactory factory = new CompositePayloadFactory();
 
@@ -160,7 +158,6 @@ public class CompositePayloadFactoryTest
     }
 
     public void testDeepCopyNothing()
-        throws PayloadException
     {
         Vector<MockPayload> v = new Vector<MockPayload>();
 
@@ -172,7 +169,6 @@ public class CompositePayloadFactoryTest
     }
 
     public void testDeepCopyFail()
-        throws PayloadException
     {
         Vector<MockPayload> v = new Vector<MockPayload>();
         v.add(new MockPayload(true));
@@ -196,7 +192,6 @@ public class CompositePayloadFactoryTest
     }
 
     public void testDeepCopy()
-        throws PayloadException
     {
         Vector<MockPayload> v = new Vector<MockPayload>();
         v.add(new MockPayload());
@@ -232,7 +227,6 @@ public class CompositePayloadFactoryTest
     }
 
     public void testDeepCopyArrayList()
-        throws PayloadException
     {
         ArrayList<MockPayload> v = new ArrayList<MockPayload>();
         v.add(new MockPayload());

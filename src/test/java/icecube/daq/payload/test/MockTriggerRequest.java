@@ -7,7 +7,6 @@ import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadException;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -52,7 +51,6 @@ public class MockTriggerRequest
     }
 
     public Object deepCopy()
-        throws PayloadException
     {
         if (failDeepCopy) {
             return null;

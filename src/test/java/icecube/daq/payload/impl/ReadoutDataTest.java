@@ -8,7 +8,6 @@ import icecube.daq.payload.test.MockHitData;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.MockUTCTime;
 import icecube.daq.payload.test.TestUtil;
-import icecube.daq.payload.PayloadException;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -146,17 +145,7 @@ public class ReadoutDataTest
                                               firstTime, lastTime, hitList);
 
         HitDataReadoutData rdp = new HitDataReadoutData(buf, 0);
-
-        try{
-            assertEquals("Buffer length returned", 1, rdp.computeBufferLength());
-        } catch( Error err ) {
-            if( !err.getMessage().equals("HitDataReadoutData has not been loaded") ){
-                throw err;
-            }
-        }
-
         rdp.loadPayload();
-        assertEquals("Buffer length returned", 174, rdp.computeBufferLength());
 
 //        assertEquals("Bad payload type",
 //                     PayloadRegistry.PAYLOAD_ID_READOUT_DATA,
@@ -177,7 +166,6 @@ public class ReadoutDataTest
 //                     isLast, rdp.isLastPayloadOfGroup());
 
         assertNotNull("Non-null hit list", rdp.getHitList());
-        assertNotNull("Copied object returned", rdp.deepCopy());
 
         List rdpHits = rdp.getHitList();
         assertEquals("Bad number of hits", 2, rdpHits.size());
@@ -246,6 +234,60 @@ public class ReadoutDataTest
             }
         }
     }
+
+/*
+    public void testWriteData()
+        throws Exception
+    {
+        final int uid = 12;
+        final int payNum = 1;
+        final boolean isLast = true;
+        final int srcId = 34;
+        final long firstTime = 1111L;
+        final long lastTime = 2222L;
+
+        final long hitTime1 = 1122L;
+        final int hitType1 = 23;
+        final int hitCfgId1 = 24;
+        final int hitSrcId1 = 25;
+        final long hitDomId1 = 1126L;
+        final int hitMode1 = 27;
+
+        final long hitTime2 = 2211;
+        final int hitType2 = 33;
+        final int hitCfgId2 = 34;
+        final int hitSrcId2 = 35;
+        final long hitDomId2 = 2109L;
+        final int hitMode2 = 37;
+
+        ArrayList hitList = new ArrayList();
+        hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
+                                    hitDomId1, hitMode1));
+        hitList.add(new MockHitData(hitTime2, hitType2, hitCfgId2, hitSrcId2,
+                                    hitDomId2, hitMode2));
+
+        ByteBuffer buf =
+            TestUtil.createReadoutDataPayload(uid, payNum, isLast, srcId,
+                                              firstTime, lastTime, hitList);
+
+        HitDataReadoutData rdp = new HitDataReadoutData(buf, 0);
+        rdp.loadPayload();
+
+        MockDestination mockDest = new MockDestination();
+        for (int b = 0; b < 2; b++) {
+            mockDest.reset();
+
+            final int written = rdp.writePayload((b == 1), mockDest);
+
+            assertEquals("Bad number of bytes written", buf.limit(), written);
+
+            ByteBuffer newBuf = mockDest.getByteBuffer();
+            for (int i = 0; i < buf.limit(); i++) {
+                assertEquals("Bad byte #" + i, buf.get(i), newBuf.get(i));
+            }
+        }
+    }
+*/
 
     public static void main(String[] args)
     {

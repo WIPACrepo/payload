@@ -5,7 +5,6 @@ import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IDomHit;
 import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.Poolable;
 import icecube.daq.payload.impl.DOMID;
@@ -396,10 +395,50 @@ public class DomHitEngineeringFormatPayload extends Payload implements IDomHit {
      *
      * @throws IOException if an error occurs during the process
      */
-    public int writePayload(int iDestOffset, ByteBuffer tDestBuffer) throws IOException,PayloadException {
+    public int writePayload(int iDestOffset, ByteBuffer tDestBuffer) throws IOException {
         return writePayload(false, iDestOffset, tDestBuffer);
     }
-
+    /**
+     * This method writes this payload to the PayloadDestination.
+     *
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
+     *
+     * @throws IOException if an error occurs during the process
+     */
+    public int writePayload(IPayloadDestination tDestination) throws IOException {
+        return writePayload(false, tDestination);
+    }
+    /**
+     * This method writes the Payload from a 'loaded' internal representation
+     * if it has one instead of from the ByteBuffer backing if it is able to.
+     * This is useful for altering payload's for testing (after loading) or
+     * for making use of specialized PayloadDestinations which can document
+     * the output if necessary.
+     *
+     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
+     * @param tDestination PayloadDestination to which to write the payload
+     * @return the length in bytes which was written to the ByteBuffer.
+     *
+     * @throws IOException if an error occurs during the process
+     */
+    public int writePayload(boolean bWriteLoaded, IPayloadDestination tDestination) throws IOException {
+        int iLength = 0;
+        if (tDestination.doLabel()) tDestination.label("[DomHitEngineeringFormatPayload] {").indent();
+        if (bWriteLoaded) {
+            try {
+                loadPayload();
+            } catch (DataFormatException tException) {
+                throw new IOException("DataFormatException thrown during load");
+            }
+            iLength += writeTestDaqHdr(tDestination);
+            iLength += mtDomHitEngineeringFormatRecord.writeData(tDestination);
+        } else {
+            iLength = super.writePayload(false, tDestination);
+        }
+        if (tDestination.doLabel()) tDestination.undent().label("} [DomHitEngineeringFormatPayload]");
+        return iLength;
+    }
     /**
      * converts domid to hex string.
      * @return hex representation of domid, useful for hashing

@@ -1,8 +1,7 @@
 /*
  * class: ITriggerRequestPayload
  *
- * Version $Id: ITriggerRequestPayload.java,v 1.3 
- *     2005/10/07 22:35:45 dwharton Exp $
+ * Version $Id: ITriggerRequestPayload.java,v 1.3 2005/10/07 22:35:45 dwharton Exp $
  *
  * Date: September 17 2004
  *
@@ -38,5 +37,5 @@ public interface ITriggerRequestPayload extends ICompositePayload
      *
      * @return trigger name
      */
-    String getTriggerName();
+    public String getTriggerName();
 }

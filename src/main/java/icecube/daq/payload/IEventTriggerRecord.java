@@ -17,8 +17,8 @@ public interface IEventTriggerRecord
      * @param hitRecList list of hits
      * @throws PayloadException if there is a problem
      */
-    void computeIndices(IDOMRegistry domRegistry, 
-        List<IEventHitRecord> hitRecList) throws PayloadException;
+    void computeIndices(IDOMRegistry domRegistry, List<IEventHitRecord> hitRecList)
+        throws PayloadException;
     /**
      * Return the configuration ID.
      * @return trigger configuration ID

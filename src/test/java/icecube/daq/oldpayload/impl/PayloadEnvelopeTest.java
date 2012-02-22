@@ -258,30 +258,6 @@ public class PayloadEnvelopeTest
                      len, PayloadEnvelope.readPayloadLength(0, buf));
     }
 
-    public void testReadType()
-        throws DataFormatException, IOException
-    {
-        ByteBuffer buf = ByteBuffer.allocate(8);
-        ByteBuffer buf1 = ByteBuffer.allocate(4);
-        buf.order(ByteOrder.BIG_ENDIAN);
-
-        assertEquals("Bad payload Type",
-                     0, PayloadEnvelope.readPayloadType(0, buf));
-        try{
-            assertEquals("Bad payload Type",
-                         0, PayloadEnvelope.readPayloadType(0, buf1));
-        }catch(DataFormatException dfe){
-            if (!dfe.getMessage().equals("Cannot read payload type; need 8 bytes, but only 4 are available")) {
-                throw dfe;
-            }
-        }
-
-        buf.order(ByteOrder.LITTLE_ENDIAN);
-
-        assertEquals("Bad payload Type",
-                     0, PayloadEnvelope.readPayloadType(0, buf));
-    }
-
     public static void main(String[] args)
     {
         TestRunner.run(suite());

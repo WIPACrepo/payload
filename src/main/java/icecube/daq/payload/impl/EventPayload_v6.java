@@ -136,7 +136,7 @@ public class EventPayload_v6
         }
 
         return hitLen;
-    }
+   }
 
     /**
      * Get the name of this payload.

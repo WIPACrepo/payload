@@ -94,16 +94,8 @@ public class TriggerRequestRecordTest
                      firstTime, reqRec.mt_firstTime.longValue());
         assertEquals("Bad last UTC time",
                      lastTime, reqRec.mt_lastTime.longValue());
-        assertNotNull("Poolable returned", reqRec.getPoolable());
-        assertNotNull("Trigger name returned", reqRec.getTriggerName());
-        assertNotNull("String returned", reqRec.toString());
-        assertNotNull("String returned", reqRec.toDataString());
 
-        String names[] = new String[5];
-
-        reqRec.setTypeNames(names);
         reqRec.recycle();
-
         assertFalse("Data should not be loaded", reqRec.isDataLoaded());
     }
 

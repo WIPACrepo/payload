@@ -8,7 +8,6 @@ import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockReadoutRequest;
 import icecube.daq.payload.test.MockReadoutRequestElement;
 import icecube.daq.payload.test.MockUTCTime;
-import icecube.daq.payload.test.MockHitData;
 import icecube.daq.payload.test.TestUtil;
 
 import java.nio.ByteBuffer;
@@ -44,9 +43,6 @@ public class ReadoutRequestPayloadTest
 
         final int uid = 34;
         final int srcId = 12;
-        final int payNum = 1;
-        final long domId = 123456L;
-        final boolean isLast = true;
 
         final int type1 = 100;
         final long firstTime1 = 101L;
@@ -59,21 +55,6 @@ public class ReadoutRequestPayloadTest
         final long lastTime2 = 202L;
         final long domId2 = -1;
         final int srcId2 = -1;
-
-        final long hitTime1 = 1122L;
-        final int hitType1 = 23;
-        final int hitCfgId1 = 24;
-        final int hitSrcId1 = 25;
-        final long hitDomId1 = 1126L;
-        final int hitMode1 = 27;
-
-        ArrayList hitList = new ArrayList();
-        hitList.add(new MockHitData(hitTime1, hitType1, hitCfgId1, hitSrcId1,
-                                    hitDomId1, hitMode1));
-
-        ByteBuffer buf =
-            TestUtil.createReadoutDataPayload(uid, payNum, isLast, srcId,
-                                              firstTime1, lastTime1, hitList);
 
         MockReadoutRequest mockReq = new MockReadoutRequest(uid, srcId);
         mockReq.addElement(type1, firstTime1, lastTime1, domId1, srcId1);
@@ -113,36 +94,6 @@ public class ReadoutRequestPayloadTest
                          (elem.getSourceID() == null ? -1 :
                           elem.getSourceID().getSourceID()));
         }
-
-        try {
-            req.getEmbeddedLength();
-        } catch (Error err) {
-            if (!err.getMessage().equals("Unimplemented")) {
-                throw err;
-            }
-        }
-        try {
-            req.length();
-        } catch (Error err) {
-            if (!err.getMessage().equals("Unimplemented")) {
-                throw err;
-            }
-        }
-        try {
-            req.putBody( buf, 0);
-        } catch (Error err) {
-            if (!err.getMessage().equals("Unimplemented")) {
-                throw err;
-            }
-        }
-        try {
-            req.addElement( type1, srcId, firstTime1, lastTime1, domId);
-        } catch (Error err) {
-            if (!err.getMessage().equals("Unimplemented")) {
-                throw err;
-            }
-        }
-        assertNotNull("String returned",req.toString());
 
         try {
             req.recycle();
@@ -265,6 +216,62 @@ public class ReadoutRequestPayloadTest
 
             assertEquals("Bad number of bytes written", buf.limit(), written);
 
+            for (int i = 0; i < buf.limit(); i++) {
+                assertEquals("Bad " + (loaded ? "loaded" : "copied") +
+                             " byte #" + i, buf.get(i), newBuf.get(i));
+            }
+        }
+    }
+
+    public void testWriteData()
+        throws Exception
+    {
+        final long utcTime = 65432L;
+
+        final int uid = 34;
+        final int srcId = 12;
+
+        final int type1 = 100;
+        final long firstTime1 = 101L;
+        final long lastTime1 = 102L;
+        final long domId1 = 103L;
+        final int srcId1 = 104;
+
+        final int type2 = 200;
+        final long firstTime2 = 201L;
+        final long lastTime2 = 202L;
+        final long domId2 = -1;
+        final int srcId2 = -1;
+
+        ArrayList mockList = new ArrayList();
+        mockList.add(new MockReadoutRequestElement(type1, firstTime1,
+                                                   lastTime1, domId1, srcId1));
+        mockList.add(new MockReadoutRequestElement(type2, firstTime2,
+                                                   lastTime2, domId2, srcId2));
+
+        ByteBuffer buf = TestUtil.createReadoutRequest(utcTime, uid, srcId,
+                                                       mockList);
+        ReadoutRequestPayload req = new ReadoutRequestPayload();
+        req.initialize(0, buf, null);
+        req.loadPayload();
+
+        MockDestination mockDest = new MockDestination();
+        for (int b = 0; b < 3; b++) {
+            mockDest.reset();
+
+            final boolean loaded;
+            final int written;
+            if (b == 0) {
+                loaded = false;
+                written = req.writePayload(mockDest);
+            } else {
+                loaded = (b == 1);
+                written = req.writePayload(loaded, mockDest);
+            }
+
+            assertEquals("Bad number of bytes written", buf.limit(), written);
+
+            ByteBuffer newBuf = mockDest.getByteBuffer();
             for (int i = 0; i < buf.limit(); i++) {
                 assertEquals("Bad " + (loaded ? "loaded" : "copied") +
                              " byte #" + i, buf.get(i), newBuf.get(i));

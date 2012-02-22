@@ -8,7 +8,7 @@ import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
-import icecube.daq.util.IDOMRegistry;
+import icecube.daq.util.DOMRegistry;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -37,8 +37,6 @@ public class HitRecordList
     private int srcId;
     /** list of hit records */
     private List<IEventHitRecord> hitRecList;
-    /** list of DOM strings without channel ID */
-    private List<String> DOM_wo_chanId;
 
     /**
      * Create a hit record list
@@ -75,7 +73,7 @@ public class HitRecordList
      * @param hitList list of hits
      * @throws PayloadException if there is a problem
      */
-    public HitRecordList(IDOMRegistry reg, long utcTime, int uid,
+    public HitRecordList(DOMRegistry reg, long utcTime, int uid,
                          ISourceID srcId, List<DOMHit> hitList)
         throws PayloadException
     {
@@ -93,11 +91,7 @@ public class HitRecordList
 
             final int chanId = reg.getChannelId(domStr);
             if (chanId == -1) {
-                if (DOM_wo_chanId == null) {
-                    DOM_wo_chanId = new ArrayList<String>();
-                }
-
-                DOM_wo_chanId.add(domStr);
+                System.err.println("Cannot find channel ID for DOM " + domStr);
                 continue;
             }
 
@@ -159,16 +153,6 @@ public class HitRecordList
     }
 
     /**
-     * Get the list of DOMs which do not have a channel id.
-     *
-     * @return list of problem DOM IDs
-     */
-    public List<String> getBadDOMs()
-    {
-        return DOM_wo_chanId;
-    }
-
-    /**
      * Get the name of this payload.
      * @return name
      */
@@ -193,17 +177,6 @@ public class HitRecordList
     public int getUID()
     {
         return uid;
-    }
-
-    /**
-     * Was this hit record list built with any bad DOMs?
-     *
-     * @return <tt>true</tt> if one or more bad DOMs were passed to the
-     *         constructor
-     */
-    public boolean hasBadDOMs()
-    {
-        return DOM_wo_chanId != null;
     }
 
     /**

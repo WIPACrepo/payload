@@ -5,7 +5,6 @@ import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.IReadoutRequestElement;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.PayloadException;
 
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -49,7 +48,7 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
      * @param tReadoutRequest IReadoutRequest which is used to construct the payload.
      * @return the ReadoutRequestPayload constructed from the IReadoutRequest.
      */
-    public Payload createPayload(IUTCTime tTime, IReadoutRequest tReadoutRequest) throws DataFormatException, PayloadException {
+    public Payload createPayload(IUTCTime tTime, IReadoutRequest tReadoutRequest) throws DataFormatException {
         // ReadoutRequestPayload tPayload = (ReadoutRequestPayload) ReadoutRequestPayload.getFromPool();
         ReadoutRequestPayload tPayload = (ReadoutRequestPayload) mt_PoolablePayloadFactory.getPoolable();
         tPayload.initialize((IUTCTime) tTime.deepCopy(), tReadoutRequest);
@@ -65,7 +64,7 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
      *                              subsequently 'owned' by the output IReadoutRequest.
      * @return the output request
      */
-    public static IReadoutRequest createReadoutRequest(ISourceID tSourceID, int iTriggerUID, List tRequestElements) throws PayloadException {
+    public static IReadoutRequest createReadoutRequest(ISourceID tSourceID, int iTriggerUID, List tRequestElements) {
         ReadoutRequestRecord tRequest = (ReadoutRequestRecord) ReadoutRequestRecord.getFromPool();
         tRequest.initialize(iTriggerUID,(ISourceID) tSourceID.deepCopy(),tRequestElements);
         return tRequest;
@@ -81,7 +80,7 @@ public class ReadoutRequestPayloadFactory extends PayloadFactory {
             IUTCTime     tLastTime,
             IDOMID       tIDomId,
             ISourceID    tISourceId
-        ) throws PayloadException {
+        ) {
         ReadoutRequestElementRecord tElement = (ReadoutRequestElementRecord) ReadoutRequestElementRecord.getFromPool();
         tElement.initialize(iReadoutType,
                             (IUTCTime) tFirstTime.deepCopy(),
