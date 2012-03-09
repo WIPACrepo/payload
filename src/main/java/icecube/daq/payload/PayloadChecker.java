@@ -121,7 +121,7 @@ class TriggerConfigEntry
                 put("AmandaRandomTrigger", new String[0]);
                 put("AmandaStringTrigger", new String[0]);
                 put("AmandaVolumeTrigger", new String[0]);
-                put("CalibrationTrigger", new String[] { "hitType" });
+                put("CalibrationTrigger", new String[] { "hitType", "domSet" });
                 put("ClusterTrigger",
                     new String[] {
                         "coherenceLength", "multiplicity", "timeWindow",
