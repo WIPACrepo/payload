@@ -83,7 +83,7 @@ public class HitRecordList
         this.uid = uid;
         this.srcId = srcId.getSourceID();
 
-        final int strMajor = this.srcId % 1000;
+        final int hubId = this.srcId % 1000;
 
         hitRecList = new ArrayList<IEventHitRecord>();
         for (DOMHit hit : hitList) {
@@ -93,7 +93,7 @@ public class HitRecordList
             }
 
             DeployedDOM dom = reg.getDom(domStr);
-            if (dom.getStringMajor() % 1000 != strMajor) {
+            if (dom.getHubId() % 1000 != hubId) {
                 System.err.println("Cannot send DOM " + domStr +
                                    " (" + dom.getStringMajor() +
                                    "-" + dom.getStringMinor() +

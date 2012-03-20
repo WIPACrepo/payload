@@ -82,9 +82,8 @@ public class DeltaHitRecord
             throw new PayloadException("Unknown channel ID " + getChannelID());
         }
 
-        int srcId = SourceIdRegistry.STRING_HUB_SOURCE_ID +
-            dom.getStringMajor();
-        long mbId = Long.decode("0x" + dom.getMainboardId()).longValue();
+        int srcId = SourceIdRegistry.STRING_HUB_SOURCE_ID + dom.getHubId();
+        long mbId = dom.getNumericMainboardId();
 
         ByteBuffer buf = ByteBuffer.wrap(getRawData());
         int word0 = buf.getInt(0);
