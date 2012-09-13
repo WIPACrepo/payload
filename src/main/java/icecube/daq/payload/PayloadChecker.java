@@ -40,6 +40,16 @@ abstract class XMLConfig
     }
 
     /**
+     * Get the node text as a long integer value.
+     * @param branch integer node
+     * @return long integer value
+     */
+    static long getNodeLong(Branch branch)
+    {
+        return Long.parseLong(getNodeText(branch));
+    }
+
+    /**
      * Concatenate the text from the node's children.
      * @param branch node
      * @return concatenated text
@@ -166,7 +176,7 @@ class TriggerConfigEntry
     private int id = -1;
     private int srcId = -1;
     private String name;
-    private HashMap<String, Integer> params = new HashMap<String, Integer>();
+    private HashMap<String, Long> params = new HashMap<String, Long>();
 
     /**
      * Trigger configuration entry
@@ -207,7 +217,7 @@ class TriggerConfigEntry
     private void parseTriggerParameter(Branch top)
     {
         String pName = null;
-        int pVal = 0;
+        long pVal = 0;
 
         for (Iterator iter = top.nodeIterator(); iter.hasNext(); ) {
             Node node = (Node) iter.next();
@@ -222,7 +232,7 @@ class TriggerConfigEntry
             if (brName.equals("parameterName")) {
                 pName = getNodeText(branch);
             } else if (brName.equals("parameterValue")) {
-                pVal = getNodeInteger(branch);
+                pVal = getNodeLong(branch);
             }
         }
 
@@ -239,10 +249,10 @@ class TriggerConfigEntry
         return name;
     }
 
-    int getParameter(String key)
+    long getParameter(String key)
     {
         if (!params.containsKey(key)) {
-            return -1;
+            return -1L;
         }
 
         return params.get(key);
@@ -603,7 +613,7 @@ public abstract class PayloadChecker
                     cfg.getSourceID() == tr.getSourceID().getSourceID() &&
                     cfg.getName().equals("SimpleMajorityTrigger"))
                 {
-                    return cfg.getParameter("threshold");
+                    return (int) cfg.getParameter("threshold");
                 }
             }
         }
