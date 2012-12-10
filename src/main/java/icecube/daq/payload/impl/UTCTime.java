@@ -2,7 +2,7 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.Poolable;
-import icecube.daq.util.leapseconds;
+import icecube.daq.util.Leapseconds;
 
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
@@ -17,8 +17,8 @@ final class DateFormatter
     /** Time zone used for DAQ times */
     private static final TimeZone UTC = TimeZone.getTimeZone("Zulu");
     /** Utility class which calculates the number of leap seconds this year */
-    private static final leapseconds LEAP_SECONDS_OBJ =
-        leapseconds.getInstance();
+    private static final Leapseconds LEAP_SECONDS_OBJ =
+        Leapseconds.getInstance();
     /** Time formatter */
     private static SimpleDateFormat format;
 
