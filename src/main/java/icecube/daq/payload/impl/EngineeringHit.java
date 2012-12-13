@@ -234,10 +234,18 @@ public class EngineeringHit
      */
     public String toString()
     {
-        return "EngineeringHit[" + getSubstring() + " atwd " + atwdChip +
-            " aff0 " + affByte0 + " aff1  " + affByte1 +
-            " trigMode " + trigMode +
-            " clk " + clockBytes + " waveformData*" + waveformData.length +
-            "]";
+	if (clockBytes==null) {
+	    return "EngineeringHit[" + getSubstring() + " atwd " + atwdChip +
+		" aff0 " + affByte0 + " aff1  " + affByte1 +
+		" trigMode " + trigMode +
+		" clk is null waveformData*" + waveformData.length +
+		"]";
+	} else {
+	    return "EngineeringHit[" + getSubstring() + " atwd " + atwdChip +
+		" aff0 " + affByte0 + " aff1  " + affByte1 +
+		" trigMode " + trigMode +
+		" clk " + clockBytes.length + " waveformData*" + waveformData.length +
+		"]";
+	}
     }
 }
