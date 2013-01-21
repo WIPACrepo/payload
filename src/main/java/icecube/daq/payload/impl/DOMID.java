@@ -125,7 +125,12 @@ public class DOMID
     {
         char[] buf = new char[12];
         for (int i = 11; i >= 0; i--) {
-            buf[i] = hexChars[(int) (domId % 16L)];
+            int idx = (int) (domId % 16L);
+            if (idx < 0 || idx > hexChars.length) {
+                buf[i] = '?';
+            } else {
+                buf[i] = hexChars[(int) (domId % 16L)];
+            }
             domId /= 16;
         }
         return new String(buf);
