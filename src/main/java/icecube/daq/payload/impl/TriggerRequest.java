@@ -562,7 +562,7 @@ public class TriggerRequest
         // length is filled in below
         buf.putInt(pos + OFFSET_COMPLEN, -1);
          // composite type is deprecated
-        buf.putShort(pos + OFFSET_COMPTYPE, (short) 0);
+        buf.putShort(pos + OFFSET_COMPTYPE, (short) 1);
         buf.putShort(pos + OFFSET_COMPNUM, (short) compList.size());
 
         int totLen = 0;
