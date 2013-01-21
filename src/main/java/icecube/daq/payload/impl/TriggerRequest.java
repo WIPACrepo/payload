@@ -61,7 +61,7 @@ public class TriggerRequest
     private static String[] TYPE_NAMES = new String[] {
         "SMT", "Calib", "MinBias", "Thruput", "Cluster", "SyncBrd",
         "TrigBrd", "AmMFrag20", "AmVol", "AmM18", "AmM24", "AmStr", "AmRand",
-        "PhysMBT", "??Trig14??", "Volume", "??Trig16??", "MplcityStr",
+        "PhysMBT", "Cluster", "Volume", "??Trig16??", "MplcityStr",
         "??Trig18??", "??Trig19??", "Volume", "Cylinder", "SlowMP",
         "??Trig22??", "??Trig23??", "??Trig24??", "??Trig25??", "??Trig26??",
         "??Trig27??", "??Trig28??", "??Trig29??", "FixedRate"
@@ -137,6 +137,11 @@ public class TriggerRequest
     {
         super(firstTime);
 
+        if (firstTime > lastTime) {
+            throw new Error("Illegal time interval [" + firstTime + "-" +
+                            lastTime + "]");
+        }
+
         this.uid = uid;
         this.trigType = trigType;
         this.cfgId = cfgId;
@@ -144,7 +149,11 @@ public class TriggerRequest
         this.firstTime = firstTime;
         this.lastTime = lastTime;
         this.rdoutReq = rdoutReq;
-        this.compList = new ArrayList<IWriteablePayload>(compList);
+        if (compList == null) {
+            this.compList = new ArrayList<IWriteablePayload>();
+        } else {
+            this.compList = new ArrayList<IWriteablePayload>(compList);
+        }
     }
 
     /**
