@@ -231,4 +231,9 @@ public class PayloadFactory
     {
         throw new Error("Unimplemented");
     }
+
+    public String toString()
+    {
+        return "PayloadFactory[" + bufCache + "]";
+    }
 }
