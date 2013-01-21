@@ -3,11 +3,14 @@ package icecube.daq.payload.impl;
 import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IHitPayload;
+import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
+import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.splicer.Spliceable;
 
 import java.nio.ByteBuffer;
 
@@ -16,7 +19,7 @@ import java.nio.ByteBuffer;
  */
 public class SimpleHit
     extends BasePayload
-    implements IHitPayload, IWriteablePayload
+    implements IHitPayload, IWriteablePayload, Spliceable
 {
     /** payload length */
     private static final int LENGTH = 38;
@@ -56,10 +59,16 @@ public class SimpleHit
      * @param offset index of first byte
      * @param len total number of bytes
      * @param utcTime payload time (UTC)
+     * @throws if there is a problem
      */
     public SimpleHit(ByteBuffer buf, int offset, int len, long utcTime)
+        throws PayloadException
     {
-        super(utcTime);
+        super(buf, offset, len, utcTime);
+
+        if (len != LENGTH) {
+            throw new Error("Length should be " + LENGTH + ", not " + len);
+        }
 
         trigType = buf.getInt(offset + OFFSET_TRIGTYPE);
         cfgId = buf.getInt(offset + OFFSET_CONFIGID);
@@ -87,6 +96,29 @@ public class SimpleHit
         this.srcId = srcId;
         this.domId = domId;
         this.trigMode = trigMode;
+    }
+
+     /**
+      * Compare two payloads for the splicer.
+      * @param spliceable object being compared
+      * @return -1, 0, or 1
+      */
+    public int compareSpliceable(Spliceable spliceable)
+    {
+        if (!(spliceable instanceof IPayload)) {
+            final String className = spliceable.getClass().getName();
+            return getClass().getName().compareTo(className);
+        }
+
+        IPayload pay = (IPayload) spliceable;
+
+        if (getUTCTime() < pay.getUTCTime()) {
+            return -1;
+        } else if (getUTCTime() > pay.getUTCTime()) {
+            return 1;
+        }
+
+        return 0;
     }
 
     /**
@@ -189,6 +221,11 @@ public class SimpleHit
         throw new Error("Unimplemented");
     }
 
+    public int getPayloadInterfaceType()
+    {
+        return PayloadInterfaceRegistry.I_HIT_PAYLOAD;
+    }
+
     /**
      * Get the name of this payload.
      * @return name
@@ -248,19 +285,25 @@ public class SimpleHit
     }
 
     /**
-     * Unimplemented
-     * @param buf ignored
-     * @param offset ignored
-     * @param utcTime ignored
-     * @param isEmbedded ignored
-     * @return Error
-     * @throws PayloadException never
+     * Load the payload data
+     * @param buf byte buffer
+     * @param offset index of first byte
+     * @param utcTime payload time
+     * @param isEmbedded <tt>true</tt> if this payload is embedded in another
+     * @return number of bytes loaded
+     * @throws PayloadException if there is a problem
      */
     public int loadBody(ByteBuffer buf, int offset, long utcTime,
                                  boolean isEmbedded)
         throws PayloadException
     {
-        throw new Error("Unimplemented");
+        trigType = buf.getInt(offset + OFFSET_TRIGTYPE);
+        cfgId = buf.getInt(offset + OFFSET_CONFIGID);
+        srcId = buf.getInt(offset + OFFSET_SOURCEID);
+        domId = buf.getLong(offset + OFFSET_DOMID);
+        trigMode = buf.getShort(offset + OFFSET_TRIGMODE);
+
+        return (OFFSET_TRIGMODE + 2) - LEN_PAYLOAD_HEADER;
     }
 
     /**
@@ -353,7 +396,7 @@ public class SimpleHit
     public String toString()
     {
         return "SimpleHit[time " + getUTCTime() + " trigType " + trigType +
-            " cfg " + cfgId + " src " + getSourceID() + " dom " + domId +
+            " cfg " + cfgId + " src " + getSourceID() + " dom " + getDOMID() +
             " trigMode " + trigMode + "]";
     }
 }
