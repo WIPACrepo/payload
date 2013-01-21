@@ -92,6 +92,16 @@ public class MockReadoutRequestElement
     }
 
     /**
+     * Write this element to the byte buffer
+     * @param buf byte buffer
+     * @param offset index of first byte
+     */
+    public void put(ByteBuffer buf, int offset)
+    {
+        throw new Error("Unimplemented");
+    }
+
+    /**
      * Write this record to the payload destination.
      *
      * @param dest PayloadDestination to which to write this record.
