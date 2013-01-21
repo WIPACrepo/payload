@@ -177,6 +177,18 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
     }
 
     /**
+     * Forward compatibility method with new payload class.
+     */
+    public void put(ByteBuffer buf, int offset)
+    {
+        try {
+            writeData(offset, buf);
+        } catch (IOException ioe) {
+            throw new Error("Cannot put " + this, ioe);
+        }
+    }
+
+    /**
      * Method to reset this object for reuse by a pool.
      * This is called once this Object has been used and is no longer valid.
      */

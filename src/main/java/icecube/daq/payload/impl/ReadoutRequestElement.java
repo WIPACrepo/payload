@@ -14,9 +14,6 @@ import java.nio.ByteBuffer;
 public class ReadoutRequestElement
     implements IReadoutRequestElement
 {
-    /** Element length */
-    public static final int LENGTH = 32;
-
     /** Offset of readout type field */
     private static final int OFFSET_TYPE = 0;
     /** Offset of source ID field */
