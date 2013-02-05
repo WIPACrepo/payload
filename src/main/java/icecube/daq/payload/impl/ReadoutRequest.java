@@ -203,6 +203,10 @@ public class ReadoutRequest
      */
     public int getEmbeddedLength()
     {
+        if (elemData == null) {
+            throw new Error("Cannot get length for recycled request");
+        }
+
         return OFFSET_ELEMDATA + elemData.size() * ReadoutRequestElement.LENGTH;
     }
 
@@ -378,7 +382,14 @@ public class ReadoutRequest
      */
     public String toString()
     {
+        String elemStr;
+        if (elemData == null) {
+            elemStr = " elem=null";
+        } else {
+            elemStr = " elem*" + elemData.size();
+        }
+
         return "ReadoutRequest[time " + getUTCTime() + " uid " + uid +
-            " src " + getSourceID() + " elem*" + elemData.size() + "]";
+            " src " + getSourceID() + elemStr + "]";
     }
 }
