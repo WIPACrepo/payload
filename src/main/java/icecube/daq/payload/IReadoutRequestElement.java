@@ -22,6 +22,7 @@ import java.nio.ByteBuffer;
  * @author hellwig,dwharton
  */
 public interface IReadoutRequestElement
+    extends ICopyable
 {
     /** Element length */
     public static final int LENGTH = 32;

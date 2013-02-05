@@ -249,6 +249,19 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
         return new ReadoutRequestElementRecord();
     }
 
+    /**
+     * This method allows a deepCopy of itself.
+     * @return Object which is a copy of the object which implements this
+     *                interface.
+     */
+    public Object deepCopy()
+    {
+        ReadoutRequestElementRecord rec = new ReadoutRequestElementRecord();
+        rec.initialize(mi_readoutType, mt_firstTime, mt_lastTime, mt_domId,
+                       mt_sourceId);
+        return rec;
+    }
+
     static final String getTypeString(int rdoutType)
     {
         switch (rdoutType) {
