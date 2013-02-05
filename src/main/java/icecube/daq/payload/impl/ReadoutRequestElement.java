@@ -194,7 +194,19 @@ public class ReadoutRequestElement
      * @param offset index of first byte
      */
     public void put(ByteBuffer buf, int offset)
+        throws PayloadException
     {
+        if (buf == null) {
+            throw new PayloadException("ByteBuffer is null");
+        }
+
+        if (buf.limit() < offset + LENGTH) {
+            throw new PayloadException("Readout request element buffer" +
+                                       " must have at least " + LENGTH +
+                                       " bytes, not " +
+                                       (buf.limit() - offset));
+        }
+
         buf.putInt(offset + OFFSET_TYPE, type);
         buf.putInt(offset + OFFSET_SOURCEID, srcId);
         buf.putLong(offset + OFFSET_FIRSTTIME, firstTime);

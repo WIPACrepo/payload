@@ -81,5 +81,6 @@ public interface IReadoutRequestElement
      * @param buf byte buffer
      * @param offset index of first byte
      */
-    void put(ByteBuffer buf, int offset);
+    void put(ByteBuffer buf, int offset)
+        throws PayloadException;
 }
