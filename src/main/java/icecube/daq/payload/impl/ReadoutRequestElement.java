@@ -228,13 +228,13 @@ public class ReadoutRequestElement
         }
 
         String domStr;
-        if (domId == -1L) {
+        if (domId == NO_DOM) {
             domStr = "";
         } else {
             domStr = " dom " + domId;
         }
 
-        return "[" + getTypeString(type) + srcStr + " [" +
-            firstTime + "-" + lastTime + "]" + domStr + "]";
+        return "[" + getTypeString(type) + + " [" +
+            firstTime + "-" + lastTime + "]" + srcStr + domStr + "]";
     }
 }
