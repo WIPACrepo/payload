@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
  * Readout request element
  */
 public class ReadoutRequestElement
-    implements IReadoutRequestElement
+    implements Comparable, IReadoutRequestElement
 {
     /** Offset of readout type field */
     private static final int OFFSET_TYPE = 0;
@@ -91,6 +91,88 @@ public class ReadoutRequestElement
     }
 
     /**
+     * Compare this object with another object.
+     *
+     * @param obj object being compared
+     *
+     * @return the usual values
+     */
+    public int compareTo(Object obj)
+    {
+        if (obj == null) {
+            return 1;
+        } else if (!(obj instanceof IReadoutRequestElement)) {
+            return getClass().getName().compareTo(obj.getClass().getName());
+        }
+
+        return compareTo((IReadoutRequestElement) obj);
+    }
+
+    /**
+     * Compare this object with another readout request element.
+     *
+     * @param rre readout request element being compared
+     *
+     * @return the usual values
+     */
+    public int compareTo(IReadoutRequestElement rre)
+    {
+        int val = type - rre.getReadoutType();
+        if (val == 0) {
+            long lval;
+            if (rre.getFirstTimeUTC() == null) {
+                lval = 1;
+            } else {
+                lval = firstTime - rre.getFirstTimeUTC().longValue();
+                if (lval == 0) {
+                    if (rre.getLastTimeUTC() == null) {
+                        lval = 1;
+                    } else {
+                        lval = lastTime - rre.getLastTimeUTC().longValue();
+                    }
+                }
+            }
+
+            if (lval < 0) {
+                val = -1;
+            } else if (lval > 0) {
+                val = 1;
+            } else {
+                val = 0;
+            }
+        }
+
+        if (val == 0) {
+            if (rre.getSourceID() == null) {
+                if (srcId >= 0) {
+                    val = 1;
+                }
+            } else {
+                val = srcId - rre.getSourceID().getSourceID();
+            }
+        }
+
+        if (val == 0) {
+            if (rre.getDomID() == null) {
+                if (domId >= 0) {
+                    val = 1;
+                }
+            } else {
+                long lval = domId - rre.getDomID().longValue();
+                if (lval < 0) {
+                    val = -1;
+                } else if (lval > 0) {
+                    val = 1;
+                } else {
+                    val = 0;
+                }
+            }
+        }
+
+        return val;
+    }
+
+    /**
      * Return a copy of this object.
      * @return copied object
      */
@@ -98,6 +180,18 @@ public class ReadoutRequestElement
     {
         return new ReadoutRequestElement(type, srcId, firstTime, lastTime,
                                          domId);
+    }
+
+    /**
+     * Check that the specified object matches this object.
+     *
+     * @param obj object being compared
+     *
+     * @return <tt>true</tt> if the objects are identical
+     */
+    public boolean equals(Object obj)
+    {
+        return compareTo(obj) == 0;
     }
 
     /**
@@ -189,6 +283,42 @@ public class ReadoutRequestElement
     }
 
     /**
+     * Unique hash code for this object.
+     *
+     * @return hash code
+     */
+    public int hashCode()
+    {
+        int val = type + srcId;
+        for (int i = 0; i < 3; i++) {
+            long lval;
+            switch (i) {
+            case 0:
+                lval = firstTime;
+                break;
+            case 1:
+                lval = lastTime;
+                break;
+            default:
+                lval = domId;
+                break;
+            }
+
+            for (int j = 0; i < 4; j++) {
+                // if we've extracted all the bits, we're done
+                if (lval == 0) {
+                    break;
+                }
+
+                val += (int) (lval & 0xffff);
+                lval >>= 16;
+            }
+        }
+
+        return val;
+    }
+
+    /**
      * Write this element to the byte buffer
      * @param buf byte buffer
      * @param offset index of first byte
@@ -234,7 +364,7 @@ public class ReadoutRequestElement
             domStr = " dom " + domId;
         }
 
-        return "[" + getTypeString(type) + + " [" +
+        return "[" + getTypeString(type) + " [" +
             firstTime + "-" + lastTime + "]" + srcStr + domStr + "]";
     }
 }
