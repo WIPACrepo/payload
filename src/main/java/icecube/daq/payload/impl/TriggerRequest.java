@@ -167,16 +167,15 @@ public class TriggerRequest
      */
     public int compareSpliceable(Spliceable spliceable)
     {
-        if (!(spliceable instanceof TriggerRequest)) {
+        if (!(spliceable instanceof ILoadablePayload)) {
             final String className = spliceable.getClass().getName();
             return getClass().getName().compareTo(className);
         }
 
-        TriggerRequest tr = (TriggerRequest) spliceable;
-
-        if (firstTime < tr.firstTime) {
+        long payTime = ((ILoadablePayload) spliceable).getUTCTime();
+        if (firstTime < payTime) {
             return -1;
-        } else if (firstTime > tr.firstTime) {
+        } else if (firstTime > payTime) {
             return 1;
         }
 
