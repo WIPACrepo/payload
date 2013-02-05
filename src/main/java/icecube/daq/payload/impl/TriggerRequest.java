@@ -140,6 +140,8 @@ public class TriggerRequest
         if (firstTime > lastTime) {
             throw new Error("Illegal time interval [" + firstTime + "-" +
                             lastTime + "]");
+        } else if (rdoutReq == null) {
+            throw new Error("Readout request cannot be null");
         }
 
         this.uid = uid;
