@@ -1,7 +1,7 @@
 /*
  * class: Payload
  *
- * Version $Id: Payload.java 13128 2011-06-28 23:38:14Z dglo $
+ * Version $Id: Payload.java 14187 2013-02-05 21:23:19Z dglo $
  *
  * Date: September 21 2004
  *
@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
  * Payload implements the IPayload interface and the Spliceable interface
  * It contains trigger information that is send through the DAQ system
  *
- * @version $Id: Payload.java 13128 2011-06-28 23:38:14Z dglo $
+ * @version $Id: Payload.java 14187 2013-02-05 21:23:19Z dglo $
  * @author hellwig,dwharton
  *
  * 8/24/2005 dbw
@@ -240,7 +240,11 @@ public abstract class Payload
     }
 
     /**
-     * compare Timestamps of two payloads
+     * Compare two payloads for the splicer.
+     * NOTE: Make sure all compared fields have been loaded by
+     * preloadSpliceableFields()
+     * @param spliceable object being compared
+     * @return -1, 0, or 1
      */
     public int compareSpliceable(Spliceable spl) {
         if (spl == null) {

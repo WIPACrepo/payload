@@ -112,7 +112,9 @@ public class HitRecordList
 
     /**
      * Compare two payloads for the splicer.
-     * @param spl object being compared
+     * NOTE: Make sure all compared fields have been loaded by
+     * preloadSpliceableFields()
+     * @param spliceable object being compared
      * @return -1, 0, or 1
      */
     public int compareSpliceable(Spliceable spl)
