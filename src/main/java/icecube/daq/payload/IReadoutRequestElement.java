@@ -43,7 +43,10 @@ public interface IReadoutRequestElement
     /** Readout of a single Module for IceTop */
     int READOUT_TYPE_IT_MODULE = READOUT_TYPE_II_MODULE + 1;
 
-
+    /** Value used to indicate that this element is not bound to a string */
+    public static final int NO_STRING = -1;
+    /** Value used to indicate that this element is not bound to a DOM */
+    public static final long NO_DOM = -1L;
 
     /**
      * getReadoutType()
