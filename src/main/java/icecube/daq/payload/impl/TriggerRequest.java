@@ -529,13 +529,16 @@ public class TriggerRequest
             bodyOffset = 0;
         }
 
-        if (bodyOffset + OFFSET_UID + 4 > len) {
+        if (bodyOffset + OFFSET_LASTTIME + 8 > len) {
             throw new PayloadException("Cannot load field at offset " +
-                                       (bodyOffset + OFFSET_UID) +
+                                       (bodyOffset + OFFSET_LASTTIME) +
                                        " from " + len + "-byte buffer");
         }
 
         uid = buf.getInt(offset + bodyOffset + OFFSET_UID);
+        trigType = buf.getInt(offset + bodyOffset + OFFSET_TRIGTYPE);
+        firstTime = buf.getLong(offset + bodyOffset + OFFSET_FIRSTTIME);
+        lastTime = buf.getLong(offset + bodyOffset + OFFSET_LASTTIME);
     }
 
     /**
