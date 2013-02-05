@@ -213,6 +213,11 @@ public class TriggerRequest
             throw new Error(getPayloadName() + " has not been loaded");
         }
 
+        if (rdoutReq == null) {
+            throw new Error("Cannot deepCopy " + toString() +
+                            "; readout request is null");
+        }
+
         IReadoutRequest newRReq =
             (IReadoutRequest) ((ILoadablePayload) rdoutReq).deepCopy();
 
