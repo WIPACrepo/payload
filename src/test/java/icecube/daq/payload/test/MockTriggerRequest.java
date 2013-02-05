@@ -219,6 +219,16 @@ public class MockTriggerRequest
         failDeepCopy = fail;
     }
 
+    /**
+     * Set the universal ID for global requests which will become events.
+     *
+     * @param uid new UID
+     */
+    public void setUID(int uid)
+    {
+        throw new Error("Unimplemented");
+    }
+
     public int writePayload(boolean writeLoaded, IPayloadDestination pDest)
         throws IOException
     {

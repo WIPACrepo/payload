@@ -379,6 +379,27 @@ public class ReadoutRequest
     }
 
     /**
+     * Set the source ID. Needed for backward compatiblility with the old
+     * global request handler implementation.
+     *
+     * @param srcId new source ID
+     */
+    public void setSourceID(ISourceID srcId)
+    {
+        this.srcId = srcId.getSourceID();
+    }
+
+    /**
+     * Set the universal ID for global requests which will become events.
+     *
+     * @param uid new UID
+     */
+    public void setUID(int uid)
+    {
+        this.uid = uid;
+    }
+
+    /**
      * Get a debugging string representing this object.
      * @return debugging string
      */

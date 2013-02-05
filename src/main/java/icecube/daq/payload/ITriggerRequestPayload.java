@@ -38,4 +38,11 @@ public interface ITriggerRequestPayload extends ICompositePayload
      * @return trigger name
      */
     public String getTriggerName();
+
+    /**
+     * Set the universal ID for global requests which will become events.
+     *
+     * @param uid new UID
+     */
+    void setUID(int uid);
 }

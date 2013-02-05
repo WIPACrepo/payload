@@ -646,6 +646,22 @@ public class TriggerRequest
     }
 
     /**
+     * Set the universal ID for global requests which will become events.
+     *
+     * @param uid new UID
+     */
+    public void setUID(int uid)
+    {
+        if (rdoutReq == null) {
+            throw new Error("Cannot set UID for " + toString() +
+                            "; readout request is null");
+        }
+
+        this.uid = uid;
+        rdoutReq.setUID(uid);
+    }
+
+    /**
      * Unimplemented
      * @param buf ignored
      * @param offset ignored

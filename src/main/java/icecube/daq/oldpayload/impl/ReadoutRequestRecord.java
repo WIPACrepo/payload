@@ -87,6 +87,15 @@ public class ReadoutRequestRecord implements IWriteablePayloadRecord, IReadoutRe
     }
 
     /**
+     * gets the UTC time for this payload as a long value
+     * @return time
+     */
+    public long getUTCTime()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    /**
      * New method which is unused in old implementation.
      */
     public int length()
@@ -367,6 +376,27 @@ public class ReadoutRequestRecord implements IWriteablePayloadRecord, IReadoutRe
      */
     public void recycle() {
         dispose();
+    }
+
+    /**
+     * Set the source ID. Needed for backward compatiblility with the old
+     * global request handler implementation.
+     *
+     * @param srcId new source ID
+     */
+    public void setSourceID(ISourceID srcId)
+    {
+        throw new Error("Unimplemented");
+    }
+
+    /**
+     * Set the universal ID for global requests which will become events.
+     *
+     * @param uid new UID
+     */
+    public void setUID(int uid)
+    {
+        throw new Error("Unimplemented");
     }
 
     /**

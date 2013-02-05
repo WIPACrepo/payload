@@ -345,6 +345,16 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
         super.recycle();
     }
 
+    /**
+     * Set the universal ID for global requests which will become events.
+     *
+     * @param uid new UID
+     */
+    public void setUID(int uid)
+    {
+        throw new Error("Unimplemented");
+    }
+
     //
     //--Section for accessing/loading data
     //
