@@ -991,7 +991,7 @@ public abstract class TestUtil
             useCompressedData = false;
         } else {
             Deflater compressor = new Deflater(Deflater.BEST_COMPRESSION, true);
-    
+
             // Give the compressor the data to compress
             compressor.setInput(hitBuf.array(), 1, hitLen + 4);
             compressor.finish();
@@ -999,7 +999,7 @@ public abstract class TestUtil
             // Compress the data
             byte[] zipData = new byte[hitLen + 1];
             int zipLen = compressor.deflate(zipData);
-        
+
             // if the compressed data was smaller that the uncompressed data...
             if (compressor.finished()) {
                 ByteBuffer cmpBuf = ByteBuffer.allocate(5 + zipLen);
