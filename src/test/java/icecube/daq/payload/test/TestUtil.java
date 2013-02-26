@@ -2118,7 +2118,7 @@ public abstract class TestUtil
         buf.put(rrBuf.array(), 16, rrBuf.limit() - 16);
 
         putCompositeEnvelope(buf, compLen,
-                             0,//PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT,
+                             PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT,
                              bufList.size());
         for (ByteBuffer hitBuf : bufList) {
             buf.put(hitBuf);
