@@ -48,7 +48,8 @@ class RequestData
         }
     }
 
-    private static int[] buildHitIndexList(IDOMRegistry domRegistry, List reqHits,
+    private static int[] buildHitIndexList(IDOMRegistry domRegistry,
+                                           List reqHits,
                                            List<IEventHitRecord> hitList)
     {
         ArrayList<IHitDataPayload> tmpHits = new ArrayList<IHitDataPayload>();
@@ -149,7 +150,8 @@ public abstract class TestUtil
 
     public static ByteBuffer createDeltaHit(long domId, long utcTime,
                                             short version, short pedestal,
-                                            long domClock, boolean isCompressed,
+                                            long domClock,
+                                            boolean isCompressed,
                                             int trigFlags, int lcFlags,
                                             boolean hasFADC, boolean hasATWD,
                                             int atwdSize, boolean isATWD_B,
@@ -231,12 +233,14 @@ public abstract class TestUtil
         return buf;
     }
 
-    public static ByteBuffer createDeltaHitRecord(short version, short pedestal,
+    public static ByteBuffer createDeltaHitRecord(short version,
+                                                  short pedestal,
                                                   long domClock,
                                                   boolean isCompressed,
                                                   int trigFlags, int lcFlags,
                                                   boolean hasFADC,
-                                                  boolean hasATWD, int atwdSize,
+                                                  boolean hasATWD,
+                                                  int atwdSize,
                                                   boolean isATWD_B,
                                                   boolean isPeakUpper,
                                                   int peakSample,
@@ -252,12 +256,14 @@ public abstract class TestUtil
                                     ByteOrder.BIG_ENDIAN);
     }
 
-    public static ByteBuffer createDeltaHitRecord(short version, short pedestal,
+    public static ByteBuffer createDeltaHitRecord(short version,
+                                                  short pedestal,
                                                   long domClock,
                                                   boolean isCompressed,
                                                   int trigFlags, int lcFlags,
                                                   boolean hasFADC,
-                                                  boolean hasATWD, int atwdSize,
+                                                  boolean hasATWD,
+                                                  int atwdSize,
                                                   boolean isATWD_B,
                                                   boolean isPeakUpper,
                                                   int peakSample,
@@ -295,9 +301,9 @@ public abstract class TestUtil
 
         final int word0upper = (isCompressed ? 0x8000 : 0) | (trigFlags << 2) |
             lcFlags;
-        final int word0lower = (hasFADC ? 0x8000 : 0) | (hasATWD ? 0x4000 : 0) |
-            (atwdSize << 12) | (isATWD_B ? 0x800 : 0) |
-            (dataBytes.length + compressedHdrBytes);
+        final int word0lower = (hasFADC ? 0x8000 : 0) |
+            (hasATWD ? 0x4000 : 0) | (atwdSize << 12) |
+            (isATWD_B ? 0x800 : 0) | (dataBytes.length + compressedHdrBytes);
         final int word0 = (word0upper << 16) | word0lower;
 
         final int word2 = (isPeakUpper ? 0x80000000 : 0) | (peakSample << 27) |
@@ -366,17 +372,20 @@ public abstract class TestUtil
                                                 long domClock, Object fadcObj,
                                                 Object atwdObj)
     {
-        return createEngHitRecord(chanId, relTime, atwdChip, trigMode, domClock,
-                                  fadcObj, atwdObj, ByteOrder.BIG_ENDIAN);
+        return createEngHitRecord(chanId, relTime, atwdChip, trigMode,
+                                  domClock, fadcObj, atwdObj,
+                                  ByteOrder.BIG_ENDIAN);
     }
 
     public static ByteBuffer createEngHitRecord(short chanId, int relTime,
                                                 int atwdChip, int trigMode,
                                                 long domClock, Object fadcObj,
-                                                Object atwdObj, ByteOrder order)
+                                                Object atwdObj,
+                                                ByteOrder order)
     {
-        ByteBuffer dataBuf = createEngHitRecordData(atwdChip, trigMode, domClock,
-                                                    fadcObj, atwdObj, order);
+        ByteBuffer dataBuf = createEngHitRecordData(atwdChip, trigMode,
+                                                    domClock, fadcObj, atwdObj,
+                                                    order);
 
         ByteBuffer buf = ByteBuffer.allocate(10 + dataBuf.limit());
 
@@ -393,7 +402,8 @@ public abstract class TestUtil
     }
 
     public static ByteBuffer createEngHitRecordData(int atwdChip, int trigMode,
-                                                    long domClock, Object fadcObj,
+                                                    long domClock,
+                                                    Object fadcObj,
                                                     Object atwdObj,
                                                     ByteOrder order)
     {
@@ -556,8 +566,8 @@ public abstract class TestUtil
                                            ITriggerRequestPayload trigReq,
                                            List hitList)
     {
-        ByteBuffer recBuf = createEventRecordv2(uid, srcId, firstTime, lastTime,
-                                                type, cfgId, runNum);
+        ByteBuffer recBuf = createEventRecordv2(uid, srcId, firstTime,
+                                                lastTime, type, cfgId, runNum);
 
         ByteBuffer trBuf = createTriggerRequest(trigReq);
 
@@ -596,8 +606,9 @@ public abstract class TestUtil
                                            ITriggerRequestPayload trigReq,
                                            List hitList)
     {
-        ByteBuffer recBuf = createEventRecordv3(uid, srcId, firstTime, lastTime,
-                                                type, runNum, subrunNum);
+        ByteBuffer recBuf = createEventRecordv3(uid, srcId, firstTime,
+                                                lastTime, type, runNum,
+                                                subrunNum);
 
         ByteBuffer trBuf = createTriggerRequest(trigReq);
 
@@ -634,8 +645,9 @@ public abstract class TestUtil
                                            ITriggerRequestPayload trigReq,
                                            List hitList)
     {
-        ByteBuffer recBuf = createEventRecordv4(uid, srcId, firstTime, lastTime,
-                                                year, runNum, subrunNum);
+        ByteBuffer recBuf = createEventRecordv4(uid, srcId, firstTime,
+                                                lastTime, year, runNum,
+                                                subrunNum);
 
         ByteBuffer trBuf = createTriggerRequest(trigReq);
 
@@ -710,7 +722,8 @@ public abstract class TestUtil
                     }
 
                     RequestData reqData =
-                        new RequestData(domRegistry, (ITriggerRequestPayload) tr,
+                        new RequestData(domRegistry,
+                                        (ITriggerRequestPayload) tr,
                                         hitList);
                     trigList.add(reqData);
                     trigLen += reqData.length();
@@ -806,7 +819,8 @@ public abstract class TestUtil
                     }
 
                     RequestData reqData =
-                        new RequestData(domRegistry, (ITriggerRequestPayload) tr,
+                        new RequestData(domRegistry,
+                                        (ITriggerRequestPayload) tr,
                                         hitList);
                     trigList.add(reqData);
                     trigLen += reqData.length();
@@ -990,7 +1004,8 @@ public abstract class TestUtil
         if (!tryCompression || hitLen >= Short.MAX_VALUE) {
             useCompressedData = false;
         } else {
-            Deflater compressor = new Deflater(Deflater.BEST_COMPRESSION, true);
+            Deflater compressor =
+                new Deflater(Deflater.BEST_COMPRESSION, true);
 
             // Give the compressor the data to compress
             compressor.setInput(hitBuf.array(), 1, hitLen + 4);
@@ -1108,7 +1123,8 @@ public abstract class TestUtil
         return buf;
     }
 
-    public static ByteBuffer createMonitorASCIIRecord(long domClock, String str,
+    public static ByteBuffer createMonitorASCIIRecord(long domClock,
+                                                      String str,
                                                       boolean littleEndian)
     {
         if (str == null) {
@@ -1147,7 +1163,8 @@ public abstract class TestUtil
     }
 
     public static ByteBuffer createMonitorConfig(long utcTime, long domId,
-                                                 long domClock, byte evtVersion,
+                                                 long domClock,
+                                                 byte evtVersion,
                                                  short hwSectionLen,
                                                  long pmtBaseId,
                                                  short fpgaBuildNum,
@@ -1175,8 +1192,8 @@ public abstract class TestUtil
                                       expCntlMajor, expCntlMinor,
                                       slowCntlMajor, slowCntlMinor,
                                       dataAccessMajor, dataAccessMinor,
-                                      cfgSectionLen, trigCfgInfo, atwdRdoutInfo,
-                                      littleEndian);
+                                      cfgSectionLen, trigCfgInfo,
+                                      atwdRdoutInfo, littleEndian);
 
         final int bufLen = 24 + recBuf.limit();
 
@@ -1305,7 +1322,7 @@ public abstract class TestUtil
                                                              byte code,
                                                              byte daqId,
                                                              short value,
-                                                             boolean littleEndian)
+                                                             boolean littleEnd)
     {
         final int bufLen;
         if (code == (byte) 0x0d) {
@@ -1321,7 +1338,7 @@ public abstract class TestUtil
         ByteBuffer buf = ByteBuffer.allocate(bufLen);
 
         final ByteOrder origOrder = buf.order();
-        if (littleEndian) {
+        if (littleEnd) {
             buf.order(ByteOrder.LITTLE_ENDIAN);
         } else {
             buf.order(ByteOrder.BIG_ENDIAN);
@@ -1420,7 +1437,8 @@ public abstract class TestUtil
 
     public static ByteBuffer createMonitorHardware(long utcTime, long domId,
                                                    long domClock, short[] data,
-                                                   int speScalar, int mpeScalar,
+                                                   int speScalar,
+                                                   int mpeScalar,
                                                    boolean littleEndian)
     {
         final byte fmtVersion = (byte) 0;
