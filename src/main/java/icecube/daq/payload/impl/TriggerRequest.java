@@ -397,6 +397,16 @@ public class TriggerRequest
     }
 
     /**
+     * Is this a merged request?
+     *
+     * @return <tt>true</tt> if this is a merged request
+     */
+    public boolean isMerged()
+    {
+        return trigType == -1;
+    }
+
+    /**
      * Load the payload data
      * @param buf byte buffer
      * @param offset index of first byte

@@ -188,6 +188,16 @@ public class MockTriggerRequest
     }
 
     /**
+     * Is this a merged request?
+     *
+     * @return <tt>true</tt> if this is a merged request
+     */
+    public boolean isMerged()
+    {
+        return type == -1;
+    }
+
+    /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
     public void loadPayload()

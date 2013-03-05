@@ -297,6 +297,19 @@ public class TriggerRequestPayload extends AbstractCompositePayload implements C
         super.mb_IsEnvelopeLoaded = true;
     }
 
+    /**
+     * Is this a merged request?
+     *
+     * @return <tt>true</tt> if this is a merged request
+     */
+    public boolean isMerged()
+    {
+        if (mt_triggerRequestRecord == null) {
+            return false;
+        }
+
+        return mt_triggerRequestRecord.mi_triggerType == -1;
+    }
 
     /**
      *  Returns the IReadoutRequest which has been associated

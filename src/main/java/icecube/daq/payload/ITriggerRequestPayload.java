@@ -40,6 +40,13 @@ public interface ITriggerRequestPayload extends ICompositePayload
     String getTriggerName();
 
     /**
+     * Is this a merged request?
+     *
+     * @return <tt>true</tt> if this is a merged request
+     */
+    boolean isMerged();
+
+    /**
      * Set the universal ID for global requests which will become events.
      *
      * @param uid new UID
