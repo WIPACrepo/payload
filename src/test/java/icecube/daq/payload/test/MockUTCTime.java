@@ -99,6 +99,11 @@ public class MockUTCTime
         return (double) (time - otherTime.longValue());
     }
 
+    public String toDateString()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public String toString()
     {
         return Long.toString(time);
