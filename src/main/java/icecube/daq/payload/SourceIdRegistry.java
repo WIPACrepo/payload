@@ -250,6 +250,8 @@ public final class SourceIdRegistry
         } else if (name.compareTo(DAQCmdInterface.DAQ_TRACK_ENGINE) == 0)
         {
             return TRACK_ENGINE_SOURCE_ID + id;
+        } else if (name.compareTo(DAQCmdInterface.DAQ_REPLAY_HUB) == 0) {
+            return STRING_HUB_SOURCE_ID + id;
         }
 
         throw new Error("Unknown DAQ component " + name + "#" + id);

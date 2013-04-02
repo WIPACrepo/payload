@@ -344,60 +344,66 @@ public class TimeCalibration
 
         buf.order(ByteOrder.LITTLE_ENDIAN);
 
-        pktLen = buf.getInt(pos + OFFSET_PACKETLEN);
+        try {
+            pktLen = buf.getInt(pos + OFFSET_PACKETLEN);
 
-        int wfPos;
+            int wfPos;
 
-        dorTX = buf.getLong(pos + OFFSET_DORTX);
-        dorRX = buf.getLong(pos + OFFSET_DORRX);
+            dorTX = buf.getLong(pos + OFFSET_DORTX);
+            dorRX = buf.getLong(pos + OFFSET_DORRX);
 
-        dorWaveform = new short[64];
+            dorWaveform = new short[64];
 
-        wfPos = pos + OFFSET_DORWAVEFORM;
-        for (int i = 0; i < dorWaveform.length; i++) {
-            dorWaveform[i] = buf.getShort(wfPos);
-            wfPos += 2;
+            wfPos = pos + OFFSET_DORWAVEFORM;
+            for (int i = 0; i < dorWaveform.length; i++) {
+                dorWaveform[i] = buf.getShort(wfPos);
+                wfPos += 2;
+            }
+
+            domRX = buf.getLong(pos + OFFSET_DOMRX);
+            domTX = buf.getLong(pos + OFFSET_DOMTX);
+
+            domWaveform = new short[64];
+
+            wfPos = pos + OFFSET_DOMWAVEFORM;
+            for (int i = 0; i < domWaveform.length; i++) {
+                domWaveform[i] = buf.getShort(wfPos);
+                wfPos += 2;
+            }
+
+            final byte startMarker = buf.get(pos + OFFSET_STARTOFGPS);
+            if (startMarker != (byte) 1) {
+                throw new PayloadException("Expected Start-of-header, not " +
+                                           (int) startMarker);
+            }
+
+            byte[] dateBytes = new byte[12];
+
+            buf.position(pos + OFFSET_JULIANDATE);
+            buf.get(dateBytes, 0, dateBytes.length);
+
+            final String dateStr = new String(dateBytes);
+
+            final int jday =
+                extractInteger("Julian day", dateStr.substring(0, 3));
+            final int hour = extractInteger("Hour", dateStr.substring(4, 6));
+            final int minute =
+                extractInteger("Minute", dateStr.substring(7, 9));
+            final int second =
+                extractInteger("Second", dateStr.substring(10, 12));
+
+            seconds = ((((((jday - 1) * 24) + hour) * 60) + minute) * 60) +
+                second;
+
+            quality = buf.get(pos + OFFSET_QUALITY);
+
+            buf.order(ByteOrder.BIG_ENDIAN);
+
+            syncTime = buf.getLong(pos + OFFSET_SYNCTIME);
+        } finally {
+            buf.position(origPos);
+            buf.order(origOrder);
         }
-
-        domRX = buf.getLong(pos + OFFSET_DOMRX);
-        domTX = buf.getLong(pos + OFFSET_DOMTX);
-
-        domWaveform = new short[64];
-
-        wfPos = pos + OFFSET_DOMWAVEFORM;
-        for (int i = 0; i < domWaveform.length; i++) {
-            domWaveform[i] = buf.getShort(wfPos);
-            wfPos += 2;
-        }
-
-        final byte startMarker = buf.get(pos + OFFSET_STARTOFGPS);
-        if (startMarker != (byte) 1) {
-            throw new PayloadException("Expected Start-of-header, not " +
-                                       (int) startMarker);
-        }
-
-        byte[] dateBytes = new byte[12];
-
-        buf.position(pos + OFFSET_JULIANDATE);
-        buf.get(dateBytes, 0, dateBytes.length);
-
-        final String dateStr = new String(dateBytes);
-
-        final int jday = extractInteger("Julian day", dateStr.substring(0, 3));
-        final int hour = extractInteger("Hour", dateStr.substring(4, 6));
-        final int minute = extractInteger("Minute", dateStr.substring(7, 9));
-        final int second = extractInteger("Second", dateStr.substring(10, 12));
-
-        seconds = ((((((jday - 1) * 24) + hour) * 60) + minute) * 60) + second;
-
-        quality = buf.get(pos + OFFSET_QUALITY);
-
-        buf.order(ByteOrder.BIG_ENDIAN);
-
-        syncTime = buf.getLong(pos + OFFSET_SYNCTIME);
-
-        buf.position(origPos);
-        buf.order(origOrder);
 
         return PAYLOAD_LEN;
     }
@@ -448,42 +454,44 @@ public class TimeCalibration
         final ByteOrder origOrder = buf.order();
         final int origPos = buf.position();
 
-        buf.order(ByteOrder.LITTLE_ENDIAN);
+        try {
+            buf.order(ByteOrder.LITTLE_ENDIAN);
 
-        buf.putInt(offset + OFFSET_PACKETLEN, pktLen);
+            buf.putInt(offset + OFFSET_PACKETLEN, pktLen);
 
-        int wfPos;
+            int wfPos;
 
-        buf.putLong(offset + OFFSET_DORTX, dorTX);
-        buf.putLong(offset + OFFSET_DORRX, dorRX);
+            buf.putLong(offset + OFFSET_DORTX, dorTX);
+            buf.putLong(offset + OFFSET_DORRX, dorRX);
 
-        wfPos = offset + OFFSET_DORWAVEFORM;
-        for (int i = 0; i < dorWaveform.length; i++) {
-            buf.putShort(wfPos, dorWaveform[i]);
-            wfPos += 2;
+            wfPos = offset + OFFSET_DORWAVEFORM;
+            for (int i = 0; i < dorWaveform.length; i++) {
+                buf.putShort(wfPos, dorWaveform[i]);
+                wfPos += 2;
+            }
+
+            buf.putLong(offset + OFFSET_DOMRX, domRX);
+            buf.putLong(offset + OFFSET_DOMTX, domTX);
+
+            wfPos = offset + OFFSET_DOMWAVEFORM;
+            for (int i = 0; i < domWaveform.length; i++) {
+                buf.putShort(wfPos, domWaveform[i]);
+                wfPos += 2;
+            }
+
+            buf.put(offset + OFFSET_STARTOFGPS, (byte) 1);
+
+            buf.position(offset + OFFSET_JULIANDATE);
+            buf.put(getDateString().getBytes(), 0, 12);
+            buf.put(offset + OFFSET_QUALITY, quality);
+
+            buf.order(ByteOrder.BIG_ENDIAN);
+
+            buf.putLong(offset + OFFSET_SYNCTIME, syncTime);
+        } finally {
+            buf.position(origPos);
+            buf.order(origOrder);
         }
-
-        buf.putLong(offset + OFFSET_DOMRX, domRX);
-        buf.putLong(offset + OFFSET_DOMTX, domTX);
-
-        wfPos = offset + OFFSET_DOMWAVEFORM;
-        for (int i = 0; i < domWaveform.length; i++) {
-            buf.putShort(wfPos, domWaveform[i]);
-            wfPos += 2;
-        }
-
-        buf.put(offset + OFFSET_STARTOFGPS, (byte) 1);
-
-        buf.position(offset + OFFSET_JULIANDATE);
-        buf.put(getDateString().getBytes(), 0, 12);
-        buf.put(offset + OFFSET_QUALITY, quality);
-
-        buf.order(ByteOrder.BIG_ENDIAN);
-
-        buf.putLong(offset + OFFSET_SYNCTIME, syncTime);
-
-        buf.position(origPos);
-        buf.order(origOrder);
 
         return PAYLOAD_LEN;
     }

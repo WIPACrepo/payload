@@ -77,20 +77,7 @@ public class DeltaCompressedHit
         buf.position(dataStart);
         buf.get(data, 0, data.length);
 
-        // Note that comparisons need to be in this order or
-        // the wrong trigger mode will be returned
-        int modeBits = (word0 >> 18) & 0x1017;
-        if ((modeBits & 0x1000) == 0x1000) {
-            trigMode = (short) 4;
-        } else if ((modeBits & 0x0010) == 0x0010) {
-            trigMode = (short) 3;
-        } else if ((modeBits & 0x0003) != 0) {
-            trigMode = (short) 2;
-        } else if ((modeBits & 0x0004) == 0x0004) {
-            trigMode = (short) 1;
-        } else {
-            trigMode = (short) 0;
-        }
+        trigMode = getTriggerModeFromWord0(word0);
     }
 
     /**
@@ -169,6 +156,31 @@ public class DeltaCompressedHit
     public short getTriggerMode()
     {
         return trigMode;
+    }
+
+    /**
+     * Extract the trigger mode from word0 of the delta-compressed hit
+     *
+     * @param word0 word 0
+     *
+     * @return trigger mode
+     */
+    public static short getTriggerModeFromWord0(int word0)
+    {
+        // Note that comparisons need to be in this order or
+        // the wrong trigger mode will be returned
+        int modeBits = (word0 >> 18) & 0x1017;
+        if ((modeBits & 0x1000) == 0x1000) {
+            return (short) 4;
+        } else if ((modeBits & 0x0010) == 0x0010) {
+            return (short) 3;
+        } else if ((modeBits & 0x0003) != 0) {
+            return (short) 2;
+        } else if ((modeBits & 0x0004) == 0x0004) {
+            return (short) 1;
+        } else {
+            return (short) 0;
+        }
     }
 
     /**

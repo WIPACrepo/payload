@@ -81,8 +81,15 @@ public abstract class DOMHit
     public ByteBuffer getHitBuffer(IByteBufferCache cache)
         throws PayloadException
     {
+        int srcVal;
+        if (srcId == null) {
+            srcVal = 0;
+        } else {
+            srcVal = srcId.getSourceID();
+        }
+
         return SimpleHit.getBuffer(cache, getUTCTime(), getTriggerMode(),
-                                   getConfigId(), srcId.getSourceID(),
+                                   getConfigId(), srcVal,
                                    domId, getTriggerMode());
     }
 

@@ -226,33 +226,39 @@ public abstract class Monitor
         final ByteOrder origOrder = buf.order();
         final int origPos = buf.position();
 
-        short recType = buf.getShort(pos + OFFSET_RECTYPE);
-        if ((recType & (short) 0xff) == 0) {
-            if (origOrder == ByteOrder.LITTLE_ENDIAN) {
-                buf.order(ByteOrder.BIG_ENDIAN);
-            } else {
-                buf.order(ByteOrder.LITTLE_ENDIAN);
+        short recLen;
+        int totLen;
+
+        try {
+            short recType = buf.getShort(pos + OFFSET_RECTYPE);
+            if ((recType & (short) 0xff) == 0) {
+                if (origOrder == ByteOrder.LITTLE_ENDIAN) {
+                    buf.order(ByteOrder.BIG_ENDIAN);
+                } else {
+                    buf.order(ByteOrder.LITTLE_ENDIAN);
+                }
+
+                recType = buf.getShort(pos + OFFSET_RECTYPE);
             }
 
-            recType = buf.getShort(pos + OFFSET_RECTYPE);
+            if (recType != getRecordType()) {
+                throw new PayloadException("Record type should be " +
+                                           getRecordType() + ", not " +
+                                           recType);
+            }
+
+            recLen = buf.getShort(pos + OFFSET_RECLEN);
+
+            clockBytes = new byte[6];
+            buf.position(pos + OFFSET_DOMCLOCK);
+            buf.get(clockBytes, 0, clockBytes.length);
+
+            totLen = loadRecord(buf, pos + OFFSET_DATA,
+                                recLen - REC_HEADER_LEN);
+        } finally {
+            buf.position(origPos);
+            buf.order(origOrder);
         }
-
-        if (recType != getRecordType()) {
-            throw new PayloadException("Record type should be " +
-                                       getRecordType() + ", not " + recType);
-        }
-
-        final short recLen = buf.getShort(pos + OFFSET_RECLEN);
-
-        clockBytes = new byte[6];
-        buf.position(pos + OFFSET_DOMCLOCK);
-        buf.get(clockBytes, 0, clockBytes.length);
-
-        final int totLen = loadRecord(buf, pos + OFFSET_DATA,
-                                      recLen - REC_HEADER_LEN);
-
-        buf.position(origPos);
-        buf.order(origOrder);
 
         if (totLen + REC_HEADER_LEN != recLen) {
             throw new PayloadException("Expected monitor record length is " +

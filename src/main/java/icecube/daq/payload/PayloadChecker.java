@@ -40,6 +40,16 @@ abstract class XMLConfig
     }
 
     /**
+     * Get the node text as a long integer value.
+     * @param branch integer node
+     * @return long integer value
+     */
+    static long getNodeLong(Branch branch)
+    {
+        return Long.parseLong(getNodeText(branch));
+    }
+
+    /**
      * Concatenate the text from the node's children.
      * @param branch node
      * @return concatenated text
@@ -121,7 +131,7 @@ class TriggerConfigEntry
                 put("AmandaRandomTrigger", new String[0]);
                 put("AmandaStringTrigger", new String[0]);
                 put("AmandaVolumeTrigger", new String[0]);
-                put("CalibrationTrigger", new String[] { "hitType" });
+                put("CalibrationTrigger", new String[] { "hitType", "domSet" });
                 put("ClusterTrigger",
                     new String[] {
                         "coherenceLength", "multiplicity", "timeWindow",
@@ -166,7 +176,7 @@ class TriggerConfigEntry
     private int id = -1;
     private int srcId = -1;
     private String name;
-    private HashMap<String, Integer> params = new HashMap<String, Integer>();
+    private HashMap<String, Long> params = new HashMap<String, Long>();
 
     /**
      * Trigger configuration entry
@@ -207,7 +217,7 @@ class TriggerConfigEntry
     private void parseTriggerParameter(Branch top)
     {
         String pName = null;
-        int pVal = 0;
+        long pVal = 0;
 
         for (Iterator iter = top.nodeIterator(); iter.hasNext(); ) {
             Node node = (Node) iter.next();
@@ -222,7 +232,7 @@ class TriggerConfigEntry
             if (brName.equals("parameterName")) {
                 pName = getNodeText(branch);
             } else if (brName.equals("parameterValue")) {
-                pVal = getNodeInteger(branch);
+                pVal = getNodeLong(branch);
             }
         }
 
@@ -239,10 +249,10 @@ class TriggerConfigEntry
         return name;
     }
 
-    int getParameter(String key)
+    long getParameter(String key)
     {
         if (!params.containsKey(key)) {
-            return -1;
+            return -1L;
         }
 
         return params.get(key);
@@ -421,11 +431,24 @@ public abstract class PayloadChecker
     /** Trigger configuration data. */
     private static TriggerConfig triggerConfig;
 
+    /** Has an expected run number been set? */
+    private static boolean hasRunNumber;
+    /** Expected run number */
+    private static int runNumber;
+
     /**
      * Cannot create an instance of a utility class
      */
     private PayloadChecker()
     {
+    }
+
+    /**
+     * Unset run number
+     */
+    public static void clearRunNumber()
+    {
+        hasRunNumber = false;
     }
 
     /**
@@ -590,7 +613,7 @@ public abstract class PayloadChecker
                     cfg.getSourceID() == tr.getSourceID().getSourceID() &&
                     cfg.getName().equals("SimpleMajorityTrigger"))
                 {
-                    return cfg.getParameter("threshold");
+                    return (int) cfg.getParameter("threshold");
                 }
             }
         }
@@ -952,6 +975,17 @@ public abstract class PayloadChecker
         }
     }
 
+    /**
+     * Set run number.
+     *
+     * @param runNum run number
+     */
+    public static void setRunNumber(int runNum)
+    {
+        hasRunNumber = true;
+        runNumber = runNum;
+    }
+
     private static String toHexString(ByteBuffer bb)
     {
         StringBuffer buf = new StringBuffer();
@@ -1060,6 +1094,10 @@ public abstract class PayloadChecker
             valid = validateEventRecords(evt, evtDesc, verbose);
         } else {
             valid = validateEventTrigReqAndHits(evt, evtDesc, verbose);
+        }
+
+        if (valid && hasRunNumber) {
+            valid |= evt.getRunNumber() == runNumber;
         }
 
         return valid;

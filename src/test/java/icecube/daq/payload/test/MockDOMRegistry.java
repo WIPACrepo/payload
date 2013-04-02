@@ -1,6 +1,7 @@
 package icecube.daq.payload.test;
 
 import icecube.daq.util.IDOMRegistry;
+import icecube.daq.util.DeployedDOM;
 
 
 import java.util.HashMap;
@@ -29,6 +30,11 @@ public class MockDOMRegistry
         }
 
         return mbidToChanID.get(mbid);
+    }
+
+    public DeployedDOM getDom(short chanid)
+    {
+        throw new Error("Unimplemented");
     }
 
     public int getStringMajor(String mbid)

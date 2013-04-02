@@ -9,6 +9,7 @@ import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
 import icecube.daq.util.DOMRegistry;
+import icecube.daq.util.DeployedDOM;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -82,6 +83,8 @@ public class HitRecordList
         this.uid = uid;
         this.srcId = srcId.getSourceID();
 
+        final int hubId = this.srcId % 1000;
+
         hitRecList = new ArrayList<IEventHitRecord>();
         for (DOMHit hit : hitList) {
             String domStr = Long.toHexString(hit.getDomId());
@@ -89,7 +92,15 @@ public class HitRecordList
                 domStr = "0" + domStr;
             }
 
-            final int chanId = reg.getChannelId(domStr);
+            DeployedDOM dom = reg.getDom(domStr);
+            if (dom.getHubId() % 1000 != hubId) {
+                System.err.println("Cannot send DOM " + domStr +
+                                   " (" + dom.getStringMajor() +
+                                   "-" + dom.getStringMinor() +
+                                   ") from " + srcId);
+            }
+
+            final int chanId = dom.getChannelId();
             if (chanId == -1) {
                 System.err.println("Cannot find channel ID for DOM " + domStr);
                 continue;
@@ -114,7 +125,14 @@ public class HitRecordList
             return getClass().getName().compareTo(spl.getClass().getName());
         }
 
-        return uid - ((HitRecordList) spl).uid;
+        final long otherTime = ((HitRecordList) spl).getUTCTime();
+        if (getUTCTime() < otherTime) {
+            return -1;
+        } else if (getUTCTime() > otherTime) {
+            return 1;
+        }
+
+        return 0;
     }
 
     /**

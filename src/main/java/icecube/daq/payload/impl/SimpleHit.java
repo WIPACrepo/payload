@@ -77,8 +77,8 @@ public class SimpleHit
      * @param domId DOM ID
      * @param trigMode trigger mode
      */
-    private SimpleHit(long utcTime, int trigType, int cfgId, int srcId,
-                      long domId, short trigMode)
+    public SimpleHit(long utcTime, int trigType, int cfgId, int srcId,
+                     long domId, short trigMode)
     {
         super(utcTime);
 

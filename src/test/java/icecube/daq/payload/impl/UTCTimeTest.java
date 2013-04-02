@@ -96,6 +96,25 @@ public class UTCTimeTest
         }
     }
 
+    public void testDateString()
+    {
+        final long time1Val = 256502461299339035L;
+
+        String date1Str = UTCTime.toDateString(time1Val, 2012);
+
+        assertEquals(String.format("Unexpected date string \"%s\" for %d",
+                                   date1Str, time1Val),
+                     date1Str, "12-10-23 21:04:05.1299339035");
+
+        long time2Val = 56502461299339035L;
+
+        String date2Str = UTCTime.toDateString(time2Val, 2011);
+
+        assertEquals(String.format("Unexpected date string \"%s\" for %d",
+                                   date2Str, time2Val),
+                     date2Str, "11-03-07 09:30:46.1299339035");
+    }
+
     public static void main(String[] args)
     {
         TestRunner.run(suite());
