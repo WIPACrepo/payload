@@ -1,15 +1,20 @@
 package icecube.daq.payload.test;
 
+import icecube.daq.payload.IByteBufferCache;
+import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.IReadoutRequestElement;
 import icecube.daq.payload.ISourceID;
+import icecube.daq.payload.IUTCTime;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.DataFormatException;
 
 public class MockReadoutRequest
-    implements IReadoutRequest
+    implements ILoadablePayload, IReadoutRequest
 {
     private int uid;
     private ISourceID srcId;
@@ -52,13 +57,6 @@ public class MockReadoutRequest
         elemList.add(elem);
     }
 
-    public void addElement(int type, int srcId, long firstTime, long lastTime, 
-                           long domId)
-    {
-        addElement(new MockReadoutRequestElement(type, firstTime, lastTime,
-                                                 domId, srcId));
-    }
-
     public void addElement(int type, long firstTime, long lastTime, long domId,
                            int srcId)
     {
@@ -66,7 +64,44 @@ public class MockReadoutRequest
                                                  domId, srcId));
     }
 
+    public void addElement(int type, int srcId, long firstTime, long lastTime,
+                           long domId)
+    {
+        addElement(new MockReadoutRequestElement(type, firstTime, lastTime,
+                                                 domId, srcId));
+    }
+
+    public Object deepCopy()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public int getEmbeddedLength()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public ByteBuffer getPayloadBacking()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getPayloadInterfaceType()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getPayloadLength()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public IUTCTime getPayloadTimeUTC()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int getPayloadType()
     {
         throw new Error("Unimplemented");
     }
@@ -97,7 +132,13 @@ public class MockReadoutRequest
 
     public int length()
     {
-        return 0;
+        throw new Error("Unimplemented");
+    }
+
+    public void loadPayload()
+        throws IOException, DataFormatException
+    {
+        // do nothing
     }
 
     public int putBody(ByteBuffer buf, int offset)
@@ -107,9 +148,12 @@ public class MockReadoutRequest
 
     public void recycle()
     {
-        uid = -1;
-        srcId = null;
-        elemList = null;
+        // do nothing
+    }
+
+    public void setCache(IByteBufferCache cache)
+    {
+        throw new Error("Unimplemented");
     }
 
     /**
@@ -120,7 +164,11 @@ public class MockReadoutRequest
      */
     public void setSourceID(ISourceID srcId)
     {
-        throw new Error("Unimplemented");
+        if (srcId == null) {
+            throw new Error("Source ID cannot be null");
+        }
+
+        this.srcId = srcId;
     }
 
     /**
@@ -131,5 +179,11 @@ public class MockReadoutRequest
     public void setUID(int uid)
     {
         throw new Error("Unimplemented");
+    }
+
+    public String toString()
+    {
+        return "MockRdoutReq[" + uid + " src " + srcId + " elem*" +
+            elemList.size() + "]";
     }
 }
