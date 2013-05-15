@@ -415,13 +415,15 @@ public abstract class BasePayload
     {
         final int totLen = getPayloadLength();
 
-        final int bufRemain = buf.limit() - (offset + totLen);
+        final int bufRemain = buf.capacity() - (offset + totLen);
         if (isConstantSize() && bufRemain < 0) {
             throw new IOException("Buffer is " + -bufRemain +
                                   " bytes too short (offset=" + offset +
-                                  ", payload len=" + totLen + ", limit=" +
-                                  buf.limit());
+                                  ", payload len=" + totLen + ", capacity=" +
+                                  buf.capacity());
         }
+
+        buf.limit(buf.capacity());
 
         // payload header
         buf.putInt(offset + OFFSET_LENGTH, totLen);
@@ -447,9 +449,7 @@ public abstract class BasePayload
             }
         }
 
-        if (false) {
-            buf.limit(offset + finalLen);
-        }
+        buf.limit(offset + finalLen);
 
         return finalLen;
     }
