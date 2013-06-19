@@ -2,6 +2,9 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.test.LoggingCase;
+import icecube.daq.util.Leapseconds;
+
+import java.io.File;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -98,6 +101,15 @@ public class UTCTimeTest
 
     public void testDateString()
     {
+        File configDir = new File(getClass().getResource("/config").getPath());
+        if (!configDir.exists()) {
+            throw new IllegalArgumentException("Cannot find config" +
+                                               " directory under " +
+                                               getClass().getResource("/"));
+        }
+
+        Leapseconds.setConfigDirectory(configDir);
+
         final long time1Val = 256502461299339035L;
 
         String date1Str = UTCTime.toDateString(time1Val, 2012);
