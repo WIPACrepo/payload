@@ -71,7 +71,19 @@ public interface IReadoutRequestElement
      * returns start time of interval
      * @return first time of interval
      */
+    long getFirstTime();
+
+    /**
+     * returns start time of interval
+     * @return first time of interval
+     */
     IUTCTime getFirstTimeUTC();
+
+    /**
+     * returns end time of interval
+     * @return last time of interval
+     */
+    long getLastTime();
 
     /**
      * returns end time of interval

@@ -229,8 +229,30 @@ public class ReadoutRequestElementRecord implements IWriteablePayloadRecord, IRe
     /**
      * returns start time of interval
      */
+    public long getFirstTime() {
+        if (mt_firstTime == null) {
+            return 0L;
+        }
+
+        return mt_firstTime.longValue();
+    }
+
+    /**
+     * returns start time of interval
+     */
     public IUTCTime getFirstTimeUTC() {
         return mt_firstTime;
+    }
+
+    /**
+     * returns end time of interval
+     */
+    public long getLastTime() {
+        if (mt_lastTime == null) {
+            return 0L;
+        }
+
+        return mt_lastTime.longValue();
     }
 
     /**

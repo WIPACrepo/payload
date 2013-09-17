@@ -211,6 +211,15 @@ public class ReadoutRequestElement
      * Get the starting time object
      * @return starting time object
      */
+    public long getFirstTime()
+    {
+        return firstTime;
+    }
+
+    /**
+     * Get the starting time object
+     * @return starting time object
+     */
     public IUTCTime getFirstTimeUTC()
     {
         if (firstTimeObj == null) {
@@ -218,6 +227,15 @@ public class ReadoutRequestElement
         }
 
         return firstTimeObj;
+    }
+
+    /**
+     * Get the ending time object
+     * @return ending time object
+     */
+    public long getLastTime()
+    {
+        return lastTime;
     }
 
     /**
