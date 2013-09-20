@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
  * Base hit record representation
  */
 public abstract class BaseHitRecord
-    implements IEventHitRecord
+    implements Comparable, IEventHitRecord
 {
     /** Offset of length field */
     private static final int OFFSET_LENGTH = 0;
@@ -59,6 +59,42 @@ public abstract class BaseHitRecord
     }
 
     /**
+     * Compare this record against another object
+     *
+     * @param obj object
+     *
+     * @return the usual values
+     */
+    public int compareTo(Object obj)
+    {
+        if (obj == null) {
+            return 1;
+        } else if (!(obj instanceof IEventHitRecord)) {
+            return getClass().getName().compareTo(obj.getClass().getName());
+        }
+
+        IEventHitRecord hr = (IEventHitRecord) obj;
+
+        int val;
+        val = chanId - hr.getChannelID();
+        if (val == 0) {
+            val = (int)(time - hr.getHitTime());
+        }
+
+        return val;
+    }
+
+    /**
+     * Is the specified object equal to this object?
+     * @param obj object being compared
+     * @return <tt>true</tt> if the objects are equal
+     */
+    public boolean equals(Object obj)
+    {
+        return compareTo(obj) == 0;
+    }
+
+    /**
      * Get this hit's channel ID
      * @return channel ID
      */
@@ -99,6 +135,16 @@ public abstract class BaseHitRecord
      * @return name
      */
     abstract String getTypeName();
+
+    /**
+     * Return this object's hash code
+     * @return hash code
+     */
+    public int hashCode()
+    {
+        return (((int)chanId & 0xffff) << 16) +
+            ((int)(time & 0xffff));
+    }
 
     /**
      * Get the record length

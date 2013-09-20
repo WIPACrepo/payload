@@ -147,7 +147,7 @@ class TemporaryHit
  * Trigger record
  */
 class TriggerRecord
-    implements IEventTriggerRecord
+    implements Comparable, IEventTriggerRecord
 {
     /** Logging object */
     private static final Log LOG = LogFactory.getLog(EventPayload_v5.class);
@@ -265,6 +265,41 @@ class TriggerRecord
     }
 
     /**
+     * Compare this record against another object
+     *
+     * @param obj object
+     *
+     * @return the usual values
+     */
+    public int compareTo(Object obj)
+    {
+        if (obj == null) {
+            return 1;
+        } else if (!(obj instanceof IEventTriggerRecord)) {
+            return getClass().getName().compareTo(obj.getClass().getName());
+        }
+
+        IEventTriggerRecord tr = (IEventTriggerRecord) obj;
+
+        int val;
+        val = getSourceID() - tr.getSourceID();
+        if (val == 0) {
+            val = (int)(getFirstTime() - tr.getFirstTime());
+            if (val == 0) {
+                val = (int)(getLastTime() - tr.getLastTime());
+                if (val == 0) {
+                    val = getType() - tr.getType();
+                    if (val == 0) {
+                        val = getConfigID() - tr.getConfigID();
+                    }
+                }
+            }
+        }
+
+        return val;
+    }
+
+    /**
      * Compute this trigger record's hit indices.
      * @param domRegistry used to map each hit's DOM ID to the channel ID
      * @param hitRecList list of this event's hit records
@@ -303,6 +338,16 @@ class TriggerRecord
 
             indices[i] = idx;
         }
+    }
+
+    /**
+     * Is the specified object equal to this object?
+     * @param obj object being compared
+     * @return <tt>true</tt> if the objects are equal
+     */
+    public boolean equals(Object obj)
+    {
+        return compareTo(obj) == 0;
     }
 
     /**
@@ -372,6 +417,18 @@ class TriggerRecord
     public int getType()
     {
         return type;
+    }
+
+    /**
+     * Return this object's hash code
+     * @return hash code
+     */
+    public int hashCode()
+    {
+        return ((getType() & 0xff) << 24) +
+            ((getConfigID() & 0xff) << 16) +
+            ((int)(getFirstTime() & 0xffL) << 8) +
+            (int)(getLastTime() & 0xffL);
     }
 
     /**
