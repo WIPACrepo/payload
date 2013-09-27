@@ -30,6 +30,16 @@ import org.dom4j.io.SAXReader;
 abstract class XMLConfig
 {
     /**
+     * Get the node text as a long integer value.
+     * @param branch integer node
+     * @return long integer value
+     */
+    static boolean getNodeBoolean(Branch branch)
+    {
+        return Boolean.parseBoolean(getNodeText(branch));
+    }
+
+    /**
      * Get the node text as an integer value.
      * @param branch integer node
      * @return integer value
@@ -142,6 +152,7 @@ class TriggerConfigEntry
                         "multiplicity", "simpleMultiplicity", "radius", "height",
                         "timeWindow", "domSet",
                     });
+                put("FixedRateTrigger", new String[] { "interval" });
                 put("MinBiasTrigger", new String[] { "prescale" });
                 put("MultiplicityStringTrigger",
                     new String[] {
@@ -152,7 +163,10 @@ class TriggerConfigEntry
                     new String[] { "deadtime", "prescale" });
                 put("SimpleMajorityTrigger",
                     new String[] { "threshold", "timeWindow", "domSet" });
-                put("SlowMPTrigger", new String[0]);
+                put("SlowMPTrigger",
+                    new String[] { "t_proximity", "t_min", "t_max",
+                                   "alpha_min", "dc_algo", "rel_v",
+                                   "min_n_tuples", "max_event_length", });
                 put("ThroughputTrigger", new String[0]);
                 put("TrigBoardTrigger", new String[] { "prescale" });
                 put("VolumeTrigger",
@@ -176,7 +190,7 @@ class TriggerConfigEntry
     private int id = -1;
     private int srcId = -1;
     private String name;
-    private HashMap<String, Long> params = new HashMap<String, Long>();
+    private HashMap<String, Object> params = new HashMap<String, Object>();
 
     /**
      * Trigger configuration entry
@@ -217,7 +231,7 @@ class TriggerConfigEntry
     private void parseTriggerParameter(Branch top)
     {
         String pName = null;
-        long pVal = 0;
+        Object pVal = null;
 
         for (Iterator iter = top.nodeIterator(); iter.hasNext(); ) {
             Node node = (Node) iter.next();
@@ -232,7 +246,15 @@ class TriggerConfigEntry
             if (brName.equals("parameterName")) {
                 pName = getNodeText(branch);
             } else if (brName.equals("parameterValue")) {
-                pVal = getNodeLong(branch);
+                try {
+                    pVal = getNodeLong(branch);
+                } catch (Exception ex) {
+                    try {
+                        pVal = getNodeBoolean(branch);
+                    } catch (Exception ex2) {
+                        throw new Error("Bad value for \"" + pName + "\"", ex);
+                    }
+                }
             }
         }
 
@@ -249,10 +271,10 @@ class TriggerConfigEntry
         return name;
     }
 
-    long getParameter(String key)
+    Object getParameter(String key)
     {
         if (!params.containsKey(key)) {
-            return -1L;
+            return null;
         }
 
         return params.get(key);
@@ -613,7 +635,10 @@ public abstract class PayloadChecker
                     cfg.getSourceID() == tr.getSourceID().getSourceID() &&
                     cfg.getName().equals("SimpleMajorityTrigger"))
                 {
-                    return (int) cfg.getParameter("threshold");
+                    Object obj = cfg.getParameter("threshold");
+                    if (obj != null) {
+                        return ((Long) obj).intValue();
+                    }
                 }
             }
         }
