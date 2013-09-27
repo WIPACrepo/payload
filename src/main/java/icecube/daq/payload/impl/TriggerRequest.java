@@ -388,6 +388,30 @@ public class TriggerRequest
     }
 
     /**
+     * Get the trigger name for the specified trigger type.
+     *
+     * @return trigger name
+     */
+    public static int getTriggerType(String name)
+    {
+        if (name != null) {
+            if (name.equals("Merged")) {
+                return -1;
+            }
+
+            if (TYPE_NAMES != null) {
+                for (int i = 0; i < TYPE_NAMES.length; i++) {
+                    if (name.equals(TYPE_NAMES[i])) {
+                        return i;
+                    }
+                }
+            }
+        }
+
+        return Integer.MIN_VALUE;
+    }
+
+    /**
      * Get the unique ID
      * @return unique ID
      */
