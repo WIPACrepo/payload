@@ -64,7 +64,7 @@ final class DateFormatter
     {
         // if this is the first time through, but the date formatter
         if (format == null) {
-            format = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+            format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             format.setTimeZone(UTC);
         }
 

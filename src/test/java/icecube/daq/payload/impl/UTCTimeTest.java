@@ -116,7 +116,7 @@ public class UTCTimeTest
 
         assertEquals(String.format("Unexpected date string \"%s\" for %d",
                                    date1Str, time1Val),
-                     date1Str, "12-10-23 21:04:06.1299339035");
+                     "2012-10-23 21:04:06.1299339035", date1Str);
 
         long time2Val = 56502461299339035L;
 
@@ -124,7 +124,7 @@ public class UTCTimeTest
 
         assertEquals(String.format("Unexpected date string \"%s\" for %d",
                                    date2Str, time2Val),
-                     date2Str, "11-03-07 09:30:46.1299339035");
+                     "2011-03-07 09:30:46.1299339035", date2Str);
     }
 
     public static void main(String[] args)
