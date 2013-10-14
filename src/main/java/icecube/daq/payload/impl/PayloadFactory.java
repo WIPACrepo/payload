@@ -188,9 +188,9 @@ public class PayloadFactory
                 throw new PayloadException("Couldn't load payload", ioe);
             }
 
-            if (pay.getPayloadLength() != len) {
+            if (pay.length() != len) {
                 throw new Error(pay.getClass().getName() + " should contain " +
-                                len + " bytes, but " + pay.getPayloadLength() +
+                                len + " bytes, but " + pay.length() +
                                 " were read");
             }
         }

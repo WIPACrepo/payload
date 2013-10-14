@@ -70,7 +70,7 @@ class MockPayload
 
     public int getPayloadLength()
     {
-        return length;
+        return length();
     }
 
     public IUTCTime getPayloadTimeUTC()
@@ -96,6 +96,11 @@ class MockPayload
     boolean isRecycled()
     {
         return recycled;
+    }
+
+    public int length()
+    {
+        return length;
     }
 
     public void loadPayload()

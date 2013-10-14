@@ -1054,7 +1054,7 @@ public abstract class PayloadChecker
      */
     public static String dumpPayloadBytes(IWriteablePayload pay, String name)
     {
-        ByteBuffer buf = ByteBuffer.allocate(pay.getPayloadLength());
+        ByteBuffer buf = ByteBuffer.allocate(pay.length());
         try {
             pay.writePayload(false, 0, buf);
         } catch (java.io.IOException ioe) {

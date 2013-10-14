@@ -1,7 +1,7 @@
 /*
  * class: Payload
  *
- * Version $Id: Payload.java 14187 2013-02-05 21:23:19Z dglo $
+ * Version $Id: Payload.java 14647 2013-10-14 21:35:55Z dglo $
  *
  * Date: September 21 2004
  *
@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
  * Payload implements the IPayload interface and the Spliceable interface
  * It contains trigger information that is send through the DAQ system
  *
- * @version $Id: Payload.java 14187 2013-02-05 21:23:19Z dglo $
+ * @version $Id: Payload.java 14647 2013-10-14 21:35:55Z dglo $
  * @author hellwig,dwharton
  *
  * 8/24/2005 dbw
@@ -183,10 +183,18 @@ public abstract class Payload
         iRecLength = PayloadEnvelope.readPayloadLength(iOffset, tBuffer);
         return iRecLength;
     }
+
     /**
      * returns the length in bytes of this payload
      */
     public int getPayloadLength() {
+        return length();
+    }
+
+    /**
+     * returns the length in bytes of this payload
+     */
+    public int length() {
         return milength;
     }
 

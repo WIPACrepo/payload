@@ -86,7 +86,7 @@ class MockHitData
 
     public int getPayloadLength()
     {
-        throw new Error("Unimplemented");
+        return length();
     }
 
     public IUTCTime getPayloadTimeUTC()
@@ -121,6 +121,11 @@ class MockHitData
         }
 
         return utcTime.longValue();
+    }
+
+    public int length()
+    {
+        throw new Error("Unimplemented");
     }
 
     /**

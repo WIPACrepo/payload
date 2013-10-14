@@ -103,7 +103,7 @@ public class MockHit
 
     public int getPayloadLength()
     {
-        return 40;
+        return length();
     }
 
     public IUTCTime getPayloadTimeUTC()
@@ -152,7 +152,7 @@ public class MockHit
 
     public int length()
     {
-        throw new Error("Unimplemented");
+        return 40;
     }
 
     /**

@@ -173,7 +173,7 @@ public class ReadoutDataPayloadFactoryTest
         assertEquals("Unexpected log message",
                      "Cannot deep-copy composite payload 2 of " +
                      hitList.size() + " (type " + badHit.getPayloadType() +
-                     ", length " + badHit.getPayloadLength() + ")",
+                     ", length " + badHit.length() + ")",
                      getMessage(0));
 
         clearMessages();

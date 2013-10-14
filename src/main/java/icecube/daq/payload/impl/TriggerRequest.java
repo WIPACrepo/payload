@@ -196,7 +196,7 @@ public class TriggerRequest
             LEN_COMPOSITE_HEADER;
 
         for (IWriteablePayload comp : compList) {
-            bufLen += comp.getPayloadLength();
+            bufLen += comp.length();
         }
 
         return bufLen;
@@ -535,7 +535,7 @@ public class TriggerRequest
                 throw new PayloadException("Cannot load composite#" + i, ioe);
             }
             compList.add(pay);
-            totLen += pay.getPayloadLength();
+            totLen += pay.length();
         }
 
         return totLen;
@@ -621,7 +621,7 @@ public class TriggerRequest
 
         int totLen = 0;
         for (IWriteablePayload pay : compList) {
-            final int expLen = pay.getPayloadLength();
+            final int expLen = pay.length();
 
             int len;
             try {

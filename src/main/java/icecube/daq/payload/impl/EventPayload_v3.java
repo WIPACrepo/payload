@@ -151,7 +151,7 @@ public class EventPayload_v3
             throw new Error(getPayloadName() + " has not been loaded");
         }
 
-        final int trLen = trigReq.getPayloadLength();
+        final int trLen = trigReq.length();
         if (trLen <= 0) {
             throw new Error("Trigger request length " + trLen +
                             " should be greater than zero for " + trigReq);
@@ -161,7 +161,7 @@ public class EventPayload_v3
             trLen;
 
         for (IWriteablePayload datum : dataList) {
-            final int dLen = datum.getPayloadLength();
+            final int dLen = datum.length();
             if (dLen <= 0) {
                 throw new Error("Payload length " + dLen +
                                 " should be greater than zero for " +
@@ -493,7 +493,7 @@ public class EventPayload_v3
             }
 
             compList.add(pay);
-            totLen += pay.getPayloadLength();
+            totLen += pay.length();
         }
 
         return totLen;
@@ -548,7 +548,7 @@ public class EventPayload_v3
 
         int totLen = 0;
         for (IWriteablePayload pay : compList) {
-            final int expLen = pay.getPayloadLength();
+            final int expLen = pay.length();
 
             int len;
             try {

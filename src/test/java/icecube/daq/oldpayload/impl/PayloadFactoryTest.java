@@ -310,7 +310,7 @@ public class PayloadFactoryTest
         assertNotNull("Got null backing buffer", pay.getPayloadBacking());
         assertEquals("Got unexpected offset", 0, pay.getPayloadOffset());
         assertEquals("Got unexpected length",
-                     payLen, pay.getPayloadLength());
+                     payLen, pay.length());
         assertEquals("Got unexpected type",
                      FooPayload.PAYLOAD_FOO, pay.getPayloadType());
         assertEquals("Got unexpected interface type",
@@ -347,7 +347,7 @@ public class PayloadFactoryTest
         assertNotNull("Got null backing buffer", pay.getPayloadBacking());
         assertEquals("Got unexpected offset", 0, pay.getPayloadOffset());
         assertEquals("Got unexpected length",
-                     payLen, pay.getPayloadLength());
+                     payLen, pay.length());
         assertEquals("Got unexpected type",
                      FooPayload.PAYLOAD_FOO, pay.getPayloadType());
         assertEquals("Got unexpected interface type",

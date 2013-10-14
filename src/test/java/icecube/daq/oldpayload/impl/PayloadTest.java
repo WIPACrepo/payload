@@ -207,7 +207,7 @@ public class PayloadTest
         MyPayload pay = new MyPayload();
         assertNull("Got non-null backing buffer", pay.getPayloadBacking());
         assertEquals("Got unexpected offset", -1, pay.getPayloadOffset());
-        assertEquals("Got unexpected length", 0, pay.getPayloadLength());
+        assertEquals("Got unexpected length", 0, pay.length());
         assertEquals("Got unexpected type",
                      MyPayload.PAYLOAD_TYPE, pay.getPayloadType());
         assertEquals("Got unexpected interface type",
@@ -236,7 +236,7 @@ public class PayloadTest
         assertNotNull("Got null backing buffer", pay.getPayloadBacking());
         assertEquals("Got unexpected offset", 0, pay.getPayloadOffset());
         assertEquals("Got unexpected length",
-                     payLen, pay.getPayloadLength());
+                     payLen, pay.length());
         assertEquals("Got unexpected type",
                      MyPayload.PAYLOAD_TYPE, pay.getPayloadType());
         assertEquals("Got unexpected interface type",
@@ -344,7 +344,7 @@ public class PayloadTest
         pay.loadSpliceablePayload();
         assertNotNull("Got null backing buffer", pay.getPayloadBacking());
         assertEquals("Got unexpected offset", 0, pay.getPayloadOffset());
-        assertEquals("Got unexpected length", len1, pay.getPayloadLength());
+        assertEquals("Got unexpected length", len1, pay.length());
         assertNotNull("Got null time", pay.getPayloadTimeUTC());
         assertEquals("Got unexpected time",
                      time1, pay.getPayloadTimeUTC().longValue());
@@ -353,7 +353,7 @@ public class PayloadTest
         pay.loadSpliceablePayload();
         assertNotNull("Got null backing buffer", pay.getPayloadBacking());
         assertEquals("Got unexpected offset", 16, pay.getPayloadOffset());
-        assertEquals("Got unexpected length", len2, pay.getPayloadLength());
+        assertEquals("Got unexpected length", len2, pay.length());
         assertNotNull("Got null time", pay.getPayloadTimeUTC());
         assertEquals("Got unexpected time",
                      time2, pay.getPayloadTimeUTC().longValue());
@@ -362,7 +362,7 @@ public class PayloadTest
         pay.loadSpliceablePayload();
         assertNotNull("Got null backing buffer", pay.getPayloadBacking());
         assertEquals("Got unexpected offset", 0, pay.getPayloadOffset());
-        assertEquals("Got unexpected length", len1, pay.getPayloadLength());
+        assertEquals("Got unexpected length", len1, pay.length());
         assertNotNull("Got null time", pay.getPayloadTimeUTC());
         assertEquals("Got unexpected time",
                      time1, pay.getPayloadTimeUTC().longValue());
@@ -453,7 +453,7 @@ public class PayloadTest
         MyPayload empty = (MyPayload) pay.deepCopy();
         assertNotNull("Got null backing buffer", empty.getPayloadBacking());
         assertEquals("Got unexpected offset", 0, empty.getPayloadOffset());
-        assertEquals("Got unexpected length", payLen, empty.getPayloadLength());
+        assertEquals("Got unexpected length", payLen, empty.length());
         assertEquals("Got unexpected type",
                      MyPayload.PAYLOAD_TYPE, empty.getPayloadType());
         assertEquals("Got unexpected interface type",
@@ -518,7 +518,7 @@ public class PayloadTest
         MyPayload empty = (MyPayload) pay.deepCopy();
         assertNotNull("Got null backing buffer", empty.getPayloadBacking());
         assertEquals("Got unexpected offset", 0, empty.getPayloadOffset());
-        assertEquals("Got unexpected length", payLen, empty.getPayloadLength());
+        assertEquals("Got unexpected length", payLen, empty.length());
         assertEquals("Got unexpected type",
                      MyPayload.PAYLOAD_TYPE, empty.getPayloadType());
         assertEquals("Got unexpected interface type",

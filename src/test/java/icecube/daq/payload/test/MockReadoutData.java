@@ -85,15 +85,7 @@ public class MockReadoutData
 
     public int getPayloadLength()
     {
-        int hitLen = 0;
-        if (hitList != null) {
-            for (IHitDataPayload hit : hitList) {
-                hitLen += hit.getPayloadLength();
-            }
-        }
-
-        return BasePayload.LEN_PAYLOAD_HEADER +
-            BaseReadoutData.OFFSET_COMPDATA + hitLen;
+        return length();
     }
 
     public IUTCTime getPayloadTimeUTC()
@@ -145,6 +137,19 @@ public class MockReadoutData
     public boolean isLastPayloadOfGroup()
     {
         throw new Error("Unimplemented");
+    }
+
+    public int length()
+    {
+        int hitLen = 0;
+        if (hitList != null) {
+            for (IHitDataPayload hit : hitList) {
+                hitLen += hit.getPayloadLength();
+            }
+        }
+
+        return BasePayload.LEN_PAYLOAD_HEADER +
+            BaseReadoutData.OFFSET_COMPDATA + hitLen;
     }
 
     public void loadPayload()

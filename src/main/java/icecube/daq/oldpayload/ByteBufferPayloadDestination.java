@@ -78,7 +78,7 @@ public class ByteBufferPayloadDestination extends PayloadDestination   {
             throw new IOException("This PayloadDestination is not valid");
         }
 
-        int iPayloadLength = tPayload.getPayloadLength();
+        int iPayloadLength = tPayload.length();
         ByteBuffer tBuffer = mtCache.acquireBuffer(iPayloadLength);
         if (tBuffer == null) {
             throw new RuntimeException("Could not acquire buffer");

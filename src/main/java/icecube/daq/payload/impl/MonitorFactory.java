@@ -61,10 +61,10 @@ public final class MonitorFactory
             throw new PayloadException("Unknown monitor type " + recType);
         }
 
-        if (mon.getPayloadLength() != len) {
+        if (mon.length() != len) {
             throw new PayloadException("Monitor should contain " + len +
                                        " bytes, but claims to contain " +
-                                       mon.getPayloadLength());
+                                       mon.length());
         }
 
         return mon;

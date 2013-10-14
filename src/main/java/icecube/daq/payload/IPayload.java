@@ -1,7 +1,7 @@
 /*
  * class: IPayload
  *
- * Version $Id: IPayload.java 13128 2011-06-28 23:38:14Z dglo $
+ * Version $Id: IPayload.java 14647 2013-10-14 21:35:55Z dglo $
  *
  * Date: September 17 2004
  *
@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
 /**
  * Basic interface defining a trigger primitive payload
  *
- * @version $Id: IPayload.java 13128 2011-06-28 23:38:14Z dglo $
+ * @version $Id: IPayload.java 14647 2013-10-14 21:35:55Z dglo $
  * @author hellwig, dwharton
  */
 public interface IPayload
@@ -33,7 +33,9 @@ public interface IPayload
     /**
      * returns the length in bytes of this payload
      * @return payload length
+     * @deprecated Replaced by {@link #length()}
      */
+    @Deprecated
     int getPayloadLength();
 
     /**
@@ -60,6 +62,12 @@ public interface IPayload
      * @return time
      */
     long getUTCTime();
+
+    /**
+     * returns the length in bytes of this payload
+     * @return payload length
+     */
+    int length();
 
     /**
      * Set the buffer cache for this payload.

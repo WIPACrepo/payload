@@ -110,30 +110,7 @@ public class MockTriggerRequest
 
     public int getPayloadLength()
     {
-        final int hitLen;
-        if (dataList == null) {
-            hitLen = 0;
-        } else {
-            hitLen = dataList.size() * 40;
-        }
-
-        final int rrLen;
-        if (rReq == null) {
-            rrLen = 0;
-        } else {
-            List elems = rReq.getReadoutRequestElements();
-
-            final int numElems;
-            if (elems == null) {
-                numElems = 0;
-            } else {
-                numElems = elems.size();
-            }
-
-            rrLen = 14 + (32 * numElems);
-        }
-
-        return 50 + rrLen + 8 + hitLen;
+        return length();
     }
 
     public IUTCTime getPayloadTimeUTC()
@@ -195,6 +172,34 @@ public class MockTriggerRequest
     public boolean isMerged()
     {
         return type == -1;
+    }
+
+    public int length()
+    {
+        final int hitLen;
+        if (dataList == null) {
+            hitLen = 0;
+        } else {
+            hitLen = dataList.size() * 40;
+        }
+
+        final int rrLen;
+        if (rReq == null) {
+            rrLen = 0;
+        } else {
+            List elems = rReq.getReadoutRequestElements();
+
+            final int numElems;
+            if (elems == null) {
+                numElems = 0;
+            } else {
+                numElems = elems.size();
+            }
+
+            rrLen = 14 + (32 * numElems);
+        }
+
+        return 50 + rrLen + 8 + hitLen;
     }
 
     /**

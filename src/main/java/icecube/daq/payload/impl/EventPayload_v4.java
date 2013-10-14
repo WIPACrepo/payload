@@ -155,10 +155,10 @@ public class EventPayload_v4
         }
 
         int len = LEN_PAYLOAD_HEADER + OFFSET_COMPOSITE + OFFSET_COMPDATA +
-            trigReq.getPayloadLength();
+            trigReq.length();
 
         for (IWriteablePayload datum : dataList) {
-            len += datum.getPayloadLength();
+            len += datum.length();
         }
 
         return len;
@@ -483,7 +483,7 @@ public class EventPayload_v4
             }
 
             compList.add(pay);
-            totLen += pay.getPayloadLength();
+            totLen += pay.length();
         }
 
         return totLen;
@@ -537,7 +537,7 @@ public class EventPayload_v4
 
         int totLen = 0;
         for (IWriteablePayload pay : compList) {
-            final int expLen = pay.getPayloadLength();
+            final int expLen = pay.length();
 
             int len;
             try {

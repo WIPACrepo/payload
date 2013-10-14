@@ -100,7 +100,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
                 } else {
                     mt_Payloads.set(ii, tPayload);
                 }
-                iCurrOffset += tPayload.getPayloadLength();
+                iCurrOffset += tPayload.length();
             }
         }
     }
@@ -115,7 +115,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
             for (int ii=0; ii < mt_Payloads.size(); ii++) {
                 IPayload pay = (IPayload) mt_Payloads.get(ii);
                 if (pay != null) {
-                    iLength += pay.getPayloadLength();
+                    iLength += pay.length();
                 }
             }
         }
@@ -146,7 +146,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
             IWriteablePayload tPayload =
                 (IWriteablePayload) mt_Payloads.get(ii);
             tPayload.writePayload(bWriteLoaded, iCurrentOffset, tBuffer);
-            iCurrentOffset += tPayload.getPayloadLength();
+            iCurrentOffset += tPayload.length();
         }
         iBytesWritten = iCurrentOffset - iOffset;
         return iBytesWritten;
@@ -172,7 +172,7 @@ public abstract class AbstractCompositePayload extends AbstractTriggerPayload im
             if (tDestination.doLabel()) tDestination.label("[CompositePayload("+(ii+1)+" of "+iSize+")]=>").indent();
             tPayload.writePayload(bWriteLoaded, tDestination);
             if (tDestination.doLabel()) tDestination.undent().label("<=[CompositePayload("+(ii+1)+" of "+iSize+")]");
-            iBytesWritten += tPayload.getPayloadLength();
+            iBytesWritten += tPayload.length();
         }
         if (tDestination.doLabel()) tDestination.undent().label("<=[writeCompositePayload] bytes="+iBytesWritten);
         return iBytesWritten;

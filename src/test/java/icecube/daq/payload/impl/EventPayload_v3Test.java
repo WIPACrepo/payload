@@ -109,7 +109,7 @@ public class EventPayload_v3Test
                                    runNum, subrunNum, trigReq, hitList);
 
         assertEquals("Bad payload length",
-                     buf.capacity(), evt.getPayloadLength());
+                     buf.capacity(), evt.length());
 
         evt.recycle();
     }
@@ -182,7 +182,7 @@ public class EventPayload_v3Test
         evt.loadPayload();
 
         assertEquals("Bad payload length",
-                     buf.capacity(), evt.getPayloadLength());
+                     buf.capacity(), evt.length());
 
 //        assertEquals("Bad payload UTC time",
 //                     firstTime, evt.getPayloadTimeUTC().longValue());
