@@ -117,10 +117,7 @@ public class PayloadFactory
                     new SourceID(SourceIdRegistry.STRINGPROCESSOR_SOURCE_ID);
             }
 
-            final long engDomId =
-                buf.getLong(offset + BasePayload.OFFSET_UTCTIME + 16);
-            pay = new EngineeringHit(hitSrc, engDomId, utcTime, buf,
-                                     offset + BasePayload.OFFSET_UTCTIME + 24);
+            pay = DOMHitFactory.getHit(hitSrc, buf, 0);
             break;
         case PayloadRegistry.PAYLOAD_ID_DELTA_DOMHIT:
             if (hitSrc == null) {
@@ -128,11 +125,7 @@ public class PayloadFactory
                     new SourceID(SourceIdRegistry.STRINGPROCESSOR_SOURCE_ID);
             }
 
-            final long deltaDomId =
-                buf.getLong(offset + BasePayload.OFFSET_UTCTIME + 16);
-            pay = new DeltaCompressedHit(hitSrc, deltaDomId, utcTime, buf,
-                                         offset + BasePayload.OFFSET_UTCTIME +
-                                         24);
+            pay = DOMHitFactory.getHit(hitSrc, buf, 0);
             break;
         case PayloadRegistry.PAYLOAD_ID_TCAL:
             pay = new TimeCalibration(buf, offset, len, utcTime);

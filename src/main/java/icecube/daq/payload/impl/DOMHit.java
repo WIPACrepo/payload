@@ -17,6 +17,8 @@ public abstract class DOMHit
     extends BasePayload
     implements ILoadablePayload, IWriteablePayload
 {
+    /** backing buffer */
+    private ByteBuffer backBuf;
     /** source ID object */
     private ISourceID srcId;
     /** DOM ID */
@@ -28,10 +30,11 @@ public abstract class DOMHit
      * @param domId DOM ID
      * @param utcTime hit time
      */
-    public DOMHit(ISourceID srcId, long domId, long utcTime)
+    public DOMHit(ByteBuffer buf, ISourceID srcId, long domId, long utcTime)
     {
         super(utcTime);
 
+        this.backBuf = buf;
         this.srcId = srcId;
         this.domId = domId;
     }
@@ -120,7 +123,7 @@ public abstract class DOMHit
      */
     public ByteBuffer getPayloadBacking()
     {
-        throw new Error("Unimplemented");
+        return backBuf;
     }
 
     /**
