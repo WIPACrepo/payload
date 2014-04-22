@@ -1,4 +1,4 @@
-package icecube.daq.oldpayload;
+package icecube.daq.payload;
 
 import java.io.DataOutput;
 import java.io.IOException;

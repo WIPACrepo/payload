@@ -1,4 +1,4 @@
-package icecube.daq.oldpayload;
+package icecube.daq.payload;
 
 import java.util.HashMap;
 import java.util.Map;

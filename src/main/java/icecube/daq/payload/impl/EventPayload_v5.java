@@ -12,6 +12,7 @@ import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
+import icecube.daq.payload.PayloadFormatException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.util.IDOMRegistry;
 
@@ -19,7 +20,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -115,7 +115,6 @@ class TemporaryHit
     }
 
     public void loadPayload()
-        throws IOException, DataFormatException
     {
         throw new Error("Unimplemented");
     }
@@ -207,17 +206,14 @@ class TriggerRecord
         } catch (IOException ioe) {
             throw new PayloadException("Couldn't load trigger request " +
                                        trigReq, ioe);
-        } catch (DataFormatException dfe) {
-            throw new PayloadException("Couldn't load trigger request " +
-                                       trigReq, dfe);
         }
 
         List payList;
         try {
             payList = trigReq.getPayloads();
-        } catch (DataFormatException dfe) {
+        } catch (PayloadFormatException pfe) {
             LOG.error("Couldn't get list of payloads from trigger request " +
-                      trigReq, dfe);
+                      trigReq, pfe);
             payList = null;
         }
 
@@ -232,8 +228,8 @@ class TriggerRecord
                 } catch (IOException ioe) {
                     LOG.error("Ignoring unloadable payload " + obj, ioe);
                     continue;
-                } catch (DataFormatException dfe) {
-                    LOG.error("Ignoring unloadable payload " + obj, dfe);
+                } catch (PayloadFormatException pfe) {
+                    LOG.error("Ignoring unloadable payload " + obj, pfe);
                     continue;
                 }
 
@@ -656,14 +652,7 @@ public class EventPayload_v5
     {
         trigRecList.add(new TriggerRecord(trigReq));
 
-        List payList;
-        try {
-            payList = trigReq.getPayloads();
-        } catch (DataFormatException dfe) {
-            throw new PayloadException("Couldn't get payloads from " + trigReq,
-                                       dfe);
-        }
-
+        List payList = trigReq.getPayloads();
         if (payList != null) {
             for (Object obj : payList) {
                 try {
@@ -672,9 +661,9 @@ public class EventPayload_v5
                     LOG.error("Ignoring unloadable trigger request " + obj,
                               ioe);
                     continue;
-                } catch (DataFormatException dfe) {
+                } catch (PayloadFormatException pfe) {
                     LOG.error("Ignoring unloadable trigger request " + obj,
-                              dfe);
+                              pfe);
                     continue;
                 }
 

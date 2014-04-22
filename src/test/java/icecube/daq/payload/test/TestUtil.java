@@ -1,6 +1,5 @@
 package icecube.daq.payload.test;
 
-import icecube.daq.oldpayload.RecordTypeRegistry;
 import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.IHitDataPayload;
@@ -10,7 +9,9 @@ import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.IReadoutRequestElement;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.PayloadException;
+import icecube.daq.payload.PayloadFormatException;
 import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.payload.RecordTypeRegistry;
 import icecube.daq.payload.impl.EventPayload_v4;
 import icecube.daq.payload.impl.Monitor;
 import icecube.daq.payload.impl.TriggerRequest;
@@ -20,7 +21,6 @@ import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.List;
 
@@ -35,7 +35,7 @@ class RequestData
 
     RequestData(IDOMRegistry domRegistry, ITriggerRequestPayload tr,
                 List<IEventHitRecord> hitList)
-        throws DataFormatException
+        throws PayloadFormatException
     {
         type = tr.getTriggerType();
         cfgId = tr.getTriggerConfigID();
@@ -687,7 +687,7 @@ public abstract class TestUtil
                                            ITriggerRequestPayload trigReq,
                                            List<IEventHitRecord> hitList,
                                            IDOMRegistry domRegistry)
-        throws DataFormatException, PayloadException
+        throws PayloadException
     {
         int hitLen = 0;
         for (IEventHitRecord hitRec : hitList) {
@@ -697,8 +697,8 @@ public abstract class TestUtil
         try {
             ((ILoadablePayload) trigReq).loadPayload();
         } catch (Exception ex) {
-            throw new DataFormatException("Cannot load trigger request " +
-                                          trigReq);
+            throw new PayloadFormatException("Cannot load trigger request " +
+                                             trigReq);
         }
 
         int trigLen = 0;
@@ -786,7 +786,7 @@ public abstract class TestUtil
                                            List<IEventHitRecord> hitList,
                                            boolean forceCompression,
                                            IDOMRegistry domRegistry)
-        throws DataFormatException, PayloadException
+        throws PayloadException
     {
         ByteBuffer hitBuf =
             createHitRecords(hitList, firstTime, true, forceCompression);
@@ -794,8 +794,8 @@ public abstract class TestUtil
         try {
             ((ILoadablePayload) trigReq).loadPayload();
         } catch (Exception ex) {
-            throw new DataFormatException("Cannot load trigger request " +
-                                          trigReq);
+            throw new PayloadFormatException("Cannot load trigger request " +
+                                             trigReq);
         }
 
         int trigLen = 0;

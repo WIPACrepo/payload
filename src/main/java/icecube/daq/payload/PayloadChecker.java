@@ -2,7 +2,6 @@ package icecube.daq.payload;
 
 import icecube.daq.payload.impl.SourceID;
 import icecube.daq.payload.impl.UTCTime;
-//import icecube.daq.trigger.TriggerRegistry;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +12,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -507,7 +505,6 @@ public abstract class PayloadChecker
             typeNames[entry.getType()] = entry.getName();
         }
 
-        icecube.daq.oldpayload.impl.TriggerRequestRecord.setTypeNames(typeNames);
         icecube.daq.payload.impl.TriggerRequest.setTypeNames(typeNames);
     }
 
@@ -689,8 +686,8 @@ public abstract class PayloadChecker
         List payList;
         try {
             payList = tr.getPayloads();
-        } catch (DataFormatException dfe) {
-            LOG.error("Couldn't get list of payloads from " + tr, dfe);
+        } catch (PayloadFormatException pfe) {
+            LOG.error("Couldn't get list of payloads from " + tr, pfe);
             payList = null;
         }
 
@@ -950,8 +947,8 @@ public abstract class PayloadChecker
         } catch (IOException ioe) {
             LOG.error("Couldn't load payload", ioe);
             return false;
-        } catch (DataFormatException dfe) {
-            LOG.error("Couldn't load payload", dfe);
+        } catch (PayloadFormatException pfe) {
+            LOG.error("Couldn't load payload", pfe);
             return false;
         }
 
@@ -1505,8 +1502,8 @@ public abstract class PayloadChecker
         List payList;
         try {
             payList = tr.getPayloads();
-        } catch (DataFormatException dfe) {
-            LOG.error("Couldn't fetch payloads for " + trDesc, dfe);
+        } catch (PayloadFormatException pfe) {
+            LOG.error("Couldn't fetch payloads for " + trDesc, pfe);
             return false;
         }
 

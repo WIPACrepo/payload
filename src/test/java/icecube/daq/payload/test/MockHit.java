@@ -15,7 +15,6 @@ import icecube.daq.payload.Poolable;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
 
 public class MockHit
     implements IHitData, IHitPayload, ILoadablePayload, IWriteablePayload,
@@ -159,7 +158,6 @@ public class MockHit
      * Initializes Payload from backing so it can be used as an IPayload.
      */
     public void loadPayload()
-        throws IOException, DataFormatException
     {
         // do nothing
     }

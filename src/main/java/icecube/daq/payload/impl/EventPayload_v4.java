@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 /**
  * Event version 4
@@ -474,9 +473,6 @@ public class EventPayload_v4
 
             try {
                 ((ILoadablePayload) pay).loadPayload();
-            } catch (DataFormatException dfe) {
-                throw new PayloadException("Couldn't load composite payload #" +
-                                           i, dfe);
             } catch (IOException ioe) {
                 throw new PayloadException("Couldn't load composite payload #" +
                                            i, ioe);

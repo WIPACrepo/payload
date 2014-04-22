@@ -13,7 +13,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 public class MockTriggerRequest
     implements ILoadablePayload, ITriggerRequestPayload
@@ -124,7 +123,6 @@ public class MockTriggerRequest
     }
 
     public List getPayloads()
-        throws DataFormatException
     {
         return dataList;
     }
@@ -206,7 +204,6 @@ public class MockTriggerRequest
      * Initializes Payload from backing so it can be used as an IPayload.
      */
     public void loadPayload()
-        throws IOException, DataFormatException
     {
         // do nothing
     }

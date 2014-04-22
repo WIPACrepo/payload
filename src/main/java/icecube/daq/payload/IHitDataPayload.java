@@ -6,8 +6,6 @@
 
 package icecube.daq.payload;
 
-import java.util.zip.DataFormatException;
-
 /**
  * Interface of a payload describing a single hit and its associated
  * engineering format
@@ -21,8 +19,8 @@ public interface IHitDataPayload
     /**
      * Get access to the underlying data for an engineering hit
      * @return hit data record
-     * @throws DataFormatException if hit cannot be read
+     * @throws PayloadFormatException if hit cannot be read
      */
     IHitDataRecord getHitRecord()
-        throws DataFormatException;
+        throws PayloadFormatException;
 }

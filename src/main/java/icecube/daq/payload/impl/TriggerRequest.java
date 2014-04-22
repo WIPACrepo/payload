@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 /**
  * Trigger request
@@ -472,8 +471,6 @@ public class TriggerRequest
         rdoutReq = new ReadoutRequest(buf, pos + OFFSET_RDOUTREQ, firstTime);
         try {
             ((ILoadablePayload) rdoutReq).loadPayload();
-        } catch (DataFormatException dfe) {
-            throw new PayloadException("Cannot load readout request", dfe);
         } catch (IOException ioe) {
             throw new PayloadException("Cannot load readout request", ioe);
         }
@@ -529,8 +526,6 @@ public class TriggerRequest
             IWriteablePayload pay = factory.getPayload(buf, offset + totLen);
             try {
                 ((ILoadablePayload) pay).loadPayload();
-            } catch (DataFormatException dfe) {
-                throw new PayloadException("Cannot load composite#" + i, dfe);
             } catch (IOException ioe) {
                 throw new PayloadException("Cannot load composite#" + i, ioe);
             }

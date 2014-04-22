@@ -12,7 +12,6 @@ import icecube.daq.splicer.SpliceableFactory;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -175,8 +174,6 @@ public class PayloadFactory
         if (DOUBLE_CHECK_LENGTH) {
             try {
                 ((ILoadablePayload) pay).loadPayload();
-            } catch (DataFormatException dfe) {
-                throw new PayloadException("Couldn't load payload", dfe);
             } catch (IOException ioe) {
                 throw new PayloadException("Couldn't load payload", ioe);
             }

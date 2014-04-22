@@ -1,7 +1,6 @@
 package icecube.daq.payload;
 
 import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
 
 /**
  * Objects which implement this interface are containers
@@ -23,8 +22,8 @@ public interface IPayloadRecord
      *                      from the engine.
      * @param tBuffer ByteBuffer from which to construct the record.
      *
-     * @exception DataFormatException if the record is not of the correct format
+     * @exception PayloadFormatException if the record is not of the correct format
      */
     void loadData(int iRecordOffset, ByteBuffer tBuffer)
-        throws DataFormatException;
+        throws PayloadFormatException;
 }

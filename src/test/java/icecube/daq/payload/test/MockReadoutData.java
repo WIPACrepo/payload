@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 public class MockReadoutData
     implements IReadoutDataPayload
@@ -99,7 +98,6 @@ public class MockReadoutData
     }
 
     public List getPayloads()
-        throws DataFormatException
     {
         throw new Error("Unimplemented");
     }
@@ -153,7 +151,6 @@ public class MockReadoutData
     }
 
     public void loadPayload()
-        throws IOException, DataFormatException
     {
         // do nothing
     }

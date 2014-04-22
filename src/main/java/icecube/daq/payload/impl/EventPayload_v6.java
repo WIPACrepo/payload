@@ -4,6 +4,7 @@ import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
+import icecube.daq.payload.PayloadFormatException;
 import icecube.daq.payload.PayloadRegistry;
 
 import java.nio.ByteBuffer;
@@ -195,7 +196,7 @@ public class EventPayload_v6
             try {
                 resultLen = decompresser.inflate(result);
             } catch (DataFormatException dfe) {
-                throw new PayloadException("Couldn't decompress hit records",
+                throw new PayloadFormatException("Couldn't decompress hit records",
                                            dfe);
             }
 

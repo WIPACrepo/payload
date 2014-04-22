@@ -1,4 +1,4 @@
-package icecube.daq.oldpayload;
+package icecube.daq.payload;
 
 import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.IByteBufferReceiver;

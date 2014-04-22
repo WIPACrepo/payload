@@ -6,10 +6,10 @@ import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
+import icecube.daq.payload.PayloadFormatException;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
 
 /**
  * Base payload class
@@ -260,17 +260,17 @@ public abstract class BasePayload
 
     /**
      * Load the payload from its byte buffer
-     * @throws DataFormatException if there is a problem
+     * @throws PayloadFormatException if there is a problem
      */
     public void loadPayload()
-        throws DataFormatException
+        throws PayloadFormatException
     {
         if (!loaded) {
             final int dataLen;
             try {
                 dataLen = loadBody(buf, offset, utcTime, false);
             } catch (PayloadException pe) {
-                throw new DataFormatException("Cannot load payload: " + pe);
+                throw new PayloadFormatException("Cannot load payload", pe);
             }
 
             bufLen = LEN_PAYLOAD_HEADER + dataLen;
