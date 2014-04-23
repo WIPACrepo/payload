@@ -12,6 +12,9 @@ import java.nio.ByteOrder;
 
 /**
  * Base Monitor class
+ *
+ * Monitoring event documentation can be found in
+ * https://docushare.icecube.wisc.edu/dsweb/Get/Document-3799/DOMmonitorfmtbinary_3_8.pdf
  */
 public abstract class Monitor
     extends BasePayload
