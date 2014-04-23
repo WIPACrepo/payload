@@ -13,23 +13,23 @@ public class ConfigMonitor
     private static final int OFFSET_EVENTVERSION = 0;
     private static final int OFFSET_HWSECTIONLEN = 2;
     private static final int OFFSET_DOMMBID = 4;
-    private static final int OFFSET_PMTBASEID = 14;
-    private static final int OFFSET_FPGABUILDNUM = 22;
-    private static final int OFFSET_SWSECTIONLEN = 24;
-    private static final int OFFSET_MAINBDBUILDNUM = 26;
-    private static final int OFFSET_MSGHANDMAJOR = 28;
-    private static final int OFFSET_MSGHANDMINOR = 29;
-    private static final int OFFSET_EXPCTLMAJOR = 30;
-    private static final int OFFSET_EXPCTLMINOR = 31;
-    private static final int OFFSET_SLOWCTLMAJOR = 32;
-    private static final int OFFSET_SLOWCTLMINOR = 33;
-    private static final int OFFSET_DATAACCESSMAJOR = 34;
-    private static final int OFFSET_DATAACCESSMINOR = 35;
-    private static final int OFFSET_CFGSECTIONLEN = 36;
-    private static final int OFFSET_TRIGCFGINFO = 38;
-    private static final int OFFSET_ATWDRDOUTINFO = 42;
+    private static final int OFFSET_PMTBASEID = 12;
+    private static final int OFFSET_FPGABUILDNUM = 20;
+    private static final int OFFSET_SWSECTIONLEN = 22;
+    private static final int OFFSET_MAINBDBUILDNUM = 24;
+    private static final int OFFSET_MSGHANDMAJOR = 26;
+    private static final int OFFSET_MSGHANDMINOR = 27;
+    private static final int OFFSET_EXPCTLMAJOR = 28;
+    private static final int OFFSET_EXPCTLMINOR = 29;
+    private static final int OFFSET_SLOWCTLMAJOR = 30;
+    private static final int OFFSET_SLOWCTLMINOR = 31;
+    private static final int OFFSET_DATAACCESSMAJOR = 32;
+    private static final int OFFSET_DATAACCESSMINOR = 33;
+    private static final int OFFSET_CFGSECTIONLEN = 34;
+    private static final int OFFSET_TRIGCFGINFO = 36;
+    private static final int OFFSET_ATWDRDOUTINFO = 40;
 
-    private static final int RECORD_LEN = 46;
+    private static final int RECORD_LEN = 44;
 
     /** version */
     private byte evtVersion;
@@ -296,7 +296,13 @@ public class ConfigMonitor
     {
         evtVersion = buf.get(offset + OFFSET_EVENTVERSION);
         hwSectionLen = buf.getShort(offset + OFFSET_HWSECTIONLEN);
-        domMBId = buf.getLong(offset + OFFSET_DOMMBID);
+
+        domMBId = 0;
+        for (int i = 0; i < 6; i++) {
+            domMBId = (domMBId << 8) |
+                ((long)buf.get(offset + OFFSET_DOMMBID + i) & 0xffL);
+        }
+
         pmtBaseId = buf.getLong(offset + OFFSET_PMTBASEID);
         fpgaBuildNum = buf.getShort(offset + OFFSET_FPGABUILDNUM);
         swSectionLen = buf.getShort(offset + OFFSET_SWSECTIONLEN);
@@ -328,6 +334,13 @@ public class ConfigMonitor
     {
         buf.put(offset + OFFSET_EVENTVERSION, evtVersion);
         buf.putShort(offset + OFFSET_HWSECTIONLEN, hwSectionLen);
+
+        for (int i = 5; i >= 0; i--) {
+            byte bval = (byte)(domMBId & 0xff);
+            buf.put(offset + OFFSET_DOMMBID + i, bval);
+            domMBId >>= 8;
+        }
+
         buf.putLong(offset + OFFSET_DOMMBID, domMBId);
         buf.putLong(offset + OFFSET_PMTBASEID, pmtBaseId);
         buf.putShort(offset + OFFSET_FPGABUILDNUM, fpgaBuildNum);
@@ -354,6 +367,21 @@ public class ConfigMonitor
      */
     public String toString()
     {
-        return "ConfigMonitor[" + getMonitorString() + "]";
+        return "ConfigMonitor[" + getMonitorString() +
+            " evtV " + evtVersion +
+            " hwLen " + hwSectionLen +
+            " mbid " + String.format("%012x", domMBId) +
+            " pmtId " + pmtBaseId +
+            " fpga " + fpgaBuildNum +
+            " swLen " + swSectionLen +
+            " mbBld " + mainbdSWBuildNum +
+            " msgHdlr " + msgHandlerMajor + "." + msgHandlerMinor +
+            " expCtl " + expCtlMajor + "." + expCtlMinor +
+            " sCtl " + slowCtlMajor + "." + slowCtlMinor +
+            " dataAcc " + dataAccessMajor + "." + dataAccessMinor +
+            " cfgLen " + cfgSectionLen +
+            " trigCfg " + trigCfgInfo +
+            " atwdRO " + atwdRdoutInfo +
+            "]";
     }
 }
