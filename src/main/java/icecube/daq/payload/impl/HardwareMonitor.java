@@ -460,6 +460,37 @@ public class HardwareMonitor
      */
     public String toString()
     {
-        return "HardwareMonitor[" + getMonitorString() + "]";
+        return "HardwareMonitor[" + getMonitorString() +
+            " evtVersion " + evtVersion +
+            " adcVoltSum " + data[ADC_VOLTAGE_SUM] +
+            " adc5VPower " + data[ADC_5V_POWER_SUPPLY] +
+            " adcPressure " + data[ADC_PRESSURE] +
+            " adc5VCurrent " + data[ADC_5V_CURRENT] +
+            " adc33VCurrent " + data[ADC_3_3V_CURRENT] +
+            " adc25VCurrent " + data[ADC_2_5V_CURRENT] +
+            " adc18VCurrent " + data[ADC_1_8V_CURRENT] +
+            " adcMinus5VCurrent " + data[ADC_MINUS_5V_CURRENT] +
+            " dacATWD0TrigBias " + data[DAC_ATWD0_TRIGGER_BIAS] +
+            " dacATWD0RampTop " + data[DAC_ATWD0_RAMP_TOP] +
+            " dacATWD0RampRate " + data[DAC_ATWD0_RAMP_RATE] +
+            " dacATWDAnalogRef " + data[DAC_ATWD_ANALOG_REF] +
+            " dacATWD1TrigBias " + data[DAC_ATWD1_TRIGGER_BIAS] +
+            " dacATWD1RampTop " + data[DAC_ATWD1_RAMP_TOP] +
+            " dacATWD1RampRate " + data[DAC_ATWD1_RAMP_RATE] +
+            " dacPMTFEPed " + data[DAC_PMT_FE_PEDESTAL] +
+            " dacMultiSPEThresh " + data[DAC_MULTIPLE_SPE_THRESH] +
+            " dacSingleSPEThresh " + data[DAC_SINGLE_SPE_THRESH] +
+            " dacLEDBright " + data[DAC_LED_BRIGHTNESS] +
+            " dacFastADCRef " + data[DAC_FAST_ADC_REF] +
+            " dacIntPulser " + data[DAC_INTERNAL_PULSER] +
+            " dacFEAmpLowClamp " + data[DAC_FE_AMP_LOWER_CLAMP] +
+            " dacFLRef " + data[DAC_FL_REF] +
+            " dacMuxBias " + data[DAC_MUX_BIAS] +
+            " pmtBaseHVSetVal " + data[PMT_BASE_HV_SET_VALUE] +
+            " pmtBaseHVMonVal " + data[PMT_BASE_HV_MONITOR_VALUE] +
+            " domTemp " + data[DOM_MB_TEMPERATURE] +
+            " spe " + speScalar +
+            " mpe " + mpeScalar +
+            "]";
     }
 }
