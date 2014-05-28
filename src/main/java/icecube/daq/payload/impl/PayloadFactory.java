@@ -113,7 +113,7 @@ public class PayloadFactory
         case PayloadRegistry.PAYLOAD_ID_ENGFORMAT_DOMHIT:
             if (hitSrc == null) {
                 hitSrc =
-                    new SourceID(SourceIdRegistry.STRINGPROCESSOR_SOURCE_ID);
+                    new SourceID(SourceIdRegistry.STRING_HUB_SOURCE_ID);
             }
 
             pay = DOMHitFactory.getHit(hitSrc, buf, 0);
@@ -121,7 +121,7 @@ public class PayloadFactory
         case PayloadRegistry.PAYLOAD_ID_DELTA_DOMHIT:
             if (hitSrc == null) {
                 hitSrc =
-                    new SourceID(SourceIdRegistry.STRINGPROCESSOR_SOURCE_ID);
+                    new SourceID(SourceIdRegistry.STRING_HUB_SOURCE_ID);
             }
 
             pay = DOMHitFactory.getHit(hitSrc, buf, 0);
