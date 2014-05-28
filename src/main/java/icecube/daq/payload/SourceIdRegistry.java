@@ -35,6 +35,8 @@ public final class SourceIdRegistry
     /** Track engine **/
     public static final int TRACK_ENGINE_SOURCE_ID = 15000;
 
+    /** Offset of DeepCore hub IDs inside the Hub "namespace" **/
+    public static final int DEEPCORE_ID_OFFSET = 78;
     /** Offset of IceTop hub IDs inside the Hub "namespace" **/
     public static final int ICETOP_ID_OFFSET = 200;
 
@@ -307,7 +309,8 @@ public final class SourceIdRegistry
         }
 
         int daqId = srcId % 1000;
-        return daqId > 78 && daqId <= DAQCmdInterface.DAQ_MAX_NUM_STRINGS;
+        return daqId >= DEEPCORE_ID_OFFSET &&
+            daqId <= DAQCmdInterface.DAQ_MAX_NUM_STRINGS;
     }
 
     /**
