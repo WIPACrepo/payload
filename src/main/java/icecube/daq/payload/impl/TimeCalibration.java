@@ -22,6 +22,8 @@ public class TimeCalibration
 
     /** Offset of packet length field */
     private static final int OFFSET_PACKETLEN = 8;
+    /** Offset of packet format field */
+    private static final int OFFSET_FORMAT = 10;
     /** Offset of DOR transmit time field */
     private static final int OFFSET_DORTX = 12;
     /** Offset of DOR receive time field */
@@ -51,7 +53,7 @@ public class TimeCalibration
     private long domId;
 
     /** packet length */
-    private int pktLen;
+    private short pktLen;
 
     /** DOR transmit time */
     private long dorTX;
@@ -66,8 +68,13 @@ public class TimeCalibration
     /** DOM waveform */
     private short[] domWaveform;
 
+    /** GPS string bytes */
+    private byte[] dateBytes;
     /** GPS seconds */
     private long seconds;
+    /**<tt>true</tt> if 'seconds' have been set */
+    private boolean secondsSet;
+
     /** quality */
     private byte quality;
     /** sync time */
@@ -164,18 +171,34 @@ public class TimeCalibration
      * Extract an integer value from the string
      * @param fldName field name
      * @param str integer string
+     * @param pos start of substring
+     * @param len length of substring
      * @return value
      * @throws PayloadException if the string is not an integer
      */
-    private static int extractInteger(String fldName, String str)
+    private static int extractInteger(String fldName, String str, int pos,
+                                      int len)
         throws PayloadException
     {
         try {
-            return Integer.parseInt(str);
+            return Integer.parseInt(str.substring(pos, pos + len));
         } catch (NumberFormatException nfe) {
             throw new PayloadException("Could not extract " + fldName +
                                        " from \"" + str + "\"", nfe);
         }
+    }
+
+    /**
+     * Return the GPS date as a byte array
+     * @return date bytes
+     */
+    public byte[] getDateBytes()
+    {
+        if (dateBytes != null) {
+            return dateBytes;
+        }
+
+        return getDateString().getBytes();
     }
 
     /**
@@ -184,22 +207,30 @@ public class TimeCalibration
      */
     public String getDateString()
     {
-        long tmpVal = seconds;
+        if (dateBytes != null) {
+            return new String(dateBytes);
+        }
 
-        final int second = (int) (tmpVal % 60L);
-        tmpVal /= 60L;
+        if (secondsSet) {
+            long tmpVal = seconds;
 
-        final int minute = (int) (tmpVal % 60L);
-        tmpVal /= 60L;
+            final int second = (int) (tmpVal % 60L);
+            tmpVal /= 60L;
 
-        final int hour = (int) (tmpVal % 24L);
-        tmpVal /= 24L;
+            final int minute = (int) (tmpVal % 60L);
+            tmpVal /= 60L;
 
-        final int jday = (int) (tmpVal % 366L);
-        tmpVal /= 366L;
+            final int hour = (int) (tmpVal % 24L);
+            tmpVal /= 24L;
 
-        return String.format("%03d:%02d:%02d:%02d", (jday + 1), hour, minute,
-                             second);
+            final int jday = (int) (tmpVal % 366L);
+            tmpVal /= 366L;
+
+            return String.format("%03d:%02d:%02d:%02d", (jday + 1), hour,
+                                 minute, second);
+        }
+
+        return "???NoDate???";
     }
 
     /**
@@ -270,7 +301,26 @@ public class TimeCalibration
      * @return GPS seconds
      */
     public long getGpsSeconds()
+        throws PayloadException
     {
+        if (!secondsSet) {
+            if (dateBytes == null) {
+                return -1L;
+            }
+
+            final String dateStr = new String(dateBytes);
+
+            final int jday = extractInteger("Julian day", dateStr, 0, 3);
+            final int hour = extractInteger("Hour", dateStr, 4, 2);
+            final int minute = extractInteger("Minute", dateStr, 7, 2);
+            final int second = extractInteger("Second", dateStr, 10, 2);
+
+            seconds = ((((((jday - 1) * 24) + hour) * 60) + minute) * 60) +
+                second;
+
+            secondsSet = true;
+        }
+
         return seconds;
     }
 
@@ -299,15 +349,6 @@ public class TimeCalibration
     public String getPayloadName()
     {
         return "TimeCalibration";
-    }
-
-    /**
-     * Unimplemented
-     * @return Error
-     */
-    public IUTCTime getPayloadTimeUTC()
-    {
-        throw new Error("Unimplemented");
     }
 
     /**
@@ -347,7 +388,27 @@ public class TimeCalibration
         buf.order(ByteOrder.LITTLE_ENDIAN);
 
         try {
-            pktLen = buf.getInt(pos + OFFSET_PACKETLEN);
+            pktLen = buf.getShort(pos + OFFSET_PACKETLEN);
+
+            short fmt = buf.getShort(pos + OFFSET_FORMAT);
+            if (fmt == 0xc9 || fmt == 0xc900) {
+                // ignore GPS header
+                //  (8-byte DOM ID/2-byte length/2-byte format)
+                pos += 12;
+            } else if (fmt != 1) {
+                final String errmsg;
+                if (fmt == 0x100) {
+                    errmsg =
+                        String.format("Time calibration record appears to" +
+                                      " be bit-flipped (format=0x%04x)", fmt);
+                } else {
+                    errmsg =
+                        String.format("Bad format 0x%04x for DOM %012x", fmt,
+                                      domId);
+                }
+
+                throw new PayloadException(errmsg);
+            }
 
             int wfPos;
 
@@ -379,23 +440,13 @@ public class TimeCalibration
                                            (int) startMarker);
             }
 
-            byte[] dateBytes = new byte[12];
+            dateBytes = new byte[12];
 
             buf.position(pos + OFFSET_JULIANDATE);
             buf.get(dateBytes, 0, dateBytes.length);
 
-            final String dateStr = new String(dateBytes);
-
-            final int jday =
-                extractInteger("Julian day", dateStr.substring(0, 3));
-            final int hour = extractInteger("Hour", dateStr.substring(4, 6));
-            final int minute =
-                extractInteger("Minute", dateStr.substring(7, 9));
-            final int second =
-                extractInteger("Second", dateStr.substring(10, 12));
-
-            seconds = ((((((jday - 1) * 24) + hour) * 60) + minute) * 60) +
-                second;
+            seconds = -1;
+            secondsSet = false;
 
             quality = buf.get(pos + OFFSET_QUALITY);
 
@@ -459,7 +510,8 @@ public class TimeCalibration
         try {
             buf.order(ByteOrder.LITTLE_ENDIAN);
 
-            buf.putInt(offset + OFFSET_PACKETLEN, pktLen);
+            buf.putShort(offset + OFFSET_PACKETLEN, pktLen);
+            buf.putShort(offset + OFFSET_FORMAT, (short) 1);
 
             int wfPos;
 
@@ -476,6 +528,7 @@ public class TimeCalibration
             buf.putLong(offset + OFFSET_DOMTX, domTX);
 
             wfPos = offset + OFFSET_DOMWAVEFORM;
+
             for (int i = 0; i < domWaveform.length; i++) {
                 buf.putShort(wfPos, domWaveform[i]);
                 wfPos += 2;
@@ -484,7 +537,7 @@ public class TimeCalibration
             buf.put(offset + OFFSET_STARTOFGPS, (byte) 1);
 
             buf.position(offset + OFFSET_JULIANDATE);
-            buf.put(getDateString().getBytes(), 0, 12);
+            buf.put(getDateBytes(), 0, 12);
             buf.put(offset + OFFSET_QUALITY, quality);
 
             buf.order(ByteOrder.BIG_ENDIAN);
@@ -514,6 +567,7 @@ public class TimeCalibration
         domRX = -1L;
         domWaveform = null;
         seconds = -1;
+        secondsSet = false;
         quality = -1;
         syncTime = -1L;
     }
@@ -524,9 +578,16 @@ public class TimeCalibration
      */
     public String toString()
     {
-        return "TimeCalibration[time " + getUTCTime() + " dom " + domId +
-            " len " + pktLen + " dorTX " + dorTX + " dorRX " + dorRX +
-            " domRX " + domRX + " domTX " + domTX + " secs " + seconds +
-            " quality '" + (char) quality + "' sync " + syncTime + "]";
+        return "TimeCalibration[" +
+            "dom " + String.format("%012x", domId) +
+            " time " + getPayloadTimeUTC().toDateString() +
+            " len " + pktLen +
+            " dorTX " + dorTX +
+            " dorRX " + dorRX +
+            " domRX " + domRX +
+            " domTX " + domTX +
+            " gpsDate " + getDateString() +
+            " quality '" + (char) quality + "'" +
+            " sync " + syncTime + "]";
     }
 }

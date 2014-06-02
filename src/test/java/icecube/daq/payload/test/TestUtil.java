@@ -181,10 +181,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -225,10 +222,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -331,10 +325,7 @@ public abstract class TestUtil
 
         buf.order(origOrder);
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -359,10 +350,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -511,10 +499,7 @@ public abstract class TestUtil
 
         buf.order(origOrder);
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -550,10 +535,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -591,10 +573,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -631,10 +610,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -673,10 +649,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -771,10 +744,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -859,10 +829,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -881,10 +848,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -908,10 +872,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -935,10 +896,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -963,10 +921,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1088,10 +1043,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1115,10 +1067,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1154,10 +1103,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1206,10 +1152,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1235,7 +1178,7 @@ public abstract class TestUtil
                                                        int atwdRdoutInfo,
                                                        boolean littleEndian)
     {
-        final int bufLen = 56;
+        final int bufLen = 54;
 
         ByteBuffer buf = ByteBuffer.allocate(bufLen);
 
@@ -1253,7 +1196,7 @@ public abstract class TestUtil
         buf.put(evtVersion);
         buf.put((byte) 0);
         buf.putShort(hwSectionLen);
-        buf.putLong(domId);
+        putDomClock(buf, buf.position(), domId);
         buf.putShort((short) 0);
         buf.putLong(pmtBaseId);
         buf.putShort(fpgaBuildNum);
@@ -1277,10 +1220,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1309,10 +1249,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1363,10 +1300,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1390,10 +1324,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1427,10 +1358,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1457,10 +1385,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1502,10 +1427,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1630,10 +1552,7 @@ public abstract class TestUtil
 
         buf.order(origOrder);
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1689,10 +1608,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1716,10 +1632,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1740,10 +1653,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1783,10 +1693,7 @@ public abstract class TestUtil
 
         buf.order(origOrder);
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1807,10 +1714,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1832,10 +1736,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1856,10 +1757,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1883,10 +1781,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1916,10 +1811,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1945,7 +1837,8 @@ public abstract class TestUtil
         final ByteOrder origOrder = buf.order();
         buf.order(ByteOrder.LITTLE_ENDIAN);
 
-        buf.putInt(pktLen);
+        buf.putShort((short) pktLen);
+        buf.putShort((short) 1);
 
         buf.putLong(dorTX);
         buf.putLong(dorRX);
@@ -1963,10 +1856,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -2061,10 +1951,7 @@ public abstract class TestUtil
 
         buf.order(origOrder);
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -2126,10 +2013,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -2226,6 +2110,17 @@ public abstract class TestUtil
         buf.putLong(firstTime);
         buf.putLong(lastTime);
         buf.putLong(domId);
+    }
+
+    private static void validateBuffer(ByteBuffer buf, int bufLen)
+    {
+        if (buf.limit() != buf.capacity()) {
+            throw new Error("Expected payload length is " + buf.capacity() +
+                            ", actual length is " + buf.limit());
+        } else if (buf.limit() != bufLen) {
+            throw new Error("Buffer length is " + bufLen +
+                            ", actual length is " + buf.limit());
+        }
     }
 
     public static String toHexString(ByteBuffer bb)

@@ -6,6 +6,16 @@ import java.nio.ByteBuffer;
 
 /**
  * ASCII text monitoring message
+ *
+ * Common examples are:
+ *   "F 1 2 3 4": fast moni record:
+ *     1) spe count from the same scaler as the HardwareMonitor value
+ *     2) mpe count from the same scaler as the HardwareMonitor value
+ *     3) number of non-aborted launches in the past second
+ *     4) number of 25ns cycles in the past second when a PMT pulse arrived
+ *        while both ATWDs were busy
+ *   "FADC CS--### entries:  0 0 0 1 ..."
+ *   "ATWD CS [AB] [01]--### entries:  0 0 0 1 ..."
  */
 public class ASCIIMonitor
     extends Monitor
@@ -72,6 +82,10 @@ public class ASCIIMonitor
      */
     public String getString()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return string;
     }
 
@@ -105,6 +119,10 @@ public class ASCIIMonitor
     public int putRecord(ByteBuffer buf, int offset)
         throws PayloadException
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         buf.position(offset);
         buf.put(string.getBytes());
 
@@ -117,7 +135,12 @@ public class ASCIIMonitor
      */
     public String toString()
     {
-        return "ASCIIMonitor[" + getMonitorString() +
-            (string == null ? "" : " str \"" + string + "\"") + "]";
+        if (string == null) {
+            return getPayloadName() + "[" + getMonitorString() + " !loaded]";
+        }
+
+        return getPayloadName() + "[" + getMonitorString() +
+            " str \"" + string + "\"" +
+            "]";
     }
 }

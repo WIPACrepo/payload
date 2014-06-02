@@ -100,6 +100,10 @@ public class ConfigMonitor
      */
     public int getATWDReadoutInfo()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return atwdRdoutInfo;
     }
 
@@ -109,6 +113,10 @@ public class ConfigMonitor
      */
     public short getDAQconfigurationSectionLength()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return cfgSectionLen;
     }
 
@@ -118,6 +126,10 @@ public class ConfigMonitor
      */
     public short getDOMMBSoftwareBuildNumber()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return mainbdSWBuildNum;
     }
 
@@ -127,6 +139,10 @@ public class ConfigMonitor
      */
     public long getDOMMainBoardId()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return domMBId;
     }
 
@@ -136,6 +152,10 @@ public class ConfigMonitor
      */
     public byte getDataAccessMajorVersion()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return dataAccessMajor;
     }
 
@@ -145,6 +165,10 @@ public class ConfigMonitor
      */
     public byte getDataAccessMinorVersion()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return dataAccessMinor;
     }
 
@@ -154,6 +178,10 @@ public class ConfigMonitor
      */
     public byte getEventVersion()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return evtVersion;
     }
 
@@ -163,6 +191,10 @@ public class ConfigMonitor
      */
     public byte getExperimentControlMajorVersion()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return expCtlMajor;
     }
 
@@ -172,6 +204,10 @@ public class ConfigMonitor
      */
     public byte getExperimentControlMinorVersion()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return expCtlMinor;
     }
 
@@ -181,6 +217,10 @@ public class ConfigMonitor
      */
     public short getHWConfigSectionLength()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return hwSectionLen;
     }
 
@@ -190,6 +230,10 @@ public class ConfigMonitor
      */
     public short getLoadedFPGABuildNumber()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return fpgaBuildNum;
     }
 
@@ -199,6 +243,10 @@ public class ConfigMonitor
      */
     public byte getMessageHandlerMajorVersion()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return msgHandlerMajor;
     }
 
@@ -208,6 +256,10 @@ public class ConfigMonitor
      */
     public byte getMessageHandlerMinorVersion()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return msgHandlerMinor;
     }
 
@@ -217,6 +269,10 @@ public class ConfigMonitor
      */
     public long getPMTBaseId()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return pmtBaseId;
     }
 
@@ -253,6 +309,10 @@ public class ConfigMonitor
      */
     public short getSWConfigSectionLength()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return swSectionLen;
     }
 
@@ -262,6 +322,10 @@ public class ConfigMonitor
      */
     public byte getSlowControlMajorVersion()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return slowCtlMajor;
     }
 
@@ -271,6 +335,10 @@ public class ConfigMonitor
      */
     public byte getSlowControlMinorVersion()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return slowCtlMinor;
     }
 
@@ -280,6 +348,10 @@ public class ConfigMonitor
      */
     public int getTriggerConfigInfo()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return trigCfgInfo;
     }
 
@@ -332,16 +404,20 @@ public class ConfigMonitor
     public int putRecord(ByteBuffer buf, int offset)
         throws PayloadException
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         buf.put(offset + OFFSET_EVENTVERSION, evtVersion);
         buf.putShort(offset + OFFSET_HWSECTIONLEN, hwSectionLen);
 
+        long tmpVal = domMBId;
         for (int i = 5; i >= 0; i--) {
-            byte bval = (byte)(domMBId & 0xff);
+            byte bval = (byte)(tmpVal & 0xff);
             buf.put(offset + OFFSET_DOMMBID + i, bval);
-            domMBId >>= 8;
+            tmpVal >>= 8;
         }
 
-        buf.putLong(offset + OFFSET_DOMMBID, domMBId);
         buf.putLong(offset + OFFSET_PMTBASEID, pmtBaseId);
         buf.putShort(offset + OFFSET_FPGABUILDNUM, fpgaBuildNum);
         buf.putShort(offset + OFFSET_SWSECTIONLEN, swSectionLen);
@@ -367,7 +443,11 @@ public class ConfigMonitor
      */
     public String toString()
     {
-        return "ConfigMonitor[" + getMonitorString() +
+        if (!isLoaded()) {
+            return getPayloadName() + "[" + getMonitorString() + " !loaded]";
+        }
+
+        return getPayloadName() + "[" + getMonitorString() +
             " evtV " + evtVersion +
             " hwLen " + hwSectionLen +
             " mbid " + String.format("%012x", domMBId) +

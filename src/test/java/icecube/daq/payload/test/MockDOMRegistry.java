@@ -32,6 +32,11 @@ public class MockDOMRegistry
         return mbidToChanID.get(mbid);
     }
 
+    public DeployedDOM getDom(String mbId)
+    {
+        throw new Error("Unimplemented");
+    }
+
     public DeployedDOM getDom(short chanid)
     {
         throw new Error("Unimplemented");

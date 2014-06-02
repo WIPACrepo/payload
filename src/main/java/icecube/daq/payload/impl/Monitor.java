@@ -177,15 +177,6 @@ public abstract class Monitor
     }
 
     /**
-     * Unimplemented
-     * @return Error
-     */
-    public IUTCTime getPayloadTimeUTC()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
      * Get the payload registry type
      * @return type
      */
@@ -254,9 +245,7 @@ public abstract class Monitor
 
             recLen = buf.getShort(pos + OFFSET_RECLEN);
 
-            clockBytes = new byte[6];
-            buf.position(pos + OFFSET_DOMCLOCK);
-            buf.get(clockBytes, 0, clockBytes.length);
+            clockBytes = loadByteArray(buf, pos + OFFSET_DOMCLOCK, 6);
 
             totLen = loadRecord(buf, pos + OFFSET_DATA,
                                 recLen - REC_HEADER_LEN);
@@ -272,6 +261,14 @@ public abstract class Monitor
         }
 
         return OFFSET_DATA + totLen;
+    }
+
+    static byte[] loadByteArray(ByteBuffer buf, int pos, int len)
+    {
+        byte[] array = new byte[len];
+        buf.position(pos);
+        buf.get(array, 0, array.length);
+        return array;
     }
 
     /**
@@ -314,6 +311,9 @@ public abstract class Monitor
         }
 
         domId = buf.getLong(offset + bodyOffset + OFFSET_DOMID);
+
+        clockBytes = loadByteArray(buf, offset + bodyOffset + OFFSET_DOMCLOCK,
+                                   6);
     }
 
     /**

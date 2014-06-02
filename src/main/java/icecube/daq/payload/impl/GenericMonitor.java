@@ -45,6 +45,10 @@ public class GenericMonitor
      */
     public byte[] getData()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data;
     }
 
@@ -63,6 +67,10 @@ public class GenericMonitor
      */
     public int getRecordLength()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data.length;
     }
 
@@ -103,6 +111,10 @@ public class GenericMonitor
     public int putRecord(ByteBuffer buf, int offset)
         throws PayloadException
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         buf.position(offset);
         buf.put(data);
 
@@ -115,7 +127,12 @@ public class GenericMonitor
      */
     public String toString()
     {
-        return "GenericMonitor[" + getMonitorString() +
-            (data == null ? "" : " data*" + data.length) + "]";
+        if (data == null) {
+            return getPayloadName() + "[" + getMonitorString() + " !loaded]";
+        }
+
+        return getPayloadName() + "[" + getMonitorString() +
+            " data*" + data.length +
+            "]";
     }
 }

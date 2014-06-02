@@ -328,7 +328,9 @@ public class Supernova
      */
     public String toString()
     {
-        return "Supernova[time " + getUTCTime() + " dom " + domId +
+        return "Supernova[time " + getUTCTime() +
+            " dom " + String.format("%012x", domId) +
+            " clk " + String.format("%016x", getDomClock(clockBytes)) +
             " fmt " + fmtId +
             (scalarData == null ? "" : " scalarData*" + scalarData.length) +
             "]";
