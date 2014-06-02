@@ -1048,7 +1048,7 @@ public class EventPayload_v5
         int hitBytes = putHitRecords(buf, offset + OFFSET_HITDATA, firstTime);
 
         int trigBytes =
-            putTriggerRecords(buf, offset + OFFSET_HITDATA + hitBytes,
+            putTriggerRecords(buf, uid, offset + OFFSET_HITDATA + hitBytes,
                               firstTime);
 
         return OFFSET_HITDATA + hitBytes + trigBytes;
@@ -1085,7 +1085,8 @@ public class EventPayload_v5
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
-    private int putTriggerRecords(ByteBuffer buf, int offset, long baseTime)
+    private int putTriggerRecords(ByteBuffer buf, int uid, int offset,
+                                  long baseTime)
         throws PayloadException
     {
         if (domRegistry == null) {
@@ -1097,7 +1098,11 @@ public class EventPayload_v5
         int pos = offset + 4;
 
         for (IEventTriggerRecord trigRec : trigRecList) {
-            trigRec.computeIndices(domRegistry, hitRecList);
+            try {
+                trigRec.computeIndices(domRegistry, hitRecList);
+            } catch (PayloadException pe) {
+                throw new PayloadException("Event " + uid + " error", pe);
+            }
             int len = trigRec.writeRecord(buf, pos, baseTime);
             pos += len;
         }
