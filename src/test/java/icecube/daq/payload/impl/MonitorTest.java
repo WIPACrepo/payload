@@ -227,7 +227,7 @@ public class MonitorTest
         }
     }
 
-    private static final byte WRITE_ONE_DAQ = (byte) 0x0d;
+    private static final byte SET_DAC = (byte) 0x0d;
     private static final byte SET_PMT_HV = (byte) 0x0e;
     private static final byte ENABLE_PMT_HV = (byte) 0x10;
     private static final byte DISABLE_PMT_HV = (byte) 0x12;
@@ -246,7 +246,7 @@ public class MonitorTest
     }
 
     final ConfigChangeData[] states = new ConfigChangeData[] {
-        new ConfigChangeData("WRITE_ONE_DAQ", WRITE_ONE_DAQ),
+        new ConfigChangeData("SET_DAC", SET_DAC),
         new ConfigChangeData("SET_PMT_HV", SET_PMT_HV),
         new ConfigChangeData("SET_PMT_HV_LIMIT", SET_PMT_HV_LIMIT),
         new ConfigChangeData("ENABLE_PMT_HV", ENABLE_PMT_HV),
@@ -280,11 +280,11 @@ public class MonitorTest
                 assertEquals("Bad event code",
                              states[c].code, moni.getEventCode());
                 switch (states[c].code) {
-                case WRITE_ONE_DAQ:
+                case SET_DAC:
                     assertEquals("Bad DAC ID",
-                                 daqId, moni.getDAQID());
+                                 daqId, moni.getDACID());
                     assertEquals("Bad DAC value",
-                                 value, moni.getDAQValue());
+                                 value, moni.getDACValue());
                     break;
                 case SET_PMT_HV:
                     assertEquals("Bad PMT HV",
