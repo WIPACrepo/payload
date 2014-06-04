@@ -1263,7 +1263,7 @@ public abstract class TestUtil
     {
         final int bufLen;
         if (code == (byte) 0x0d) {
-            bufLen = 15;
+            bufLen = 16;
         } else if (code == (byte) 0x0e || code == (byte) 0x1d) {
             bufLen = 14;
         } else if (code == (byte) 0x10 || code == (byte) 0x12) {
@@ -1289,6 +1289,7 @@ public abstract class TestUtil
         buf.put(code);
         if (code == (byte) 0x0d) {
             buf.put(daqId);
+            buf.put((byte) 0xff);
             buf.putShort(value);
         } else if (code == (byte) 0x0e || code == (byte) 0x1d) {
             buf.putShort(value);

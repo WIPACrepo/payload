@@ -10,8 +10,8 @@ import java.nio.ByteBuffer;
 public class ConfigChangeMonitor
     extends Monitor
 {
-    /** Request to get a DAQ value */
-    private static final byte WRITE_ONE_DAQ = (byte) 0x0d;
+    /** Request to get a DAC value */
+    private static final byte SET_DAC = (byte) 0x0d;
     /** Request to set the PMT high voltage */
     private static final byte SET_PMT_HV = (byte) 0x0e;
     /** Request to enable the PMT high voltage */
@@ -20,15 +20,21 @@ public class ConfigChangeMonitor
     private static final byte DISABLE_PMT_HV = (byte) 0x12;
     /** Request to set the PMT high voltage limit */
     private static final byte SET_PMT_HV_LIMIT = (byte) 0x1d;
+    /** Request to set the local coincidence mode */
+    private static final byte SET_LOCAL_COIN_MODE = (byte) 0x2d;
+    /** Request to set the local coincidence window */
+    private static final byte SET_LOCAL_COIN_WINDOW = (byte) 0x2f;
 
     /** Control request type */
     private byte ctlReq;
     /** Change code */
     private byte code;
-    /** DAQ ID */
-    private byte daqId;
+    /** DAC ID */
+    private byte dacId;
     /** Change value */
     private short value;
+    /** Coincidence window values */
+    private long[] window;
 
     /**
      * Configuration change monitoring message
@@ -58,19 +64,19 @@ public class ConfigChangeMonitor
     }
 
     /**
-     * Get the DAQ ID.
-     * @return DAQ ID
+     * Get the DAC ID.
+     * @return DAC ID
      */
-    public byte getDAQID()
+    public byte getDACID()
     {
-        return daqId;
+        return dacId;
     }
 
     /**
-     * Get the DAQ value.
-     * @return DAQ value
+     * Get the DAC value.
+     * @return DAC value
      */
-    public short getDAQValue()
+    public short getDACValue()
     {
         return value;
     }
@@ -118,14 +124,18 @@ public class ConfigChangeMonitor
     public int getRecordLength()
     {
         switch (code) {
-        case WRITE_ONE_DAQ:
-            return 5;
+        case SET_DAC:
+            return 6;
         case SET_PMT_HV:
         case SET_PMT_HV_LIMIT:
             return 4;
         case ENABLE_PMT_HV:
         case DISABLE_PMT_HV:
             return 2;
+        case SET_LOCAL_COIN_MODE:
+            return 1;
+        case SET_LOCAL_COIN_WINDOW:
+            return 16;
         default:
             return 0;
         }
@@ -155,22 +165,34 @@ public class ConfigChangeMonitor
         code = buf.get(offset + 1);
 
         int totLen = 2;
-        if (code == WRITE_ONE_DAQ) {
-            daqId = buf.get(offset + 2);
-            value = buf.getShort(offset + 3);
-            totLen += 3;
+        if (code == SET_DAC) {
+            dacId = buf.get(offset + totLen);
+            byte spare = buf.get(offset + totLen + 1);
+            value = buf.getShort(offset + totLen + 2);
+            totLen += 4;
         } else if (code == SET_PMT_HV || code == SET_PMT_HV_LIMIT) {
-            value = buf.getShort(offset + 2);
+            value = buf.getShort(offset + totLen);
             totLen += 2;
         } else if (code == ENABLE_PMT_HV || code == DISABLE_PMT_HV) {
             // do nothing
+        } else if (code == SET_LOCAL_COIN_MODE) {
+            value = buf.get(offset + totLen);
+            totLen += 1;
+        } else if (code == SET_LOCAL_COIN_WINDOW) {
+            window = new long[4];
+            for (int i = 0; i < window.length; i++) {
+                window[i] = buf.getInt(offset + totLen);
+                totLen += 4;
+            }
         } else {
             throw new PayloadException("Bad config change code 0x" +
                                        Integer.toHexString(code));
         }
 
         if (totLen != len) {
-            throw new PayloadException("Expected record length of " + len +
+            throw new PayloadException("For config change 0x" +
+                                       Integer.toHexString(code) +
+                                       " expected record length of " + len +
                                        ", not " + totLen);
         }
 
@@ -191,15 +213,29 @@ public class ConfigChangeMonitor
         buf.put(offset + 1, code);
 
         int totLen = 2;
-        if (code == WRITE_ONE_DAQ) {
-            buf.put(offset + 2, daqId);
-            buf.putShort(offset + 3, value);
-            totLen += 3;
+        if (code == SET_DAC) {
+            buf.put(offset + totLen, dacId);
+            buf.put(offset + totLen + 1, (byte) 0xff);
+            buf.putShort(offset + totLen + 2, value);
+            totLen += 4;
         } else if (code == SET_PMT_HV || code == SET_PMT_HV_LIMIT) {
-            buf.putShort(offset + 2, value);
+            buf.putShort(offset + totLen, value);
             totLen += 2;
         } else if (code == ENABLE_PMT_HV || code == DISABLE_PMT_HV) {
             // do nothing
+        } else if (code == SET_LOCAL_COIN_MODE) {
+            buf.put(offset + totLen, (byte) (value & 0xff));
+            totLen += 1;
+        } else if (code == SET_LOCAL_COIN_WINDOW) {
+            if (window == null) {
+                throw new PayloadException("Local coincidence window has not" +
+                                           " been set");
+            }
+
+            for (int i = 0; i < window.length; i++) {
+                buf.putInt(offset + totLen, (int) window[i]);
+                totLen += 4;
+            }
         } else {
             throw new PayloadException("Bad config change code 0x" +
                                        Integer.toHexString(code));
@@ -215,7 +251,7 @@ public class ConfigChangeMonitor
     public String toString()
     {
         return "ConfigChangeMonitor[" + getMonitorString() + " req " + ctlReq +
-            " code " + Integer.toHexString(code) + " id " + daqId +
+            " code " + Integer.toHexString(code) + " id " + dacId +
             " val " + value + "]";
     }
 }
