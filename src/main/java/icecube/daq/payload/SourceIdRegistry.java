@@ -340,7 +340,6 @@ public final class SourceIdRegistry
     public static boolean isIcetopHubSourceID(int srcId)
     {
         if (!isAnyHubSourceID(srcId)) {
-System.err.printf("NotHub %d\n", srcId);
             return false;
         }
 
