@@ -275,8 +275,9 @@ public final class SourceIdRegistry
      */
     public static boolean isAnyHubSourceID(int srcId)
     {
-        return srcId / 1000 == STRING_HUB_SOURCE_ID / 1000 ||
-            srcId / 1000 == SIMULATION_HUB_SOURCE_ID / 1000;
+        return srcId > 0 &&
+            (srcId / 1000 == STRING_HUB_SOURCE_ID / 1000 ||
+             srcId / 1000 == SIMULATION_HUB_SOURCE_ID / 1000);
     }
 
     /**
@@ -339,6 +340,7 @@ public final class SourceIdRegistry
     public static boolean isIcetopHubSourceID(int srcId)
     {
         if (!isAnyHubSourceID(srcId)) {
+System.err.printf("NotHub %d\n", srcId);
             return false;
         }
 
