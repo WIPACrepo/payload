@@ -2,7 +2,6 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.ILoadablePayload;
-import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
@@ -389,17 +388,6 @@ public abstract class BasePayload
         }
 
         return strBuf.toString();
-    }
-
-    /**
-     * Unimplemented
-     * @param writeLoaded ignored
-     * @param dest ignored
-     * @return Error
-     */
-    public int writePayload(boolean writeLoaded, IPayloadDestination dest)
-    {
-        throw new Error("Unimplemented");
     }
 
     /**

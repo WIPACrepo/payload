@@ -6,7 +6,6 @@ import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.IHitData;
 import icecube.daq.payload.IHitDataPayload;
 import icecube.daq.payload.IHitDataRecord;
-import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import java.io.IOException;
@@ -144,12 +143,6 @@ public class MockHitData
     }
 
     public int writePayload(ByteBuffer buf, int offset)
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int writePayload(boolean b0, IPayloadDestination x1)
-        throws IOException
     {
         throw new Error("Unimplemented");
     }

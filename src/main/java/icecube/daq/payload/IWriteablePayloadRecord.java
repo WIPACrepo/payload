@@ -18,15 +18,6 @@ public interface IWriteablePayloadRecord
 
     /**
      * Method to write this record to the payload destination.
-     * @param tDestination PayloadDestination to which to write this record.
-     * @return the number of bytes written to this destination.
-     * @throws IOException if payload cannot be written
-     */
-    int writeData(IPayloadDestination tDestination)
-        throws IOException;
-
-    /**
-     * Method to write this record to the payload destination.
      * @param iOffset the offset at which to start writing the object.
      * @param tBuffer the ByteBuffer into which to write this payload-record.
      * @return the number of bytes written to this destination.

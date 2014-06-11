@@ -37,22 +37,6 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      *
      * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
      * @param tPayload Payload to which to write to this destination
-     * @return the length in bytes which was written to the ByteBuffer.
-     *
-     * @throws IOException if an error occurs during the process
-     */
-    public int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload) throws IOException {
-        return tPayload.writePayload(bWriteLoaded, this);
-    }
-
-    /**
-     * This methods proxies the call to write Payload to allow the whole
-     * payload to be passed to the payload destination to allow it to
-     * be invoke the write method itself, or to pass the payload by refernce
-     * to the target.
-     *
-     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tPayload Payload to which to write to this destination
      * @param iDestOffset the offset into the destination ByteBuffer at which to start writting the payload
      * @param tDestBuffer the destination ByteBuffer to write the payload to.
      * @return the length in bytes which was written to the ByteBuffer.
