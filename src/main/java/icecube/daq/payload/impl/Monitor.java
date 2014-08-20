@@ -1,7 +1,6 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.ILoadablePayload;
-import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;

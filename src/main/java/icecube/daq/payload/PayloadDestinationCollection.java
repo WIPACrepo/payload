@@ -1,7 +1,7 @@
 /*
  * class: PayloadDestinationCollection
  *
- * Version $Id: PayloadDestinationCollection.java 14993 2014-04-22 21:45:14Z dglo $
+ * Version $Id: PayloadDestinationCollection.java 15128 2014-08-20 16:37:50Z dglo $
  *
  * Date: October 19 2005
  *
@@ -9,12 +9,6 @@
  */
 
 package icecube.daq.payload;
-
-import icecube.daq.payload.IPayloadDestination;
-import icecube.daq.payload.IPayloadDestinationCollection;
-import icecube.daq.payload.IPayloadDestinationCollectionController;
-import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.IWriteablePayload;
 
 import icecube.daq.payload.impl.SourceID;
 
@@ -27,7 +21,7 @@ import java.util.Map;
 /**
  * This class is a simple implementation of the IPayloadDestinationCollection interface.
  *
- * @version $Id: PayloadDestinationCollection.java 14993 2014-04-22 21:45:14Z dglo $
+ * @version $Id: PayloadDestinationCollection.java 15128 2014-08-20 16:37:50Z dglo $
  * @author pat
  */
 public class PayloadDestinationCollection implements IPayloadDestinationCollection

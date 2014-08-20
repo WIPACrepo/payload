@@ -1,9 +1,5 @@
 package icecube.daq.payload;
 
-import icecube.daq.payload.IByteBufferCache;
-import icecube.daq.payload.IByteBufferReceiver;
-import icecube.daq.payload.IWriteablePayload;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
