@@ -19,7 +19,7 @@ public final class DOMHitFactory
     /** Offset of DOM ID field */
     private static final int OFFSET_DOMID = 8;
     /** Offset of unused field */
-    private static final int OFFSET_UNUSED = 16;
+    //private static final int OFFSET_UNUSED = 16;
     /** Offset of UTC time field */
     private static final int OFFSET_UTCTIME = 24;
 

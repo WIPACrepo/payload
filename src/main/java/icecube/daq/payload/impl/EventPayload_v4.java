@@ -40,7 +40,7 @@ public class EventPayload_v4
     /** Offset of year field */
     private static final int OFFSET_YEAR = 26;
     /** Offset of unused field */
-    private static final int OFFSET_UNUSED = 28;
+    //private static final int OFFSET_UNUSED = 28;
     /** Offset of run number field */
     private static final int OFFSET_RUNNUMBER = 30;
     /** Offset of subrun number field */

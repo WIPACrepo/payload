@@ -322,7 +322,7 @@ public class ReadoutRequestElement
                 break;
             }
 
-            for (int j = 0; i < 4; j++) {
+            for (int j = 0; j < 4; j++) {
                 // if we've extracted all the bits, we're done
                 if (lval == 0) {
                     break;

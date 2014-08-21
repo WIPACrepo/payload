@@ -167,7 +167,7 @@ public class ConfigChangeMonitor
         int totLen = 2;
         if (code == SET_DAC) {
             dacId = buf.get(offset + totLen);
-            byte spare = buf.get(offset + totLen + 1);
+            //byte spare = buf.get(offset + totLen + 1);
             value = buf.getShort(offset + totLen + 2);
             totLen += 4;
         } else if (code == SET_PMT_HV || code == SET_PMT_HV_LIMIT) {

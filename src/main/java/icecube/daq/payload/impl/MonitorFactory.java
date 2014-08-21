@@ -13,7 +13,7 @@ public final class MonitorFactory
     private static final int OFFSET_DOMID = BasePayload.LEN_PAYLOAD_HEADER;
     private static final int OFFSET_RECLEN = OFFSET_DOMID + 8;
     private static final int OFFSET_RECTYPE = OFFSET_RECLEN + 2;
-    private static final int OFFSET_DOMCLOCK = OFFSET_RECTYPE + 2;
+    //private static final int OFFSET_DOMCLOCK = OFFSET_RECTYPE + 2;
 
     /**
      * Cannot create an instance of a factory class

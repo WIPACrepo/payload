@@ -53,11 +53,11 @@ public class EngineeringHitData
     private static final int OFFSET_DATA = 72;
 
     /** trigger mode */
-    private int trigMode;
+    //private int trigMode;
     /** source ID */
-    private int srcId;
+    //private int srcId;
     /** DOM ID */
-    private long domId;
+    //private long domId;
     /** DOM clock bytes */
     private byte[] clockBytes;
     /** ATWD chip select */
@@ -86,8 +86,8 @@ public class EngineeringHitData
     {
         super(utcTime);
 
-        trigMode = buf.getInt(offset + OFFSET_CONFIGID);
-        srcId = buf.getInt(offset + OFFSET_SOURCEID);
+        //trigMode = buf.getInt(offset + OFFSET_CONFIGID);
+        //srcId = buf.getInt(offset + OFFSET_SOURCEID);
         if (buf.getInt(offset + OFFSET_SUBLEN) != len - 24) {
             throw new Error("Engineering hit sub length should be " +
                             (len - 24) + ", not " +
@@ -99,7 +99,7 @@ public class EngineeringHitData
                             buf.getInt(offset + OFFSET_SUBID));
         }
 
-        domId = buf.getLong(offset + OFFSET_DOMID);
+        //domId = buf.getLong(offset + OFFSET_DOMID);
 
         if (buf.getShort(offset + OFFSET_RECLEN) != (short) (len - 56)) {
             throw new Error("Engineering hit record length should be " +

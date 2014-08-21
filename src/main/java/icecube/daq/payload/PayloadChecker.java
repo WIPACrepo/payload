@@ -1054,7 +1054,7 @@ public abstract class PayloadChecker
         ByteBuffer buf = ByteBuffer.allocate(pay.length());
         try {
             pay.writePayload(false, 0, buf);
-        } catch (java.io.IOException ioe) {
+        } catch (IOException ioe) {
             System.err.println("Couldn't dump payload " + pay);
             ioe.printStackTrace();
             buf = null;
