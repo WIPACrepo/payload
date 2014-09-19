@@ -32,6 +32,17 @@
       <groupId>edu.wisc.icecube</groupId>
       <artifactId>daq-common</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>dom4j</groupId>
+      <artifactId>dom4j</artifactId>
+    </dependency>
+
+    <!-- required by dom4j -->
+    <dependency>
+      <groupId>jaxen</groupId>
+      <artifactId>jaxen</artifactId>
+    </dependency>
   </dependencies>
 
 </project>
