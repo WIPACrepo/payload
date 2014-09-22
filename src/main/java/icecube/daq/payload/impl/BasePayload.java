@@ -360,7 +360,7 @@ public abstract class BasePayload
             length = buf.limit() - offset;
         }
 
-        StringBuffer strBuf = new StringBuffer();
+        StringBuilder strBuf = new StringBuilder();
 
         for (int i = 0; i < length; i++) {
             if (i % 16 == 0) {
