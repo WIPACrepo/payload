@@ -138,9 +138,11 @@ public abstract class BasePayload
     public static final long getDomClock(byte[] clockBytes)
     {
         long domClock = 0L;
-        for (int i = 0; i < clockBytes.length; i++) {
-            final int val = ((int) clockBytes[i] & 0xff);
-            domClock = (domClock << 8) | val;
+        if (clockBytes != null) {
+            for (int i = 0; i < clockBytes.length; i++) {
+                final int val = ((int) clockBytes[i] & 0xff);
+                domClock = (domClock << 8) | val;
+            }
         }
         return domClock;
     }
