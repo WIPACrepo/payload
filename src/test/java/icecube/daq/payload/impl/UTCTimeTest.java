@@ -56,7 +56,8 @@ public class UTCTimeTest
         assertEquals("Unexpected time", timeVal, time.longValue());
 
         assertEquals("Bad null compare", 1, time.compareTo(null));
-        assertEquals("Bad bogus compare", -1, time.compareTo(new Integer(1)));
+        assertEquals("Bad bogus compare", -1,
+                     time.compareTo(Integer.valueOf(1)));
 
         assertEquals("Bad compare", 0, time.compareTo(time));
 
