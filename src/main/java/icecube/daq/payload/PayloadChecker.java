@@ -2,6 +2,8 @@ package icecube.daq.payload;
 
 import icecube.daq.payload.impl.SourceID;
 import icecube.daq.payload.impl.UTCTime;
+import icecube.daq.util.JAXPUtil;
+import icecube.daq.util.JAXPUtilException;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,81 +12,20 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.dom4j.Branch;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Node;
-import org.dom4j.io.SAXReader;
-
-/**
- * Generic XML-based configuration.
- */
-abstract class XMLConfig
-{
-    /**
-     * Get the node text as a long integer value.
-     * @param branch integer node
-     * @return long integer value
-     */
-    static boolean getNodeBoolean(Branch branch)
-    {
-        return Boolean.parseBoolean(getNodeText(branch));
-    }
-
-    /**
-     * Get the node text as an integer value.
-     * @param branch integer node
-     * @return integer value
-     */
-    static int getNodeInteger(Branch branch)
-    {
-        return Integer.parseInt(getNodeText(branch));
-    }
-
-    /**
-     * Get the node text as a long integer value.
-     * @param branch integer node
-     * @return long integer value
-     */
-    static long getNodeLong(Branch branch)
-    {
-        return Long.parseLong(getNodeText(branch));
-    }
-
-    /**
-     * Concatenate the text from the node's children.
-     * @param branch node
-     * @return concatenated text
-     */
-    static String getNodeText(Branch branch)
-    {
-        StringBuilder str = new StringBuilder();
-
-        for (Iterator iter = branch.nodeIterator(); iter.hasNext(); ) {
-            Node node = (Node) iter.next();
-
-            if (node.getNodeType() != Node.TEXT_NODE) {
-                continue;
-            }
-
-            str.append(node.getText());
-        }
-
-        return str.toString().trim();
-    }
-}
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Run configuration.
  */
 class RunConfig
-    extends XMLConfig
 {
     /** Trigger configuration name. */
     private String trigCfg;
@@ -94,17 +35,23 @@ class RunConfig
      * @param configName configuration name
      * @param doc XML tree describing run configuration
      */
-    RunConfig(String configName, Branch doc)
+    RunConfig(String configName, Node doc)
     {
-        List cfgNodes = doc.selectNodes("runConfig/triggerConfig");
-        if (cfgNodes.size() == 0) {
+        NodeList cfgNodes;
+        try {
+            cfgNodes = JAXPUtil.extractNodeList(doc, "runConfig/triggerConfig");
+        } catch (JAXPUtilException jux) {
+            throw new Error(jux);
+        }
+
+        if (cfgNodes.getLength() == 0) {
             throw new Error("No trigger configuration found in " + configName);
-        } else if (cfgNodes.size() > 1) {
+        } else if (cfgNodes.getLength() > 1) {
             throw new Error("Multiple trigger configurations found in " +
                             configName);
         }
 
-        trigCfg = getNodeText((Branch) cfgNodes.get(0));
+        trigCfg = cfgNodes.item(0).getTextContent();
     }
 
     /**
@@ -121,7 +68,6 @@ class RunConfig
  * Trigger configuration entry
  */
 class TriggerConfigEntry
-    extends XMLConfig
 {
     /** Log object. */
     private static final Log LOG =
@@ -193,62 +139,62 @@ class TriggerConfigEntry
     /**
      * Trigger configuration entry
      */
-    TriggerConfigEntry(Branch top)
+    TriggerConfigEntry(Node top)
     {
-        for (Iterator iter = top.nodeIterator(); iter.hasNext(); ) {
-            Node node = (Node) iter.next();
-
+        for (Node node = top.getFirstChild(); node != null;
+             node = node.getNextSibling())
+        {
             if (node.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
 
-            Branch branch = (Branch) node;
-            final String brName = branch.getName();
+            Element elem = (Element) node;
+            final String tagName = elem.getTagName();
 
-            if (brName.equals("triggerType")) {
-                type = getNodeInteger(branch);
-            } else if (brName.equals("triggerConfigId")) {
-                id = getNodeInteger(branch);
-            } else if (brName.equals("sourceId")) {
-                srcId = getNodeInteger(branch);
-            } else if (brName.equals("triggerName")) {
-                name = getNodeText(branch);
-            } else if (brName.equals("parameterConfig")) {
-                parseTriggerParameter(branch);
-            } else if (!brName.equals("readoutConfig")) {
+            if (tagName.equals("triggerType")) {
+                type = Integer.parseInt(elem.getTextContent());
+            } else if (tagName.equals("triggerConfigId")) {
+                id = Integer.parseInt(elem.getTextContent());
+            } else if (tagName.equals("sourceId")) {
+                srcId = Integer.parseInt(elem.getTextContent());
+            } else if (tagName.equals("triggerName")) {
+                name = elem.getTextContent();
+            } else if (tagName.equals("parameterConfig")) {
+                parseTriggerParameter(elem);
+            } else if (!tagName.equals("readoutConfig")) {
                 throw new Error("Unknown trigger " +
                                 (name != null ? name + " " :
                                  (id != 0 ? "#" + id + " " :
-                                  "")) + " attribute \"" + brName + "\"");
+                                  "")) + " attribute \"" + tagName + "\"");
             }
         }
 
         validate();
     }
 
-    private void parseTriggerParameter(Branch top)
+    private void parseTriggerParameter(Node top)
     {
         String pName = null;
         Object pVal = null;
 
-        for (Iterator iter = top.nodeIterator(); iter.hasNext(); ) {
-            Node node = (Node) iter.next();
-
+        for (Node node = top.getFirstChild(); node != null;
+             node = node.getNextSibling())
+        {
             if (node.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
 
-            Branch branch = (Branch) node;
-            final String brName = branch.getName();
+            Element elem = (Element) node;
+            final String tagName = elem.getTagName();
 
-            if (brName.equals("parameterName")) {
-                pName = getNodeText(branch);
-            } else if (brName.equals("parameterValue")) {
+            if (tagName.equals("parameterName")) {
+                pName = elem.getTextContent();
+            } else if (tagName.equals("parameterValue")) {
                 try {
-                    pVal = getNodeLong(branch);
+                    pVal = Long.parseLong(elem.getTextContent());
                 } catch (Exception ex) {
                     try {
-                        pVal = getNodeBoolean(branch);
+                        pVal = Boolean.parseBoolean(elem.getTextContent());
                     } catch (Exception ex2) {
                         throw new Error("Bad value for \"" + pName + "\"", ex);
                     }
@@ -479,14 +425,11 @@ public abstract class PayloadChecker
      */
     public static void configure(File configDir, String configName)
     {
-        SAXReader xmlRdr = new SAXReader();
-
-        String trigCfgName =
-            getTriggerConfigName(xmlRdr, configDir, configName);
+        String trigCfgName = getTriggerConfigName(configDir, configName);
 
         File trigCfgDir = new File(configDir, "trigger");
 
-        triggerConfig = loadTriggerConfig(xmlRdr, trigCfgDir, trigCfgName);
+        triggerConfig = loadTriggerConfig(trigCfgDir, trigCfgName);
 
         setTriggerNames();
     }
@@ -732,16 +675,20 @@ public abstract class PayloadChecker
     /**
      * Read the trigger configuration file name from the run configuration file.
      *
-     * @param xmlRdr SAX reader
      * @param configDir directory holding run configuration files
      * @param runConfig name of run configuration file
      *
      * @return name of trigger configuration file
      */
-    public static String getTriggerConfigName(SAXReader xmlRdr, File configDir,
-                                              String runConfig)
+    public static String getTriggerConfigName(File configDir, String runConfig)
     {
-        Document doc = readConfigFile(xmlRdr, configDir, runConfig);
+        Document doc;
+        try {
+            doc = JAXPUtil.loadXMLDocument(configDir, runConfig);
+        } catch (JAXPUtilException jux) {
+            throw new Error(jux);
+        }
+
         RunConfig runCfg = new RunConfig(runConfig, doc);
         return runCfg.getTriggerConfig();
     }
@@ -959,42 +906,36 @@ public abstract class PayloadChecker
      * Read individual trigger configuration entries
      * from trigger configuration file.
      *
-     * @param xmlRdr SAX reader
      * @param trigCfgDir directory holding trigger configuration files
      * @param trigConfig name of trigger configuration file
      *
      * @return configuration entries
      */
-    public static TriggerConfig loadTriggerConfig(SAXReader xmlRdr,
-                                                  File trigCfgDir,
+    public static TriggerConfig loadTriggerConfig(File trigCfgDir,
                                                   String trigConfig)
     {
-        Document doc = readConfigFile(xmlRdr, trigCfgDir, trigConfig);
+        Document doc;
+        try {
+            doc = JAXPUtil.loadXMLDocument(trigCfgDir, trigConfig);
+        } catch (JAXPUtilException jux) {
+            throw new Error(jux);
+        }
+
+        NodeList cfgNodes;
+        try {
+            cfgNodes =
+                JAXPUtil.extractNodeList(doc, "activeTriggers/triggerConfig");
+        } catch (JAXPUtilException jux) {
+            throw new Error(jux);
+        }
 
         TriggerConfig tmpConfig = new TriggerConfig(trigConfig);
 
-        for (Object obj : doc.selectNodes("activeTriggers/triggerConfig")) {
-            tmpConfig.add(new TriggerConfigEntry((Branch) obj));
+        for (int i = 0; i < cfgNodes.getLength(); i++) {
+            tmpConfig.add(new TriggerConfigEntry((Element) cfgNodes.item(i)));
         }
 
         return tmpConfig;
-    }
-
-    private static Document readConfigFile(SAXReader xmlRdr, File configDir,
-                                           String configName)
-    {
-        File cfgFile;
-        if (configName.endsWith(".xml")) {
-            cfgFile = new File(configDir, configName);
-        } else {
-            cfgFile = new File(configDir, configName + ".xml");
-        }
-
-        try {
-            return xmlRdr.read(cfgFile);
-        } catch (DocumentException de) {
-            throw new Error("Cannot read " + cfgFile, de);
-        }
     }
 
     /**
