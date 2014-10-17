@@ -99,11 +99,6 @@ public class MockHit
         throw new Error("Unimplemented");
     }
 
-    public int getPayloadLength()
-    {
-        return length();
-    }
-
     public IUTCTime getPayloadTimeUTC()
     {
         return getHitTimeUTC();

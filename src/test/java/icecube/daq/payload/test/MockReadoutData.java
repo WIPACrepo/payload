@@ -81,11 +81,6 @@ public class MockReadoutData
         throw new Error("Unimplemented");
     }
 
-    public int getPayloadLength()
-    {
-        return length();
-    }
-
     public IUTCTime getPayloadTimeUTC()
     {
         throw new Error("Unimplemented");
@@ -141,7 +136,7 @@ public class MockReadoutData
         int hitLen = 0;
         if (hitList != null) {
             for (IHitDataPayload hit : hitList) {
-                hitLen += hit.getPayloadLength();
+                hitLen += hit.length();
             }
         }
 

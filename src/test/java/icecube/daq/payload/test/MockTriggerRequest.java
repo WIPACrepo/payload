@@ -106,11 +106,6 @@ public class MockTriggerRequest
         throw new Error("Unimplemented");
     }
 
-    public int getPayloadLength()
-    {
-        return length();
-    }
-
     public IUTCTime getPayloadTimeUTC()
     {
         return getFirstTimeUTC();

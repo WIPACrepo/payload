@@ -175,15 +175,6 @@ public abstract class BasePayload
     }
 
     /**
-     * Get the length of this payload
-     * @return number of bytes
-     */
-    public int getPayloadLength()
-    {
-        return length();
-    }
-
-    /**
      * Get the name of this payload.
      * @return name
      */
@@ -311,7 +302,7 @@ public abstract class BasePayload
         // XXX the 'offset == 0' check is a bit of a hack to ensure we
         //     don't "deallocate" a payload which was inside another payload
         if (cache != null && buf != null && offset == 0) {
-            cache.returnBuffer(getPayloadLength());
+            cache.returnBuffer(length());
         }
 
         buf = null;
@@ -403,7 +394,7 @@ public abstract class BasePayload
     public int writePayload(boolean writeLoaded, int offset, ByteBuffer buf)
         throws IOException
     {
-        final int totLen = getPayloadLength();
+        final int totLen = length();
 
         final int bufRemain = buf.capacity() - (offset + totLen);
         if (isConstantSize() && bufRemain < 0) {
