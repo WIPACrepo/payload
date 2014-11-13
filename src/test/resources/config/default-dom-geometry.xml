@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<domGeometry>
+  <string>
+    <number>1</number>
+    <dom>
+      <mainBoardId>fedcba987654</mainBoardId>
+      <channelId>123</channelId>
+    </dom>
+    <dom>
+      <mainBoardId>edcba9876543</mainBoardId>
+      <channelId>124</channelId>
+    </dom>
+    <dom>
+      <mainBoardId>edcba9876544</mainBoardId>
+      <!--<channelId>MISSING</channelId> should show up as channel 0-->
+    </dom>
+  </string>
+  <string>
+   <number>2</number>
+   <dom>
+      <mainBoardId>fedcba987699</mainBoardId>
+      <channelId>125</channelId>
+   </dom>
+  </string>
+</domGeometry>

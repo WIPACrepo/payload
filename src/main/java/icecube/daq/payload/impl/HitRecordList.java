@@ -10,6 +10,8 @@ import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
 import icecube.daq.util.DOMRegistry;
 import icecube.daq.util.DeployedDOM;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -38,6 +40,9 @@ public class HitRecordList
     private int srcId;
     /** list of hit records */
     private List<IEventHitRecord> hitRecList;
+
+    private static Log log = LogFactory.getLog(HitRecordList.class);
+
 
     /**
      * Create a hit record list
@@ -85,6 +90,8 @@ public class HitRecordList
 
         final int hubId = this.srcId % 1000;
 
+        // validate hit against source/dom registry, dropping
+        // those which are logically inconsistent
         hitRecList = new ArrayList<IEventHitRecord>();
         for (DOMHit hit : hitList) {
             String domStr = Long.toHexString(hit.getDomId());
@@ -92,17 +99,33 @@ public class HitRecordList
                 domStr = "0" + domStr;
             }
 
+
             DeployedDOM dom = reg.getDom(domStr);
+            if(dom == null)
+            {
+                log.error("Cannot send hit from unregistered " +
+                        "DOM [" + domStr + "]");
+                continue;
+            }
             if (dom.getHubId() % 1000 != hubId) {
-                System.err.println("Cannot send DOM " + domStr +
+                log.error("Cannot send DOM " + domStr +
                                    " (" + dom.getStringMajor() +
                                    "-" + dom.getStringMinor() +
                                    ") from " + srcId);
+                continue;
+            }
+            if(hit.getSourceID().getSourceID() != srcId.getSourceID())
+            {
+                log.error("Cannot set hit from " +
+                        "source [" + hit.getSourceID().getSourceID() + "]" +
+                "in list from source [" + srcId.getSourceID() + "]");
+                continue;
             }
 
             final int chanId = dom.getChannelId();
-            if (chanId == -1) {
-                System.err.println("Cannot find channel ID for DOM " + domStr);
+            if (chanId < 1) {
+                log.error("Invalid Channel ID, [" + chanId + "] " +
+                        "for DOM [" + domStr + "]");
                 continue;
             }
 
