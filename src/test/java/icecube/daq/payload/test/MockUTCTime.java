@@ -99,6 +99,10 @@ public class MockUTCTime
         return (double) (time - otherTime.longValue());
     }
 
+    /**
+     * Return a human-readable date/time string
+     * @return human-readable date/time string
+     */
     public String toDateString()
     {
         throw new Error("Unimplemented");
