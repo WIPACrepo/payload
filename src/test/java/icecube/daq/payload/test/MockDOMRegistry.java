@@ -10,20 +10,20 @@ import java.util.Set;
 public class MockDOMRegistry
     implements IDOMRegistry
 {
-    private HashMap<String, Short> mbidToChanID = new HashMap<String, Short>();
+    private HashMap<Long, Short> mbidToChanID = new HashMap<Long, Short>();
 
-    public void addChannelId(long mbval, short chanId)
+    public void addChannelId(long mbid, short chanId)
     {
-        String mbid = String.format("%012x", mbval);
         if (mbidToChanID.containsKey(mbid)) {
-            throw new Error("Cannot overwrite MBID \"" + mbid + "\" -> " +
+            final String mbstr = String.format("%012x", mbid);
+            throw new Error("Cannot overwrite MBID \"" + mbstr + "\" -> " +
                             mbidToChanID.get(mbid) + " with value " + chanId);
         }
 
         mbidToChanID.put(mbid, chanId);
     }
 
-    public short getChannelId(String mbid)
+    public short getChannelId(long mbid)
     {
         if (!mbidToChanID.containsKey(mbid)) {
             throw new Error("Unknown MBID \"" + mbid + "\"");
@@ -32,7 +32,7 @@ public class MockDOMRegistry
         return mbidToChanID.get(mbid);
     }
 
-    public DeployedDOM getDom(String mbId)
+    public DeployedDOM getDom(long mbId)
     {
         throw new Error("Unimplemented");
     }
@@ -42,19 +42,28 @@ public class MockDOMRegistry
         throw new Error("Unimplemented");
     }
 
-    public int getStringMajor(String mbid)
+    public int getStringMajor(long mbid)
     {
         throw new Error("Unimplemented");
     }
 
-    public Set<String> keys()
+    public int getStringMinor(long mbid)
     {
         throw new Error("Unimplemented");
     }
 
-    public double distanceBetweenDOMs(String mbid0, String mbid1)
+    public Set<Long> keys()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public int size()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public double distanceBetweenDOMs(long mbid0, long mbid1)
     {
         throw new Error("Unimplemented");
     }
 }
-

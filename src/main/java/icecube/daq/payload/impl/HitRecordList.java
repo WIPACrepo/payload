@@ -94,21 +94,15 @@ public class HitRecordList
         // those which are logically inconsistent
         hitRecList = new ArrayList<IEventHitRecord>();
         for (DOMHit hit : hitList) {
-            String domStr = Long.toHexString(hit.getDomId());
-            while (domStr.length() < 12) {
-                domStr = "0" + domStr;
-            }
-
-
-            DeployedDOM dom = reg.getDom(domStr);
+            DeployedDOM dom = reg.getDom(hit.getDomId());
             if(dom == null)
             {
                 log.error("Cannot send hit from unregistered " +
-                        "DOM [" + domStr + "]");
+                          String.format("DOM [%012x]", hit.getDomId()));
                 continue;
             }
             if (dom.getHubId() % 1000 != hubId) {
-                log.error("Cannot send DOM " + domStr +
+                log.error("Cannot send DOM " + dom.getMainboardId() +
                                    " (" + dom.getStringMajor() +
                                    "-" + dom.getStringMinor() +
                                    ") from " + srcId);
@@ -125,7 +119,7 @@ public class HitRecordList
             final int chanId = dom.getChannelId();
             if (chanId < 1) {
                 log.error("Invalid Channel ID, [" + chanId + "] " +
-                        "for DOM [" + domStr + "]");
+                        "for DOM [" + dom.getMainboardId() + "]");
                 continue;
             }
 

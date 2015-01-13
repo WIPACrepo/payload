@@ -25,15 +25,15 @@ public class HitRecordListTest
     DOMRegistry domRegistry;
 
     //the dom geometry loaded in the test config
-    private static String GOOD_DOM_A = "fedcba987654";
+    private static long GOOD_DOM_A = 0xfedcba987654L;
 
-    private static String GOOD_DOM_B = "edcba9876543";
+    private static long GOOD_DOM_B = 0xedcba9876543L;
 
-    private static String DOM_WRONG_STRING = "fedcba987699";
+    private static long DOM_WRONG_STRING = 0xfedcba987699L;
 
-    private static String BAD_DOM_NO_CHANNEL = "edcba9876544";
+    private static long BAD_DOM_NO_CHANNEL = 0xedcba9876544L;
 
-    private static String BAD_DOM_NOT_REGISTERED = "cafebabecafe";
+    private static long BAD_DOM_NOT_REGISTERED = 0xcafebabecafeL;
 
 
 
@@ -174,13 +174,6 @@ public class HitRecordListTest
                 getAppender().getNumberOfMessages());
 
         getAppender().clear();
-    }
-
-    private static DeltaCompressedHit hitGenerator(final String domId,
-                                                   final int srcId)
-            throws PayloadException
-    {
-        return hitGenerator(Long.parseLong(domId, 16), srcId);
     }
 
     private static DeltaCompressedHit hitGenerator(final long domId,

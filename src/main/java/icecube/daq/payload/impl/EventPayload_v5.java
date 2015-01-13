@@ -320,7 +320,7 @@ class TriggerRecord
 
             if (idx == -1) {
                 final int chanId =
-                    domRegistry.getChannelId(hit.getDOMID().toString());
+                    domRegistry.getChannelId(hit.getDOMID().longValue());
                 throw new PayloadException("Couldn't find hit record for " +
                                            hit + " (chanId " + chanId + ")");
             }

@@ -207,7 +207,7 @@ public abstract class BaseHitRecord
             return false;
         }
 
-        if (chanId != domRegistry.getChannelId(hit.getDOMID().toString())) {
+        if (chanId != domRegistry.getChannelId(hit.getDOMID().longValue())) {
             return false;
         }
 
