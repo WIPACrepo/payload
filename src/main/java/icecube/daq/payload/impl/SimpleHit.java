@@ -59,7 +59,7 @@ public class SimpleHit
      * @param offset index of first byte
      * @param len total number of bytes
      * @param utcTime payload time (UTC)
-     * @throws if there is a problem
+     * @throws PayloadException if there is a problem
      */
     public SimpleHit(ByteBuffer buf, int offset, int len, long utcTime)
         throws PayloadException
