@@ -379,6 +379,12 @@ public class TimeCalibration
             pos = offset + LEN_PAYLOAD_HEADER;
         }
 
+        if (buf.limit() < pos + PAYLOAD_LEN) {
+            throw new PayloadException("Need at least " + PAYLOAD_LEN +
+                                       "bytes, but only " +
+                                       (buf.limit() - pos) + " are available");
+        }
+
         domId = buf.getLong(pos + OFFSET_DOMID);
 
         final ByteOrder origOrder = buf.order();
