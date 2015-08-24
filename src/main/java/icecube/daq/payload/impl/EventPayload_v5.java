@@ -320,10 +320,22 @@ class TriggerRecord
             }
 
             if (idx == -1) {
-                final int chanId =
-                    domRegistry.getChannelId(hit.getDOMID().longValue());
-                throw new PayloadException("Couldn't find hit record for " +
-                                           hit + " (chanId " + chanId + ")");
+                final DeployedDOM dom =
+                    domRegistry.getDom(hit.getDOMID().longValue());
+
+                final String errMsg;
+                if (dom == null) {
+                    errMsg = String.format("Couldn't find hit record for " +
+                                           "unknown DOM ID " + hit.getDOMID() +
+                                           " (utc " + hit.getHitTimeUTC() +
+                                           ")");
+                } else {
+                    errMsg = String.format("Couldn't find hit record for " +
+                                           dom + " (utc " +
+                                           hit.getHitTimeUTC() + ")");
+                }
+
+                throw new PayloadException(errMsg);
             }
 
             indices[i] = idx;
