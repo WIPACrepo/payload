@@ -13,6 +13,7 @@ import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadFormatException;
 import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.util.DeployedDOM;
 import icecube.daq.util.IDOMRegistry;
 
 import java.io.IOException;
@@ -506,6 +507,9 @@ public class EventPayload_v5
     /** Offset of hit data field */
     private static final int OFFSET_HITDATA = 18;
 
+    /** DOM registry used to map each hit's DOM ID to the channel ID */
+    private static IDOMRegistry domRegistry;
+
     /** unique ID */
     private int uid;
     /** starting time */
@@ -527,9 +531,6 @@ public class EventPayload_v5
     private UTCTime firstTimeObj;
     /** cached ending time object */
     private UTCTime lastTimeObj;
-
-    /** DOM registry used to map each hit's DOM ID to the channel ID */
-    private IDOMRegistry domRegistry;
 
     /**
      * Create an event
@@ -1120,11 +1121,11 @@ public class EventPayload_v5
 
     /**
      * Set the DOM registry used to translate hit DOM IDs to channel IDs
-     * @param domRegistry DOM registry
+     * @param reg DOM registry
      */
-    public void setDOMRegistry(IDOMRegistry domRegistry)
+    public static void setDOMRegistry(IDOMRegistry reg)
     {
-        this.domRegistry = domRegistry;
+        domRegistry = reg;
     }
 
     /**
