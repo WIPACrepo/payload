@@ -117,7 +117,7 @@ public class HitRecordList
             }
 
             final int chanId = dom.getChannelId();
-            if (chanId < 1) {
+            if (chanId < 0) {
                 log.error("Invalid Channel ID, [" + chanId + "] " +
                         "for DOM [" + dom.getMainboardId() + "]");
                 continue;
