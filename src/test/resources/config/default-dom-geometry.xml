@@ -10,10 +10,6 @@
       <mainBoardId>edcba9876543</mainBoardId>
       <channelId>124</channelId>
     </dom>
-    <dom>
-      <mainBoardId>edcba9876544</mainBoardId>
-      <!--<channelId>MISSING</channelId> should show up as channel 0-->
-    </dom>
   </string>
   <string>
    <number>2</number>
