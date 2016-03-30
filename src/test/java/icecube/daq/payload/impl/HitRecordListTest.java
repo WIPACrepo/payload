@@ -31,8 +31,6 @@ public class HitRecordListTest
 
     private static long DOM_WRONG_STRING = 0xfedcba987699L;
 
-    private static long BAD_DOM_NO_CHANNEL = 0xedcba9876544L;
-
     private static long BAD_DOM_NOT_REGISTERED = 0xcafebabecafeL;
 
 
@@ -69,10 +67,6 @@ public class HitRecordListTest
         assertEquals(MSG, 2, domRegistry.getDom(DOM_WRONG_STRING).getHubId());
         assertEquals(MSG, 125,
                 domRegistry.getDom(DOM_WRONG_STRING).getChannelId());
-
-        assertNotNull(MSG, domRegistry.getDom(BAD_DOM_NO_CHANNEL));
-        assertEquals(MSG, 0,
-                domRegistry.getDom(BAD_DOM_NO_CHANNEL).getChannelId());
 
         assertNull(MSG, domRegistry.getDom(BAD_DOM_NOT_REGISTERED));
     }
@@ -147,10 +141,6 @@ public class HitRecordListTest
         hits.add(hitGenerator(GOOD_DOM_B, srcID.getSourceID()));
         hits.add(hitGenerator(GOOD_DOM_B, srcID.getSourceID()));
         hits.add(hitGenerator(GOOD_DOM_B, srcID.getSourceID()));
-
-        //bad hit: no channel configured
-        hits.add(hitGenerator(BAD_DOM_NO_CHANNEL, srcID.getSourceID()));
-        numBadhitsInInput++;
 
         hits.add(hitGenerator(GOOD_DOM_A, srcID.getSourceID()));
         hits.add(hitGenerator(GOOD_DOM_B, srcID.getSourceID()));
