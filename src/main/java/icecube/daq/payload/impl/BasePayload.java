@@ -1,20 +1,20 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IByteBufferCache;
-import icecube.daq.payload.IPayload;
-import icecube.daq.payload.IPayloadDestination;
+import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IUTCTime;
+import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
+import icecube.daq.payload.PayloadFormatException;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
 
 /**
  * Base payload class
  */
 public abstract class BasePayload
-    implements IPayload
+    implements ILoadablePayload, IWriteablePayload
 {
     /** Offset of payload length field */
     public static final int OFFSET_LENGTH = 0;
@@ -138,9 +138,11 @@ public abstract class BasePayload
     public static final long getDomClock(byte[] clockBytes)
     {
         long domClock = 0L;
-        for (int i = 0; i < clockBytes.length; i++) {
-            final int val = ((int) clockBytes[i] & 0xff);
-            domClock = (domClock << 8) | val;
+        if (clockBytes != null) {
+            for (int i = 0; i < clockBytes.length; i++) {
+                final int val = ((int) clockBytes[i] & 0xff);
+                domClock = (domClock << 8) | val;
+            }
         }
         return domClock;
     }
@@ -170,15 +172,6 @@ public abstract class BasePayload
     public int getPayloadInterfaceType()
     {
         throw new Error("Unimplemented");
-    }
-
-    /**
-     * Get the length of this payload
-     * @return number of bytes
-     */
-    public int getPayloadLength()
-    {
-        return length();
     }
 
     /**
@@ -259,17 +252,17 @@ public abstract class BasePayload
 
     /**
      * Load the payload from its byte buffer
-     * @throws DataFormatException if there is a problem
+     * @throws PayloadFormatException if there is a problem
      */
     public void loadPayload()
-        throws DataFormatException
+        throws PayloadFormatException
     {
         if (!loaded) {
             final int dataLen;
             try {
                 dataLen = loadBody(buf, offset, utcTime, false);
             } catch (PayloadException pe) {
-                throw new DataFormatException("Cannot load payload: " + pe);
+                throw new PayloadFormatException("Cannot load payload", pe);
             }
 
             bufLen = LEN_PAYLOAD_HEADER + dataLen;
@@ -309,7 +302,7 @@ public abstract class BasePayload
         // XXX the 'offset == 0' check is a bit of a hack to ensure we
         //     don't "deallocate" a payload which was inside another payload
         if (cache != null && buf != null && offset == 0) {
-            cache.returnBuffer(getPayloadLength());
+            cache.returnBuffer(length());
         }
 
         buf = null;
@@ -358,7 +351,7 @@ public abstract class BasePayload
             length = buf.limit() - offset;
         }
 
-        StringBuffer strBuf = new StringBuffer();
+        StringBuilder strBuf = new StringBuilder();
 
         for (int i = 0; i < length; i++) {
             if (i % 16 == 0) {
@@ -391,17 +384,6 @@ public abstract class BasePayload
     }
 
     /**
-     * Unimplemented
-     * @param writeLoaded ignored
-     * @param dest ignored
-     * @return Error
-     */
-    public int writePayload(boolean writeLoaded, IPayloadDestination dest)
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
      * Write this payload's data to the byte buffer
      * @param writeLoaded ignored
      * @param offset index of first byte
@@ -412,15 +394,17 @@ public abstract class BasePayload
     public int writePayload(boolean writeLoaded, int offset, ByteBuffer buf)
         throws IOException
     {
-        final int totLen = getPayloadLength();
+        final int totLen = length();
 
-        final int bufRemain = buf.limit() - (offset + totLen);
+        final int bufRemain = buf.capacity() - (offset + totLen);
         if (isConstantSize() && bufRemain < 0) {
             throw new IOException("Buffer is " + -bufRemain +
                                   " bytes too short (offset=" + offset +
-                                  ", payload len=" + totLen + ", limit=" +
-                                  buf.limit());
+                                  ", payload len=" + totLen + ", capacity=" +
+                                  buf.capacity());
         }
+
+        buf.limit(buf.capacity());
 
         // payload header
         buf.putInt(offset + OFFSET_LENGTH, totLen);
@@ -446,9 +430,7 @@ public abstract class BasePayload
             }
         }
 
-        if (false) {
-            buf.limit(offset + finalLen);
-        }
+        buf.limit(offset + finalLen);
 
         return finalLen;
     }

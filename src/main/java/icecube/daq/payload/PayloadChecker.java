@@ -2,7 +2,8 @@ package icecube.daq.payload;
 
 import icecube.daq.payload.impl.SourceID;
 import icecube.daq.payload.impl.UTCTime;
-//import icecube.daq.trigger.TriggerRegistry;
+import icecube.daq.util.JAXPUtil;
+import icecube.daq.util.JAXPUtilException;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,72 +12,20 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.dom4j.Branch;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Node;
-import org.dom4j.io.SAXReader;
-
-/**
- * Generic XML-based configuration.
- */
-abstract class XMLConfig
-{
-    /**
-     * Get the node text as an integer value.
-     * @param branch integer node
-     * @return integer value
-     */
-    static int getNodeInteger(Branch branch)
-    {
-        return Integer.parseInt(getNodeText(branch));
-    }
-
-    /**
-     * Get the node text as a long integer value.
-     * @param branch integer node
-     * @return long integer value
-     */
-    static long getNodeLong(Branch branch)
-    {
-        return Long.parseLong(getNodeText(branch));
-    }
-
-    /**
-     * Concatenate the text from the node's children.
-     * @param branch node
-     * @return concatenated text
-     */
-    static String getNodeText(Branch branch)
-    {
-        StringBuilder str = new StringBuilder();
-
-        for (Iterator iter = branch.nodeIterator(); iter.hasNext(); ) {
-            Node node = (Node) iter.next();
-
-            if (node.getNodeType() != Node.TEXT_NODE) {
-                continue;
-            }
-
-            str.append(node.getText());
-        }
-
-        return str.toString().trim();
-    }
-}
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Run configuration.
  */
 class RunConfig
-    extends XMLConfig
 {
     /** Trigger configuration name. */
     private String trigCfg;
@@ -86,17 +35,23 @@ class RunConfig
      * @param configName configuration name
      * @param doc XML tree describing run configuration
      */
-    RunConfig(String configName, Branch doc)
+    RunConfig(String configName, Node doc)
     {
-        List cfgNodes = doc.selectNodes("runConfig/triggerConfig");
-        if (cfgNodes.size() == 0) {
+        NodeList cfgNodes;
+        try {
+            cfgNodes = JAXPUtil.extractNodeList(doc, "runConfig/triggerConfig");
+        } catch (JAXPUtilException jux) {
+            throw new Error(jux);
+        }
+
+        if (cfgNodes.getLength() == 0) {
             throw new Error("No trigger configuration found in " + configName);
-        } else if (cfgNodes.size() > 1) {
+        } else if (cfgNodes.getLength() > 1) {
             throw new Error("Multiple trigger configurations found in " +
                             configName);
         }
 
-        trigCfg = getNodeText((Branch) cfgNodes.get(0));
+        trigCfg = cfgNodes.item(0).getTextContent();
     }
 
     /**
@@ -113,7 +68,6 @@ class RunConfig
  * Trigger configuration entry
  */
 class TriggerConfigEntry
-    extends XMLConfig
 {
     /** Log object. */
     private static final Log LOG =
@@ -142,6 +96,7 @@ class TriggerConfigEntry
                         "multiplicity", "simpleMultiplicity", "radius", "height",
                         "timeWindow", "domSet",
                     });
+                put("FixedRateTrigger", new String[] { "interval" });
                 put("MinBiasTrigger", new String[] { "prescale" });
                 put("MultiplicityStringTrigger",
                     new String[] {
@@ -152,7 +107,10 @@ class TriggerConfigEntry
                     new String[] { "deadtime", "prescale" });
                 put("SimpleMajorityTrigger",
                     new String[] { "threshold", "timeWindow", "domSet" });
-                put("SlowMPTrigger", new String[0]);
+                put("SlowMPTrigger",
+                    new String[] { "t_proximity", "t_min", "t_max",
+                                   "alpha_min", "dc_algo", "rel_v",
+                                   "min_n_tuples", "max_event_length", });
                 put("ThroughputTrigger", new String[0]);
                 put("TrigBoardTrigger", new String[] { "prescale" });
                 put("VolumeTrigger",
@@ -176,63 +134,71 @@ class TriggerConfigEntry
     private int id = -1;
     private int srcId = -1;
     private String name;
-    private HashMap<String, Long> params = new HashMap<String, Long>();
+    private HashMap<String, Object> params = new HashMap<String, Object>();
 
     /**
      * Trigger configuration entry
      */
-    TriggerConfigEntry(Branch top)
+    TriggerConfigEntry(Node top)
     {
-        for (Iterator iter = top.nodeIterator(); iter.hasNext(); ) {
-            Node node = (Node) iter.next();
-
+        for (Node node = top.getFirstChild(); node != null;
+             node = node.getNextSibling())
+        {
             if (node.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
 
-            Branch branch = (Branch) node;
-            final String brName = branch.getName();
+            Element elem = (Element) node;
+            final String tagName = elem.getTagName();
 
-            if (brName.equals("triggerType")) {
-                type = getNodeInteger(branch);
-            } else if (brName.equals("triggerConfigId")) {
-                id = getNodeInteger(branch);
-            } else if (brName.equals("sourceId")) {
-                srcId = getNodeInteger(branch);
-            } else if (brName.equals("triggerName")) {
-                name = getNodeText(branch);
-            } else if (brName.equals("parameterConfig")) {
-                parseTriggerParameter(branch);
-            } else if (!brName.equals("readoutConfig")) {
+            if (tagName.equals("triggerType")) {
+                type = Integer.parseInt(elem.getTextContent());
+            } else if (tagName.equals("triggerConfigId")) {
+                id = Integer.parseInt(elem.getTextContent());
+            } else if (tagName.equals("sourceId")) {
+                srcId = Integer.parseInt(elem.getTextContent());
+            } else if (tagName.equals("triggerName")) {
+                name = elem.getTextContent();
+            } else if (tagName.equals("parameterConfig")) {
+                parseTriggerParameter(elem);
+            } else if (!tagName.equals("readoutConfig")) {
                 throw new Error("Unknown trigger " +
                                 (name != null ? name + " " :
                                  (id != 0 ? "#" + id + " " :
-                                  "")) + " attribute \"" + brName + "\"");
+                                  "")) + " attribute \"" + tagName + "\"");
             }
         }
 
         validate();
     }
 
-    private void parseTriggerParameter(Branch top)
+    private void parseTriggerParameter(Node top)
     {
         String pName = null;
-        long pVal = 0;
+        Object pVal = null;
 
-        for (Iterator iter = top.nodeIterator(); iter.hasNext(); ) {
-            Node node = (Node) iter.next();
-
+        for (Node node = top.getFirstChild(); node != null;
+             node = node.getNextSibling())
+        {
             if (node.getNodeType() != Node.ELEMENT_NODE) {
                 continue;
             }
 
-            Branch branch = (Branch) node;
-            final String brName = branch.getName();
+            Element elem = (Element) node;
+            final String tagName = elem.getTagName();
 
-            if (brName.equals("parameterName")) {
-                pName = getNodeText(branch);
-            } else if (brName.equals("parameterValue")) {
-                pVal = getNodeLong(branch);
+            if (tagName.equals("parameterName")) {
+                pName = elem.getTextContent();
+            } else if (tagName.equals("parameterValue")) {
+                try {
+                    pVal = Long.parseLong(elem.getTextContent());
+                } catch (Exception ex) {
+                    try {
+                        pVal = Boolean.parseBoolean(elem.getTextContent());
+                    } catch (Exception ex2) {
+                        throw new Error("Bad value for \"" + pName + "\"", ex);
+                    }
+                }
             }
         }
 
@@ -249,10 +215,10 @@ class TriggerConfigEntry
         return name;
     }
 
-    long getParameter(String key)
+    Object getParameter(String key)
     {
         if (!params.containsKey(key)) {
-            return -1L;
+            return null;
         }
 
         return params.get(key);
@@ -459,14 +425,11 @@ public abstract class PayloadChecker
      */
     public static void configure(File configDir, String configName)
     {
-        SAXReader xmlRdr = new SAXReader();
-
-        String trigCfgName =
-            getTriggerConfigName(xmlRdr, configDir, configName);
+        String trigCfgName = getTriggerConfigName(configDir, configName);
 
         File trigCfgDir = new File(configDir, "trigger");
 
-        triggerConfig = loadTriggerConfig(xmlRdr, trigCfgDir, trigCfgName);
+        triggerConfig = loadTriggerConfig(trigCfgDir, trigCfgName);
 
         setTriggerNames();
     }
@@ -485,7 +448,6 @@ public abstract class PayloadChecker
             typeNames[entry.getType()] = entry.getName();
         }
 
-        icecube.daq.oldpayload.impl.TriggerRequestRecord.setTypeNames(typeNames);
         icecube.daq.payload.impl.TriggerRequest.setTypeNames(typeNames);
     }
 
@@ -613,7 +575,10 @@ public abstract class PayloadChecker
                     cfg.getSourceID() == tr.getSourceID().getSourceID() &&
                     cfg.getName().equals("SimpleMajorityTrigger"))
                 {
-                    return (int) cfg.getParameter("threshold");
+                    Object obj = cfg.getParameter("threshold");
+                    if (obj != null) {
+                        return ((Long) obj).intValue();
+                    }
                 }
             }
         }
@@ -664,8 +629,8 @@ public abstract class PayloadChecker
         List payList;
         try {
             payList = tr.getPayloads();
-        } catch (DataFormatException dfe) {
-            LOG.error("Couldn't get list of payloads from " + tr, dfe);
+        } catch (PayloadFormatException pfe) {
+            LOG.error("Couldn't get list of payloads from " + tr, pfe);
             payList = null;
         }
 
@@ -710,16 +675,20 @@ public abstract class PayloadChecker
     /**
      * Read the trigger configuration file name from the run configuration file.
      *
-     * @param xmlRdr SAX reader
      * @param configDir directory holding run configuration files
      * @param runConfig name of run configuration file
      *
      * @return name of trigger configuration file
      */
-    public static String getTriggerConfigName(SAXReader xmlRdr, File configDir,
-                                              String runConfig)
+    public static String getTriggerConfigName(File configDir, String runConfig)
     {
-        Document doc = readConfigFile(xmlRdr, configDir, runConfig);
+        Document doc;
+        try {
+            doc = JAXPUtil.loadXMLDocument(configDir, runConfig);
+        } catch (JAXPUtilException jux) {
+            throw new Error(jux);
+        }
+
         RunConfig runCfg = new RunConfig(runConfig, doc);
         return runCfg.getTriggerConfig();
     }
@@ -925,8 +894,8 @@ public abstract class PayloadChecker
         } catch (IOException ioe) {
             LOG.error("Couldn't load payload", ioe);
             return false;
-        } catch (DataFormatException dfe) {
-            LOG.error("Couldn't load payload", dfe);
+        } catch (PayloadFormatException pfe) {
+            LOG.error("Couldn't load payload", pfe);
             return false;
         }
 
@@ -937,42 +906,36 @@ public abstract class PayloadChecker
      * Read individual trigger configuration entries
      * from trigger configuration file.
      *
-     * @param xmlRdr SAX reader
      * @param trigCfgDir directory holding trigger configuration files
      * @param trigConfig name of trigger configuration file
      *
      * @return configuration entries
      */
-    public static TriggerConfig loadTriggerConfig(SAXReader xmlRdr,
-                                                  File trigCfgDir,
+    public static TriggerConfig loadTriggerConfig(File trigCfgDir,
                                                   String trigConfig)
     {
-        Document doc = readConfigFile(xmlRdr, trigCfgDir, trigConfig);
+        Document doc;
+        try {
+            doc = JAXPUtil.loadXMLDocument(trigCfgDir, trigConfig);
+        } catch (JAXPUtilException jux) {
+            throw new Error(jux);
+        }
+
+        NodeList cfgNodes;
+        try {
+            cfgNodes =
+                JAXPUtil.extractNodeList(doc, "activeTriggers/triggerConfig");
+        } catch (JAXPUtilException jux) {
+            throw new Error(jux);
+        }
 
         TriggerConfig tmpConfig = new TriggerConfig(trigConfig);
 
-        for (Object obj : doc.selectNodes("activeTriggers/triggerConfig")) {
-            tmpConfig.add(new TriggerConfigEntry((Branch) obj));
+        for (int i = 0; i < cfgNodes.getLength(); i++) {
+            tmpConfig.add(new TriggerConfigEntry((Element) cfgNodes.item(i)));
         }
 
         return tmpConfig;
-    }
-
-    private static Document readConfigFile(SAXReader xmlRdr, File configDir,
-                                           String configName)
-    {
-        File cfgFile;
-        if (configName.endsWith(".xml")) {
-            cfgFile = new File(configDir, configName);
-        } else {
-            cfgFile = new File(configDir, configName + ".xml");
-        }
-
-        try {
-            return xmlRdr.read(cfgFile);
-        } catch (DocumentException de) {
-            throw new Error("Cannot read " + cfgFile, de);
-        }
     }
 
     /**
@@ -988,7 +951,7 @@ public abstract class PayloadChecker
 
     private static String toHexString(ByteBuffer bb)
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int i = 0; i < bb.limit(); i++) {
             String str = Integer.toHexString(bb.get(i));
             buf.append("(byte)0x");
@@ -1029,10 +992,10 @@ public abstract class PayloadChecker
      */
     public static String dumpPayloadBytes(IWriteablePayload pay, String name)
     {
-        ByteBuffer buf = ByteBuffer.allocate(pay.getPayloadLength());
+        ByteBuffer buf = ByteBuffer.allocate(pay.length());
         try {
             pay.writePayload(false, 0, buf);
-        } catch (java.io.IOException ioe) {
+        } catch (IOException ioe) {
             System.err.println("Couldn't dump payload " + pay);
             ioe.printStackTrace();
             buf = null;
@@ -1480,8 +1443,8 @@ public abstract class PayloadChecker
         List payList;
         try {
             payList = tr.getPayloads();
-        } catch (DataFormatException dfe) {
-            LOG.error("Couldn't fetch payloads for " + trDesc, dfe);
+        } catch (PayloadFormatException pfe) {
+            LOG.error("Couldn't fetch payloads for " + trDesc, pfe);
             return false;
         }
 

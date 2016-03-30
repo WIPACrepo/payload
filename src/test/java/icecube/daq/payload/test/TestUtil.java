@@ -1,6 +1,5 @@
 package icecube.daq.payload.test;
 
-import icecube.daq.oldpayload.RecordTypeRegistry;
 import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.IHitDataPayload;
@@ -10,7 +9,9 @@ import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.IReadoutRequestElement;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.PayloadException;
+import icecube.daq.payload.PayloadFormatException;
 import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.payload.RecordTypeRegistry;
 import icecube.daq.payload.impl.EventPayload_v4;
 import icecube.daq.payload.impl.Monitor;
 import icecube.daq.payload.impl.TriggerRequest;
@@ -20,7 +21,6 @@ import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.List;
 
@@ -35,7 +35,7 @@ class RequestData
 
     RequestData(IDOMRegistry domRegistry, ITriggerRequestPayload tr,
                 List<IEventHitRecord> hitList)
-        throws DataFormatException
+        throws PayloadFormatException
     {
         type = tr.getTriggerType();
         cfgId = tr.getTriggerConfigID();
@@ -48,7 +48,8 @@ class RequestData
         }
     }
 
-    private static int[] buildHitIndexList(IDOMRegistry domRegistry, List reqHits,
+    private static int[] buildHitIndexList(IDOMRegistry domRegistry,
+                                           List reqHits,
                                            List<IEventHitRecord> hitList)
     {
         ArrayList<IHitDataPayload> tmpHits = new ArrayList<IHitDataPayload>();
@@ -149,7 +150,8 @@ public abstract class TestUtil
 
     public static ByteBuffer createDeltaHit(long domId, long utcTime,
                                             short version, short pedestal,
-                                            long domClock, boolean isCompressed,
+                                            long domClock,
+                                            boolean isCompressed,
                                             int trigFlags, int lcFlags,
                                             boolean hasFADC, boolean hasATWD,
                                             int atwdSize, boolean isATWD_B,
@@ -179,10 +181,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -223,20 +222,19 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
 
-    public static ByteBuffer createDeltaHitRecord(short version, short pedestal,
+    public static ByteBuffer createDeltaHitRecord(short version,
+                                                  short pedestal,
                                                   long domClock,
                                                   boolean isCompressed,
                                                   int trigFlags, int lcFlags,
                                                   boolean hasFADC,
-                                                  boolean hasATWD, int atwdSize,
+                                                  boolean hasATWD,
+                                                  int atwdSize,
                                                   boolean isATWD_B,
                                                   boolean isPeakUpper,
                                                   int peakSample,
@@ -252,12 +250,14 @@ public abstract class TestUtil
                                     ByteOrder.BIG_ENDIAN);
     }
 
-    public static ByteBuffer createDeltaHitRecord(short version, short pedestal,
+    public static ByteBuffer createDeltaHitRecord(short version,
+                                                  short pedestal,
                                                   long domClock,
                                                   boolean isCompressed,
                                                   int trigFlags, int lcFlags,
                                                   boolean hasFADC,
-                                                  boolean hasATWD, int atwdSize,
+                                                  boolean hasATWD,
+                                                  int atwdSize,
                                                   boolean isATWD_B,
                                                   boolean isPeakUpper,
                                                   int peakSample,
@@ -295,9 +295,9 @@ public abstract class TestUtil
 
         final int word0upper = (isCompressed ? 0x8000 : 0) | (trigFlags << 2) |
             lcFlags;
-        final int word0lower = (hasFADC ? 0x8000 : 0) | (hasATWD ? 0x4000 : 0) |
-            (atwdSize << 12) | (isATWD_B ? 0x800 : 0) |
-            (dataBytes.length + compressedHdrBytes);
+        final int word0lower = (hasFADC ? 0x8000 : 0) |
+            (hasATWD ? 0x4000 : 0) | (atwdSize << 12) |
+            (isATWD_B ? 0x800 : 0) | (dataBytes.length + compressedHdrBytes);
         final int word0 = (word0upper << 16) | word0lower;
 
         final int word2 = (isPeakUpper ? 0x80000000 : 0) | (peakSample << 27) |
@@ -325,10 +325,7 @@ public abstract class TestUtil
 
         buf.order(origOrder);
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -353,10 +350,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -366,17 +360,20 @@ public abstract class TestUtil
                                                 long domClock, Object fadcObj,
                                                 Object atwdObj)
     {
-        return createEngHitRecord(chanId, relTime, atwdChip, trigMode, domClock,
-                                  fadcObj, atwdObj, ByteOrder.BIG_ENDIAN);
+        return createEngHitRecord(chanId, relTime, atwdChip, trigMode,
+                                  domClock, fadcObj, atwdObj,
+                                  ByteOrder.BIG_ENDIAN);
     }
 
     public static ByteBuffer createEngHitRecord(short chanId, int relTime,
                                                 int atwdChip, int trigMode,
                                                 long domClock, Object fadcObj,
-                                                Object atwdObj, ByteOrder order)
+                                                Object atwdObj,
+                                                ByteOrder order)
     {
-        ByteBuffer dataBuf = createEngHitRecordData(atwdChip, trigMode, domClock,
-                                                    fadcObj, atwdObj, order);
+        ByteBuffer dataBuf = createEngHitRecordData(atwdChip, trigMode,
+                                                    domClock, fadcObj, atwdObj,
+                                                    order);
 
         ByteBuffer buf = ByteBuffer.allocate(10 + dataBuf.limit());
 
@@ -393,7 +390,8 @@ public abstract class TestUtil
     }
 
     public static ByteBuffer createEngHitRecordData(int atwdChip, int trigMode,
-                                                    long domClock, Object fadcObj,
+                                                    long domClock,
+                                                    Object fadcObj,
                                                     Object atwdObj,
                                                     ByteOrder order)
     {
@@ -501,10 +499,7 @@ public abstract class TestUtil
 
         buf.order(origOrder);
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -540,10 +535,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -556,8 +548,8 @@ public abstract class TestUtil
                                            ITriggerRequestPayload trigReq,
                                            List hitList)
     {
-        ByteBuffer recBuf = createEventRecordv2(uid, srcId, firstTime, lastTime,
-                                                type, cfgId, runNum);
+        ByteBuffer recBuf = createEventRecordv2(uid, srcId, firstTime,
+                                                lastTime, type, cfgId, runNum);
 
         ByteBuffer trBuf = createTriggerRequest(trigReq);
 
@@ -581,10 +573,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -596,8 +585,9 @@ public abstract class TestUtil
                                            ITriggerRequestPayload trigReq,
                                            List hitList)
     {
-        ByteBuffer recBuf = createEventRecordv3(uid, srcId, firstTime, lastTime,
-                                                type, runNum, subrunNum);
+        ByteBuffer recBuf = createEventRecordv3(uid, srcId, firstTime,
+                                                lastTime, type, runNum,
+                                                subrunNum);
 
         ByteBuffer trBuf = createTriggerRequest(trigReq);
 
@@ -620,10 +610,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -634,8 +621,9 @@ public abstract class TestUtil
                                            ITriggerRequestPayload trigReq,
                                            List hitList)
     {
-        ByteBuffer recBuf = createEventRecordv4(uid, srcId, firstTime, lastTime,
-                                                year, runNum, subrunNum);
+        ByteBuffer recBuf = createEventRecordv4(uid, srcId, firstTime,
+                                                lastTime, year, runNum,
+                                                subrunNum);
 
         ByteBuffer trBuf = createTriggerRequest(trigReq);
 
@@ -661,10 +649,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -675,7 +660,7 @@ public abstract class TestUtil
                                            ITriggerRequestPayload trigReq,
                                            List<IEventHitRecord> hitList,
                                            IDOMRegistry domRegistry)
-        throws DataFormatException, PayloadException
+        throws PayloadException
     {
         int hitLen = 0;
         for (IEventHitRecord hitRec : hitList) {
@@ -685,8 +670,8 @@ public abstract class TestUtil
         try {
             ((ILoadablePayload) trigReq).loadPayload();
         } catch (Exception ex) {
-            throw new DataFormatException("Cannot load trigger request " +
-                                          trigReq);
+            throw new PayloadFormatException("Cannot load trigger request " +
+                                             trigReq);
         }
 
         int trigLen = 0;
@@ -710,7 +695,8 @@ public abstract class TestUtil
                     }
 
                     RequestData reqData =
-                        new RequestData(domRegistry, (ITriggerRequestPayload) tr,
+                        new RequestData(domRegistry,
+                                        (ITriggerRequestPayload) tr,
                                         hitList);
                     trigList.add(reqData);
                     trigLen += reqData.length();
@@ -758,10 +744,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -773,7 +756,7 @@ public abstract class TestUtil
                                            List<IEventHitRecord> hitList,
                                            boolean forceCompression,
                                            IDOMRegistry domRegistry)
-        throws DataFormatException, PayloadException
+        throws PayloadException
     {
         ByteBuffer hitBuf =
             createHitRecords(hitList, firstTime, true, forceCompression);
@@ -781,8 +764,8 @@ public abstract class TestUtil
         try {
             ((ILoadablePayload) trigReq).loadPayload();
         } catch (Exception ex) {
-            throw new DataFormatException("Cannot load trigger request " +
-                                          trigReq);
+            throw new PayloadFormatException("Cannot load trigger request " +
+                                             trigReq);
         }
 
         int trigLen = 0;
@@ -806,7 +789,8 @@ public abstract class TestUtil
                     }
 
                     RequestData reqData =
-                        new RequestData(domRegistry, (ITriggerRequestPayload) tr,
+                        new RequestData(domRegistry,
+                                        (ITriggerRequestPayload) tr,
                                         hitList);
                     trigList.add(reqData);
                     trigLen += reqData.length();
@@ -845,10 +829,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -867,10 +848,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -894,10 +872,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -921,10 +896,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -949,10 +921,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -990,8 +959,9 @@ public abstract class TestUtil
         if (!tryCompression || hitLen >= Short.MAX_VALUE) {
             useCompressedData = false;
         } else {
-            Deflater compressor = new Deflater(Deflater.BEST_COMPRESSION, true);
-    
+            Deflater compressor =
+                new Deflater(Deflater.BEST_COMPRESSION, true);
+
             // Give the compressor the data to compress
             compressor.setInput(hitBuf.array(), 1, hitLen + 4);
             compressor.finish();
@@ -999,7 +969,7 @@ public abstract class TestUtil
             // Compress the data
             byte[] zipData = new byte[hitLen + 1];
             int zipLen = compressor.deflate(zipData);
-        
+
             // if the compressed data was smaller that the uncompressed data...
             if (compressor.finished()) {
                 ByteBuffer cmpBuf = ByteBuffer.allocate(5 + zipLen);
@@ -1073,10 +1043,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1100,15 +1067,13 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
 
-    public static ByteBuffer createMonitorASCIIRecord(long domClock, String str,
+    public static ByteBuffer createMonitorASCIIRecord(long domClock,
+                                                      String str,
                                                       boolean littleEndian)
     {
         if (str == null) {
@@ -1138,16 +1103,14 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
 
     public static ByteBuffer createMonitorConfig(long utcTime, long domId,
-                                                 long domClock, byte evtVersion,
+                                                 long domClock,
+                                                 byte evtVersion,
                                                  short hwSectionLen,
                                                  long pmtBaseId,
                                                  short fpgaBuildNum,
@@ -1175,8 +1138,8 @@ public abstract class TestUtil
                                       expCntlMajor, expCntlMinor,
                                       slowCntlMajor, slowCntlMinor,
                                       dataAccessMajor, dataAccessMinor,
-                                      cfgSectionLen, trigCfgInfo, atwdRdoutInfo,
-                                      littleEndian);
+                                      cfgSectionLen, trigCfgInfo,
+                                      atwdRdoutInfo, littleEndian);
 
         final int bufLen = 24 + recBuf.limit();
 
@@ -1189,10 +1152,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1218,7 +1178,7 @@ public abstract class TestUtil
                                                        int atwdRdoutInfo,
                                                        boolean littleEndian)
     {
-        final int bufLen = 56;
+        final int bufLen = 54;
 
         ByteBuffer buf = ByteBuffer.allocate(bufLen);
 
@@ -1236,7 +1196,7 @@ public abstract class TestUtil
         buf.put(evtVersion);
         buf.put((byte) 0);
         buf.putShort(hwSectionLen);
-        buf.putLong(domId);
+        putDomClock(buf, buf.position(), domId);
         buf.putShort((short) 0);
         buf.putLong(pmtBaseId);
         buf.putShort(fpgaBuildNum);
@@ -1260,10 +1220,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1292,10 +1249,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1305,11 +1259,11 @@ public abstract class TestUtil
                                                              byte code,
                                                              byte daqId,
                                                              short value,
-                                                             boolean littleEndian)
+                                                             boolean littleEnd)
     {
         final int bufLen;
         if (code == (byte) 0x0d) {
-            bufLen = 15;
+            bufLen = 16;
         } else if (code == (byte) 0x0e || code == (byte) 0x1d) {
             bufLen = 14;
         } else if (code == (byte) 0x10 || code == (byte) 0x12) {
@@ -1321,7 +1275,7 @@ public abstract class TestUtil
         ByteBuffer buf = ByteBuffer.allocate(bufLen);
 
         final ByteOrder origOrder = buf.order();
-        if (littleEndian) {
+        if (littleEnd) {
             buf.order(ByteOrder.LITTLE_ENDIAN);
         } else {
             buf.order(ByteOrder.BIG_ENDIAN);
@@ -1335,6 +1289,7 @@ public abstract class TestUtil
         buf.put(code);
         if (code == (byte) 0x0d) {
             buf.put(daqId);
+            buf.put((byte) 0xff);
             buf.putShort(value);
         } else if (code == (byte) 0x0e || code == (byte) 0x1d) {
             buf.putShort(value);
@@ -1346,10 +1301,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1373,10 +1325,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1410,17 +1359,15 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
 
     public static ByteBuffer createMonitorHardware(long utcTime, long domId,
                                                    long domClock, short[] data,
-                                                   int speScalar, int mpeScalar,
+                                                   int speScalar,
+                                                   int mpeScalar,
                                                    boolean littleEndian)
     {
         final byte fmtVersion = (byte) 0;
@@ -1439,10 +1386,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1484,10 +1428,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1612,10 +1553,7 @@ public abstract class TestUtil
 
         buf.order(origOrder);
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1671,10 +1609,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1698,10 +1633,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1722,10 +1654,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1765,10 +1694,7 @@ public abstract class TestUtil
 
         buf.order(origOrder);
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1789,10 +1715,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1814,10 +1737,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1838,10 +1758,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1865,10 +1782,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1898,10 +1812,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -1927,7 +1838,8 @@ public abstract class TestUtil
         final ByteOrder origOrder = buf.order();
         buf.order(ByteOrder.LITTLE_ENDIAN);
 
-        buf.putInt(pktLen);
+        buf.putShort((short) pktLen);
+        buf.putShort((short) 1);
 
         buf.putLong(dorTX);
         buf.putLong(dorRX);
@@ -1945,10 +1857,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected record length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -2043,10 +1952,7 @@ public abstract class TestUtil
 
         buf.order(origOrder);
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -2100,7 +2006,7 @@ public abstract class TestUtil
         buf.put(rrBuf.array(), 16, rrBuf.limit() - 16);
 
         putCompositeEnvelope(buf, compLen,
-                             0,//PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT,
+                             PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT,
                              bufList.size());
         for (ByteBuffer hitBuf : bufList) {
             buf.put(hitBuf);
@@ -2108,10 +2014,7 @@ public abstract class TestUtil
 
         buf.flip();
 
-        if (buf.limit() != buf.capacity()) {
-            throw new Error("Expected payload length is " + buf.capacity() +
-                            ", actual length is " + buf.limit());
-        }
+        validateBuffer(buf, bufLen);
 
         return buf;
     }
@@ -2210,9 +2113,20 @@ public abstract class TestUtil
         buf.putLong(domId);
     }
 
+    private static void validateBuffer(ByteBuffer buf, int bufLen)
+    {
+        if (buf.limit() != buf.capacity()) {
+            throw new Error("Expected payload length is " + buf.capacity() +
+                            ", actual length is " + buf.limit());
+        } else if (buf.limit() != bufLen) {
+            throw new Error("Buffer length is " + bufLen +
+                            ", actual length is " + buf.limit());
+        }
+    }
+
     public static String toHexString(ByteBuffer bb)
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (int i = 0; i < bb.limit(); i++) {
             String str = Integer.toHexString(bb.get(i));
             if (str.length() < 2) {

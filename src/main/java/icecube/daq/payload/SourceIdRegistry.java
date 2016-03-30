@@ -8,8 +8,6 @@ import icecube.daq.payload.impl.SourceID;
  */
 public final class SourceIdRegistry
 {
-    /** String processor (obsolete) */
-    public static final int STRINGPROCESSOR_SOURCE_ID = 2000;
     /** Icetop data handler */
     public static final int ICETOP_DATA_HANDLER_SOURCE_ID = 3000;
     /** In-ice trigger */
@@ -37,6 +35,11 @@ public final class SourceIdRegistry
     /** Track engine **/
     public static final int TRACK_ENGINE_SOURCE_ID = 15000;
 
+    /** Offset of DeepCore hub IDs inside the Hub "namespace" **/
+    public static final int DEEPCORE_ID_OFFSET = 78;
+    /** Offset of IceTop hub IDs inside the Hub "namespace" **/
+    public static final int ICETOP_ID_OFFSET = 200;
+
     /**
      * This is a utility class.
      */
@@ -51,11 +54,7 @@ public final class SourceIdRegistry
      */
     public static int getDAQIdFromSourceID(int srcId)
     {
-        if (srcId >= STRINGPROCESSOR_SOURCE_ID &&
-            srcId < STRINGPROCESSOR_SOURCE_ID + 1000)
-        {
-            return srcId - STRINGPROCESSOR_SOURCE_ID;
-        } else if (srcId >= ICETOP_DATA_HANDLER_SOURCE_ID &&
+        if (srcId >= ICETOP_DATA_HANDLER_SOURCE_ID &&
             srcId < ICETOP_DATA_HANDLER_SOURCE_ID + 1000)
         {
             return srcId - ICETOP_DATA_HANDLER_SOURCE_ID;
@@ -121,11 +120,7 @@ public final class SourceIdRegistry
      */
     public static String getDAQNameFromSourceID(int srcId)
     {
-        if (srcId >= STRINGPROCESSOR_SOURCE_ID &&
-            srcId < STRINGPROCESSOR_SOURCE_ID + 1000)
-        {
-            return DAQCmdInterface.DAQ_STRINGPROCESSOR;
-        } else if (srcId >= ICETOP_DATA_HANDLER_SOURCE_ID &&
+        if (srcId >= ICETOP_DATA_HANDLER_SOURCE_ID &&
             srcId < ICETOP_DATA_HANDLER_SOURCE_ID + 1000)
         {
             return DAQCmdInterface.DAQ_ICETOP_DATA_HANDLER;
@@ -219,9 +214,7 @@ public final class SourceIdRegistry
      */
     public static int getSourceIDFromNameAndId(String name, int id)
     {
-        if (name.compareTo(DAQCmdInterface.DAQ_STRINGPROCESSOR) == 0) {
-            return STRINGPROCESSOR_SOURCE_ID + id;
-        } else if (name.compareTo(DAQCmdInterface.DAQ_ICETOP_DATA_HANDLER) == 0)
+        if (name.compareTo(DAQCmdInterface.DAQ_ICETOP_DATA_HANDLER) == 0)
         {
             return ICETOP_DATA_HANDLER_SOURCE_ID + id;
         } else if (name.compareTo(DAQCmdInterface.DAQ_INICE_TRIGGER) == 0) {
@@ -258,26 +251,7 @@ public final class SourceIdRegistry
     }
 
     /**
-     * Is the source ID for an AMANDA hub?
-     *
-     * @param srcId integer source ID
-     *
-     * @return <tt>true</tt> if the source ID is for an AMANDA hub component
-     */
-/*
-    public static boolean isAmandaHubSourceID(int srcId)
-    {
-        if (!isAnyHubSourceID(srcId)) {
-            return false;
-        }
-
-        return srcId == STRING_HUB_SOURCE_ID ||
-            srcId == SIMULATION_HUB_SOURCE_ID;
-    }
-*/
-
-    /**
-     * Is the source ID for an amanda hub, string hub, or icetop hub?
+     * Is the source ID for an IceCube string hub or icetop data handler?
      *
      * @param srcId integer source ID
      *
@@ -301,8 +275,43 @@ public final class SourceIdRegistry
      */
     public static boolean isAnyHubSourceID(int srcId)
     {
-        return (srcId >= STRING_HUB_SOURCE_ID &&
-                srcId < (SIMULATION_HUB_SOURCE_ID + 1000));
+        return srcId > 0 &&
+            (srcId / 1000 == STRING_HUB_SOURCE_ID / 1000 ||
+             srcId / 1000 == SIMULATION_HUB_SOURCE_ID / 1000);
+    }
+
+    /**
+     * Is the source ID for an amanda hub, string hub, or icetop hub?
+     *
+     * @param srcId integer source ID
+     *
+     * @return <tt>true</tt> if the source ID is for a hub component
+     */
+    public static boolean isDeepCoreHubSourceID(ISourceID srcId)
+    {
+        if (srcId == null) {
+            return false;
+        }
+
+        return isDeepCoreHubSourceID(srcId.getSourceID());
+    }
+
+    /**
+     * Is the source ID for a deep-core string hub?
+     *
+     * @param srcId integer source ID
+     *
+     * @return <tt>true</tt> if the source ID is for a deep-core hub component
+     */
+    public static boolean isDeepCoreHubSourceID(int srcId)
+    {
+        if (!isAnyHubSourceID(srcId)) {
+            return false;
+        }
+
+        int daqId = srcId % 1000;
+        return daqId >= DEEPCORE_ID_OFFSET &&
+            daqId <= DAQCmdInterface.DAQ_MAX_NUM_STRINGS;
     }
 
     /**
@@ -335,7 +344,9 @@ public final class SourceIdRegistry
         }
 
         int daqId = srcId % 1000;
-        return daqId >= 200 && daqId <= 210;
+        return daqId >= SourceIdRegistry.ICETOP_ID_OFFSET &&
+            daqId <= (SourceIdRegistry.ICETOP_ID_OFFSET +
+                      DAQCmdInterface.DAQ_MAX_NUM_IDH);
     }
 
     /**

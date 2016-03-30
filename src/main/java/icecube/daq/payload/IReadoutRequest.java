@@ -46,6 +46,12 @@ public interface IReadoutRequest
     List getReadoutRequestElements();
 
     /**
+     * gets the UTC time for this payload as a long value
+     * @return time
+     */
+    long getUTCTime();
+
+    /**
      * getUID()
      * returns the unique Trigger ID
      * by using this UID and the Stringnumber the Eventbuilder can
@@ -89,4 +95,19 @@ public interface IReadoutRequest
      * Recycle this payload.  It will be useless after this call.
      */
     void recycle();
+
+    /**
+     * Set the source ID. Needed for backward compatiblility with the old
+     * global request handler implementation.
+     *
+     * @param srcId new source ID
+     */
+    void setSourceID(ISourceID srcId);
+
+    /**
+     * Set the universal ID for global requests which will become events.
+     *
+     * @param uid new UID
+     */
+    void setUID(int uid);
 }

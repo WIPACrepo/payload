@@ -51,7 +51,7 @@ public class MockDeltaHitRecord
             return false;
         }
 
-        String mbid = String.format("%012x", hit.getDOMID().longValue());
+        final long mbid = hit.getDOMID().longValue();
         return (chanId == domRegistry.getChannelId(mbid));
     }
 

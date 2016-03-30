@@ -59,7 +59,7 @@ public class TriggerRequestFactory
     public ITriggerRequestPayload createPayload(int uid, int trigType,
                                                 int cfgId, int srcId,
                                                 long firstTime, long lastTime,
-                                                ReadoutRequest rdoutReq,
+                                                IReadoutRequest rdoutReq,
                                                 List<IWriteablePayload> list)
     {
         TriggerRequest trigReq =

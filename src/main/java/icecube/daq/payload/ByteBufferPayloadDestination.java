@@ -1,8 +1,4 @@
-package icecube.daq.oldpayload;
-
-import icecube.daq.payload.IByteBufferCache;
-import icecube.daq.payload.IByteBufferReceiver;
-import icecube.daq.payload.IWriteablePayload;
+package icecube.daq.payload;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -78,7 +74,7 @@ public class ByteBufferPayloadDestination extends PayloadDestination   {
             throw new IOException("This PayloadDestination is not valid");
         }
 
-        int iPayloadLength = tPayload.getPayloadLength();
+        int iPayloadLength = tPayload.length();
         ByteBuffer tBuffer = mtCache.acquireBuffer(iPayloadLength);
         if (tBuffer == null) {
             throw new RuntimeException("Could not acquire buffer");

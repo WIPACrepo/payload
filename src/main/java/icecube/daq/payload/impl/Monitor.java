@@ -1,7 +1,6 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.ILoadablePayload;
-import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
@@ -12,6 +11,9 @@ import java.nio.ByteOrder;
 
 /**
  * Base Monitor class
+ *
+ * Monitoring event documentation can be found in
+ * https://docushare.icecube.wisc.edu/dsweb/Get/Document-3799/DOMmonitorfmtbinary_3_8.pdf
  */
 public abstract class Monitor
     extends BasePayload
@@ -77,7 +79,9 @@ public abstract class Monitor
     }
 
     /**
-     * Compare two monitoring messages for the splicer.
+     * Compare two payloads for the splicer.
+     * NOTE: Make sure all compared fields have been loaded by
+     * preloadSpliceableFields()
      * @param spliceable object being compared
      * @return -1, 0, or 1
      */
@@ -172,15 +176,6 @@ public abstract class Monitor
     }
 
     /**
-     * Unimplemented
-     * @return Error
-     */
-    public IUTCTime getPayloadTimeUTC()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
      * Get the payload registry type
      * @return type
      */
@@ -249,9 +244,7 @@ public abstract class Monitor
 
             recLen = buf.getShort(pos + OFFSET_RECLEN);
 
-            clockBytes = new byte[6];
-            buf.position(pos + OFFSET_DOMCLOCK);
-            buf.get(clockBytes, 0, clockBytes.length);
+            clockBytes = loadByteArray(buf, pos + OFFSET_DOMCLOCK, 6);
 
             totLen = loadRecord(buf, pos + OFFSET_DATA,
                                 recLen - REC_HEADER_LEN);
@@ -267,6 +260,14 @@ public abstract class Monitor
         }
 
         return OFFSET_DATA + totLen;
+    }
+
+    static byte[] loadByteArray(ByteBuffer buf, int pos, int len)
+    {
+        byte[] array = new byte[len];
+        buf.position(pos);
+        buf.get(array, 0, array.length);
+        return array;
     }
 
     /**
@@ -309,6 +310,9 @@ public abstract class Monitor
         }
 
         domId = buf.getLong(offset + bodyOffset + OFFSET_DOMID);
+
+        clockBytes = loadByteArray(buf, offset + bodyOffset + OFFSET_DOMCLOCK,
+                                   6);
     }
 
     /**

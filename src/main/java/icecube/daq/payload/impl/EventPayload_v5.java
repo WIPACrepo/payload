@@ -7,19 +7,19 @@ import icecube.daq.payload.IEventPayload;
 import icecube.daq.payload.IEventTriggerRecord;
 import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.ILoadablePayload;
-import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
+import icecube.daq.payload.PayloadFormatException;
 import icecube.daq.payload.PayloadRegistry;
+import icecube.daq.util.DeployedDOM;
 import icecube.daq.util.IDOMRegistry;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -74,11 +74,6 @@ class TemporaryHit
         throw new Error("Unimplemented");
     }
 
-    public int getPayloadLength()
-    {
-        throw new Error("Unimplemented");
-    }
-
     public IUTCTime getPayloadTimeUTC()
     {
         throw new Error("Unimplemented");
@@ -109,8 +104,12 @@ class TemporaryHit
         throw new Error("Unimplemented");
     }
 
+    public int length()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public void loadPayload()
-        throws IOException, DataFormatException
     {
         throw new Error("Unimplemented");
     }
@@ -121,12 +120,6 @@ class TemporaryHit
     }
 
     public void setCache(IByteBufferCache x0)
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int writePayload(boolean b0, IPayloadDestination x1)
-        throws IOException
     {
         throw new Error("Unimplemented");
     }
@@ -147,7 +140,7 @@ class TemporaryHit
  * Trigger record
  */
 class TriggerRecord
-    implements IEventTriggerRecord
+    implements Comparable, IEventTriggerRecord
 {
     /** Logging object */
     private static final Log LOG = LogFactory.getLog(EventPayload_v5.class);
@@ -202,17 +195,14 @@ class TriggerRecord
         } catch (IOException ioe) {
             throw new PayloadException("Couldn't load trigger request " +
                                        trigReq, ioe);
-        } catch (DataFormatException dfe) {
-            throw new PayloadException("Couldn't load trigger request " +
-                                       trigReq, dfe);
         }
 
         List payList;
         try {
             payList = trigReq.getPayloads();
-        } catch (DataFormatException dfe) {
+        } catch (PayloadFormatException pfe) {
             LOG.error("Couldn't get list of payloads from trigger request " +
-                      trigReq, dfe);
+                      trigReq, pfe);
             payList = null;
         }
 
@@ -227,8 +217,8 @@ class TriggerRecord
                 } catch (IOException ioe) {
                     LOG.error("Ignoring unloadable payload " + obj, ioe);
                     continue;
-                } catch (DataFormatException dfe) {
-                    LOG.error("Ignoring unloadable payload " + obj, dfe);
+                } catch (PayloadFormatException pfe) {
+                    LOG.error("Ignoring unloadable payload " + obj, pfe);
                     continue;
                 }
 
@@ -265,6 +255,41 @@ class TriggerRecord
     }
 
     /**
+     * Compare this record against another object
+     *
+     * @param obj object
+     *
+     * @return the usual values
+     */
+    public int compareTo(Object obj)
+    {
+        if (obj == null) {
+            return 1;
+        } else if (!(obj instanceof IEventTriggerRecord)) {
+            return getClass().getName().compareTo(obj.getClass().getName());
+        }
+
+        IEventTriggerRecord tr = (IEventTriggerRecord) obj;
+
+        int val;
+        val = getSourceID() - tr.getSourceID();
+        if (val == 0) {
+            val = (int)(getFirstTime() - tr.getFirstTime());
+            if (val == 0) {
+                val = (int)(getLastTime() - tr.getLastTime());
+                if (val == 0) {
+                    val = getType() - tr.getType();
+                    if (val == 0) {
+                        val = getConfigID() - tr.getConfigID();
+                    }
+                }
+            }
+        }
+
+        return val;
+    }
+
+    /**
      * Compute this trigger record's hit indices.
      * @param domRegistry used to map each hit's DOM ID to the channel ID
      * @param hitRecList list of this event's hit records
@@ -295,14 +320,36 @@ class TriggerRecord
             }
 
             if (idx == -1) {
-                final int chanId =
-                    domRegistry.getChannelId(hit.getDOMID().toString());
-                throw new PayloadException("Couldn't find hit record for " +
-                                           hit + " (chanId " + chanId + ")");
+                final DeployedDOM dom =
+                    domRegistry.getDom(hit.getDOMID().longValue());
+
+                final String errMsg;
+                if (dom == null) {
+                    errMsg = String.format("Couldn't find hit record for " +
+                                           "unknown DOM ID " + hit.getDOMID() +
+                                           " (utc " + hit.getHitTimeUTC() +
+                                           ")");
+                } else {
+                    errMsg = String.format("Couldn't find hit record for " +
+                                           dom + " (utc " +
+                                           hit.getHitTimeUTC() + ")");
+                }
+
+                throw new PayloadException(errMsg);
             }
 
             indices[i] = idx;
         }
+    }
+
+    /**
+     * Is the specified object equal to this object?
+     * @param obj object being compared
+     * @return <tt>true</tt> if the objects are equal
+     */
+    public boolean equals(Object obj)
+    {
+        return compareTo(obj) == 0;
     }
 
     /**
@@ -372,6 +419,18 @@ class TriggerRecord
     public int getType()
     {
         return type;
+    }
+
+    /**
+     * Return this object's hash code
+     * @return hash code
+     */
+    public int hashCode()
+    {
+        return ((getType() & 0xff) << 24) +
+            ((getConfigID() & 0xff) << 16) +
+            ((int)(getFirstTime() & 0xffL) << 8) +
+            (int)(getLastTime() & 0xffL);
     }
 
     /**
@@ -460,6 +519,9 @@ public class EventPayload_v5
     /** Offset of hit data field */
     private static final int OFFSET_HITDATA = 18;
 
+    /** DOM registry used to map each hit's DOM ID to the channel ID */
+    private static IDOMRegistry domRegistry;
+
     /** unique ID */
     private int uid;
     /** starting time */
@@ -481,9 +543,6 @@ public class EventPayload_v5
     private UTCTime firstTimeObj;
     /** cached ending time object */
     private UTCTime lastTimeObj;
-
-    /** DOM registry used to map each hit's DOM ID to the channel ID */
-    private IDOMRegistry domRegistry;
 
     /**
      * Create an event
@@ -594,14 +653,7 @@ public class EventPayload_v5
     {
         trigRecList.add(new TriggerRecord(trigReq));
 
-        List payList;
-        try {
-            payList = trigReq.getPayloads();
-        } catch (DataFormatException dfe) {
-            throw new PayloadException("Couldn't get payloads from " + trigReq,
-                                       dfe);
-        }
-
+        List payList = trigReq.getPayloads();
         if (payList != null) {
             for (Object obj : payList) {
                 try {
@@ -610,9 +662,9 @@ public class EventPayload_v5
                     LOG.error("Ignoring unloadable trigger request " + obj,
                               ioe);
                     continue;
-                } catch (DataFormatException dfe) {
+                } catch (PayloadFormatException pfe) {
                     LOG.error("Ignoring unloadable trigger request " + obj,
-                              dfe);
+                              pfe);
                     continue;
                 }
 
@@ -997,7 +1049,7 @@ public class EventPayload_v5
         int hitBytes = putHitRecords(buf, offset + OFFSET_HITDATA, firstTime);
 
         int trigBytes =
-            putTriggerRecords(buf, offset + OFFSET_HITDATA + hitBytes,
+            putTriggerRecords(buf, uid, offset + OFFSET_HITDATA + hitBytes,
                               firstTime);
 
         return OFFSET_HITDATA + hitBytes + trigBytes;
@@ -1034,7 +1086,8 @@ public class EventPayload_v5
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
-    private int putTriggerRecords(ByteBuffer buf, int offset, long baseTime)
+    private int putTriggerRecords(ByteBuffer buf, int uid, int offset,
+                                  long baseTime)
         throws PayloadException
     {
         if (domRegistry == null) {
@@ -1046,7 +1099,11 @@ public class EventPayload_v5
         int pos = offset + 4;
 
         for (IEventTriggerRecord trigRec : trigRecList) {
-            trigRec.computeIndices(domRegistry, hitRecList);
+            try {
+                trigRec.computeIndices(domRegistry, hitRecList);
+            } catch (PayloadException pe) {
+                throw new PayloadException("Event " + uid + " error", pe);
+            }
             int len = trigRec.writeRecord(buf, pos, baseTime);
             pos += len;
         }
@@ -1076,11 +1133,11 @@ public class EventPayload_v5
 
     /**
      * Set the DOM registry used to translate hit DOM IDs to channel IDs
-     * @param domRegistry DOM registry
+     * @param reg DOM registry
      */
-    public void setDOMRegistry(IDOMRegistry domRegistry)
+    public static void setDOMRegistry(IDOMRegistry reg)
     {
-        this.domRegistry = domRegistry;
+        domRegistry = reg;
     }
 
     /**

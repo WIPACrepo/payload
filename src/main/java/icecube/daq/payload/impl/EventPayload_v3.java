@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 /**
  * Event version 3
@@ -151,7 +150,7 @@ public class EventPayload_v3
             throw new Error(getPayloadName() + " has not been loaded");
         }
 
-        final int trLen = trigReq.getPayloadLength();
+        final int trLen = trigReq.length();
         if (trLen <= 0) {
             throw new Error("Trigger request length " + trLen +
                             " should be greater than zero for " + trigReq);
@@ -161,7 +160,7 @@ public class EventPayload_v3
             trLen;
 
         for (IWriteablePayload datum : dataList) {
-            final int dLen = datum.getPayloadLength();
+            final int dLen = datum.length();
             if (dLen <= 0) {
                 throw new Error("Payload length " + dLen +
                                 " should be greater than zero for " +
@@ -484,16 +483,13 @@ public class EventPayload_v3
 
             try {
                 ((ILoadablePayload) pay).loadPayload();
-            } catch (DataFormatException dfe) {
-                throw new PayloadException("Couldn't load composite payload #" +
-                                           i, dfe);
             } catch (IOException ioe) {
                 throw new PayloadException("Couldn't load composite payload #" +
                                            i, ioe);
             }
 
             compList.add(pay);
-            totLen += pay.getPayloadLength();
+            totLen += pay.length();
         }
 
         return totLen;
@@ -548,7 +544,7 @@ public class EventPayload_v3
 
         int totLen = 0;
         for (IWriteablePayload pay : compList) {
-            final int expLen = pay.getPayloadLength();
+            final int expLen = pay.length();
 
             int len;
             try {

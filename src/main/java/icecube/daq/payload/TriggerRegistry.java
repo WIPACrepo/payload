@@ -1,4 +1,4 @@
-package icecube.daq.oldpayload;
+package icecube.daq.payload;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,22 +12,22 @@ import java.util.Map;
 public final class TriggerRegistry
 {
 
-    private static final Integer SMT_TYPE   = new Integer(0);
-    private static final Integer  CT_TYPE   = new Integer(1);
-    private static final Integer MBT_TYPE   = new Integer(2);
-    private static final Integer  TT_TYPE   = new Integer(3);
-    private static final Integer FRT_TYPE   = new Integer(4);
-    private static final Integer SBT_TYPE   = new Integer(5);
-    private static final Integer TBT_TYPE   = new Integer(6);
-    private static final Integer AFT_TYPE   = new Integer(7);
-    private static final Integer AVT_TYPE   = new Integer(8);
-    private static final Integer AM18T_TYPE = new Integer(9);
-    private static final Integer AM24T_TYPE = new Integer(10);
-    private static final Integer AST_TYPE   = new Integer(11);
-    private static final Integer  ST_TYPE   = new Integer(12);
-    private static final Integer ART_TYPE   = new Integer(13);
-    private static final Integer AT0T_TYPE  = new Integer(14);
-    private static final Integer ALT_TYPE   = new Integer(15);
+    private static final Integer SMT_TYPE   = Integer.valueOf(0);
+    private static final Integer  CT_TYPE   = Integer.valueOf(1);
+    private static final Integer MBT_TYPE   = Integer.valueOf(2);
+    private static final Integer  TT_TYPE   = Integer.valueOf(3);
+    private static final Integer FRT_TYPE   = Integer.valueOf(4);
+    private static final Integer SBT_TYPE   = Integer.valueOf(5);
+    private static final Integer TBT_TYPE   = Integer.valueOf(6);
+    private static final Integer AFT_TYPE   = Integer.valueOf(7);
+    private static final Integer AVT_TYPE   = Integer.valueOf(8);
+    private static final Integer AM18T_TYPE = Integer.valueOf(9);
+    private static final Integer AM24T_TYPE = Integer.valueOf(10);
+    private static final Integer AST_TYPE   = Integer.valueOf(11);
+    private static final Integer  ST_TYPE   = Integer.valueOf(12);
+    private static final Integer ART_TYPE   = Integer.valueOf(13);
+    private static final Integer AT0T_TYPE  = Integer.valueOf(14);
+    private static final Integer ALT_TYPE   = Integer.valueOf(15);
 
     private static final String SMT_NAME   = "SimpleMajorityTrigger";
     private static final String  CT_NAME   = "CalibrationTrigger";
@@ -60,7 +60,7 @@ public final class TriggerRegistry
 
     public static String getTriggerName(int triggerType) {
         if (null == nameByType) createMaps();
-        Integer type = new Integer(triggerType);
+        Integer type = Integer.valueOf(triggerType);
         if (nameByType.containsKey(type)) {
            return ((String) nameByType.get(type));
         } else {

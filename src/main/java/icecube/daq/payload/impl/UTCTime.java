@@ -26,7 +26,6 @@ final class DateFormatter
      * Build a readable date/time string.
      *
      * @param val UTC time
-     * @param year year when time occurs
      *
      * @return human-readable date/time string
      */
@@ -39,6 +38,27 @@ final class DateFormatter
 
     /**
      * Build a readable date/time string.
+     *
+     * <pre>
+     * <br>
+     * Note: Date/time strings produced for times that occur within
+     *       a leap second will be resolved as occurring in the previous
+     *       second. Sequences of times that span a leap second will
+     *       appear to move backward during the leap second.
+     *
+     *       Example:
+     *
+     *       The Dec 31st, 1973 leap second.
+     *
+     *       315359990000000000 --> 1973-12-31 23:59:59.0000000000
+     *       315359995000000000 --> 1973-12-31 23:59:59.5000000000
+     *       315360000000000000 --> 1973-12-31 23:59:59.0000000000 (23:59:60)
+     *       315360005000000000 --> 1973-12-31 23:59:59.5000000000 (23:59:60)
+     *       315360010000000000 --> 1974-01-01 00:00:00.0000000000
+     *
+     *       This is a limitation of the java calendar library which does
+     *       not support UTC leap seconds.
+     * </pre>
      *
      * @param val UTC time
      * @param year year when time occurs
@@ -53,6 +73,27 @@ final class DateFormatter
     /**
      * Build a readable date/time string.
      *
+     * <pre>
+     * <br>
+     * Note: Date/time strings produced for times that occur within
+     *       a leap second will be resolved as occurring in the previous
+     *       second. Sequences of times that span a leap second will
+     *       appear to move backward during the leap second.
+     *
+     *       Example:
+     *
+     *       The Dec 31st, 1973 leap second.
+     *
+     *       315359990000000000 --> 1973-12-31 23:59:59.0000000000
+     *       315359995000000000 --> 1973-12-31 23:59:59.5000000000
+     *       315360000000000000 --> 1973-12-31 23:59:59.0000000000 (23:59:60)
+     *       315360005000000000 --> 1973-12-31 23:59:59.5000000000 (23:59:60)
+     *       315360010000000000 --> 1974-01-01 00:00:00.0000000000
+     *
+     *       This is a limitation of the java calendar library which does
+     *       not support UTC leap seconds.
+     * </pre>
+     *
      * @param cal Calendar object used to build date
      * @param val UTC time
      * @param year year when time occurs
@@ -64,7 +105,7 @@ final class DateFormatter
     {
         // if this is the first time through, but the date formatter
         if (format == null) {
-            format = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+            format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             format.setTimeZone(UTC);
         }
 
@@ -80,8 +121,16 @@ final class DateFormatter
         cal.add(GregorianCalendar.MILLISECOND, millis);
 
         // subtract any leap seconds
-        int leapSecs =
-            LEAP_SECONDS_OBJ.get_leap_offset((int) (secs / SECS_PER_DAY));
+        //
+        // Note: Days are 1-based.
+        //
+        // Note: Year-end times are a bit tricky to work with in the leap
+        //       second object. To get the correct offset lookup, you need
+        //       to index with the specified year, and extend the days beyond
+        //       the number of days in the year.  This works for 48 hours into
+        //       the next year.
+        int dayOfYear = (int) (secs / SECS_PER_DAY) + 1;
+        int leapSecs = LEAP_SECONDS_OBJ.get_leap_offset(year, dayOfYear);
         if (leapSecs > 0) {
             cal.add(GregorianCalendar.SECOND, -leapSecs);
         }
@@ -245,6 +294,28 @@ public class UTCTime
 
     /**
      * Return a human-readable date/time string
+     *
+     * <pre>
+     * <br>
+     * Note: Date/time strings produced for times that occur within
+     *       a leap second will be resolved as occurring in the previous
+     *       second. Sequences of times that span a leap second will
+     *       appear to move backward during the leap second.
+     *
+     *       Example:
+     *
+     *       The Dec 31st, 1973 leap second.
+     *
+     *       315359990000000000 --> 1973-12-31 23:59:59.0000000000
+     *       315359995000000000 --> 1973-12-31 23:59:59.5000000000
+     *       315360000000000000 --> 1973-12-31 23:59:59.0000000000 (23:59:60)
+     *       315360005000000000 --> 1973-12-31 23:59:59.5000000000 (23:59:60)
+     *       315360010000000000 --> 1974-01-01 00:00:00.0000000000
+     *
+     *       This is a limitation of the java calendar library which does
+     *       not support UTC leap seconds.
+     * </pre>
+     *
      * @param time UTC time
      * @param year year in which the time occurred
      * @return human-readable date/time string

@@ -63,7 +63,7 @@ public interface IByteBufferCache
      *
      * @param iLength int length of the ByteBuffer
      *
-     * @return ByteBuffer whose actual length is >= iLength, or null.
+     * @return ByteBuffer whose actual length is &gt;= iLength, or null.
      */
     ByteBuffer acquireBuffer(int iLength);
 

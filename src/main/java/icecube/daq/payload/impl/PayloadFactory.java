@@ -12,7 +12,6 @@ import icecube.daq.splicer.SpliceableFactory;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -114,25 +113,18 @@ public class PayloadFactory
         case PayloadRegistry.PAYLOAD_ID_ENGFORMAT_DOMHIT:
             if (hitSrc == null) {
                 hitSrc =
-                    new SourceID(SourceIdRegistry.STRINGPROCESSOR_SOURCE_ID);
+                    new SourceID(SourceIdRegistry.STRING_HUB_SOURCE_ID);
             }
 
-            final long engDomId =
-                buf.getLong(offset + BasePayload.OFFSET_UTCTIME + 16);
-            pay = new EngineeringHit(hitSrc, engDomId, utcTime, buf,
-                                     offset + BasePayload.OFFSET_UTCTIME + 24);
+            pay = DOMHitFactory.getHit(hitSrc, buf, 0);
             break;
         case PayloadRegistry.PAYLOAD_ID_DELTA_DOMHIT:
             if (hitSrc == null) {
                 hitSrc =
-                    new SourceID(SourceIdRegistry.STRINGPROCESSOR_SOURCE_ID);
+                    new SourceID(SourceIdRegistry.STRING_HUB_SOURCE_ID);
             }
 
-            final long deltaDomId =
-                buf.getLong(offset + BasePayload.OFFSET_UTCTIME + 16);
-            pay = new DeltaCompressedHit(hitSrc, deltaDomId, utcTime, buf,
-                                         offset + BasePayload.OFFSET_UTCTIME +
-                                         24);
+            pay = DOMHitFactory.getHit(hitSrc, buf, 0);
             break;
         case PayloadRegistry.PAYLOAD_ID_TCAL:
             pay = new TimeCalibration(buf, offset, len, utcTime);
@@ -182,15 +174,13 @@ public class PayloadFactory
         if (DOUBLE_CHECK_LENGTH) {
             try {
                 ((ILoadablePayload) pay).loadPayload();
-            } catch (DataFormatException dfe) {
-                throw new PayloadException("Couldn't load payload", dfe);
             } catch (IOException ioe) {
                 throw new PayloadException("Couldn't load payload", ioe);
             }
 
-            if (pay.getPayloadLength() != len) {
+            if (pay.length() != len) {
                 throw new Error(pay.getClass().getName() + " should contain " +
-                                len + " bytes, but " + pay.getPayloadLength() +
+                                len + " bytes, but " + pay.length() +
                                 " were read");
             }
         }
@@ -230,5 +220,10 @@ public class PayloadFactory
     public boolean skipSpliceable(ByteBuffer x0)
     {
         throw new Error("Unimplemented");
+    }
+
+    public String toString()
+    {
+        return "PayloadFactory[" + bufCache + "]";
     }
 }

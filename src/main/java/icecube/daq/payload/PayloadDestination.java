@@ -1,7 +1,4 @@
-package icecube.daq.oldpayload;
-
-import icecube.daq.payload.IPayloadDestination;
-import icecube.daq.payload.IWriteablePayload;
+package icecube.daq.payload;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -27,22 +24,6 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      */
     public int writePayload(IWriteablePayload tPayload) throws IOException {
         return writePayload(false, tPayload);
-    }
-
-    /**
-     * This methods proxies the call to write Payload to allow the whole
-     * payload to be passed to the payload destination to allow it to
-     * be invoke the write method itself, or to pass the payload by refernce
-     * to the target.
-     *
-     * @param bWriteLoaded boolean to indicate if the loaded vs buffered payload should be written.
-     * @param tPayload Payload to which to write to this destination
-     * @return the length in bytes which was written to the ByteBuffer.
-     *
-     * @throws IOException if an error occurs during the process
-     */
-    public int writePayload(boolean bWriteLoaded, IWriteablePayload tPayload) throws IOException {
-        return tPayload.writePayload(bWriteLoaded, this);
     }
 
     /**
@@ -158,14 +139,14 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
     //
 
     /**
-     * This method writes bytes from the given offset in the ByteBuffer for a length of iBytes
-     * to the destination.
+     * This method writes bytes from the given offset in the ByteBuffer for a
+     * length of iBytes to the destination.
      * @param iOffset the offset in the ByteBuffer to start
      * @param tBuffer ByteBuffer from which to write to destination.
      * @param iBytes  the number of bytes to write to the destination.
      *
-     * @throws IOException....if an error occurs either reading the ByteBuffer or writing
-     *                        to the destination.
+     * @throws IOException if an error occurs either reading the ByteBuffer or
+     *                     writing to the destination.
      */
     public void write(int iOffset, ByteBuffer tBuffer, int iBytes) throws IOException {
         errorUnimplementedMethod("write(int iOffset, ByteBuffer tBuffer, int iBytes)");
@@ -211,16 +192,16 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
         return writeRemaining(src);
     }
     /**
-     * This method writes bytes from the given offset in the ByteBuffer for a length of iBytes
-     * to the destination.
+     * This method writes bytes from the given offset in the ByteBuffer for a
+     * length of iBytes to the destination.
      *
      * @param sFieldName name of the field.
      * @param iOffset the offset in the ByteBuffer to start
      * @param tBuffer ByteBuffer from which to write to destination.
      * @param iBytes the number of bytes to write to the destination.
      *
-     * @throws IOException....if an error occurs either reading the ByteBuffer or writing
-     *                        to the destination.
+     * @throws IOException if an error occurs either reading the ByteBuffer or
+     *                     writing to the destination.
      */
     public void write(String sFieldName, int iOffset, ByteBuffer tBuffer, int iBytes) throws IOException {
         write(iOffset, tBuffer, iBytes);

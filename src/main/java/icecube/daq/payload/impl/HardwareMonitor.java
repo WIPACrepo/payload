@@ -10,6 +10,9 @@ import java.nio.ByteBuffer;
 public class HardwareMonitor
     extends Monitor
 {
+    /** Number of data array entries (should be last index + 1) */
+    public static final int NUM_DATA_ENTRIES = 27;
+
     /** Index of ADC voltage sum value */
     private static final int ADC_VOLTAGE_SUM = 0;
     /** Index of ADC 5 volt power supply value */
@@ -65,9 +68,6 @@ public class HardwareMonitor
     /** Index of mainboard temperature value */
     private static final int DOM_MB_TEMPERATURE = 26;
 
-    /** Number of data array entries (should be last index + 1) */
-    private static final int NUM_DATA_ENTRIES = 27;
-
     /** Total hardware monitor record length */
     private static final int RECORD_LEN = 2 + NUM_DATA_ENTRIES * 2 + 8;
 
@@ -112,6 +112,10 @@ public class HardwareMonitor
      */
     public short getADC18VCurrent()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[ADC_1_8V_CURRENT];
     }
 
@@ -121,6 +125,10 @@ public class HardwareMonitor
      */
     public short getADC25VCurrent()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[ADC_2_5V_CURRENT];
     }
 
@@ -130,6 +138,10 @@ public class HardwareMonitor
      */
     public short getADC33VCurrent()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[ADC_3_3V_CURRENT];
     }
 
@@ -139,6 +151,10 @@ public class HardwareMonitor
      */
     public short getADC5VCurrent()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[ADC_5V_CURRENT];
     }
 
@@ -148,6 +164,10 @@ public class HardwareMonitor
      */
     public short getADC5VPowerSupply()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[ADC_5V_POWER_SUPPLY];
     }
 
@@ -157,6 +177,10 @@ public class HardwareMonitor
      */
     public short getADCMinus5VCurrent()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[ADC_MINUS_5V_CURRENT];
     }
 
@@ -166,6 +190,10 @@ public class HardwareMonitor
      */
     public short getADCPressure()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[ADC_PRESSURE];
     }
 
@@ -175,6 +203,10 @@ public class HardwareMonitor
      */
     public short getADCVoltageSum()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[ADC_VOLTAGE_SUM];
     }
 
@@ -184,6 +216,10 @@ public class HardwareMonitor
      */
     public short getDACATWD0RampRate()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_ATWD0_RAMP_RATE];
     }
 
@@ -193,6 +229,10 @@ public class HardwareMonitor
      */
     public short getDACATWD0RampTop()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_ATWD0_RAMP_TOP];
     }
 
@@ -202,6 +242,10 @@ public class HardwareMonitor
      */
     public short getDACATWD0TriggerBias()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_ATWD0_TRIGGER_BIAS];
     }
 
@@ -211,6 +255,10 @@ public class HardwareMonitor
      */
     public short getDACATWD1RampRate()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_ATWD1_RAMP_RATE];
     }
 
@@ -220,6 +268,10 @@ public class HardwareMonitor
      */
     public short getDACATWD1RampTop()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_ATWD1_RAMP_TOP];
     }
 
@@ -229,6 +281,10 @@ public class HardwareMonitor
      */
     public short getDACATWD1TriggerBias()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_ATWD1_TRIGGER_BIAS];
     }
 
@@ -238,6 +294,10 @@ public class HardwareMonitor
      */
     public short getDACATWDAnalogRef()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_ATWD_ANALOG_REF];
     }
 
@@ -247,6 +307,10 @@ public class HardwareMonitor
      */
     public short getDACFEAmpLowerClamp()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_FE_AMP_LOWER_CLAMP];
     }
 
@@ -256,6 +320,10 @@ public class HardwareMonitor
      */
     public short getDACFLRef()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_FL_REF];
     }
 
@@ -265,6 +333,10 @@ public class HardwareMonitor
      */
     public short getDACFastADCRef()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_FAST_ADC_REF];
     }
 
@@ -274,6 +346,10 @@ public class HardwareMonitor
      */
     public short getDACInternalPulser()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_INTERNAL_PULSER];
     }
 
@@ -283,6 +359,10 @@ public class HardwareMonitor
      */
     public short getDACLEDBrightness()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_LED_BRIGHTNESS];
     }
 
@@ -292,6 +372,10 @@ public class HardwareMonitor
      */
     public short getDACMultipleSPEThresh()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_MULTIPLE_SPE_THRESH];
     }
 
@@ -301,6 +385,10 @@ public class HardwareMonitor
      */
     public short getDACMuxBias()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_MUX_BIAS];
     }
 
@@ -310,6 +398,10 @@ public class HardwareMonitor
      */
     public short getDACPMTFEPedestal()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_PMT_FE_PEDESTAL];
     }
 
@@ -319,6 +411,10 @@ public class HardwareMonitor
      */
     public short getDACSingleSPEThresh()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DAC_SINGLE_SPE_THRESH];
     }
 
@@ -328,6 +424,10 @@ public class HardwareMonitor
      */
     public short getMBTemperature()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[DOM_MB_TEMPERATURE];
     }
 
@@ -337,6 +437,10 @@ public class HardwareMonitor
      */
     public int getMPEScalar()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return mpeScalar;
     }
 
@@ -346,6 +450,10 @@ public class HardwareMonitor
      */
     public short getPMTBaseHVMonitorValue()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[PMT_BASE_HV_MONITOR_VALUE];
     }
 
@@ -355,6 +463,10 @@ public class HardwareMonitor
      */
     public short getPMTBaseHVSetValue()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return data[PMT_BASE_HV_SET_VALUE];
     }
 
@@ -391,6 +503,10 @@ public class HardwareMonitor
      */
     public int getSPEScalar()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return speScalar;
     }
 
@@ -400,6 +516,10 @@ public class HardwareMonitor
      */
     public byte getStateEventVersion()
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         return evtVersion;
     }
 
@@ -440,6 +560,10 @@ public class HardwareMonitor
     public int putRecord(ByteBuffer buf, int offset)
         throws PayloadException
     {
+        if (!isLoaded()) {
+            throw new Error("Monitor event has not been loaded");
+        }
+
         buf.put(offset, evtVersion);
 
         buf.position(offset + 2);
@@ -460,6 +584,41 @@ public class HardwareMonitor
      */
     public String toString()
     {
-        return "HardwareMonitor[" + getMonitorString() + "]";
+        if (data == null) {
+            return getPayloadName() + "[" + getMonitorString() + " !loaded]";
+        }
+
+        return getPayloadName() + "[" + getMonitorString() +
+            " evtVersion " + evtVersion +
+            " adcVoltSum " + data[ADC_VOLTAGE_SUM] +
+            " adc5VPower " + data[ADC_5V_POWER_SUPPLY] +
+            " adcPressure " + data[ADC_PRESSURE] +
+            " adc5VCurrent " + data[ADC_5V_CURRENT] +
+            " adc33VCurrent " + data[ADC_3_3V_CURRENT] +
+            " adc25VCurrent " + data[ADC_2_5V_CURRENT] +
+            " adc18VCurrent " + data[ADC_1_8V_CURRENT] +
+            " adcMinus5VCurrent " + data[ADC_MINUS_5V_CURRENT] +
+            " dacATWD0TrigBias " + data[DAC_ATWD0_TRIGGER_BIAS] +
+            " dacATWD0RampTop " + data[DAC_ATWD0_RAMP_TOP] +
+            " dacATWD0RampRate " + data[DAC_ATWD0_RAMP_RATE] +
+            " dacATWDAnalogRef " + data[DAC_ATWD_ANALOG_REF] +
+            " dacATWD1TrigBias " + data[DAC_ATWD1_TRIGGER_BIAS] +
+            " dacATWD1RampTop " + data[DAC_ATWD1_RAMP_TOP] +
+            " dacATWD1RampRate " + data[DAC_ATWD1_RAMP_RATE] +
+            " dacPMTFEPed " + data[DAC_PMT_FE_PEDESTAL] +
+            " dacMultiSPEThresh " + data[DAC_MULTIPLE_SPE_THRESH] +
+            " dacSingleSPEThresh " + data[DAC_SINGLE_SPE_THRESH] +
+            " dacLEDBright " + data[DAC_LED_BRIGHTNESS] +
+            " dacFastADCRef " + data[DAC_FAST_ADC_REF] +
+            " dacIntPulser " + data[DAC_INTERNAL_PULSER] +
+            " dacFEAmpLowClamp " + data[DAC_FE_AMP_LOWER_CLAMP] +
+            " dacFLRef " + data[DAC_FL_REF] +
+            " dacMuxBias " + data[DAC_MUX_BIAS] +
+            " pmtBaseHVSetVal " + data[PMT_BASE_HV_SET_VALUE] +
+            " pmtBaseHVMonVal " + data[PMT_BASE_HV_MONITOR_VALUE] +
+            " domTemp " + data[DOM_MB_TEMPERATURE] +
+            " spe " + speScalar +
+            " mpe " + mpeScalar +
+            "]";
     }
 }

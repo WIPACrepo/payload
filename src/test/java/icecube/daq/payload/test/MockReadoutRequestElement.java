@@ -1,7 +1,6 @@
 package icecube.daq.payload.test;
 
 import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IReadoutRequestElement;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
@@ -9,7 +8,6 @@ import icecube.daq.payload.IWriteablePayloadRecord;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
 
 public class MockReadoutRequestElement
     implements IReadoutRequestElement, IWriteablePayloadRecord
@@ -38,6 +36,11 @@ public class MockReadoutRequestElement
         this.srcId = srcId;
     }
 
+    public Object deepCopy()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public void dispose()
     {
         // do nothing
@@ -48,9 +51,25 @@ public class MockReadoutRequestElement
         return domId;
     }
 
+    public long getFirstTime() {
+        if (firstTime == null) {
+            return 0L;
+        }
+
+        return firstTime.longValue();
+    }
+
     public IUTCTime getFirstTimeUTC()
     {
         return firstTime;
+    }
+
+    public long getLastTime() {
+        if (lastTime == null) {
+            return 0L;
+        }
+
+        return lastTime.longValue();
     }
 
     public IUTCTime getLastTimeUTC()
@@ -82,9 +101,6 @@ public class MockReadoutRequestElement
      *
      * @param offset the offset into the byte buffer
      * @param buffer ByteBuffer from which to construct the record.
-     *
-     * @exception IOException if errors are detected reading the record
-     * @exception DataFormatException if the record is not of the correct format
      */
     public void loadData(int offset, ByteBuffer buffer)
     {
@@ -92,14 +108,11 @@ public class MockReadoutRequestElement
     }
 
     /**
-     * Write this record to the payload destination.
-     *
-     * @param dest PayloadDestination to which to write this record.
-     *
-     * @return the number of bytes written to this destination.
+     * Write this element to the byte buffer
+     * @param buf byte buffer
+     * @param offset index of first byte
      */
-    public int writeData(IPayloadDestination dest)
-        throws IOException
+    public void put(ByteBuffer buf, int offset)
     {
         throw new Error("Unimplemented");
     }
@@ -107,8 +120,8 @@ public class MockReadoutRequestElement
     /**
      * Write this record to the bute buffer.
      *
-     * @param offset the offset at which to start writing the object.
-     * @param buffer the ByteBuffer into which to write this payload-record
+     * @param iOffset the offset at which to start writing the object.
+     * @param tBuffer the ByteBuffer into which to write this payload-record
 .
      * @return the number of bytes written to this byte buffer.
      */

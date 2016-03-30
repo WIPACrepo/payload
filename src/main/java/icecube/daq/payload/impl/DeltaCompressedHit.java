@@ -57,7 +57,7 @@ public class DeltaCompressedHit
                        ByteBuffer buf, int offset)
         throws PayloadException
     {
-        super(srcId, domId, utcTime);
+        super(buf, srcId, domId, utcTime);
 
         short check = buf.getShort(offset + OFFSET_ORDERCHK);
         if (check != (short) 1) {
@@ -251,8 +251,16 @@ public class DeltaCompressedHit
      */
     public String toString()
     {
-        return "DeltaCompressedHit[" + getSubstring() + " ped " + pedestal +
-            " clk " + domClock + " word0 " + Integer.toHexString(word0) +
-            " word2 " + Integer.toHexString(word2) + " data " + data + "]";
+	if(data==null) {
+	    return "DeltaCompressedHit[" + getSubstring() + " ped " + pedestal +
+		" clk " + domClock + " word0 " + Integer.toHexString(word0) +
+		" word2 " + Integer.toHexString(word2) + " data is null]";
+	} else {
+	    return "DeltaCompressedHit[" + getSubstring() + " ped " + pedestal +
+		" clk " + domClock + " word0 " + Integer.toHexString(word0) +
+		" word2 " + Integer.toHexString(word2) + " data contains: "+ data.length +
+		" elements]";
+	}
     }
+
 }

@@ -103,15 +103,13 @@ public class EventFactory
      * @param subrunNum subrun number
      * @param trigReq trigger request
      * @param hitRecList list of hit records
-     * @param domRegistry used to map each hit's DOM ID to the channel ID
      * @return new event
      */
     public ILoadablePayload createPayload(int uid, IUTCTime firstTime,
                                           IUTCTime lastTime, short year,
                                           int runNum, int subrunNum,
                                           ITriggerRequestPayload trigReq,
-                                          List<IEventHitRecord> hitRecList,
-                                          IDOMRegistry domRegistry)
+                                          List<IEventHitRecord> hitRecList)
         throws PayloadException
     {
         switch (version) {
@@ -124,7 +122,6 @@ public class EventFactory
             if (bufCache != null) {
                 e5.setCache(bufCache);
             }
-            e5.setDOMRegistry(domRegistry);
             return e5;
         case 6:
             EventPayload_v6 e6 =
@@ -133,7 +130,6 @@ public class EventFactory
             if (bufCache != null) {
                 e6.setCache(bufCache);
             }
-            e6.setDOMRegistry(domRegistry);
             return e6;
         default:
             throw new PayloadException("Bad event version " + version);
@@ -152,5 +148,15 @@ public class EventFactory
         }
 
         this.bufCache = bufCache;
+    }
+
+    /**
+     * Set the DOM registry used to translate hit DOM IDs to channel IDs
+     *
+     * @param domRegistry DOM registry
+     */
+    public void setDOMRegistry(IDOMRegistry domRegistry)
+    {
+        EventPayload_v5.setDOMRegistry(domRegistry);
     }
 }

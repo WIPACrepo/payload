@@ -60,7 +60,7 @@ public class EngineeringHit
                    int offset)
         throws PayloadException
     {
-        super(srcId, domId, utcTime);
+        super(buf, srcId, domId, utcTime);
 
         short recLen = buf.getShort(offset + OFFSET_RECLEN);
 
@@ -234,10 +234,17 @@ public class EngineeringHit
      */
     public String toString()
     {
+        String clkStr;
+        if (clockBytes==null) {
+            clkStr = " clk is null";
+        } else {
+            clkStr = " clk " + clockBytes.length;
+        }
+
         return "EngineeringHit[" + getSubstring() + " atwd " + atwdChip +
             " aff0 " + affByte0 + " aff1  " + affByte1 +
-            " trigMode " + trigMode +
-            " clk " + clockBytes + " waveformData*" + waveformData.length +
+            " trigMode " + trigMode + clkStr +
+            " waveformData*" + waveformData.length +
             "]";
     }
 }

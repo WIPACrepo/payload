@@ -2,7 +2,6 @@ package icecube.daq.payload.test;
 
 import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IByteBufferCache;
-import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
@@ -13,7 +12,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 public class MockTriggerRequest
     implements ILoadablePayload, ITriggerRequestPayload
@@ -108,34 +106,6 @@ public class MockTriggerRequest
         throw new Error("Unimplemented");
     }
 
-    public int getPayloadLength()
-    {
-        final int hitLen;
-        if (dataList == null) {
-            hitLen = 0;
-        } else {
-            hitLen = dataList.size() * 40;
-        }
-
-        final int rrLen;
-        if (rReq == null) {
-            rrLen = 0;
-        } else {
-            List elems = rReq.getReadoutRequestElements();
-
-            final int numElems;
-            if (elems == null) {
-                numElems = 0;
-            } else {
-                numElems = elems.size();
-            }
-
-            rrLen = 14 + (32 * numElems);
-        }
-
-        return 50 + rrLen + 8 + hitLen;
-    }
-
     public IUTCTime getPayloadTimeUTC()
     {
         return getFirstTimeUTC();
@@ -147,7 +117,6 @@ public class MockTriggerRequest
     }
 
     public List getPayloads()
-        throws DataFormatException
     {
         return dataList;
     }
@@ -188,10 +157,47 @@ public class MockTriggerRequest
     }
 
     /**
+     * Is this a merged request?
+     *
+     * @return <tt>true</tt> if this is a merged request
+     */
+    public boolean isMerged()
+    {
+        return type == -1;
+    }
+
+    public int length()
+    {
+        final int hitLen;
+        if (dataList == null) {
+            hitLen = 0;
+        } else {
+            hitLen = dataList.size() * 40;
+        }
+
+        final int rrLen;
+        if (rReq == null) {
+            rrLen = 0;
+        } else {
+            List elems = rReq.getReadoutRequestElements();
+
+            final int numElems;
+            if (elems == null) {
+                numElems = 0;
+            } else {
+                numElems = elems.size();
+            }
+
+            rrLen = 14 + (32 * numElems);
+        }
+
+        return 50 + rrLen + 8 + hitLen;
+    }
+
+    /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
     public void loadPayload()
-        throws IOException, DataFormatException
     {
         // do nothing
     }
@@ -219,8 +225,12 @@ public class MockTriggerRequest
         failDeepCopy = fail;
     }
 
-    public int writePayload(boolean writeLoaded, IPayloadDestination pDest)
-        throws IOException
+    /**
+     * Set the universal ID for global requests which will become events.
+     *
+     * @param uid new UID
+     */
+    public void setUID(int uid)
     {
         throw new Error("Unimplemented");
     }

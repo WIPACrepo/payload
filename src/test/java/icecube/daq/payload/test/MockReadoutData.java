@@ -2,7 +2,6 @@ package icecube.daq.payload.test;
 
 import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.IHitDataPayload;
-import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.IReadoutDataPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
@@ -13,7 +12,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 public class MockReadoutData
     implements IReadoutDataPayload
@@ -83,19 +81,6 @@ public class MockReadoutData
         throw new Error("Unimplemented");
     }
 
-    public int getPayloadLength()
-    {
-        int hitLen = 0;
-        if (hitList != null) {
-            for (IHitDataPayload hit : hitList) {
-                hitLen += hit.getPayloadLength();
-            }
-        }
-
-        return BasePayload.LEN_PAYLOAD_HEADER +
-            BaseReadoutData.OFFSET_COMPDATA + hitLen;
-    }
-
     public IUTCTime getPayloadTimeUTC()
     {
         throw new Error("Unimplemented");
@@ -107,7 +92,6 @@ public class MockReadoutData
     }
 
     public List getPayloads()
-        throws DataFormatException
     {
         throw new Error("Unimplemented");
     }
@@ -147,8 +131,20 @@ public class MockReadoutData
         throw new Error("Unimplemented");
     }
 
+    public int length()
+    {
+        int hitLen = 0;
+        if (hitList != null) {
+            for (IHitDataPayload hit : hitList) {
+                hitLen += hit.length();
+            }
+        }
+
+        return BasePayload.LEN_PAYLOAD_HEADER +
+            BaseReadoutData.OFFSET_COMPDATA + hitLen;
+    }
+
     public void loadPayload()
-        throws IOException, DataFormatException
     {
         // do nothing
     }
@@ -163,12 +159,6 @@ public class MockReadoutData
     }
 
     public void setCache(IByteBufferCache cache)
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int writePayload(boolean b0, IPayloadDestination x1)
-        throws IOException
     {
         throw new Error("Unimplemented");
     }

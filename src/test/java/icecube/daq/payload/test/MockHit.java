@@ -6,7 +6,6 @@ import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.IHitData;
 import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.ILoadablePayload;
-import icecube.daq.payload.IPayloadDestination;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.IWriteablePayload;
@@ -15,7 +14,6 @@ import icecube.daq.payload.Poolable;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.zip.DataFormatException;
 
 public class MockHit
     implements IHitData, IHitPayload, ILoadablePayload, IWriteablePayload,
@@ -101,11 +99,6 @@ public class MockHit
         throw new Error("Unimplemented");
     }
 
-    public int getPayloadLength()
-    {
-        return 40;
-    }
-
     public IUTCTime getPayloadTimeUTC()
     {
         return getHitTimeUTC();
@@ -152,14 +145,13 @@ public class MockHit
 
     public int length()
     {
-        throw new Error("Unimplemented");
+        return 40;
     }
 
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
     public void loadPayload()
-        throws IOException, DataFormatException
     {
         // do nothing
     }
@@ -188,12 +180,6 @@ public class MockHit
     }
 
     public int writePayload(ByteBuffer buf, int offset)
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public int writePayload(boolean b0, IPayloadDestination x1)
-        throws IOException
     {
         throw new Error("Unimplemented");
     }

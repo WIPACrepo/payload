@@ -1,7 +1,9 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.ICopyable;
 import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IReadoutRequest;
+import icecube.daq.payload.IReadoutRequestElement;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
@@ -35,7 +37,7 @@ public class ReadoutRequest
     /** source ID */
     private int srcId;
     /** list of element data */
-    private List<ReadoutRequestElement> elemData;
+    private List<IReadoutRequestElement> elemData;
 
     /** cached source ID object */
     private SourceID srcObj;
@@ -109,16 +111,16 @@ public class ReadoutRequest
      * @param srcId source ID
      * @param elemData element data
      */
-    private ReadoutRequest(long utcTime, int uid, int srcId,
-                           List<ReadoutRequestElement> elemData)
+    public ReadoutRequest(long utcTime, int uid, int srcId,
+                          List<IReadoutRequestElement> elemData)
     {
         super(utcTime);
         this.uid = uid;
         this.srcId = srcId;
         if (elemData == null) {
-            this.elemData = new ArrayList<ReadoutRequestElement>();
+            this.elemData = new ArrayList<IReadoutRequestElement>();
         } else {
-            this.elemData = new ArrayList<ReadoutRequestElement>(elemData);
+            this.elemData = new ArrayList<IReadoutRequestElement>(elemData);
         }
     }
 
@@ -143,6 +145,8 @@ public class ReadoutRequest
 
     /**
      * Compare two payloads for the splicer.
+     * NOTE: Make sure all compared fields have been loaded by
+     * preloadSpliceableFields()
      * @param spliceable object being compared
      * @return -1, 0, or 1
      */
@@ -177,10 +181,11 @@ public class ReadoutRequest
      */
     public Object deepCopy()
     {
-        List<ReadoutRequestElement> newData =
-            new ArrayList<ReadoutRequestElement>();
-        for (ReadoutRequestElement elem : elemData) {
-            newData.add(elem.deepCopy());
+        List<IReadoutRequestElement> newData =
+            new ArrayList<IReadoutRequestElement>();
+        for (IReadoutRequestElement elem : elemData) {
+            Object copy = ((ICopyable) elem).deepCopy();
+            newData.add((IReadoutRequestElement) copy);
         }
 
         return new ReadoutRequest(getUTCTime(), uid, srcId, newData);
@@ -200,6 +205,10 @@ public class ReadoutRequest
      */
     public int getEmbeddedLength()
     {
+        if (elemData == null) {
+            throw new Error("Cannot get length for recycled request");
+        }
+
         return OFFSET_ELEMDATA + elemData.size() * ReadoutRequestElement.LENGTH;
     }
 
@@ -284,7 +293,7 @@ public class ReadoutRequest
         srcId = buf.getInt(pos + OFFSET_SOURCEID);
         final int numElems = buf.getInt(pos + OFFSET_NUMELEMS);
 
-        elemData = new ArrayList<ReadoutRequestElement>(numElems);
+        elemData = new ArrayList<IReadoutRequestElement>(numElems);
 
         int dataPos = pos + OFFSET_ELEMDATA;
         for (int i = 0; i < numElems; i++) {
@@ -347,9 +356,9 @@ public class ReadoutRequest
         buf.putInt(offset + OFFSET_NUMELEMS, elemData.size());
 
         int dataPos = offset + OFFSET_ELEMDATA;
-        for (ReadoutRequestElement elem : elemData) {
+        for (IReadoutRequestElement elem : elemData) {
             elem.put(buf, dataPos);
-            dataPos += ReadoutRequestElement.LENGTH;
+            dataPos += IReadoutRequestElement.LENGTH;
         }
 
         return dataPos - offset;
@@ -370,12 +379,40 @@ public class ReadoutRequest
     }
 
     /**
+     * Set the source ID. Needed for backward compatiblility with the old
+     * global request handler implementation.
+     *
+     * @param srcId new source ID
+     */
+    public void setSourceID(ISourceID srcId)
+    {
+        this.srcId = srcId.getSourceID();
+    }
+
+    /**
+     * Set the universal ID for global requests which will become events.
+     *
+     * @param uid new UID
+     */
+    public void setUID(int uid)
+    {
+        this.uid = uid;
+    }
+
+    /**
      * Get a debugging string representing this object.
      * @return debugging string
      */
     public String toString()
     {
+        String elemStr;
+        if (elemData == null) {
+            elemStr = " elem=null";
+        } else {
+            elemStr = " elem*" + elemData.size();
+        }
+
         return "ReadoutRequest[time " + getUTCTime() + " uid " + uid +
-            " src " + getSourceID() + " elem*" + elemData.size() + "]";
+            " src " + getSourceID() + elemStr + "]";
     }
 }

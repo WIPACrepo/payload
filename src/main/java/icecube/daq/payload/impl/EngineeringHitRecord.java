@@ -40,7 +40,7 @@ public class EngineeringHitRecord
     private static final int OFFSET_DATA = 12;
 
     /** length of waveforms encoded in each ATWD format nybble */
-    private static final int waveformLength[] = new int[] { 32, 64, 16, 128 };
+    private static final int[] waveformLength = new int[] { 32, 64, 16, 128 };
 
     /**
      * Create an engineering-format hit record

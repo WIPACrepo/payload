@@ -18,16 +18,6 @@ public interface IWriteablePayload
      */
     void recycle();
     /**
-     * Should not be used
-     * @param writeLoaded deprecated
-     * @param pDest deprecated
-     * @return deprecated
-     * @throws IOException if there is a problem
-     * @deprecated
-     */
-    int writePayload(boolean writeLoaded, IPayloadDestination pDest)
-        throws IOException;
-    /**
      * Write this payload's binary representation to the ByteBuffer.
      * @param writeLoaded if <tt>false</tt>, write the original data
      * @param destOffset index into <tt>buf</tt> where payload is written

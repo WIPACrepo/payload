@@ -1,7 +1,6 @@
 package icecube.daq.payload;
 
 import java.io.IOException;
-import java.util.zip.DataFormatException;
 
 /**
  * A loadable/recyclable payload.
@@ -12,10 +11,10 @@ public interface ILoadablePayload
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      * @throws IOException if the payload cannot be loaded
-     * @throws DataFormatException if there is a problem loading the payload
+     * @throws PayloadFormatException if there is a problem loading the payload
      */
     void loadPayload()
-        throws IOException, DataFormatException;
+        throws IOException, PayloadFormatException;
 
     /**
      * Object knows how to recycle itself

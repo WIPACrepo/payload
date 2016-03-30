@@ -9,6 +9,8 @@ package icecube.daq.payload;
  * (c) 2004 IceCube Collaboration
  */
 
+import java.nio.ByteBuffer;
+
 /**
  * This interface describes a single readout element.
  * It can be either a single Module, a whole String
@@ -20,7 +22,11 @@ package icecube.daq.payload;
  * @author hellwig,dwharton
  */
 public interface IReadoutRequestElement
+    extends ICopyable
 {
+    /** Element length */
+    int LENGTH = 32;
+
     /** Readout of both all InIce and all IceTop */
     int READOUT_TYPE_GLOBAL = 0;
     /** Readout of all IceTop */
@@ -37,7 +43,10 @@ public interface IReadoutRequestElement
     /** Readout of a single Module for IceTop */
     int READOUT_TYPE_IT_MODULE = READOUT_TYPE_II_MODULE + 1;
 
-
+    /** Value used to indicate that this element is not bound to a string */
+    int NO_STRING = -1;
+    /** Value used to indicate that this element is not bound to a DOM */
+    long NO_DOM = -1L;
 
     /**
      * getReadoutType()
@@ -62,7 +71,19 @@ public interface IReadoutRequestElement
      * returns start time of interval
      * @return first time of interval
      */
+    long getFirstTime();
+
+    /**
+     * returns start time of interval
+     * @return first time of interval
+     */
     IUTCTime getFirstTimeUTC();
+
+    /**
+     * returns end time of interval
+     * @return last time of interval
+     */
+    long getLastTime();
 
     /**
      * returns end time of interval
@@ -70,4 +91,11 @@ public interface IReadoutRequestElement
      */
     IUTCTime getLastTimeUTC();
 
+    /**
+     * Write this element to the byte buffer
+     * @param buf byte buffer
+     * @param offset index of first byte
+     */
+    void put(ByteBuffer buf, int offset)
+        throws PayloadException;
 }

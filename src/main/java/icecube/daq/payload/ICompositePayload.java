@@ -11,7 +11,6 @@
 package icecube.daq.payload;
 
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 /**
  * Composite of ITriggerPayloads
@@ -37,9 +36,9 @@ public interface ICompositePayload
     /**
      * get list of Payload's.
      * @return list of Payloads
-     * @throws DataFormatException for some unknown reason
+     * @throws PayloadFormatException for some unknown reason
      */
-    List getPayloads() throws DataFormatException;
+    List getPayloads() throws PayloadFormatException;
 
     /**
      * get timeordered list of all hits contained in Composite, this

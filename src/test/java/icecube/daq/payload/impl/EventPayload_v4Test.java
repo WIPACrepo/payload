@@ -15,7 +15,6 @@ import icecube.daq.payload.test.TestUtil;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.Vector;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -126,7 +125,7 @@ setVerbose(true);
                                    runNum, subrunNum, trigReq, hitList);
 
         assertEquals("Bad payload length",
-                     buf.capacity(), evt.getPayloadLength());
+                     buf.capacity(), evt.length());
 */
 
         evt.recycle();
@@ -201,7 +200,7 @@ setVerbose(true);
         assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
         assertEquals("Bad payload length",
-                     buf.capacity(), evt.getPayloadLength());
+                     buf.capacity(), evt.length());
 
 //        assertEquals("Bad payload UTC time",
 //                     firstTime, evt.getPayloadTimeUTC().longValue());

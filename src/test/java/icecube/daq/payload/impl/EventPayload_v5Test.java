@@ -113,8 +113,7 @@ public class EventPayload_v5Test
             TestUtil.createEventv5(uid, firstTime, lastTime, YEAR, runNum,
                                    subrunNum, trigReq, hitRecList, domRegistry);
 
-        assertEquals("Bad payload length",
-                     buf.capacity(), evt.getPayloadLength());
+        assertEquals("Bad payload length", buf.capacity(), evt.length());
 
         evt.recycle();
     }
@@ -203,8 +202,7 @@ public class EventPayload_v5Test
 
         assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
-        assertEquals("Bad payload length",
-                     buf.capacity(), evt.getPayloadLength());
+        assertEquals("Bad payload length", buf.capacity(), evt.length());
 
         assertEquals("Bad UID", uid, evt.getEventUID());
         assertEquals("Bad first UTC time",

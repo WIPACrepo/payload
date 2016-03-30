@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 /**
  * Trigger request
@@ -61,7 +60,7 @@ public class TriggerRequest
     private static String[] TYPE_NAMES = new String[] {
         "SMT", "Calib", "MinBias", "Thruput", "Cluster", "SyncBrd",
         "TrigBrd", "AmMFrag20", "AmVol", "AmM18", "AmM24", "AmStr", "AmRand",
-        "PhysMBT", "??Trig14??", "Volume", "??Trig16??", "MplcityStr",
+        "PhysMBT", "Cluster", "Volume", "??Trig16??", "MplcityStr",
         "??Trig18??", "??Trig19??", "Volume", "Cylinder", "SlowMP",
         "??Trig22??", "??Trig23??", "??Trig24??", "??Trig25??", "??Trig26??",
         "??Trig27??", "??Trig28??", "??Trig29??", "FixedRate"
@@ -137,6 +136,13 @@ public class TriggerRequest
     {
         super(firstTime);
 
+        if (firstTime > lastTime) {
+            throw new Error("Illegal time interval [" + firstTime + "-" +
+                            lastTime + "]");
+        } else if (rdoutReq == null) {
+            throw new Error("Readout request cannot be null");
+        }
+
         this.uid = uid;
         this.trigType = trigType;
         this.cfgId = cfgId;
@@ -144,26 +150,31 @@ public class TriggerRequest
         this.firstTime = firstTime;
         this.lastTime = lastTime;
         this.rdoutReq = rdoutReq;
-        this.compList = new ArrayList<IWriteablePayload>(compList);
+        if (compList == null) {
+            this.compList = new ArrayList<IWriteablePayload>();
+        } else {
+            this.compList = new ArrayList<IWriteablePayload>(compList);
+        }
     }
 
     /**
      * Compare two payloads for the splicer.
+     * NOTE: Make sure all compared fields have been loaded by
+     * preloadSpliceableFields()
      * @param spliceable object being compared
      * @return -1, 0, or 1
      */
     public int compareSpliceable(Spliceable spliceable)
     {
-        if (!(spliceable instanceof TriggerRequest)) {
+        if (!(spliceable instanceof ILoadablePayload)) {
             final String className = spliceable.getClass().getName();
             return getClass().getName().compareTo(className);
         }
 
-        TriggerRequest tr = (TriggerRequest) spliceable;
-
-        if (firstTime < tr.firstTime) {
+        long payTime = ((ILoadablePayload) spliceable).getUTCTime();
+        if (firstTime < payTime) {
             return -1;
-        } else if (firstTime > tr.firstTime) {
+        } else if (firstTime > payTime) {
             return 1;
         }
 
@@ -184,7 +195,7 @@ public class TriggerRequest
             LEN_COMPOSITE_HEADER;
 
         for (IWriteablePayload comp : compList) {
-            bufLen += comp.getPayloadLength();
+            bufLen += comp.length();
         }
 
         return bufLen;
@@ -198,6 +209,11 @@ public class TriggerRequest
     {
         if (!isLoaded()) {
             throw new Error(getPayloadName() + " has not been loaded");
+        }
+
+        if (rdoutReq == null) {
+            throw new Error("Cannot deepCopy " + toString() +
+                            "; readout request is null");
         }
 
         IReadoutRequest newRReq =
@@ -371,12 +387,46 @@ public class TriggerRequest
     }
 
     /**
+     * Get the trigger name for the specified trigger type.
+     *
+     * @return trigger name
+     */
+    public static int getTriggerType(String name)
+    {
+        if (name != null) {
+            if (name.equals("Merged")) {
+                return -1;
+            }
+
+            if (TYPE_NAMES != null) {
+                for (int i = 0; i < TYPE_NAMES.length; i++) {
+                    if (name.equals(TYPE_NAMES[i])) {
+                        return i;
+                    }
+                }
+            }
+        }
+
+        return Integer.MIN_VALUE;
+    }
+
+    /**
      * Get the unique ID
      * @return unique ID
      */
     public int getUID()
     {
         return uid;
+    }
+
+    /**
+     * Is this a merged request?
+     *
+     * @return <tt>true</tt> if this is a merged request
+     */
+    public boolean isMerged()
+    {
+        return trigType == -1;
     }
 
     /**
@@ -421,8 +471,6 @@ public class TriggerRequest
         rdoutReq = new ReadoutRequest(buf, pos + OFFSET_RDOUTREQ, firstTime);
         try {
             ((ILoadablePayload) rdoutReq).loadPayload();
-        } catch (DataFormatException dfe) {
-            throw new PayloadException("Cannot load readout request", dfe);
         } catch (IOException ioe) {
             throw new PayloadException("Cannot load readout request", ioe);
         }
@@ -478,13 +526,11 @@ public class TriggerRequest
             IWriteablePayload pay = factory.getPayload(buf, offset + totLen);
             try {
                 ((ILoadablePayload) pay).loadPayload();
-            } catch (DataFormatException dfe) {
-                throw new PayloadException("Cannot load composite#" + i, dfe);
             } catch (IOException ioe) {
                 throw new PayloadException("Cannot load composite#" + i, ioe);
             }
             compList.add(pay);
-            totLen += pay.getPayloadLength();
+            totLen += pay.length();
         }
 
         return totLen;
@@ -512,13 +558,16 @@ public class TriggerRequest
             bodyOffset = 0;
         }
 
-        if (bodyOffset + OFFSET_UID + 4 > len) {
+        if (bodyOffset + OFFSET_LASTTIME + 8 > len) {
             throw new PayloadException("Cannot load field at offset " +
-                                       (bodyOffset + OFFSET_UID) +
+                                       (bodyOffset + OFFSET_LASTTIME) +
                                        " from " + len + "-byte buffer");
         }
 
         uid = buf.getInt(offset + bodyOffset + OFFSET_UID);
+        trigType = buf.getInt(offset + bodyOffset + OFFSET_TRIGTYPE);
+        firstTime = buf.getLong(offset + bodyOffset + OFFSET_FIRSTTIME);
+        lastTime = buf.getLong(offset + bodyOffset + OFFSET_LASTTIME);
     }
 
     /**
@@ -562,12 +611,12 @@ public class TriggerRequest
         // length is filled in below
         buf.putInt(pos + OFFSET_COMPLEN, -1);
          // composite type is deprecated
-        buf.putShort(pos + OFFSET_COMPTYPE, (short) 0);
+        buf.putShort(pos + OFFSET_COMPTYPE, (short) 1);
         buf.putShort(pos + OFFSET_COMPNUM, (short) compList.size());
 
         int totLen = 0;
         for (IWriteablePayload pay : compList) {
-            final int expLen = pay.getPayloadLength();
+            final int expLen = pay.length();
 
             int len;
             try {
@@ -623,6 +672,22 @@ public class TriggerRequest
     public static void setTypeNames(String[] names)
     {
         TYPE_NAMES = names;
+    }
+
+    /**
+     * Set the universal ID for global requests which will become events.
+     *
+     * @param uid new UID
+     */
+    public void setUID(int uid)
+    {
+        if (rdoutReq == null) {
+            throw new Error("Cannot set UID for " + toString() +
+                            "; readout request is null");
+        }
+
+        this.uid = uid;
+        rdoutReq.setUID(uid);
     }
 
     /**

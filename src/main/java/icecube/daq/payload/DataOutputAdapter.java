@@ -1,4 +1,4 @@
-package icecube.daq.oldpayload;
+package icecube.daq.payload;
 
 import java.io.DataOutput;
 import java.io.IOException;
@@ -332,6 +332,6 @@ public class DataOutputAdapter implements DataOutput {
      * @param sMethod String holding the method name from which this method was called.
      */
     protected static void errorUnimplementedMethod(String sMethod) throws IOException {
-        throw new java.io.IOException("DataOutputAdapter: "+sMethod+"not implemented");
+        throw new IOException("DataOutputAdapter: "+sMethod+"not implemented");
     }
 }

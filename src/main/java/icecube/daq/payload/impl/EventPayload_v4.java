@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.DataFormatException;
 
 /**
  * Event version 4
@@ -41,7 +40,7 @@ public class EventPayload_v4
     /** Offset of year field */
     private static final int OFFSET_YEAR = 26;
     /** Offset of unused field */
-    private static final int OFFSET_UNUSED = 28;
+    //private static final int OFFSET_UNUSED = 28;
     /** Offset of run number field */
     private static final int OFFSET_RUNNUMBER = 30;
     /** Offset of subrun number field */
@@ -155,10 +154,10 @@ public class EventPayload_v4
         }
 
         int len = LEN_PAYLOAD_HEADER + OFFSET_COMPOSITE + OFFSET_COMPDATA +
-            trigReq.getPayloadLength();
+            trigReq.length();
 
         for (IWriteablePayload datum : dataList) {
-            len += datum.getPayloadLength();
+            len += datum.length();
         }
 
         return len;
@@ -474,16 +473,13 @@ public class EventPayload_v4
 
             try {
                 ((ILoadablePayload) pay).loadPayload();
-            } catch (DataFormatException dfe) {
-                throw new PayloadException("Couldn't load composite payload #" +
-                                           i, dfe);
             } catch (IOException ioe) {
                 throw new PayloadException("Couldn't load composite payload #" +
                                            i, ioe);
             }
 
             compList.add(pay);
-            totLen += pay.getPayloadLength();
+            totLen += pay.length();
         }
 
         return totLen;
@@ -537,7 +533,7 @@ public class EventPayload_v4
 
         int totLen = 0;
         for (IWriteablePayload pay : compList) {
-            final int expLen = pay.getPayloadLength();
+            final int expLen = pay.length();
 
             int len;
             try {

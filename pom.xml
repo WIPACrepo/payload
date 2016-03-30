@@ -9,7 +9,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>payload</artifactId>
   <packaging>jar</packaging>
-  <name>payload</name>
+  <name>Binary payloads</name>
   <description>The ${project.name} sub-system of the Surface Data Acquisition system for the IceCube Project.</description>
 
   <scm>
@@ -18,6 +18,18 @@
     <tag>HEAD</tag>
     <url>http://code.icecube.wisc.edu/daq/projects/${project.name}</url>
   </scm>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-Xms1024m -Xmx1024m</argLine>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <!-- Dependencies for this project.  These should not contain
   versions.  The versions needed should be specified in the top-level
@@ -31,6 +43,11 @@
     <dependency>
       <groupId>edu.wisc.icecube</groupId>
       <artifactId>daq-common</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.xml.parsers</groupId>
+      <artifactId>jaxp-api</artifactId>
     </dependency>
   </dependencies>
 

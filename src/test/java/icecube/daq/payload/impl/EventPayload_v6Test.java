@@ -110,7 +110,7 @@ public class EventPayload_v6Test
         assertEquals("Bad run number", runNum, evt.getRunNumber());
         assertEquals("Bad subrun number", subrunNum, evt.getSubrunNumber());
 
-        final int expLen = evt.getPayloadLength();
+        final int expLen = evt.length();
 
         ByteBuffer newBuf = ByteBuffer.allocate(expLen);
         for (int b = 0; b < 2; b++) {
@@ -192,7 +192,7 @@ public class EventPayload_v6Test
             assertEquals("Bad run number", runNum, evt.getRunNumber());
             assertEquals("Bad subrun number", subrunNum, evt.getSubrunNumber());
 
-            final int expLen = evt.getPayloadLength();
+            final int expLen = evt.length();
 
             ByteBuffer newBuf = ByteBuffer.allocate(expLen + 10);
             for (int b = 0; b < 2; b++) {
