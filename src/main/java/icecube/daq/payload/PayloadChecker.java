@@ -1411,10 +1411,6 @@ public abstract class PayloadChecker
         if (rReq != null) {
             List elemList = rReq.getReadoutRequestElements();
 
-            IReadoutRequestElement[] elems =
-                new IReadoutRequestElement[elemList.size()];
-
-            int nextElem = 0;
             for (Object obj : elemList) {
                 IReadoutRequestElement elem = (IReadoutRequestElement) obj;
 
@@ -1435,8 +1431,6 @@ public abstract class PayloadChecker
                 {
                     return false;
                 }
-
-                elems[nextElem++] = elem;
             }
         }
 

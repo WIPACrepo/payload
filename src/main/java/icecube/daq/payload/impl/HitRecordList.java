@@ -2,9 +2,7 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.IHitRecordList;
-import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
@@ -23,7 +21,7 @@ import java.util.List;
  */
 public class HitRecordList
     extends BasePayload
-    implements IHitRecordList, ILoadablePayload, IWriteablePayload, Spliceable
+    implements IHitRecordList, Spliceable
 {
     /** Offset of unique ID field */
     private static final int OFFSET_UID = 0;

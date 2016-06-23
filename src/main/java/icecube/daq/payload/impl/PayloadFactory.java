@@ -244,7 +244,6 @@ public class PayloadFactory
                 }
 
                 // if this is an icetop hub, add the offset
-                int base;
                 if (hostname.charAt(1) == 't') {
                     srcNum += SourceIdRegistry.ICETOP_ID_OFFSET;
                 }

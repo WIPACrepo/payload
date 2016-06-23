@@ -2,10 +2,8 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.IEventHitRecord;
-import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 
 import java.nio.ByteBuffer;
@@ -15,7 +13,6 @@ import java.nio.ByteBuffer;
  */
 public abstract class DOMHit
     extends BasePayload
-    implements ILoadablePayload, IWriteablePayload
 {
     /** backing buffer */
     private ByteBuffer backBuf;

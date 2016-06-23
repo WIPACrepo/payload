@@ -9,8 +9,6 @@ import java.nio.ByteBuffer;
  *  NOTE: removed WriteableByteChannel implementation because of conflicting polymorphism with return types
  */
 public abstract class PayloadDestination extends DataOutputAdapter implements IPayloadDestination {
-    protected boolean mb_doLabel;
-
     /**
      * This methods proxies the call to write Payload to allow the whole
      * payload to be passed to the payload destination to allow it to
@@ -160,16 +158,6 @@ public abstract class PayloadDestination extends DataOutputAdapter implements IP
      */
     public PayloadDestination label(String sLabel) {
         return this;
-    }
-
-    /**
-     * Returns boolean to tell if label operation should be performed.
-     * this saves objects work if they are using the label feature for
-     * PayloadDestinations which do not do labeling.
-     * @return boolean true if labeling is on, false if off.
-     */
-    public boolean doLabel() {
-        return mb_doLabel;
     }
 
     /**

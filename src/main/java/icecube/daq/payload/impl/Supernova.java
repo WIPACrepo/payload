@@ -1,8 +1,6 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
@@ -15,7 +13,7 @@ import java.nio.ByteOrder;
  */
 public class Supernova
     extends BasePayload
-    implements ILoadablePayload, IWriteablePayload, Spliceable
+    implements Spliceable
 {
     /** Offset of DOM ID field */
     private static final int OFFSET_DOMID = 0;

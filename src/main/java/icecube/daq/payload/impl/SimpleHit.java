@@ -6,7 +6,6 @@ import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
@@ -19,7 +18,7 @@ import java.nio.ByteBuffer;
  */
 public class SimpleHit
     extends BasePayload
-    implements IHitPayload, IWriteablePayload, Spliceable
+    implements IHitPayload, Spliceable
 {
     /** payload length */
     private static final int LENGTH = 38;

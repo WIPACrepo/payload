@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class TriggerRequest
     extends BasePayload
-    implements ILoadablePayload, ITriggerRequestPayload, Spliceable
+    implements ITriggerRequestPayload, Spliceable
 {
     /** Internal trigger request record type */
     public static final short RECORD_TYPE = 4;

@@ -1,10 +1,8 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IReadoutDataPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
@@ -17,8 +15,7 @@ import java.util.List;
  */
 public abstract class BaseReadoutData
     extends BasePayload
-    implements ILoadablePayload, IReadoutDataPayload, IWriteablePayload,
-               Spliceable
+    implements IReadoutDataPayload, Spliceable
 {
     /** Offset of byte-order check field */
     private static final int OFFSET_ORDERCHK = 0;

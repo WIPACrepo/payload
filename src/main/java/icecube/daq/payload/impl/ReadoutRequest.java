@@ -1,11 +1,9 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.ICopyable;
-import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.IReadoutRequestElement;
 import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
@@ -19,7 +17,7 @@ import java.util.List;
  */
 public class ReadoutRequest
     extends BasePayload
-    implements ILoadablePayload, IReadoutRequest, IWriteablePayload, Spliceable
+    implements IReadoutRequest, Spliceable
 {
     /** Offset of order check field */
     private static final int OFFSET_ORDERCHK = 0;

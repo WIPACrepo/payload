@@ -1,7 +1,5 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.ILoadablePayload;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
@@ -14,7 +12,7 @@ import java.nio.ByteOrder;
  */
 public class TimeCalibration
     extends BasePayload
-    implements ILoadablePayload, IWriteablePayload, Spliceable
+    implements Spliceable
 {
     /** Offset of DOM ID field */
     private static final int OFFSET_DOMID = 0;
@@ -396,7 +394,7 @@ public class TimeCalibration
             pktLen = buf.getShort(pos + OFFSET_PACKETLEN);
 
             short fmt = buf.getShort(pos + OFFSET_FORMAT);
-            if (fmt == 0xc9 || fmt == 0xc900) {
+            if (fmt == 0xc9 || fmt == (short) 0xc900) {
                 // ignore GPS header
                 //  (8-byte DOM ID/2-byte length/2-byte format)
                 pos += 12;

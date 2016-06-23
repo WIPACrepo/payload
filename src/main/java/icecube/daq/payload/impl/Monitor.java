@@ -1,7 +1,5 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.ILoadablePayload;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
@@ -17,7 +15,7 @@ import java.nio.ByteOrder;
  */
 public abstract class Monitor
     extends BasePayload
-    implements ILoadablePayload, IWriteablePayload, Spliceable
+    implements Spliceable
 {
     /** ID of hardware monitoring message */
     public static final short HARDWARE =  0xc8;
