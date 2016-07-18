@@ -488,7 +488,7 @@ public abstract class PayloadChecker
      */
     private static String getHitString(IHitPayload hit)
     {
-        return "hit@" + hit.getHitTimeUTC();
+        return "hit@" + hit.getUTCTime();
     }
 
     /**
@@ -645,8 +645,7 @@ public abstract class PayloadChecker
                     getTrigReqHits((ITriggerRequestPayload) obj,
                                           hitList);
                 } else if (obj instanceof IHitPayload) {
-                    long hitTime =
-                        ((IHitPayload) obj).getHitTimeUTC().longValue();
+                    long hitTime = ((IHitPayload) obj).getUTCTime();
                     if (hitTime >= trigStart && hitTime <= trigFinish) {
                         hitList.add((IHitPayload) obj);
                         numHits++;

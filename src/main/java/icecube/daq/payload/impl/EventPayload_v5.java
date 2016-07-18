@@ -31,12 +31,12 @@ class TemporaryHit
     implements IHitPayload
 {
     private IDOMID domId;
-    private IUTCTime hitTime;
+    private long hitTime;
 
     public TemporaryHit(IHitPayload hit)
     {
         domId = (IDOMID) hit.getDOMID().deepCopy();
-        hitTime = (IUTCTime) hit.getHitTimeUTC().deepCopy();
+        hitTime = hit.getUTCTime();
     }
 
     public Object deepCopy()
@@ -56,7 +56,7 @@ class TemporaryHit
 
     public IUTCTime getHitTimeUTC()
     {
-        return hitTime;
+        throw new Error("Unimplemented");
     }
 
     public double getIntegratedCharge()
@@ -101,7 +101,7 @@ class TemporaryHit
 
     public long getUTCTime()
     {
-        throw new Error("Unimplemented");
+        return hitTime;
     }
 
     public int length()
@@ -327,12 +327,12 @@ class TriggerRecord
                 if (dom == null) {
                     errMsg = String.format("Couldn't find hit record for " +
                                            "unknown DOM ID " + hit.getDOMID() +
-                                           " (utc " + hit.getHitTimeUTC() +
+                                           " (utc " + hit.getUTCTime() +
                                            ")");
                 } else {
                     errMsg = String.format("Couldn't find hit record for " +
                                            dom + " (utc " +
-                                           hit.getHitTimeUTC() + ")");
+                                           hit.getUTCTime() + ")");
                 }
 
                 throw new PayloadException(errMsg);

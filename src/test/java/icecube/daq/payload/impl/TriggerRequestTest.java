@@ -132,10 +132,8 @@ public class TriggerRequestTest
         for (int i = 0; i < reqHits.size(); i++) {
             IHitPayload hit = (IHitPayload) reqHits.get(i);
 
-            assertEquals("Bad hit time",
-                         hitTime, hit.getHitTimeUTC().longValue());
-            assertEquals("Bad hit type",
-                         hitType, hit.getTriggerType());
+            assertEquals("Bad hit time", hitTime, hit.getUTCTime());
+            assertEquals("Bad hit type", hitType, hit.getTriggerType());
             assertEquals("Bad hit DOM ID",
                          hitDomId,
                          (hit.getDOMID() == null ? -1L :
@@ -233,10 +231,8 @@ public class TriggerRequestTest
         for (int i = 0; i < reqHits.size(); i++) {
             IHitPayload hit = (IHitPayload) reqHits.get(i);
 
-            assertEquals("Bad hit time",
-                         hitTime, hit.getHitTimeUTC().longValue());
-            assertEquals("Bad hit type",
-                         hitType, hit.getTriggerType());
+            assertEquals("Bad hit time", hitTime, hit.getUTCTime());
+            assertEquals("Bad hit type", hitType, hit.getTriggerType());
             assertEquals("Bad hit DOM ID",
                          hitDomId,
                          (hit.getDOMID() == null ? -1L :

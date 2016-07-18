@@ -203,7 +203,7 @@ public abstract class BaseHitRecord
      */
     public boolean matches(IDOMRegistry domRegistry, IHitPayload hit)
     {
-        if (time != hit.getHitTimeUTC().longValue()) {
+        if (time != hit.getUTCTime()) {
             return false;
         }
 
