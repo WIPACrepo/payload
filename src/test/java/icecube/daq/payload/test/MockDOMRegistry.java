@@ -3,7 +3,6 @@ package icecube.daq.payload.test;
 import icecube.daq.util.IDOMRegistry;
 import icecube.daq.util.DeployedDOM;
 
-
 import java.util.HashMap;
 import java.util.Set;
 
@@ -48,6 +47,16 @@ public class MockDOMRegistry
     }
 
     public Set<DeployedDOM> getDomsOnString(int string)
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public String getName(long mbid)
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public String getProductionId(long mbid)
     {
         throw new Error("Unimplemented");
     }

@@ -6,7 +6,7 @@ import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
-import icecube.daq.util.DOMRegistry;
+import icecube.daq.util.IDOMRegistry;
 import icecube.daq.util.DeployedDOM;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -77,7 +77,7 @@ public class HitRecordList
      * @param hitList list of hits
      * @throws PayloadException if there is a problem
      */
-    public HitRecordList(DOMRegistry reg, long utcTime, int uid,
+    public HitRecordList(IDOMRegistry reg, long utcTime, int uid,
                          ISourceID srcId, List<DOMHit> hitList)
         throws PayloadException
     {

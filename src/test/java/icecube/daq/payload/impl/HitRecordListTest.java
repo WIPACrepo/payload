@@ -6,6 +6,7 @@ import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.TestUtil;
 import icecube.daq.util.DOMRegistry;
+import icecube.daq.util.IDOMRegistry;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
@@ -22,7 +23,7 @@ public class HitRecordListTest
         extends LoggingCase
 {
 
-    DOMRegistry domRegistry;
+    IDOMRegistry domRegistry;
 
     //the dom geometry loaded in the test config
     private static long GOOD_DOM_A = 0xfedcba987654L;
