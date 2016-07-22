@@ -64,7 +64,7 @@ public class DeltaHitRecord
     }
 
     /**
-     * Derive the original hit sent to the triggers.
+     * Condense the original hit to the minimal hit sent to the triggers.
      *
      * @return (mostly) original hit
      *
@@ -95,6 +95,26 @@ public class DeltaHitRecord
 
         return new SimpleHit(getHitTime(), trigType, cfgId, srcId, mbId,
                              trigMode);
+    }
+
+    /**
+     * Condense the original hit to the minimal hit sent to the triggers.
+     *
+     * @return (mostly) original hit
+     *
+     * @throws PayloadException if the channel ID is not valid
+     */
+    public SimplerHit getSimplerHit()
+        throws PayloadException
+    {
+        ByteBuffer buf = ByteBuffer.wrap(getRawData());
+        int word0 = buf.getInt(0);
+        short trigMode = DeltaCompressedHit.getTriggerModeFromWord0(word0);
+
+        // fake these two values
+        int trigType = trigMode;
+
+        return new SimplerHit(getHitTime(), getChannelID(), trigMode);
     }
 
     /**

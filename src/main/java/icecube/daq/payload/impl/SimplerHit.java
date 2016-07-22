@@ -10,47 +10,38 @@ import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
+import icecube.daq.util.DeployedDOM;
 
 import java.nio.ByteBuffer;
 
 /**
- * Simple hit (used by triggers)
+ * Simpler hit (used by triggers)
  */
-public class SimpleHit
+public class SimplerHit
     extends BasePayload
     implements IHitPayload, Spliceable
 {
     /** payload length */
-    private static final int LENGTH = 38;
+    private static final int LENGTH = 20;
 
-    /** Offset of trigger type field */
-    private static final int OFFSET_TRIGTYPE = 16;
     /** Offset of trigger configuration ID field */
-    private static final int OFFSET_CONFIGID = 20;
-    /** Offset of source ID field */
-    private static final int OFFSET_SOURCEID = 24;
-    /** Offset of DOM ID field */
-    private static final int OFFSET_DOMID = 28;
-    /** Offset of trigger mode field */
-    private static final int OFFSET_TRIGMODE = 36;
+    private static final int OFFSET_CHANNELID = 16;
+    /** Offset of trigger type field */
+    private static final int OFFSET_TRIGMODE = 18;
 
-    /** trigger type */
-    private int trigType;
-    /** trigger configuration ID */
-    private int cfgId;
-    /** source ID */
-    private int srcId;
-    /** DOM ID */
-    private long domId;
+    /** trigger mode */
+    private short channelId;
     /** trigger mode */
     private short trigMode;
+    /** DOM ID */
+    //private long domId;
 
     /** cached UTC time object */
     private UTCTime utcTimeObj;
     /** cached source ID object */
     private SourceID srcObj;
     /** cached DOM ID object */
-    private DOMID domObj;
+    //private DOMID domObj;
 
     /**
      * Event constructor for PayloadFactory.
@@ -60,7 +51,7 @@ public class SimpleHit
      * @param utcTime payload time (UTC)
      * @throws PayloadException if there is a problem
      */
-    public SimpleHit(ByteBuffer buf, int offset, int len, long utcTime)
+    public SimplerHit(ByteBuffer buf, int offset, int len, long utcTime)
         throws PayloadException
     {
         super(buf, offset, len, utcTime);
@@ -69,31 +60,21 @@ public class SimpleHit
             throw new Error("Length should be " + LENGTH + ", not " + len);
         }
 
-        trigType = buf.getInt(offset + OFFSET_TRIGTYPE);
-        cfgId = buf.getInt(offset + OFFSET_CONFIGID);
-        srcId = buf.getInt(offset + OFFSET_SOURCEID);
-        domId = buf.getLong(offset + OFFSET_DOMID);
         trigMode = buf.getShort(offset + OFFSET_TRIGMODE);
+        channelId = buf.getShort(offset + OFFSET_CHANNELID);
     }
 
     /**
      * Create a simple hit
      * @param utcTime UTC time
-     * @param trigType trigger type
-     * @param cfgId trigger configuration ID
-     * @param srcId source ID
-     * @param domId DOM ID
+     * @param channelId channel ID
      * @param trigMode trigger mode
      */
-    public SimpleHit(long utcTime, int trigType, int cfgId, int srcId,
-                     long domId, short trigMode)
+    public SimplerHit(long utcTime, short channelId, short trigMode)
     {
         super(utcTime);
 
-        this.trigType = trigType;
-        this.cfgId = cfgId;
-        this.srcId = srcId;
-        this.domId = domId;
+        this.channelId = channelId;
         this.trigMode = trigMode;
     }
 
@@ -137,8 +118,7 @@ public class SimpleHit
      */
     public Object deepCopy()
     {
-        return new SimpleHit(getUTCTime(), trigType, cfgId, srcId, domId,
-                             trigMode);
+        return new SimplerHit(getUTCTime(), channelId, trigMode);
     }
 
     /**
@@ -153,17 +133,13 @@ public class SimpleHit
      * Get a byte buffer containing this payload
      * @param cache buffer cache
      * @param utcTime UTC time
-     * @param trigType trigger type
-     * @param cfgId trigger configuration ID
-     * @param srcId source ID
-     * @param domId DOM ID
+     * @param channelId channel ID
      * @param trigMode trigger mode
      * @return byte buffer containing the simple hit payload
      * @throws PayloadException if there is a problem
      */
     public static ByteBuffer getBuffer(IByteBufferCache cache, long utcTime,
-                                       int trigType, int cfgId, int srcId,
-                                       long domId, short trigMode)
+                                       short channelId, short trigMode)
         throws PayloadException
     {
         ByteBuffer hitBuf;
@@ -173,8 +149,7 @@ public class SimpleHit
             hitBuf = cache.acquireBuffer(LENGTH);
         }
 
-        writePayloadToBuffer(hitBuf, 0, utcTime, trigType, cfgId, srcId, domId,
-                             trigMode);
+        writePayloadToBuffer(hitBuf, 0, utcTime, channelId, trigMode);
 
         hitBuf.position(LENGTH);
         hitBuf.flip();
@@ -193,20 +168,16 @@ public class SimpleHit
      */
     public short getChannelID()
     {
-        throw new Error("Unimplemented");
+        return channelId;
     }
 
     /**
-     * Get the DOM ID object
-     * @return DOM ID object
+     * Unimplemented
+     * @return Error
      */
     public IDOMID getDOMID()
     {
-        if (domObj == null) {
-            domObj = new DOMID(domId);
-        }
-
-        return domObj;
+        throw new Error("Unimplemented");
     }
 
     /**
@@ -242,7 +213,7 @@ public class SimpleHit
      */
     public String getPayloadName()
     {
-        return "SimpleHit";
+        return "SimplerHit";
     }
 
     /**
@@ -260,7 +231,7 @@ public class SimpleHit
      */
     public int getPayloadType()
     {
-        return PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT;
+        return PayloadRegistry.PAYLOAD_ID_SIMPLER_HIT;
     }
 
     /**
@@ -270,6 +241,7 @@ public class SimpleHit
     public ISourceID getSourceID()
     {
         if (srcObj == null) {
+            final int srcId = DeployedDOM.computeSourceId(channelId);
             srcObj = new SourceID(srcId);
         }
 
@@ -282,7 +254,7 @@ public class SimpleHit
      */
     public int getTriggerConfigID()
     {
-        return cfgId;
+        throw new Error("Unimplemented");
     }
 
     /**
@@ -291,7 +263,7 @@ public class SimpleHit
      */
     public int getTriggerType()
     {
-        return trigType;
+        return trigMode;
     }
 
     /**
@@ -300,7 +272,7 @@ public class SimpleHit
      */
     public boolean hasChannelID()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -316,10 +288,7 @@ public class SimpleHit
                                  boolean isEmbedded)
         throws PayloadException
     {
-        trigType = buf.getInt(offset + OFFSET_TRIGTYPE);
-        cfgId = buf.getInt(offset + OFFSET_CONFIGID);
-        srcId = buf.getInt(offset + OFFSET_SOURCEID);
-        domId = buf.getLong(offset + OFFSET_DOMID);
+        channelId = buf.getShort(offset + OFFSET_CHANNELID);
         trigMode = buf.getShort(offset + OFFSET_TRIGMODE);
 
         return (OFFSET_TRIGMODE + 2) - LEN_PAYLOAD_HEADER;
@@ -356,14 +325,12 @@ public class SimpleHit
     {
         super.recycle();
 
-        trigType = -1;
-        cfgId = srcId;
-        domId = -1L;
+        channelId = (short) -1;
         trigMode = (short) -1;
 
         utcTimeObj = null;
-        srcObj = null;
-        domObj = null;
+        //srcObj = null;
+        //domObj = null;
     }
 
     /**
@@ -375,8 +342,7 @@ public class SimpleHit
      */
     public int writePayload(boolean writeLoaded, int offset, ByteBuffer buf)
     {
-        writePayloadToBuffer(buf, offset, getUTCTime(), trigType, cfgId, srcId,
-                             domId, trigMode);
+        writePayloadToBuffer(buf, offset, getUTCTime(), channelId, trigMode);
 
         return LENGTH;
     }
@@ -386,25 +352,18 @@ public class SimpleHit
      * @param buf byte buffer
      * @param offset index of first byte
      * @param utcTime UTC time
-     * @param trigType trigger type
-     * @param cfgId trigger configuration ID
-     * @param srcId source ID
-     * @param domId DOM ID
+     * @param channelId channel ID
      * @param trigMode trigger mode
      */
     public static void writePayloadToBuffer(ByteBuffer buf, int offset,
-                                            long utcTime, int trigType,
-                                            int cfgId, int srcId, long domId,
+                                            long utcTime, short channelId,
                                             short trigMode)
     {
         buf.putInt(offset + OFFSET_LENGTH, LENGTH);
         buf.putInt(offset + OFFSET_TYPE,
-                   PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT);
+                   PayloadRegistry.PAYLOAD_ID_SIMPLER_HIT);
         buf.putLong(offset + OFFSET_UTCTIME, utcTime);
-        buf.putInt(offset + OFFSET_TRIGTYPE, trigType);
-        buf.putInt(offset + OFFSET_CONFIGID, cfgId);
-        buf.putInt(offset + OFFSET_SOURCEID, srcId);
-        buf.putLong(offset + OFFSET_DOMID, domId);
+        buf.putShort(offset + OFFSET_CHANNELID, channelId);
         buf.putShort(offset + OFFSET_TRIGMODE, trigMode);
     }
 
@@ -414,8 +373,7 @@ public class SimpleHit
      */
     public String toString()
     {
-        return "SimpleHit[time " + getUTCTime() + " trigType " + trigType +
-            " cfg " + cfgId + " src " + getSourceID() + " dom " + getDOMID() +
+        return "SimplerHit[time " + getUTCTime() + " channelId " + channelId +
             " trigMode " + trigMode + "]";
     }
 }

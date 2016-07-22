@@ -32,8 +32,20 @@ public interface IHitPayload
     double getIntegratedCharge();
 
     /**
+     * Get channel ID
+     * @return channel ID
+     */
+    short getChannelID();
+
+    /**
      * Get DOM ID
      * @return DOM ID
      */
     IDOMID getDOMID();
+
+    /**
+     * Return<tt>true</tt> if this hit has a channel ID instead of
+     * source and DOM IDs
+     */
+    boolean hasChannelID();
 }

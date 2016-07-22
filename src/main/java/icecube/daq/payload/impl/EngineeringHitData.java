@@ -158,6 +158,15 @@ public class EngineeringHitData
     }
 
     /**
+     * Get channel ID
+     * @return channel ID
+     */
+    public short getChannelID()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    /**
      * Unimplemented
      * @return Error
      */
@@ -223,6 +232,15 @@ public class EngineeringHitData
     public int getTriggerType()
     {
         throw new Error("Unimplemented");
+    }
+
+    /**
+     * Return<tt>true</tt> if this hit has a channel ID instead of
+     * source and DOM IDs
+     */
+    public boolean hasChannelID()
+    {
+        return false;
     }
 
     /**

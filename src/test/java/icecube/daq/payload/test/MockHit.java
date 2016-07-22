@@ -61,6 +61,11 @@ public class MockHit
         // do nothing
     }
 
+    public short getChannelID()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public IDOMID getDOMID()
     {
         if (domObj == null) {
@@ -141,6 +146,11 @@ public class MockHit
     public long getUTCTime()
     {
         return utcTime;
+    }
+
+    public boolean hasChannelID()
+    {
+        return false;
     }
 
     public int length()

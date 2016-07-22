@@ -55,6 +55,8 @@ public final class PayloadRegistry
     public static final int PAYLOAD_ID_EVENT_V6 = 22;
     /** Hit record */
     public static final int PAYLOAD_ID_HIT_RECORD_LIST = 23;
+    /** Minimal(er) hit representation */
+    public static final int PAYLOAD_ID_SIMPLER_HIT = 24;
 
     /**
      * This is a utility class.

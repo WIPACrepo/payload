@@ -30,12 +30,18 @@ import org.apache.commons.logging.LogFactory;
 class TemporaryHit
     implements IHitPayload
 {
+    private static final short NO_CHANNEL_ID = Short.MIN_VALUE;
+    private short chanId = NO_CHANNEL_ID;
     private IDOMID domId;
     private long hitTime;
 
     public TemporaryHit(IHitPayload hit)
     {
-        domId = (IDOMID) hit.getDOMID().deepCopy();
+        if (hit.hasChannelID()) {
+            chanId = hit.getChannelID();
+        } else {
+            domId = (IDOMID) hit.getDOMID().deepCopy();
+        }
         hitTime = hit.getUTCTime();
     }
 
@@ -49,8 +55,21 @@ class TemporaryHit
         throw new Error("Unimplemented");
     }
 
+    public short getChannelID()
+    {
+        if (chanId == NO_CHANNEL_ID) {
+            throw new Error("Unimplemented");
+        }
+
+        return chanId;
+    }
+
     public IDOMID getDOMID()
     {
+        if (domId == null) {
+            throw new Error("Unimplemented");
+        }
+
         return domId;
     }
 
@@ -104,6 +123,11 @@ class TemporaryHit
         return hitTime;
     }
 
+    public boolean hasChannelID()
+    {
+        return chanId != NO_CHANNEL_ID;
+    }
+
     public int length()
     {
         throw new Error("Unimplemented");
@@ -132,7 +156,10 @@ class TemporaryHit
 
     public String toString()
     {
-        return "TemporaryHit[" + hitTime + " dom " + domId + "]";
+        return "TemporaryHit[" + hitTime +
+            (chanId != NO_CHANNEL_ID ? " chan " + chanId :
+             " dom " + domId) +
+            "]";
     }
 }
 
@@ -320,19 +347,20 @@ class TriggerRecord
             }
 
             if (idx == -1) {
-                final DeployedDOM dom =
-                    domRegistry.getDom(hit.getDOMID().longValue());
+                final DeployedDOM dom;
+                if (hit.hasChannelID()) {
+                    dom = domRegistry.getDom(hit.getChannelID());
+                } else {
+                    dom = domRegistry.getDom(hit.getDOMID().longValue());
+                }
 
                 final String errMsg;
                 if (dom == null) {
-                    errMsg = String.format("Couldn't find hit record for " +
-                                           "unknown DOM ID " + hit.getDOMID() +
-                                           " (utc " + hit.getUTCTime() +
-                                           ")");
+                    errMsg = "Couldn't find hit record for " + hit +
+                        " (utc " + hit.getUTCTime() + ")";
                 } else {
-                    errMsg = String.format("Couldn't find hit record for " +
-                                           dom + " (utc " +
-                                           hit.getUTCTime() + ")");
+                    errMsg = "Couldn't find hit record for " + dom +
+                        " (utc " + hit.getUTCTime() + ")";
                 }
 
                 throw new PayloadException(errMsg);

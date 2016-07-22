@@ -167,6 +167,9 @@ public class PayloadFactory
         case PayloadRegistry.PAYLOAD_ID_HIT_RECORD_LIST:
             pay = new HitRecordList(buf, offset, len, utcTime);
             break;
+        case PayloadRegistry.PAYLOAD_ID_SIMPLER_HIT:
+            pay = new SimplerHit(buf, offset, len, utcTime);
+            break;
         default:
             throw new PayloadException("Unknown payload type #" + type);
         }

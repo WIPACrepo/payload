@@ -47,6 +47,11 @@ public class MockHitData
         domId = -1L;
     }
 
+    public short getChannelID()
+    {
+        throw new Error("Unimplemented");
+    }
+
     public IDOMID getDOMID()
     {
         return new MockDOMID(domId);
@@ -110,6 +115,11 @@ public class MockHitData
     public long getUTCTime()
     {
         return utcTime;
+    }
+
+    public boolean hasChannelID()
+    {
+        return false;
     }
 
     public int length()

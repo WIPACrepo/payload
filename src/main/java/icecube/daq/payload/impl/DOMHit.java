@@ -5,6 +5,7 @@ import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
+import icecube.daq.util.IDOMRegistry;
 
 import java.nio.ByteBuffer;
 
@@ -14,12 +15,18 @@ import java.nio.ByteBuffer;
 public abstract class DOMHit
     extends BasePayload
 {
+    /** If <tt>true</tt>, return new, smaller hits from getHitBuffer() */
+    public static final boolean USE_SIMPLER_HITS =
+        System.getProperty("useSimpleHits") == null;
+
     /** backing buffer */
     private ByteBuffer backBuf;
     /** source ID object */
     private ISourceID srcId;
     /** DOM ID */
     private long domId;
+    /** channel ID */
+    private short chanId = Short.MIN_VALUE;
 
     /**
      * Create a base DOM hit
@@ -78,7 +85,25 @@ public abstract class DOMHit
      * @return byte buffer
      * @throws PayloadException if there is a problem
      */
-    public ByteBuffer getHitBuffer(IByteBufferCache cache)
+    public ByteBuffer getHitBuffer(IByteBufferCache cache,
+                                   IDOMRegistry registry)
+        throws PayloadException
+    {
+        if (USE_SIMPLER_HITS) {
+            return getNewHitBuffer(cache, registry);
+        }
+
+        return getOldHitBuffer(cache, registry);
+    }
+
+    /**
+     * Get a byte buffer containing the simple hit payload for this DOM hit
+     * @param cache buffer cache
+     * @return byte buffer
+     * @throws PayloadException if there is a problem
+     */
+    public ByteBuffer getOldHitBuffer(IByteBufferCache cache,
+                                      IDOMRegistry registry)
         throws PayloadException
     {
         int srcVal;
@@ -91,6 +116,33 @@ public abstract class DOMHit
         return SimpleHit.getBuffer(cache, getUTCTime(), getTriggerMode(),
                                    getConfigId(), srcVal,
                                    domId, getTriggerMode());
+    }
+
+    /**
+     * Get a byte buffer containing the simple hit payload for this DOM hit
+     * @param cache buffer cache
+     * @return byte buffer
+     * @throws PayloadException if there is a problem
+     */
+    public ByteBuffer getNewHitBuffer(IByteBufferCache cache,
+                                      IDOMRegistry registry)
+        throws PayloadException
+    {
+        if (chanId < 0) {
+            if (registry == null) {
+                throw new PayloadException("DOM Registry has not been set");
+            }
+
+            chanId = registry.getChannelId(domId);
+            if (chanId < 0) {
+                final String errMsg =
+                    String.format("Cannot find channel ID for %012x", domId);
+                throw new PayloadException(errMsg);
+            }
+        }
+
+        return SimplerHit.getBuffer(cache, getUTCTime(), chanId,
+                                    getTriggerMode());
     }
 
     /**

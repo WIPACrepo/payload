@@ -207,11 +207,14 @@ public abstract class BaseHitRecord
             return false;
         }
 
-        if (chanId != domRegistry.getChannelId(hit.getDOMID().longValue())) {
-            return false;
+        short hitChanId;
+        if (hit.hasChannelID()) {
+            hitChanId = hit.getChannelID();
+        } else {
+            hitChanId = domRegistry.getChannelId(hit.getDOMID().longValue());
         }
 
-        return true;
+        return chanId == hitChanId;
     }
 
     /**
