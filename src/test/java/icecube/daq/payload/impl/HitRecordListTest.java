@@ -58,15 +58,15 @@ public class HitRecordListTest
         String MSG = "Bad Setup Data";
         assertNotNull(MSG, domRegistry.getDom(GOOD_DOM_A));
         assertEquals(MSG, 1, domRegistry.getDom(GOOD_DOM_A).getHubId());
-        assertEquals(MSG, 123, domRegistry.getDom(GOOD_DOM_A).getChannelId());
+        assertEquals(MSG, 122, domRegistry.getDom(GOOD_DOM_A).getChannelId());
 
         assertNotNull(MSG, domRegistry.getDom(GOOD_DOM_B));
         assertEquals(MSG, 1, domRegistry.getDom(GOOD_DOM_B).getHubId());
-        assertEquals(MSG, 124, domRegistry.getDom(GOOD_DOM_B).getChannelId());
+        assertEquals(MSG, 123, domRegistry.getDom(GOOD_DOM_B).getChannelId());
 
         assertNotNull(MSG, domRegistry.getDom(DOM_WRONG_STRING));
         assertEquals(MSG, 2, domRegistry.getDom(DOM_WRONG_STRING).getHubId());
-        assertEquals(MSG, 125,
+        assertEquals(MSG, 129,
                 domRegistry.getDom(DOM_WRONG_STRING).getChannelId());
 
         assertNull(MSG, domRegistry.getDom(BAD_DOM_NOT_REGISTERED));

@@ -22,6 +22,16 @@ public class MockDOMRegistry
         mbidToChanID.put(mbid, chanId);
     }
 
+    public double distanceBetweenDOMs(DeployedDOM dom0, DeployedDOM dom1)
+    {
+        throw new Error("Unimplemented");
+    }
+
+    public double distanceBetweenDOMs(long mbid0, long mbid1)
+    {
+        throw new Error("Unimplemented");
+    }
+
     public short getChannelId(long mbid)
     {
         if (!mbidToChanID.containsKey(mbid)) {
@@ -77,11 +87,6 @@ public class MockDOMRegistry
     }
 
     public int size()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    public double distanceBetweenDOMs(long mbid0, long mbid1)
     {
         throw new Error("Unimplemented");
     }
