@@ -6,11 +6,13 @@
       <position>59</position>
       <mainBoardId>fedcba987654</mainBoardId>
       <channelId>122</channelId>
+      <name>One_FiftyNine</name>
     </dom>
     <dom>
       <position>60</position>
       <mainBoardId>edcba9876543</mainBoardId>
       <channelId>123</channelId>
+      <name>One_Sixty</name>
     </dom>
   </string>
   <string>
@@ -19,6 +21,7 @@
       <position>2</position>
       <mainBoardId>fedcba987699</mainBoardId>
       <channelId>129</channelId>
+      <name>Two_OneTwentyNine</name>
    </dom>
   </string>
 </domGeometry>
