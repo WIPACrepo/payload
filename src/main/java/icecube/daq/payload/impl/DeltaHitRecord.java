@@ -2,7 +2,7 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.SourceIdRegistry;
-import icecube.daq.util.DeployedDOM;
+import icecube.daq.util.DOMInfo;
 import icecube.daq.util.IDOMRegistry;
 
 import java.nio.ByteBuffer;
@@ -77,7 +77,7 @@ public class DeltaHitRecord
             throw new Error("DOM registry has not been set");
         }
 
-        DeployedDOM dom = domRegistry.getDom(getChannelID());
+        DOMInfo dom = domRegistry.getDom(getChannelID());
         if (dom == null) {
             throw new PayloadException("Unknown channel ID " + getChannelID());
         }

@@ -1,7 +1,7 @@
 package icecube.daq.payload.test;
 
 import icecube.daq.util.IDOMRegistry;
-import icecube.daq.util.DeployedDOM;
+import icecube.daq.util.DOMInfo;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -22,7 +22,7 @@ public class MockDOMRegistry
         mbidToChanID.put(mbid, chanId);
     }
 
-    public double distanceBetweenDOMs(DeployedDOM dom0, DeployedDOM dom1)
+    public double distanceBetweenDOMs(DOMInfo dom0, DOMInfo dom1)
     {
         throw new Error("Unimplemented");
     }
@@ -41,27 +41,27 @@ public class MockDOMRegistry
         return mbidToChanID.get(mbid);
     }
 
-    public DeployedDOM getDom(long mbId)
+    public DOMInfo getDom(long mbId)
     {
         throw new Error("Unimplemented");
     }
 
-    public DeployedDOM getDom(int major, int minor)
+    public DOMInfo getDom(int major, int minor)
     {
         throw new Error("Unimplemented");
     }
 
-    public DeployedDOM getDom(short chanid)
+    public DOMInfo getDom(short chanid)
     {
         throw new Error("Unimplemented");
     }
 
-    public Set<DeployedDOM> getDomsOnHub(int hubId)
+    public Set<DOMInfo> getDomsOnHub(int hubId)
     {
         throw new Error("Unimplemented");
     }
 
-    public Set<DeployedDOM> getDomsOnString(int string)
+    public Set<DOMInfo> getDomsOnString(int string)
     {
         throw new Error("Unimplemented");
     }

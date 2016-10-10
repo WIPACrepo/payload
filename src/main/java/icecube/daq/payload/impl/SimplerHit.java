@@ -10,7 +10,7 @@ import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
-import icecube.daq.util.DeployedDOM;
+import icecube.daq.util.DOMInfo;
 
 import java.nio.ByteBuffer;
 
@@ -241,7 +241,7 @@ public class SimplerHit
     public ISourceID getSourceID()
     {
         if (srcObj == null) {
-            final int srcId = DeployedDOM.computeSourceId(channelId);
+            final int srcId = DOMInfo.computeSourceId(channelId);
             srcObj = new SourceID(srcId);
         }
 

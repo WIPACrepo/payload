@@ -13,7 +13,7 @@ import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadFormatException;
 import icecube.daq.payload.PayloadRegistry;
-import icecube.daq.util.DeployedDOM;
+import icecube.daq.util.DOMInfo;
 import icecube.daq.util.IDOMRegistry;
 
 import java.io.IOException;
@@ -347,7 +347,7 @@ class TriggerRecord
             }
 
             if (idx == -1) {
-                final DeployedDOM dom;
+                final DOMInfo dom;
                 if (hit.hasChannelID()) {
                     dom = domRegistry.getDom(hit.getChannelID());
                 } else {

@@ -7,7 +7,7 @@ import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
 import icecube.daq.util.IDOMRegistry;
-import icecube.daq.util.DeployedDOM;
+import icecube.daq.util.DOMInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -92,7 +92,7 @@ public class HitRecordList
         // those which are logically inconsistent
         hitRecList = new ArrayList<IEventHitRecord>();
         for (DOMHit hit : hitList) {
-            DeployedDOM dom = reg.getDom(hit.getDomId());
+            DOMInfo dom = reg.getDom(hit.getDomId());
             if(dom == null)
             {
                 log.error("Cannot send hit from unregistered " +
