@@ -5,7 +5,7 @@ import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.TestUtil;
-import icecube.daq.util.DOMRegistry;
+import icecube.daq.util.DOMRegistryFactory;
 import icecube.daq.util.IDOMRegistry;
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -51,7 +51,7 @@ public class HitRecordListTest
         super.setUp();
         if (domRegistry == null) {
             String configDir = getClass().getResource("/config").getPath();
-                domRegistry = DOMRegistry.loadRegistry(configDir);
+                domRegistry = DOMRegistryFactory.load(configDir);
         }
 
         //verify loaded dom info
