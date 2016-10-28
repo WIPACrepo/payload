@@ -171,13 +171,6 @@ public class VitreousBufferCache
 
     /**
      * Do nothing
-     */
-    public void destinationClosed()
-    {
-    }
-
-    /**
-     * Do nothing
      * @param tBuffer ignored
      */
     public void receiveByteBuffer(ByteBuffer tBuffer)
