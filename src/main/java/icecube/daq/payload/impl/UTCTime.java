@@ -5,6 +5,7 @@ import icecube.daq.payload.Poolable;
 import icecube.daq.util.Leapseconds;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
@@ -146,8 +147,19 @@ final class DateFormatter
 public class UTCTime
     implements Comparable, IUTCTime, Poolable
 {
+    /** First millisecond of the current year */
+    private static long jan1Millis = Long.MIN_VALUE;
+
     /** time value */
     private long time;
+
+    /**
+     * Get the current time
+     */
+    public UTCTime()
+    {
+        this(GregorianCalendar.getInstance());
+    }
 
     /**
      * Create a time
@@ -156,6 +168,25 @@ public class UTCTime
     public UTCTime(long time)
     {
         this.time = time;
+    }
+
+    /**
+     * Create a time
+     * @param time value
+     */
+    public UTCTime(Calendar cal)
+    {
+        if (jan1Millis < 0) {
+            synchronized (this) {
+                GregorianCalendar gcal = new GregorianCalendar();
+                final int year = gcal.get(GregorianCalendar.YEAR);
+                gcal.set(year, 0, 1, 0, 0, 0);
+                gcal.set(GregorianCalendar.MILLISECOND, 0);
+                jan1Millis = gcal.getTimeInMillis() ;
+            }
+        }
+
+        this.time = (cal.getTimeInMillis() - jan1Millis) * (long) 1E7;
     }
 
     /**
