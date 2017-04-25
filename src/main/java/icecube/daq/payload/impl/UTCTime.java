@@ -186,7 +186,10 @@ public class UTCTime
             }
         }
 
-        this.time = (cal.getTimeInMillis() - jan1Millis) * (long) 1E7;
+        this.time = (cal.getTimeInMillis() + cal.get(Calendar.DST_OFFSET) -
+                     jan1Millis) * (long) 1E7;
+
+        System.out.println("Ticks <- " + time);
     }
 
     /**
