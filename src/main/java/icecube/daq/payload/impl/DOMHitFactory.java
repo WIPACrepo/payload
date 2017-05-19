@@ -24,11 +24,11 @@ public final class DOMHitFactory
     private static final int OFFSET_UTCTIME = 24;
 
     /** Engineering-format type */
-    private static final int TYPE_ENG_HIT = 2;
+    public static final int TYPE_ENG_HIT = 2;
     /** Delta-compressed type */
-    private static final int TYPE_DELTA_HIT = 3;
+    public static final int TYPE_DELTA_HIT = 3;
     /** Delta-compressed hit payload type */
-    private static final int TYPE_DELTA_PAYLOAD =
+    public static final int TYPE_DELTA_PAYLOAD =
         PayloadRegistry.PAYLOAD_ID_DELTA_HIT;
 
     /**
