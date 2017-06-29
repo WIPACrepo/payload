@@ -131,7 +131,7 @@ final class DateFormatter
         //       the number of days in the year.  This works for 48 hours into
         //       the next year.
         int dayOfYear = (int) (secs / SECS_PER_DAY) + 1;
-        int leapSecs = LEAP_SECONDS_OBJ.get_leap_offset(year, dayOfYear);
+        int leapSecs = LEAP_SECONDS_OBJ.getLeapOffset(year, dayOfYear);
         if (leapSecs > 0) {
             cal.add(GregorianCalendar.SECOND, -leapSecs);
         }

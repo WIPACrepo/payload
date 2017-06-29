@@ -274,7 +274,7 @@ public class UTCTimeTest
             Integer year = entry.getKey();
             String predicted = entry.getValue();
 
-            int daysInYear = Leapseconds.getInstance().get_days_in_year(year);
+            int daysInYear = Leapseconds.getInstance().getDaysInYear(year);
             long newYearMoment =
                     daysInYear == 365 ? newYearMostYears : newYearLeapYears;
             String answered =
