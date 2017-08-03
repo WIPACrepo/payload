@@ -35,6 +35,13 @@ public final class MonitorFactory
                                                int len, long utcTime)
         throws PayloadException
     {
+        short recLen = buf.getShort(offset + OFFSET_RECLEN);
+        if (recLen != len - OFFSET_RECLEN) {
+            throw new PayloadException("Bad record length " + recLen +
+                                       " (expected " + (len - OFFSET_RECLEN) +
+                                       ")");
+        }
+
         short recType = buf.getShort(offset + OFFSET_RECTYPE);
         if ((recType & (short) 0xff) == 0) {
             recType = (short) ((recType >> 8) & 0xff);
