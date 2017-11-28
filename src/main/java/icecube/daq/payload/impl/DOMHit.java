@@ -149,7 +149,7 @@ public abstract class DOMHit
      * Get the length of this DOM hit's data payload
      * @return number of bytes
      */
-    abstract int getHitDataLength();
+    public abstract int getHitDataLength();
 
     /**
      * Get a hit record for this DOM hit
