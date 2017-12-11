@@ -15,6 +15,9 @@ public class Supernova
     extends BasePayload
     implements Spliceable
 {
+    /** Magic byte value */
+    public static final short MAGIC_NUMBER = 300;
+
     /** Offset of DOM ID field */
     private static final int OFFSET_DOMID = 0;
     /** Offset of block length field */
@@ -31,8 +34,6 @@ public class Supernova
 
     /** DOM ID */
     private long domId;
-    /** format ID */
-    private short fmtId;
     /** DOM clock bytes */
     private byte[] clockBytes;
     /** scalar data */
@@ -68,12 +69,11 @@ public class Supernova
      * Create a supernova payload
      * @param utcTime UTC time
      * @param domId DOM ID
-     * @param fmtId format ID
      * @param clockBytes 6-byte DOM clock
      * @param scalarData scalar data
      * @throws PayloadException if there is a problem
      */
-    public Supernova(long utcTime, long domId, short fmtId, byte[] clockBytes,
+    public Supernova(long utcTime, long domId, byte[] clockBytes,
                      byte[] scalarData)
         throws PayloadException
     {
@@ -86,7 +86,6 @@ public class Supernova
         }
 
         this.domId = domId;
-        this.fmtId = fmtId;
         this.clockBytes = clockBytes;
         this.scalarData = scalarData;
     }
@@ -226,7 +225,14 @@ public class Supernova
             buf.order(ByteOrder.BIG_ENDIAN);
 
             final int blockLen = buf.getShort(pos + OFFSET_BLOCKLEN);
-            fmtId = buf.getShort(pos + OFFSET_FORMATID);
+
+            final short magic = buf.getShort(pos + OFFSET_FORMATID);
+            if (magic != MAGIC_NUMBER) {
+                final String msg =
+                    String.format("\"Magic\" bytes should be %04x, not %04x",
+                                  MAGIC_NUMBER, magic);
+                throw new PayloadException(msg);
+            }
 
             clockBytes = new byte[6];
             buf.position(pos + OFFSET_DOMCLOCK);
@@ -293,7 +299,7 @@ public class Supernova
 
         buf.putShort(offset + OFFSET_BLOCKLEN,
                      (short) (HEADER_LEN + scalarData.length));
-        buf.putShort(offset + OFFSET_FORMATID, fmtId);
+        buf.putShort(offset + OFFSET_FORMATID, MAGIC_NUMBER);
 
         buf.position(offset + OFFSET_DOMCLOCK);
         buf.put(clockBytes);
@@ -315,7 +321,6 @@ public class Supernova
         super.recycle();
 
         domId = -1L;
-        fmtId = (short) -1;
         clockBytes = null;
         scalarData = null;
     }
@@ -328,8 +333,7 @@ public class Supernova
     {
         return "Supernova[time " + getUTCTime() +
             " dom " + String.format("%012x", domId) +
-            " clk " + String.format("%016x", getDomClock(clockBytes)) +
-            " fmt " + fmtId +
+            " clk " + String.format("%012x", getDomClock(clockBytes)) +
             (scalarData == null ? "" : " scalarData*" + scalarData.length) +
             "]";
     }
