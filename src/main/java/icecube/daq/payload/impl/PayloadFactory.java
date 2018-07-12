@@ -75,6 +75,16 @@ public class PayloadFactory
     }
 
     /**
+     * Get the buffer cache used to allocate payloads
+     *
+     * @return buffer cache
+     */
+    public IByteBufferCache getByteBufferCache()
+    {
+        return bufCache;
+    }
+
+    /**
      * Create a payload
      * @param buf byte buffer
      * @param offset starting index of payload
