@@ -10,6 +10,8 @@ import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
+import icecube.daq.util.DOMInfo;
+import icecube.daq.util.IDOMRegistry;
 
 import java.nio.ByteBuffer;
 
@@ -34,6 +36,9 @@ public class SimpleHit
     /** Offset of trigger mode field */
     private static final int OFFSET_TRIGMODE = 36;
 
+    /** used to fetch channel ID */
+    private static IDOMRegistry domRegistry;
+
     /** trigger type */
     private int trigType;
     /** trigger configuration ID */
@@ -51,6 +56,8 @@ public class SimpleHit
     private SourceID srcObj;
     /** cached DOM ID object */
     private DOMID domObj;
+    /** cached DOM registry object */
+    private DOMInfo domInfo;
 
     /**
      * Event constructor for PayloadFactory.
@@ -193,7 +200,19 @@ public class SimpleHit
      */
     public short getChannelID()
     {
-        throw new Error("Unimplemented");
+        if (domInfo == null) {
+            if (domRegistry == null) {
+                throw new Error("DOM registry has not been set");
+            }
+
+            domInfo = domRegistry.getDom(domId);
+            if (domInfo == null) {
+                throw new Error("Unknown channel ID for DOM " +
+                                Long.toHexString(domId));
+            }
+        }
+
+        return domInfo.getChannelId();
     }
 
     /**
@@ -364,6 +383,17 @@ public class SimpleHit
         utcTimeObj = null;
         srcObj = null;
         domObj = null;
+    }
+
+    /**
+     * Set the DOM registry which will be used to recreate the original hit
+     * sent to the triggers.
+     *
+     * @param reg DOM registry
+     */
+    public static void setDOMRegistry(IDOMRegistry reg)
+    {
+        domRegistry = reg;
     }
 
     /**
