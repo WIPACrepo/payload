@@ -62,6 +62,7 @@ public class HitDataReadoutData
      * Compute the number of bytes needed to save this payload to a byte buffer
      * @return number of bytes
      */
+    @Override
     public int computeBufferLength()
     {
         if (!isLoaded()) {
@@ -81,6 +82,7 @@ public class HitDataReadoutData
      * Return a copy of this object.
      * @return copied object
      */
+    @Override
     public Object deepCopy()
     {
         return new HitDataReadoutData(getRequestUID(), getSourceId(),
@@ -91,6 +93,7 @@ public class HitDataReadoutData
      * Get the list of hits
      * @return list of hits
      */
+    @Override
     public List getDataPayloads()
     {
         return hitList;
@@ -100,6 +103,7 @@ public class HitDataReadoutData
      * Get the list of hits
      * @return list of hits
      */
+    @Override
     public List getHitList()
     {
         return hitList;
@@ -109,6 +113,7 @@ public class HitDataReadoutData
      * Get the number of hits
      * @return number of hits
      */
+    @Override
     public int getNumHits()
     {
         return hitList.size();
@@ -118,6 +123,7 @@ public class HitDataReadoutData
      * Get the name of this payload.
      * @return name
      */
+    @Override
     public String getPayloadName()
     {
         return "HitDataReadoutData";
@@ -131,6 +137,7 @@ public class HitDataReadoutData
      * @return number of bytes loaded
      * @throws PayloadException if there is a problem
      */
+    @Override
     int loadHits(ByteBuffer buf, int offset, int numHits)
         throws PayloadException
     {
@@ -154,6 +161,7 @@ public class HitDataReadoutData
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     int writeHitBytes(ByteBuffer buf, int offset)
         throws PayloadException
     {

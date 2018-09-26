@@ -37,6 +37,7 @@ public class DOMHitReadoutData
      * Compute the number of bytes needed to save this payload to a byte buffer
      * @return number of bytes
      */
+    @Override
     public int computeBufferLength()
     {
         if (!isLoaded()) {
@@ -56,6 +57,7 @@ public class DOMHitReadoutData
      * Unimplemented
      * @return Error
      */
+    @Override
     public Object deepCopy()
     {
         throw new Error("Unimplemented");
@@ -65,6 +67,7 @@ public class DOMHitReadoutData
      * Unimplemented
      * @return Error
      */
+    @Override
     public List getDataPayloads()
     {
         throw new Error("Unimplemented");
@@ -74,6 +77,7 @@ public class DOMHitReadoutData
      * Unimplemented
      * @return Error
      */
+    @Override
     public List getHitList()
     {
         throw new Error("Unimplemented");
@@ -83,6 +87,7 @@ public class DOMHitReadoutData
      * Get the number of hits
      * @return number of hits
      */
+    @Override
     public int getNumHits()
     {
         return hitList.size();
@@ -92,6 +97,7 @@ public class DOMHitReadoutData
      * Get the name of this payload.
      * @return name
      */
+    @Override
     public String getPayloadName()
     {
         return "DOMHitReadoutData";
@@ -104,6 +110,7 @@ public class DOMHitReadoutData
      * @param numHits ignored
      * @return Error
      */
+    @Override
     int loadHits(ByteBuffer buf, int offset, int numHits)
     {
         throw new Error("Unimplemented");
@@ -116,6 +123,7 @@ public class DOMHitReadoutData
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     int writeHitBytes(ByteBuffer buf, int offset)
         throws PayloadException
     {

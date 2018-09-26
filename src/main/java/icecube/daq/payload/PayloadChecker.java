@@ -296,6 +296,7 @@ class TriggerConfigEntry
         }
     }
 
+    @Override
     public String toString()
     {
         StringBuilder buf = new StringBuilder(name);
@@ -366,6 +367,7 @@ class TriggerConfig
         return name;
     }
 
+    @Override
     public String toString()
     {
         return name + "*" + entries.size();

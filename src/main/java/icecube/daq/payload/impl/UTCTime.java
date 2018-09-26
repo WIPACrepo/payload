@@ -195,6 +195,7 @@ public class UTCTime
      * @param obj object being compared
      * @return -1, 0, or 1
      */
+    @Override
     public int compareTo(Object obj)
     {
         if (obj == null) {
@@ -217,6 +218,7 @@ public class UTCTime
      * Make a deep copy of this object
      * @return copied object
      */
+    @Override
     public Object deepCopy()
     {
         return new UTCTime(time);
@@ -225,6 +227,7 @@ public class UTCTime
     /**
      * Clear out any cached data.
      */
+    @Override
     public void dispose()
     {
         time = -1L;
@@ -235,6 +238,7 @@ public class UTCTime
      * @param obj object being compared
      * @return <tt>true</tt> if the objects are equal
      */
+    @Override
     public boolean equals(Object obj)
     {
         return compareTo(obj) == 0;
@@ -245,6 +249,7 @@ public class UTCTime
      * @param nanoSec number of nanoseconds to add
      * @return new time
      */
+    @Override
     public IUTCTime getOffsetUTCTime(double nanoSec)
     {
         return new UTCTime(time + (long) (nanoSec * 10.0));
@@ -254,6 +259,7 @@ public class UTCTime
      * Unimplemented
      * @return Error
      */
+    @Override
     public Poolable getPoolable()
     {
         throw new Error("Unimplemented");
@@ -263,6 +269,7 @@ public class UTCTime
      * Return this object's hash code
      * @return hash code
      */
+    @Override
     public int hashCode()
     {
         return (int) (time & (long) Integer.MAX_VALUE);
@@ -272,6 +279,7 @@ public class UTCTime
      * Return the long integer value of this UTC time
      * @return value
      */
+    @Override
     public long longValue()
     {
         return time;
@@ -280,6 +288,7 @@ public class UTCTime
     /**
      * Clear out any cached data.
      */
+    @Override
     public void recycle()
     {
         dispose();
@@ -290,6 +299,7 @@ public class UTCTime
      * @param otherTime time to subtract
      * @return difference
      */
+    @Override
     public long timeDiff(IUTCTime otherTime)
     {
         return time - otherTime.longValue();
@@ -300,6 +310,7 @@ public class UTCTime
      * @param otherTime time to subtract
      * @return difference in nanoseconds
      */
+    @Override
     public double timeDiff_ns(IUTCTime otherTime)
     {
         return (double) (time - otherTime.longValue()) / 10.0;
@@ -309,6 +320,7 @@ public class UTCTime
      * Return a human-readable date/time string
      * @return human-readable date/time string
      */
+    @Override
     public String toDateString()
     {
         return toDateString(time);
@@ -361,6 +373,7 @@ public class UTCTime
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         return Long.toString(time);

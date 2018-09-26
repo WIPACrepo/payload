@@ -31,6 +31,7 @@ public abstract class BaseFactory
      * @param i1 unused
      * @param i2 unused
      */
+    @Override
     public void backingBufferShift(List x0, int i1, int i2)
     {
         throw new Error("Unimplemented");
@@ -41,6 +42,7 @@ public abstract class BaseFactory
      * @param buf source buffer
      * @return spliceable payload object
      */
+    @Override
     public abstract Spliceable createSpliceable(ByteBuffer buf);
 
     /**
@@ -56,6 +58,7 @@ public abstract class BaseFactory
      * Unimplemented
      * @param spliceables unused
      */
+    @Override
     public void invalidateSpliceables(List spliceables)
     {
         throw new Error("Unimplemented");
@@ -66,6 +69,7 @@ public abstract class BaseFactory
      * @param buf unused
      * @return Error
      */
+    @Override
     public boolean skipSpliceable(ByteBuffer buf)
     {
         throw new Error("Unimplemented");

@@ -30,21 +30,25 @@ public class MockDeltaHitRecord
         System.arraycopy(data, 0, this.data, 0, data.length);
     }
 
+    @Override
     public short getChannelID()
     {
         return chanId;
     }
 
+    @Override
     public long getHitTime()
     {
         return time;
     }
 
+    @Override
     public int length()
     {
         return 20 + data.length;
     }
 
+    @Override
     public boolean matches(IDOMRegistry domRegistry, IHitPayload hit)
     {
         if (time != hit.getUTCTime()) {
@@ -55,6 +59,7 @@ public class MockDeltaHitRecord
         return (chanId == domRegistry.getChannelId(mbid));
     }
 
+    @Override
     public int writeRecord(ByteBuffer buf, int offset, long baseTime)
     {
         final int len = length();
@@ -81,6 +86,7 @@ public class MockDeltaHitRecord
         return 20 + data.length;
     }
 
+    @Override
     public String toString()
     {
         return "MockDeltaHitRecord[flags " + flags + " chan " + chanId +

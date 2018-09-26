@@ -97,6 +97,7 @@ public class ReadoutRequestElement
      *
      * @return the usual values
      */
+    @Override
     public int compareTo(Object obj)
     {
         if (obj == null) {
@@ -189,6 +190,7 @@ public class ReadoutRequestElement
      *
      * @return <tt>true</tt> if the objects are identical
      */
+    @Override
     public boolean equals(Object obj)
     {
         return compareTo(obj) == 0;
@@ -198,6 +200,7 @@ public class ReadoutRequestElement
      * Get the DOM ID object
      * @return DOM ID object
      */
+    @Override
     public IDOMID getDomID()
     {
         if (domObj == null) {
@@ -211,6 +214,7 @@ public class ReadoutRequestElement
      * Get the starting time object
      * @return starting time object
      */
+    @Override
     public long getFirstTime()
     {
         return firstTime;
@@ -220,6 +224,7 @@ public class ReadoutRequestElement
      * Get the starting time object
      * @return starting time object
      */
+    @Override
     public IUTCTime getFirstTimeUTC()
     {
         if (firstTimeObj == null) {
@@ -233,6 +238,7 @@ public class ReadoutRequestElement
      * Get the ending time object
      * @return ending time object
      */
+    @Override
     public long getLastTime()
     {
         return lastTime;
@@ -242,6 +248,7 @@ public class ReadoutRequestElement
      * Get the ending time object
      * @return ending time object
      */
+    @Override
     public IUTCTime getLastTimeUTC()
     {
         if (lastTimeObj == null) {
@@ -255,6 +262,7 @@ public class ReadoutRequestElement
      * Get the readout type
      * @return readout type
      */
+    @Override
     public int getReadoutType()
     {
         return type;
@@ -264,6 +272,7 @@ public class ReadoutRequestElement
      * Get the source ID object
      * @return source ID object
      */
+    @Override
     public ISourceID getSourceID()
     {
         if (srcObj == null) {
@@ -305,6 +314,7 @@ public class ReadoutRequestElement
      *
      * @return hash code
      */
+    @Override
     public int hashCode()
     {
         int val = type + srcId;
@@ -341,6 +351,7 @@ public class ReadoutRequestElement
      * @param buf byte buffer
      * @param offset index of first byte
      */
+    @Override
     public void put(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -366,6 +377,7 @@ public class ReadoutRequestElement
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         String srcStr;

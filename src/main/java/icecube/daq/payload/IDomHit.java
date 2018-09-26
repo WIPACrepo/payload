@@ -27,6 +27,7 @@ public interface IDomHit
      *
      * @return ByteBuffer
      */
+    @Override
     ByteBuffer getPayloadBacking();
 
     /**

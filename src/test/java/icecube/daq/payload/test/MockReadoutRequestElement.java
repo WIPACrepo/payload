@@ -36,21 +36,25 @@ public class MockReadoutRequestElement
         this.srcId = srcId;
     }
 
+    @Override
     public Object deepCopy()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public void dispose()
     {
         // do nothing
     }
 
+    @Override
     public IDOMID getDomID()
     {
         return domId;
     }
 
+    @Override
     public long getFirstTime() {
         if (firstTime == null) {
             return 0L;
@@ -59,11 +63,13 @@ public class MockReadoutRequestElement
         return firstTime.longValue();
     }
 
+    @Override
     public IUTCTime getFirstTimeUTC()
     {
         return firstTime;
     }
 
+    @Override
     public long getLastTime() {
         if (lastTime == null) {
             return 0L;
@@ -72,16 +78,19 @@ public class MockReadoutRequestElement
         return lastTime.longValue();
     }
 
+    @Override
     public IUTCTime getLastTimeUTC()
     {
         return lastTime;
     }
 
+    @Override
     public int getReadoutType()
     {
         return type;
     }
 
+    @Override
     public ISourceID getSourceID()
     {
         return srcId;
@@ -91,6 +100,7 @@ public class MockReadoutRequestElement
      * Determines if this record is loaded with valid data.
      * @return <tt>true</tt> if data is loaded, <tt>false</tt> otherwise.
      */
+    @Override
     public boolean isDataLoaded()
     {
         throw new Error("Unimplemented");
@@ -102,6 +112,7 @@ public class MockReadoutRequestElement
      * @param offset the offset into the byte buffer
      * @param buffer ByteBuffer from which to construct the record.
      */
+    @Override
     public void loadData(int offset, ByteBuffer buffer)
     {
         throw new Error("Unimplemented");
@@ -112,6 +123,7 @@ public class MockReadoutRequestElement
      * @param buf byte buffer
      * @param offset index of first byte
      */
+    @Override
     public void put(ByteBuffer buf, int offset)
     {
         throw new Error("Unimplemented");
@@ -125,12 +137,14 @@ public class MockReadoutRequestElement
 .
      * @return the number of bytes written to this byte buffer.
      */
+    @Override
     public int writeData(int iOffset, ByteBuffer tBuffer)
         throws IOException
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public String toString()
     {
         String typeStr;

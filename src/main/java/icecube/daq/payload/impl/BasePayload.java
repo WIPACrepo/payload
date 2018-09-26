@@ -151,6 +151,7 @@ public abstract class BasePayload
      * Get the byte buffer from which this payload was loaded
      * @return buffer cache (or <tt>null</tt>)
      */
+    @Override
     public ByteBuffer getPayloadBacking()
     {
         return buf;
@@ -169,6 +170,7 @@ public abstract class BasePayload
      * Unimplemented
      * @return Error
      */
+    @Override
     public int getPayloadInterfaceType()
     {
         throw new Error("Unimplemented");
@@ -184,6 +186,7 @@ public abstract class BasePayload
      * Get the UTC time for this payload as an object
      * @return UTCTime object for this payload
      */
+    @Override
     public IUTCTime getPayloadTimeUTC()
     {
         return new UTCTime(utcTime);
@@ -193,12 +196,14 @@ public abstract class BasePayload
      * Get the payload registry type
      * @return type
      */
+    @Override
     public abstract int getPayloadType();
 
     /**
      * Get the UTC time for this payload
      * @return time value
      */
+    @Override
     public long getUTCTime()
     {
         return utcTime;
@@ -228,6 +233,7 @@ public abstract class BasePayload
      * Get the length of this payload
      * @return number of bytes
      */
+    @Override
     public int length()
     {
         if (bufLen == Integer.MIN_VALUE) {
@@ -254,6 +260,7 @@ public abstract class BasePayload
      * Load the payload from its byte buffer
      * @throws PayloadFormatException if there is a problem
      */
+    @Override
     public void loadPayload()
         throws PayloadFormatException
     {
@@ -295,6 +302,7 @@ public abstract class BasePayload
     /**
      * Clear out any cached data.
      */
+    @Override
     public void recycle()
     {
         utcTime = -1L;
@@ -313,6 +321,7 @@ public abstract class BasePayload
      * Set the buffer cache for this payload
      * @param cache buffer cache
      */
+    @Override
     public void setCache(IByteBufferCache cache)
     {
         this.cache = cache;
@@ -391,6 +400,7 @@ public abstract class BasePayload
      * @return number of bytes written
      * @throws IOException if there is a problem
      */
+    @Override
     public int writePayload(boolean writeLoaded, int offset, ByteBuffer buf)
         throws IOException
     {
@@ -439,5 +449,6 @@ public abstract class BasePayload
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public abstract String toString();
 }

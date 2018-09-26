@@ -33,11 +33,13 @@ public class MockHitData
         //this.trigMode = trigMode;
     }
 
+    @Override
     public Object deepCopy()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public void dispose()
     {
         utcTime = -1L;
@@ -47,96 +49,115 @@ public class MockHitData
         domId = -1L;
     }
 
+    @Override
     public short getChannelID()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public IDOMID getDOMID()
     {
         return new MockDOMID(domId);
     }
 
+    @Override
     public IEventHitRecord getEventHitRecord(short chanId)
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public IHitDataRecord getHitRecord()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public IUTCTime getHitTimeUTC()
     {
         return new MockUTCTime(utcTime);
     }
 
+    @Override
     public double getIntegratedCharge()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public ByteBuffer getPayloadBacking()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public int getPayloadInterfaceType()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public IUTCTime getPayloadTimeUTC()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public int getPayloadType()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public ISourceID getSourceID()
     {
         return new MockSourceID(srcId);
     }
 
+    @Override
     public int getTriggerConfigID()
     {
         return cfgId;
     }
 
+    @Override
     public int getTriggerType()
     {
         return trigType;
     }
 
+    @Override
     public long getUTCTime()
     {
         return utcTime;
     }
 
+    @Override
     public boolean hasChannelID()
     {
         return false;
     }
 
+    @Override
     public int length()
     {
         return length;
     }
 
+    @Override
     public void loadPayload()
     {
         // do nothing
     }
 
+    @Override
     public void recycle()
     {
         dispose();
     }
 
+    @Override
     public void setCache(IByteBufferCache cache)
     {
         throw new Error("Unimplemented");
@@ -147,17 +168,20 @@ public class MockHitData
         length = len;
     }
 
+    @Override
     public int writePayload(ByteBuffer buf, int offset)
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public int writePayload(boolean b0, int i1, ByteBuffer x2)
         throws IOException
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public String toString()
     {
         return "MockHitData[time " + utcTime + " type " + trigType +

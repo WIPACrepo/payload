@@ -116,6 +116,7 @@ public abstract class BaseReadoutData
      * @param spliceable object being compared
      * @return -1, 0, or 1
      */
+    @Override
     public int compareSpliceable(Spliceable spliceable)
     {
         if (!(spliceable instanceof BaseReadoutData)) {
@@ -144,11 +145,13 @@ public abstract class BaseReadoutData
      * Return a copy of this object.
      * @return copied object
      */
+    @Override
     public abstract Object deepCopy();
 
     /**
      * Unimplemented
      */
+    @Override
     public void dispose()
     {
         throw new Error("Unimplemented");
@@ -158,6 +161,7 @@ public abstract class BaseReadoutData
      * Get the list of data payloads
      * @return list of data payloads
      */
+    @Override
     public abstract List getDataPayloads();
 
     /**
@@ -173,6 +177,7 @@ public abstract class BaseReadoutData
      * Get the starting time object
      * @return starting time object
      */
+    @Override
     public IUTCTime getFirstTimeUTC()
     {
         if (firstTimeObj == null) {
@@ -186,6 +191,7 @@ public abstract class BaseReadoutData
      * Get the list of hits
      * @return list of hits
      */
+    @Override
     public abstract List getHitList();
 
     /**
@@ -201,6 +207,7 @@ public abstract class BaseReadoutData
      * Get the ending time object
      * @return ending time object
      */
+    @Override
     public IUTCTime getLastTimeUTC()
     {
         if (lastTimeObj == null) {
@@ -214,12 +221,14 @@ public abstract class BaseReadoutData
      * Get the number of hits
      * @return number of hits
      */
+    @Override
     public abstract int getNumHits();
 
     /**
      * Get the payload registry type
      * @return type
      */
+    @Override
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_READOUT_DATA;
@@ -229,6 +238,7 @@ public abstract class BaseReadoutData
      * Unimplemented
      * @return Error
      */
+    @Override
     public List getPayloads()
     {
         throw new Error("Unimplemented");
@@ -238,6 +248,7 @@ public abstract class BaseReadoutData
      * Unimplemented
      * @return Error
      */
+    @Override
     public int getReadoutDataPayloadNumber()
     {
         throw new Error("Unimplemented");
@@ -247,6 +258,7 @@ public abstract class BaseReadoutData
      * Get the unique ID
      * @return unique ID
      */
+    @Override
     public int getRequestUID()
     {
         return uid;
@@ -256,6 +268,7 @@ public abstract class BaseReadoutData
      * Get the source ID object
      * @return source ID object
      */
+    @Override
     public ISourceID getSourceID()
     {
         if (srcObj == null) {
@@ -278,6 +291,7 @@ public abstract class BaseReadoutData
      * Get the trigger configuration ID
      * @return trigger configuration ID
      */
+    @Override
     public int getTriggerConfigID()
     {
         return -1;
@@ -287,6 +301,7 @@ public abstract class BaseReadoutData
      * Unimplemented
      * @return Error
      */
+    @Override
     public int getTriggerType()
     {
         throw new Error("Unimplemented");
@@ -297,6 +312,7 @@ public abstract class BaseReadoutData
      * @return Error
      * @deprecated
      */
+    @Override
     public boolean isLastPayloadOfGroup()
     {
         throw new Error("Unimplemented");
@@ -311,6 +327,7 @@ public abstract class BaseReadoutData
      * @return number of bytes loaded
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int loadBody(ByteBuffer buf, int offset, long utcTime,
                         boolean isEmbedded)
         throws PayloadException
@@ -384,6 +401,7 @@ public abstract class BaseReadoutData
      * @param len total number of bytes
      * @throws PayloadException if the essential fields cannot be preloaded
      */
+    @Override
     public void preloadSpliceableFields(ByteBuffer buf, int offset, int len)
         throws PayloadException
     {
@@ -416,6 +434,7 @@ public abstract class BaseReadoutData
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int putBody(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -448,6 +467,7 @@ public abstract class BaseReadoutData
     /**
      * Clear out any cached data.
      */
+    @Override
     public void recycle()
     {
         super.recycle();
@@ -477,6 +497,7 @@ public abstract class BaseReadoutData
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         return getPayloadName() + "[uid " + uid +

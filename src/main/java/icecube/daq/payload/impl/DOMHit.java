@@ -47,6 +47,7 @@ public abstract class DOMHit
      * Unimplemented
      * @return Error
      */
+    @Override
     public Object deepCopy()
     {
         throw new Error("Unimplemented");
@@ -56,6 +57,7 @@ public abstract class DOMHit
     /**
      * Unimplemented
      */
+    @Override
     public void dispose()
     {
         throw new Error("Unimplemented");
@@ -170,6 +172,7 @@ public abstract class DOMHit
      * Unimplemented
      * @return Error
      */
+    @Override
     public ByteBuffer getPayloadBacking()
     {
         return backBuf;
@@ -179,6 +182,7 @@ public abstract class DOMHit
      * Unimplemented
      * @return Error
      */
+    @Override
     public IUTCTime getPayloadTimeUTC()
     {
         throw new Error("Unimplemented");
@@ -224,6 +228,7 @@ public abstract class DOMHit
      * @param offset index of first byte
      * @param len total number of bytes
      */
+    @Override
     public void preloadSpliceableFields(ByteBuffer buf, int offset, int len)
     {
         // do nothing
@@ -232,6 +237,7 @@ public abstract class DOMHit
     /**
      * Clear out any cached data.
      */
+    @Override
     public void recycle()
     {
         super.recycle();
@@ -257,6 +263,7 @@ public abstract class DOMHit
      * @param buf ignored
      * @return Error
      */
+    @Override
     public int writePayload(boolean writeLoaded, int offset, ByteBuffer buf)
     {
         throw new Error("Unimplemented");

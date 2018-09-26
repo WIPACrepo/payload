@@ -121,6 +121,7 @@ public class DeltaHitRecord
      * Get the name of this hit type (used in base class error messages)
      * @return name
      */
+    @Override
     String getTypeName()
     {
         return "Delta";
@@ -145,6 +146,7 @@ public class DeltaHitRecord
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int writeRecord(ByteBuffer buf, int offset, long baseTime)
         throws PayloadException
     {

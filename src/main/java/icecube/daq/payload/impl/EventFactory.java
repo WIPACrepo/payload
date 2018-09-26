@@ -60,6 +60,7 @@ public class EventFactory
      * @param dataList readout data payloads
      * @return new event
      */
+    @Override
     public ILoadablePayload createPayload(int uid, ISourceID srcId,
                                           IUTCTime firstTime,
                                           IUTCTime lastTime, short year,
@@ -105,6 +106,7 @@ public class EventFactory
      * @param hitRecList list of hit records
      * @return new event
      */
+    @Override
     public ILoadablePayload createPayload(int uid, IUTCTime firstTime,
                                           IUTCTime lastTime, short year,
                                           int runNum, int subrunNum,
@@ -140,6 +142,7 @@ public class EventFactory
      * Set the byte buffer cache associated with payloads from this factory
      * @param bufCache buffer cache
      */
+    @Override
     public void setByteBufferCache(IByteBufferCache bufCache)
     {
         if (this.bufCache != null && this.bufCache != bufCache) {
@@ -155,6 +158,7 @@ public class EventFactory
      *
      * @param domRegistry DOM registry
      */
+    @Override
     public void setDOMRegistry(IDOMRegistry domRegistry)
     {
         EventPayload_v5.setDOMRegistry(domRegistry);

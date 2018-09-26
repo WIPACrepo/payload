@@ -55,6 +55,7 @@ public class VitreousBufferCache
      * @param iLength number of bytes
      * @return byte buffer
      */
+    @Override
     public synchronized ByteBuffer acquireBuffer(int iLength)
     {
         acquiredBufferCount++;
@@ -66,6 +67,7 @@ public class VitreousBufferCache
     /**
      * Do nothing
      */
+    @Override
     public void flush()
     {
     }
@@ -74,6 +76,7 @@ public class VitreousBufferCache
      * Get number of currently buffers acquired
      * @return value
      */
+    @Override
     public synchronized int getCurrentAquiredBuffers()
     {
         return acquiredBufferCount;
@@ -83,6 +86,7 @@ public class VitreousBufferCache
      * Get number of currently acquired bytes
      * @return value
      */
+    @Override
     public synchronized long getCurrentAquiredBytes()
     {
         return acquiredBytes;
@@ -92,6 +96,7 @@ public class VitreousBufferCache
      * Get total number of buffers acquired
      * @return value
      */
+    @Override
     public synchronized int getTotalBuffersAcquired()
     {
         return totalBufferCount;
@@ -101,6 +106,7 @@ public class VitreousBufferCache
      * Get the buffer cache name
      * @return name
      */
+    @Override
     public String getName()
     {
         return name;
@@ -110,6 +116,7 @@ public class VitreousBufferCache
      * Get total number of buffers created
      * @return value
      */
+    @Override
     public synchronized int getTotalBuffersCreated()
     {
         return totalBufferCount;
@@ -119,6 +126,7 @@ public class VitreousBufferCache
      * Get total number of buffers returned
      * @return value
      */
+    @Override
     public synchronized int getTotalBuffersReturned()
     {
         return returnedBuffers;
@@ -128,6 +136,7 @@ public class VitreousBufferCache
      * Get total number of bytes created but not returned
      * @return value
      */
+    @Override
     public synchronized long getTotalBytesInCache()
     {
         return acquiredBytes;
@@ -137,6 +146,7 @@ public class VitreousBufferCache
      * Return <tt>true</tt> if there are no unreturned buffers
      * @return value
      */
+    @Override
     public synchronized boolean isBalanced()
     {
         return acquiredBufferCount == 0;
@@ -146,6 +156,7 @@ public class VitreousBufferCache
      * Return a buffer
      * @param tByteBuffer buffer
      */
+    @Override
     public synchronized void returnBuffer(ByteBuffer tByteBuffer)
     {
         returnBuffer(tByteBuffer.capacity());
@@ -155,6 +166,7 @@ public class VitreousBufferCache
      * Return a "buffer"
      * @param numBytes buffer capacity
      */
+    @Override
     public synchronized void returnBuffer(int numBytes)
     {
         acquiredBufferCount--;
@@ -173,6 +185,7 @@ public class VitreousBufferCache
      * Do nothing
      * @param tBuffer ignored
      */
+    @Override
     public void receiveByteBuffer(ByteBuffer tBuffer)
     {
     }
@@ -181,6 +194,7 @@ public class VitreousBufferCache
      * Get number of buffers returned.
      * @return value
      */
+    @Override
     public synchronized int getReturnBufferCount()
     {
         return returnedBuffers;
@@ -208,6 +222,7 @@ public class VitreousBufferCache
      * Does this buffer cache have an upper limit?
      * @return <tt>true</tt> if cache is bounded
      */
+    @Override
     public boolean getIsCacheBounded()
     {
         return (maxAcquiredBytes > 0);
@@ -217,6 +232,7 @@ public class VitreousBufferCache
      * Get the upper limit for this buffer cache
      * @return value
      */
+    @Override
     public long getMaxAquiredBytes()
     {
         return maxAcquiredBytes;
@@ -226,6 +242,7 @@ public class VitreousBufferCache
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         return "VitreousBufferCache[" + name + ",buf=" + acquiredBufferCount +

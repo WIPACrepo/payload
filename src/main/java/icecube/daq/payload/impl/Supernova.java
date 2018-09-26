@@ -97,6 +97,7 @@ public class Supernova
      * @param spliceable object being compared
      * @return -1, 0, or 1
      */
+    @Override
     public int compareSpliceable(Spliceable spliceable)
     {
         if (!(spliceable instanceof Supernova)) {
@@ -129,6 +130,7 @@ public class Supernova
      * Compute the number of bytes needed to save this payload to a byte buffer
      * @return number of bytes
      */
+    @Override
     public int computeBufferLength()
     {
         return LEN_PAYLOAD_HEADER + OFFSET_SCALARDATA + scalarData.length;
@@ -138,6 +140,7 @@ public class Supernova
      * Unimplemented
      * @return Error
      */
+    @Override
     public Object deepCopy()
     {
         throw new Error("Unimplemented");
@@ -146,6 +149,7 @@ public class Supernova
     /**
      * Unimplemented
      */
+    @Override
     public void dispose()
     {
         throw new Error("Unimplemented");
@@ -164,6 +168,7 @@ public class Supernova
      * Get the name of this payload.
      * @return name
      */
+    @Override
     public String getPayloadName()
     {
         return "Supernova";
@@ -173,6 +178,7 @@ public class Supernova
      * Unimplemented
      * @return Error
      */
+    @Override
     public IUTCTime getPayloadTimeUTC()
     {
         throw new Error("Unimplemented");
@@ -182,6 +188,7 @@ public class Supernova
      * Get the payload registry type
      * @return type
      */
+    @Override
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_SN;
@@ -205,6 +212,7 @@ public class Supernova
      * @return number of bytes loaded
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int loadBody(ByteBuffer buf, int offset, long utcTime,
                         boolean isEmbedded)
         throws PayloadException
@@ -256,6 +264,7 @@ public class Supernova
      * @param len total number of bytes
      * @throws PayloadException if the essential fields cannot be preloaded
      */
+    @Override
     public void preloadSpliceableFields(ByteBuffer buf, int offset, int len)
         throws PayloadException
     {
@@ -287,6 +296,7 @@ public class Supernova
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int putBody(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -316,6 +326,7 @@ public class Supernova
     /**
      * Clear out any cached data.
      */
+    @Override
     public void recycle()
     {
         super.recycle();
@@ -329,6 +340,7 @@ public class Supernova
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         return "Supernova[time " + getUTCTime() +

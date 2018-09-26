@@ -65,6 +65,7 @@ public abstract class BaseHitRecord
      *
      * @return the usual values
      */
+    @Override
     public int compareTo(Object obj)
     {
         if (obj == null) {
@@ -89,6 +90,7 @@ public abstract class BaseHitRecord
      * @param obj object being compared
      * @return <tt>true</tt> if the objects are equal
      */
+    @Override
     public boolean equals(Object obj)
     {
         return compareTo(obj) == 0;
@@ -98,6 +100,7 @@ public abstract class BaseHitRecord
      * Get this hit's channel ID
      * @return channel ID
      */
+    @Override
     public short getChannelID()
     {
         return chanId;
@@ -107,6 +110,7 @@ public abstract class BaseHitRecord
      * Get this hit's UTC time
      * @return value
      */
+    @Override
     public long getHitTime()
     {
         return time;
@@ -140,6 +144,7 @@ public abstract class BaseHitRecord
      * Return this object's hash code
      * @return hash code
      */
+    @Override
     public int hashCode()
     {
         return (((int)chanId & 0xffff) << 16) +
@@ -150,6 +155,7 @@ public abstract class BaseHitRecord
      * Get the record length
      * @return number of bytes
      */
+    @Override
     public int length()
     {
         return OFFSET_RAWDATA + rawData.length;
@@ -201,6 +207,7 @@ public abstract class BaseHitRecord
      * @param hit hit to compare
      * @return <tt>true</tt> if this hit record matches the hit
      */
+    @Override
     public boolean matches(IDOMRegistry domRegistry, IHitPayload hit)
     {
         if (time != hit.getUTCTime()) {
@@ -256,6 +263,7 @@ public abstract class BaseHitRecord
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         return getTypeName() + "HitRecord[flags " + flags + " chan " + chanId +

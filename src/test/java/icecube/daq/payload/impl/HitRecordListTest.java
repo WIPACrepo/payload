@@ -46,6 +46,7 @@ public class HitRecordListTest
         return new TestSuite(HitRecordListTest.class);
     }
 
+    @Override
     protected void setUp() throws Exception
     {
         super.setUp();

@@ -111,6 +111,7 @@ public class SimpleHit
      * @param spliceable object being compared
      * @return -1, 0, or 1
      */
+    @Override
     public int compareSpliceable(Spliceable spliceable)
     {
         if (!(spliceable instanceof IPayload)) {
@@ -133,6 +134,7 @@ public class SimpleHit
      * Compute the number of bytes needed to save this payload to a byte buffer
      * @return number of bytes
      */
+    @Override
     public int computeBufferLength()
     {
         return LENGTH;
@@ -142,6 +144,7 @@ public class SimpleHit
      * Return a copy of this object.
      * @return copied object
      */
+    @Override
     public Object deepCopy()
     {
         return new SimpleHit(getUTCTime(), trigType, cfgId, srcId, domId,
@@ -151,6 +154,7 @@ public class SimpleHit
     /**
      * Unimplemented
      */
+    @Override
     public void dispose()
     {
         throw new Error("Unimplemented");
@@ -198,6 +202,7 @@ public class SimpleHit
      * Get channel ID
      * @return channel ID
      */
+    @Override
     public short getChannelID()
     {
         if (domInfo == null) {
@@ -219,6 +224,7 @@ public class SimpleHit
      * Get the DOM ID object
      * @return DOM ID object
      */
+    @Override
     public IDOMID getDOMID()
     {
         if (domObj == null) {
@@ -232,6 +238,7 @@ public class SimpleHit
      * Get the hit time object
      * @return hit time object
      */
+    @Override
     public IUTCTime getHitTimeUTC()
     {
         if (utcTimeObj == null) {
@@ -245,11 +252,13 @@ public class SimpleHit
      * Unimplemented
      * @return Error
      */
+    @Override
     public double getIntegratedCharge()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public int getPayloadInterfaceType()
     {
         return PayloadInterfaceRegistry.I_HIT_PAYLOAD;
@@ -259,6 +268,7 @@ public class SimpleHit
      * Get the name of this payload.
      * @return name
      */
+    @Override
     public String getPayloadName()
     {
         return "SimpleHit";
@@ -268,6 +278,7 @@ public class SimpleHit
      * Get the payload time object
      * @return payload time object
      */
+    @Override
     public IUTCTime getPayloadTimeUTC()
     {
         return getHitTimeUTC();
@@ -277,6 +288,7 @@ public class SimpleHit
      * Get the payload registry type
      * @return type
      */
+    @Override
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT;
@@ -286,6 +298,7 @@ public class SimpleHit
      * Get the source ID object
      * @return source ID object
      */
+    @Override
     public ISourceID getSourceID()
     {
         if (srcObj == null) {
@@ -299,6 +312,7 @@ public class SimpleHit
      * Get the trigger configuration ID
      * @return trigger configuration ID
      */
+    @Override
     public int getTriggerConfigID()
     {
         return cfgId;
@@ -308,6 +322,7 @@ public class SimpleHit
      * Get the trigger type
      * @return trigger type
      */
+    @Override
     public int getTriggerType()
     {
         return trigType;
@@ -317,6 +332,7 @@ public class SimpleHit
      * Return<tt>true</tt> if this hit has a channel ID instead of
      * source and DOM IDs
      */
+    @Override
     public boolean hasChannelID()
     {
         return false;
@@ -331,6 +347,7 @@ public class SimpleHit
      * @return number of bytes loaded
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int loadBody(ByteBuffer buf, int offset, long utcTime,
                                  boolean isEmbedded)
         throws PayloadException
@@ -350,6 +367,7 @@ public class SimpleHit
      * @param offset index of first byte
      * @param len total number of bytes
      */
+    @Override
     public void preloadSpliceableFields(ByteBuffer buf, int offset, int len)
     {
         // do nothing
@@ -362,6 +380,7 @@ public class SimpleHit
      * @return Error
      * @throws PayloadException never
      */
+    @Override
     public int putBody(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -371,6 +390,7 @@ public class SimpleHit
     /**
      * Clear out any cached data.
      */
+    @Override
     public void recycle()
     {
         super.recycle();
@@ -403,6 +423,7 @@ public class SimpleHit
      * @param buf byte buffer
      * @return number of bytes written
      */
+    @Override
     public int writePayload(boolean writeLoaded, int offset, ByteBuffer buf)
     {
         writePayloadToBuffer(buf, offset, getUTCTime(), trigType, cfgId, srcId,
@@ -442,6 +463,7 @@ public class SimpleHit
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         return "SimpleHit[time " + getUTCTime() + " trigType " + trigType +

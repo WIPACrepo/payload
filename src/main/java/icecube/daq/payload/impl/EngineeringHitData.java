@@ -138,6 +138,7 @@ public class EngineeringHitData
      * Compute the number of bytes needed to save this payload to a byte buffer
      * @return number of bytes
      */
+    @Override
     public int computeBufferLength()
     {
         if (!isLoaded()) {
@@ -161,6 +162,7 @@ public class EngineeringHitData
      * Get channel ID
      * @return channel ID
      */
+    @Override
     public short getChannelID()
     {
         throw new Error("Unimplemented");
@@ -170,6 +172,7 @@ public class EngineeringHitData
      * Unimplemented
      * @return Error
      */
+    @Override
     public IDOMID getDOMID()
     {
         throw new Error("Unimplemented");
@@ -181,6 +184,7 @@ public class EngineeringHitData
      * @return hit record
      * @throws PayloadException if there is a problem
      */
+    @Override
     public IEventHitRecord getEventHitRecord(short chanId)
         throws PayloadException
     {
@@ -193,6 +197,7 @@ public class EngineeringHitData
      * Unimplemented
      * @return Error
      */
+    @Override
     public IUTCTime getHitTimeUTC()
     {
         throw new Error("Unimplemented");
@@ -202,6 +207,7 @@ public class EngineeringHitData
      * Get the name of this payload.
      * @return name
      */
+    @Override
     public String getPayloadName()
     {
         return "EngineeringHitData";
@@ -211,6 +217,7 @@ public class EngineeringHitData
      * Get the payload registry type
      * @return type
      */
+    @Override
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_ENGFORMAT_HIT_DATA;
@@ -220,6 +227,7 @@ public class EngineeringHitData
      * Unimplemented
      * @return Error
      */
+    @Override
     public ISourceID getSourceID()
     {
         throw new Error("Unimplemented");
@@ -229,6 +237,7 @@ public class EngineeringHitData
      * Unimplemented
      * @return Error
      */
+    @Override
     public int getTriggerType()
     {
         throw new Error("Unimplemented");
@@ -238,6 +247,7 @@ public class EngineeringHitData
      * Return<tt>true</tt> if this hit has a channel ID instead of
      * source and DOM IDs
      */
+    @Override
     public boolean hasChannelID()
     {
         return false;
@@ -252,6 +262,7 @@ public class EngineeringHitData
      * @return Error
      * @throws PayloadException never
      */
+    @Override
     public int loadBody(ByteBuffer buf, int offset, long utcTime,
                                  boolean isEmbedded)
         throws PayloadException
@@ -266,6 +277,7 @@ public class EngineeringHitData
      * @return Error
      * @throws PayloadException never
      */
+    @Override
     public int putBody(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -278,6 +290,7 @@ public class EngineeringHitData
      * @param offset ignored
      * @return Error
      */
+    @Override
     public int writePayload(ByteBuffer buf, int offset)
     {
         throw new Error("Unimplemented");
@@ -366,6 +379,7 @@ public class EngineeringHitData
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         return "EngineeringHitData[time " + getUTCTime() + "]";

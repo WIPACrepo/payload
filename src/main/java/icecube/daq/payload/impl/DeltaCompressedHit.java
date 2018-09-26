@@ -84,6 +84,7 @@ public class DeltaCompressedHit
      * Compute the number of bytes needed to save this payload to a byte buffer
      * @return number of bytes
      */
+    @Override
     public int computeBufferLength()
     {
         if (!isLoaded()) {
@@ -106,6 +107,7 @@ public class DeltaCompressedHit
      * Get the length of this DOM hit's data payload
      * @return number of bytes
      */
+    @Override
     public int getHitDataLength()
     {
         return DeltaCompressedHitData.computeLength(data.length);
@@ -116,6 +118,7 @@ public class DeltaCompressedHit
      * @param chanId this DOM's channel ID
      * @return hit record
      */
+    @Override
     public IEventHitRecord getHitRecord(short chanId)
     {
         return new DeltaHitRecord((byte) (pedestal & 0x3), chanId,
@@ -126,6 +129,7 @@ public class DeltaCompressedHit
      * Get the local coincidence mode
      * @return local coincidence mode
      */
+    @Override
     public int getLocalCoincidenceMode()
     {
         return (word0 >> 16) & 0x3;
@@ -135,6 +139,7 @@ public class DeltaCompressedHit
      * Get the name of this payload.
      * @return name
      */
+    @Override
     public String getPayloadName()
     {
         return "DeltaHit";
@@ -144,6 +149,7 @@ public class DeltaCompressedHit
      * Get the payload registry type
      * @return type
      */
+    @Override
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_DELTA_HIT;
@@ -153,6 +159,7 @@ public class DeltaCompressedHit
      * Get the trigger mode
      * @return trigger mode
      */
+    @Override
     public short getTriggerMode()
     {
         return trigMode;
@@ -192,6 +199,7 @@ public class DeltaCompressedHit
      * @return Error
      * @throws PayloadException never
      */
+    @Override
     public int loadBody(ByteBuffer buf, int offset, long utcTime,
                                  boolean isEmbedded)
         throws PayloadException
@@ -206,6 +214,7 @@ public class DeltaCompressedHit
      * @return Error
      * @throws PayloadException never
      */
+    @Override
     public int putBody(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -219,6 +228,7 @@ public class DeltaCompressedHit
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int writeHitData(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -249,6 +259,7 @@ public class DeltaCompressedHit
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
 	if(data==null) {

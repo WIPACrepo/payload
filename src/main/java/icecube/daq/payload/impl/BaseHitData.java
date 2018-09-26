@@ -25,12 +25,14 @@ abstract class BaseHitData
         super(utcTime);
     }
 
+    @Override
     public abstract int computeBufferLength();
 
     /**
      * Unimplemented
      * @return Error
      */
+    @Override
     public Object deepCopy()
     {
         throw new Error("Unimplemented");
@@ -39,6 +41,7 @@ abstract class BaseHitData
     /**
      * Unimplemented
      */
+    @Override
     public void dispose()
     {
         throw new Error("Unimplemented");
@@ -48,12 +51,14 @@ abstract class BaseHitData
      * Return the ID of the DOM which recorded this hit
      * @return DOM ID
      */
+    @Override
     public abstract IDOMID getDOMID();
 
     /**
      * Unimplemented
      * @return Error
      */
+    @Override
     public IHitDataRecord getHitRecord()
     {
         throw new Error("Unimplemented");
@@ -63,12 +68,14 @@ abstract class BaseHitData
      * Return the time this hit occurred.
      * @return hit time
      */
+    @Override
     public abstract IUTCTime getHitTimeUTC();
 
     /**
      * Unimplemented
      * @return Error
      */
+    @Override
     public double getIntegratedCharge()
     {
         throw new Error("Unimplemented");
@@ -78,6 +85,7 @@ abstract class BaseHitData
      * Return the time this hit occurred.
      * @return hit time
      */
+    @Override
     public IUTCTime getPayloadTimeUTC()
     {
         return getHitTimeUTC();
@@ -87,12 +95,14 @@ abstract class BaseHitData
      * Return the source ID of the component which recorded this hit
      * @return source ID
      */
+    @Override
     public abstract ISourceID getSourceID();
 
     /**
      * Unimplemented
      * @return Error
      */
+    @Override
     public int getTriggerConfigID()
     {
         throw new Error("Unimplemented");
@@ -102,6 +112,7 @@ abstract class BaseHitData
      * Return this hit's trigger type
      * @return trigger type
      */
+    @Override
     public abstract int getTriggerType();
 
     /**
@@ -110,6 +121,7 @@ abstract class BaseHitData
      * @param offset index of first byte
      * @param len total number of bytes
      */
+    @Override
     public void preloadSpliceableFields(ByteBuffer buf, int offset, int len)
     {
         // do nothing
@@ -118,6 +130,7 @@ abstract class BaseHitData
     /**
      * Unimplemented
      */
+    @Override
     public void recycle()
     {
         throw new Error("Unimplemented");
@@ -127,6 +140,7 @@ abstract class BaseHitData
      * Unimplemented
      * @return Error
      */
+    @Override
     public int writePayload(boolean b0, int i1, ByteBuffer x2)
     {
         throw new Error("Unimplemented");
