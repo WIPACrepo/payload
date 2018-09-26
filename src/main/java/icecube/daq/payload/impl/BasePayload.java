@@ -148,21 +148,21 @@ public abstract class BasePayload
     }
 
     /**
-     * Create a new payload factory which uses this payload's buffer cache
-     * @return new payload factory
-     */
-    public PayloadFactory getPayloadFactory()
-    {
-        return new PayloadFactory(cache);
-    }
-
-    /**
      * Get the byte buffer from which this payload was loaded
      * @return buffer cache (or <tt>null</tt>)
      */
     public ByteBuffer getPayloadBacking()
     {
         return buf;
+    }
+
+    /**
+     * Create a new payload factory which uses this payload's buffer cache
+     * @return new payload factory
+     */
+    public PayloadFactory getPayloadFactory()
+    {
+        return new PayloadFactory(cache);
     }
 
     /**
@@ -181,12 +181,6 @@ public abstract class BasePayload
     public abstract String getPayloadName();
 
     /**
-     * Get the payload registry type
-     * @return type
-     */
-    public abstract int getPayloadType();
-
-    /**
      * Get the UTC time for this payload as an object
      * @return UTCTime object for this payload
      */
@@ -194,6 +188,12 @@ public abstract class BasePayload
     {
         return new UTCTime(utcTime);
     }
+
+    /**
+     * Get the payload registry type
+     * @return type
+     */
+    public abstract int getPayloadType();
 
     /**
      * Get the UTC time for this payload
