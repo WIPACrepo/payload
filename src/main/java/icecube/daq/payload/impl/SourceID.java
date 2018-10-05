@@ -115,12 +115,24 @@ public class SourceID
     /**
      * Get the string representation of this source ID.
      *
+     * @param id source ID
+     *
+     * @return DAQName#DAQId
+     */
+    public static final String toString(int id)
+    {
+        return SourceIdRegistry.getDAQNameFromSourceID(id) + "#" +
+            SourceIdRegistry.getDAQIdFromSourceID(id);
+    }
+
+    /**
+     * Get the string representation of this source ID.
+     *
      * @return DAQName#DAQId
      */
     @Override
     public String toString()
     {
-        return SourceIdRegistry.getDAQNameFromSourceID(id) + "#" +
-            SourceIdRegistry.getDAQIdFromSourceID(id);
+        return toString(id);
     }
 }
