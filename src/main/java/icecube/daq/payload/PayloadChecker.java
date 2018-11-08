@@ -14,8 +14,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -70,8 +69,8 @@ class RunConfig
 class TriggerConfigEntry
 {
     /** Log object. */
-    private static final Log LOG =
-        LogFactory.getLog(TriggerConfigEntry.class);
+    private static final Logger LOG =
+        Logger.getLogger(TriggerConfigEntry.class);
 
     /**
      * Map of configuration names to list of parameters
@@ -380,8 +379,8 @@ class TriggerConfig
 public abstract class PayloadChecker
 {
     /** Log object. */
-    private static final Log LOG =
-        LogFactory.getLog(PayloadChecker.class);
+    private static final Logger LOG =
+        Logger.getLogger(PayloadChecker.class);
 
     private static final int SMT_TYPE = -1;
     // = TriggerRegistry.getTriggerType("SimpleMajorityTrigger");

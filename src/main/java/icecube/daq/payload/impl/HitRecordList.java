@@ -8,8 +8,7 @@ import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
 import icecube.daq.util.IDOMRegistry;
 import icecube.daq.util.DOMInfo;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class HitRecordList
     /** list of hit records */
     private List<IEventHitRecord> hitRecList;
 
-    private static Log log = LogFactory.getLog(HitRecordList.class);
+    private static Logger log = Logger.getLogger(HitRecordList.class);
 
 
     /**

@@ -4,8 +4,7 @@ import icecube.daq.payload.IByteBufferCache;
 
 import java.nio.ByteBuffer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * This buffer cache simply allocates buffers directly from the heap.
@@ -16,7 +15,7 @@ import org.apache.commons.logging.LogFactory;
 public class VitreousBufferCache
     implements IByteBufferCache, VitreousBufferCacheMBean
 {
-    private static final Log LOG = LogFactory.getLog(VitreousBufferCache.class);
+    private static final Logger LOG = Logger.getLogger(VitreousBufferCache.class);
 
     private String name;
     private int acquiredBufferCount;

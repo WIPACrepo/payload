@@ -21,8 +21,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * Temporary simple hit
@@ -191,7 +190,7 @@ class TriggerRecord
     implements Comparable, IEventTriggerRecord
 {
     /** Logging object */
-    private static final Log LOG = LogFactory.getLog(EventPayload_v5.class);
+    private static final Logger LOG = Logger.getLogger(EventPayload_v5.class);
 
     /** Offset of trigger type field */
     private static final int OFFSET_TYPE = 0;
@@ -566,7 +565,7 @@ public class EventPayload_v5
     implements IEventPayload
 {
     /** logging object */
-    private static final Log LOG = LogFactory.getLog(EventPayload_v5.class);
+    private static final Logger LOG = Logger.getLogger(EventPayload_v5.class);
 
     /** Offset of last relative time field */
     private static final int OFFSET_LASTRELTIME = 0;

@@ -13,8 +13,7 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * Event version 6
@@ -23,7 +22,7 @@ public class EventPayload_v6
     extends EventPayload_v5
 {
     /** Logging object */
-    private static final Log LOG = LogFactory.getLog(EventPayload_v6.class);
+    private static final Logger LOG = Logger.getLogger(EventPayload_v6.class);
 
     /** Were the hit records compressed? */
     private byte compressed;

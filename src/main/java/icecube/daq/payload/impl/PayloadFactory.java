@@ -15,8 +15,7 @@ import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * Create payloads
@@ -25,7 +24,7 @@ public class PayloadFactory
     implements SpliceableFactory
 {
     /** logging object */
-    private static final Log LOG = LogFactory.getLog(PayloadFactory.class);
+    private static final Logger LOG = Logger.getLogger(PayloadFactory.class);
 
     /**
      * Set to <tt>true</tt> to reverify the length after the payload is
