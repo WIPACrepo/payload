@@ -1,7 +1,7 @@
 /*
  * class: IUTCTime
  *
- * Version $Id: IUTCTime.java 14292 2013-03-05 21:13:52Z dglo $
+ * Version $Id: IUTCTime.java 17400 2019-06-17 16:08:55Z dglo $
  *
  * Date: September 18 2004
  *
@@ -15,7 +15,7 @@ package icecube.daq.payload;
  * as defined by the DOR time definition.  Nanosec time difference
  * is available computed as a double.
  *
- * @version $Id: IUTCTime.java 14292 2013-03-05 21:13:52Z dglo $
+ * @version $Id: IUTCTime.java 17400 2019-06-17 16:08:55Z dglo $
  * @author hellwig,dwharton
  */
 public interface IUTCTime
@@ -46,12 +46,11 @@ public interface IUTCTime
 
     /**
      * Generates IUTCTime based on offset in ns from this time.
-     * @param dNanoSec the positive or negative nanosec value from which to
-     *                 produce another IUTCTime which is representative of this
-     *                 time difference.
+     * @param ticks the positive or negative 0.1 ns value from which to
+     *                 produce another IUTCTime
      * @return offset time
      */
-    IUTCTime getOffsetUTCTime(double dNanoSec);
+    IUTCTime getOffsetUTCTime(long ticks);
 
     /**
      * Return a human-readable date/time string

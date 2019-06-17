@@ -246,13 +246,13 @@ public class UTCTime
 
     /**
      * Get a new UTCTime value offset by the specified time
-     * @param nanoSec number of nanoseconds to add
+     * @param ticks number of 0.1 nanoseconds to add/subtract
      * @return new time
      */
     @Override
-    public IUTCTime getOffsetUTCTime(double nanoSec)
+    public IUTCTime getOffsetUTCTime(long ticks)
     {
-        return new UTCTime(time + (long) (nanoSec * 10.0));
+        return new UTCTime(time + ticks);
     }
 
     /**
