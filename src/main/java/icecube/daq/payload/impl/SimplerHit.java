@@ -3,7 +3,6 @@ package icecube.daq.payload.impl;
 import icecube.daq.payload.IByteBufferCache;
 import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IHitPayload;
-import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
@@ -11,6 +10,7 @@ import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
 import icecube.daq.util.DOMInfo;
+import icecube.daq.util.IDOMRegistry;
 
 import java.nio.ByteBuffer;
 
@@ -29,19 +29,22 @@ public class SimplerHit
     /** Offset of trigger type field */
     private static final int OFFSET_TRIGMODE = 18;
 
+    /** used to fetch channel ID */
+    private static IDOMRegistry domRegistry;
+
     /** trigger mode */
     private short channelId;
     /** trigger mode */
     private short trigMode;
-    /** DOM ID */
-    //private long domId;
 
     /** cached UTC time object */
     private UTCTime utcTimeObj;
     /** cached source ID object */
     private SourceID srcObj;
     /** cached DOM ID object */
-    //private DOMID domObj;
+    private DOMID domObj;
+    /** cached DOM registry object */
+    private DOMInfo domInfo;
 
     /**
      * Event constructor for PayloadFactory.
@@ -88,16 +91,22 @@ public class SimplerHit
     @Override
     public int compareSpliceable(Spliceable spliceable)
     {
-        if (!(spliceable instanceof IPayload)) {
+        if (!(spliceable instanceof IHitPayload)) {
             final String className = spliceable.getClass().getName();
             return getClass().getName().compareTo(className);
         }
 
-        IPayload pay = (IPayload) spliceable;
+        IHitPayload hit = (IHitPayload) spliceable;
 
-        if (getUTCTime() < pay.getUTCTime()) {
+        if (getUTCTime() < hit.getUTCTime()) {
             return -1;
-        } else if (getUTCTime() > pay.getUTCTime()) {
+        } else if (getUTCTime() > hit.getUTCTime()) {
+            return 1;
+        }
+
+        if (getChannelID() < hit.getChannelID()) {
+            return -1;
+        } else if (getChannelID() > hit.getChannelID()) {
             return 1;
         }
 
@@ -183,7 +192,22 @@ public class SimplerHit
     @Override
     public IDOMID getDOMID()
     {
-        throw new Error("Unimplemented");
+        if (domInfo == null) {
+            if (domRegistry == null) {
+                throw new Error("DOM registry has not been set");
+            }
+
+            domInfo = domRegistry.getDom(channelId);
+            if (domInfo == null) {
+                throw new Error("Unknown DOM for channel ID " + channelId);
+            }
+        }
+
+        if (domObj == null) {
+            domObj = new DOMID(domInfo.getNumericMainboardId());
+        }
+
+        return domObj;
     }
 
     /**
@@ -349,8 +373,19 @@ public class SimplerHit
         trigMode = (short) -1;
 
         utcTimeObj = null;
-        //srcObj = null;
-        //domObj = null;
+        srcObj = null;
+        domObj = null;
+    }
+
+    /**
+     * Set the DOM registry which will be used to recreate the original hit
+     * sent to the triggers.
+     *
+     * @param reg DOM registry
+     */
+    public static void setDOMRegistry(IDOMRegistry reg)
+    {
+        domRegistry = reg;
     }
 
     /**

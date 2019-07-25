@@ -114,16 +114,22 @@ public class SimpleHit
     @Override
     public int compareSpliceable(Spliceable spliceable)
     {
-        if (!(spliceable instanceof IPayload)) {
+        if (!(spliceable instanceof IHitPayload)) {
             final String className = spliceable.getClass().getName();
             return getClass().getName().compareTo(className);
         }
 
-        IPayload pay = (IPayload) spliceable;
+        IHitPayload hit = (IHitPayload) spliceable;
 
-        if (getUTCTime() < pay.getUTCTime()) {
+        if (getUTCTime() < hit.getUTCTime()) {
             return -1;
-        } else if (getUTCTime() > pay.getUTCTime()) {
+        } else if (getUTCTime() > hit.getUTCTime()) {
+            return 1;
+        }
+
+        if (getDOMID().longValue() < hit.getDOMID().longValue()) {
+            return -1;
+        } else if (getDOMID().longValue() > hit.getDOMID().longValue()) {
             return 1;
         }
 
