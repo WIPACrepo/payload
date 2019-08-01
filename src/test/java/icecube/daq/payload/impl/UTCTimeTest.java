@@ -83,9 +83,6 @@ public class UTCTimeTest
 
             assertEquals("Unexpected timeDiff",
                          timeVal - newVal, time.timeDiff(newTime));
-            assertEquals("Unexpected timeDiff_ns",
-                         (double) (timeVal - newVal) / 10.0,
-                         time.timeDiff_ns(newTime));
         }
     }
 

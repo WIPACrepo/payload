@@ -1,7 +1,7 @@
 /*
  * class: IUTCTime
  *
- * Version $Id: IUTCTime.java 17400 2019-06-17 16:08:55Z dglo $
+ * Version $Id: IUTCTime.java 17490 2019-08-01 22:06:24Z dglo $
  *
  * Date: September 18 2004
  *
@@ -15,7 +15,7 @@ package icecube.daq.payload;
  * as defined by the DOR time definition.  Nanosec time difference
  * is available computed as a double.
  *
- * @version $Id: IUTCTime.java 17400 2019-06-17 16:08:55Z dglo $
+ * @version $Id: IUTCTime.java 17490 2019-08-01 22:06:24Z dglo $
  * @author hellwig,dwharton
  */
 public interface IUTCTime
@@ -29,14 +29,6 @@ public interface IUTCTime
      * @return the difference in time in dor card units
      */
     long timeDiff(IUTCTime tTime);
-
-    /**
-     * Compares ThisTime - tDifferenceTime and computes time
-     * difference in nanoseconds.
-     * @param tTime IUTCTime to compare to.
-     * @return the difference in time in ns
-     */
-    double timeDiff_ns(IUTCTime tTime);
 
     /**
      * Returns the UTCTime as long.

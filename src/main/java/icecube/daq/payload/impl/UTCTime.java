@@ -306,17 +306,6 @@ public class UTCTime
     }
 
     /**
-     * Return the difference between the specified time and this time
-     * @param otherTime time to subtract
-     * @return difference in nanoseconds
-     */
-    @Override
-    public double timeDiff_ns(IUTCTime otherTime)
-    {
-        return (double) (time - otherTime.longValue()) / 10.0;
-    }
-
-    /**
      * Return a human-readable date/time string
      * @return human-readable date/time string
      */
