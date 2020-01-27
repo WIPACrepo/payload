@@ -13,7 +13,7 @@ import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadFormatException;
 import icecube.daq.payload.PayloadRegistry;
-import icecube.daq.util.DeployedDOM;
+import icecube.daq.util.DOMInfo;
 import icecube.daq.util.IDOMRegistry;
 
 import java.io.IOException;
@@ -30,109 +30,157 @@ import org.apache.commons.logging.LogFactory;
 class TemporaryHit
     implements IHitPayload
 {
+    private static final short NO_CHANNEL_ID = Short.MIN_VALUE;
+    private short chanId = NO_CHANNEL_ID;
     private IDOMID domId;
-    private IUTCTime hitTime;
+    private long hitTime;
 
     public TemporaryHit(IHitPayload hit)
     {
-        domId = (IDOMID) hit.getDOMID().deepCopy();
-        hitTime = (IUTCTime) hit.getHitTimeUTC().deepCopy();
+        if (hit.hasChannelID()) {
+            chanId = hit.getChannelID();
+        } else {
+            domId = (IDOMID) hit.getDOMID().deepCopy();
+        }
+        hitTime = hit.getUTCTime();
     }
 
+    @Override
     public Object deepCopy()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public void dispose()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
+    public short getChannelID()
+    {
+        if (chanId == NO_CHANNEL_ID) {
+            throw new Error("Unimplemented");
+        }
+
+        return chanId;
+    }
+
+    @Override
     public IDOMID getDOMID()
     {
+        if (domId == null) {
+            throw new Error("Unimplemented");
+        }
+
         return domId;
     }
 
+    @Override
     public IUTCTime getHitTimeUTC()
     {
-        return hitTime;
+        throw new Error("Unimplemented");
     }
 
+    @Override
     public double getIntegratedCharge()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public ByteBuffer getPayloadBacking()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public int getPayloadInterfaceType()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public IUTCTime getPayloadTimeUTC()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public int getPayloadType()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public ISourceID getSourceID()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public int getTriggerConfigID()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public int getTriggerType()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public long getUTCTime()
     {
-        throw new Error("Unimplemented");
+        return hitTime;
     }
 
+    @Override
+    public boolean hasChannelID()
+    {
+        return chanId != NO_CHANNEL_ID;
+    }
+
+    @Override
     public int length()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public void loadPayload()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public void recycle()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public void setCache(IByteBufferCache x0)
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public int writePayload(boolean b0, int i1, ByteBuffer x2)
         throws IOException
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public String toString()
     {
-        return "TemporaryHit[" + hitTime + " dom " + domId + "]";
+        return "TemporaryHit[" + hitTime +
+            (chanId != NO_CHANNEL_ID ? " chan " + chanId :
+             " dom " + domId) +
+            "]";
     }
 }
 
@@ -261,6 +309,7 @@ class TriggerRecord
      *
      * @return the usual values
      */
+    @Override
     public int compareTo(Object obj)
     {
         if (obj == null) {
@@ -295,6 +344,7 @@ class TriggerRecord
      * @param hitRecList list of this event's hit records
      * @throws PayloadException if there is a problem
      */
+    @Override
     public void computeIndices(IDOMRegistry domRegistry,
                                List<IEventHitRecord> hitRecList)
         throws PayloadException
@@ -320,19 +370,20 @@ class TriggerRecord
             }
 
             if (idx == -1) {
-                final DeployedDOM dom =
-                    domRegistry.getDom(hit.getDOMID().longValue());
+                final DOMInfo dom;
+                if (hit.hasChannelID()) {
+                    dom = domRegistry.getDom(hit.getChannelID());
+                } else {
+                    dom = domRegistry.getDom(hit.getDOMID().longValue());
+                }
 
                 final String errMsg;
                 if (dom == null) {
-                    errMsg = String.format("Couldn't find hit record for " +
-                                           "unknown DOM ID " + hit.getDOMID() +
-                                           " (utc " + hit.getHitTimeUTC() +
-                                           ")");
+                    errMsg = "Couldn't find hit record for " + hit +
+                        " (utc " + hit.getUTCTime() + ")";
                 } else {
-                    errMsg = String.format("Couldn't find hit record for " +
-                                           dom + " (utc " +
-                                           hit.getHitTimeUTC() + ")");
+                    errMsg = "Couldn't find hit record for " + dom +
+                        " (utc " + hit.getUTCTime() + ")";
                 }
 
                 throw new PayloadException(errMsg);
@@ -347,6 +398,7 @@ class TriggerRecord
      * @param obj object being compared
      * @return <tt>true</tt> if the objects are equal
      */
+    @Override
     public boolean equals(Object obj)
     {
         return compareTo(obj) == 0;
@@ -356,6 +408,7 @@ class TriggerRecord
      * Return the configuration ID.
      * @return trigger configuration ID
      */
+    @Override
     public int getConfigID()
     {
         return cfgId;
@@ -365,6 +418,7 @@ class TriggerRecord
      * Get trigger starting time
      * @return starting time
      */
+    @Override
     public long getFirstTime()
     {
         return startTime;
@@ -374,6 +428,7 @@ class TriggerRecord
      * Get list of indexes into full hit record list.
      * @return list of hit indexes
      */
+    @Override
     public int[] getHitRecordIndexList()
     {
         return indices;
@@ -383,6 +438,7 @@ class TriggerRecord
      * Get trigger ending time
      * @return ending time
      */
+    @Override
     public long getLastTime()
     {
         return endTime;
@@ -407,6 +463,7 @@ class TriggerRecord
      * Get this trigger's source ID
      * @return source ID
      */
+    @Override
     public int getSourceID()
     {
         return srcId;
@@ -416,6 +473,7 @@ class TriggerRecord
      * Return the trigger type.
      * @return trigger type
      */
+    @Override
     public int getType()
     {
         return type;
@@ -425,6 +483,7 @@ class TriggerRecord
      * Return this object's hash code
      * @return hash code
      */
+    @Override
     public int hashCode()
     {
         return ((getType() & 0xff) << 24) +
@@ -437,6 +496,7 @@ class TriggerRecord
      * Get the length of this trigger record
      * @return number of bytes
      */
+    @Override
     public int length()
     {
         return OFFSET_HITDATA + getNumHits() * 4;
@@ -450,6 +510,7 @@ class TriggerRecord
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int writeRecord(ByteBuffer buf, int offset, long baseTime)
         throws PayloadException
     {
@@ -487,6 +548,7 @@ class TriggerRecord
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         final String trigName = TriggerRequest.getTriggerName(type, cfgId, 0);
@@ -606,6 +668,7 @@ public class EventPayload_v5
      * Compute the number of bytes needed to save this payload to a byte buffer
      * @return number of bytes
      */
+    @Override
     public int computeBufferLength()
     {
         if (!isLoaded()) {
@@ -626,6 +689,7 @@ public class EventPayload_v5
      * Unimplemented
      * @return Error
      */
+    @Override
     public Object deepCopy()
     {
         throw new Error("Unimplemented");
@@ -634,6 +698,7 @@ public class EventPayload_v5
     /**
      * Unimplemented
      */
+    @Override
     public void dispose()
     {
         throw new Error("Unimplemented");
@@ -684,6 +749,7 @@ public class EventPayload_v5
      * @return -1
      * @deprecated
      */
+    @Override
     public int getEventConfigID()
     {
         return -1;
@@ -694,6 +760,7 @@ public class EventPayload_v5
      * @return -1
      * @deprecated
      */
+    @Override
     public int getEventType()
     {
         return -1;
@@ -703,6 +770,7 @@ public class EventPayload_v5
      * Get unique ID
      * @return unique ID
      */
+    @Override
     public int getEventUID()
     {
         return uid;
@@ -712,6 +780,7 @@ public class EventPayload_v5
      * Get event version
      * @return <tt>5</tt>
      */
+    @Override
     public int getEventVersion()
     {
         return 5;
@@ -730,6 +799,7 @@ public class EventPayload_v5
      * Get event starting time
      * @return starting time object
      */
+    @Override
     public IUTCTime getFirstTimeUTC()
     {
         if (firstTimeObj == null) {
@@ -755,6 +825,7 @@ public class EventPayload_v5
      * Unimplemented
      * @return Error
      */
+    @Override
     public List getHitList()
     {
         throw new Error("Unimplemented");
@@ -781,6 +852,7 @@ public class EventPayload_v5
      * Get list of hit records
      * @return iterator for hit record list
      */
+    @Override
     public Iterable<IEventHitRecord> getHitRecords()
     {
         return hitRecList;
@@ -790,6 +862,7 @@ public class EventPayload_v5
      * Get event ending time
      * @return ending time object
      */
+    @Override
     public IUTCTime getLastTimeUTC()
     {
         if (lastTimeObj == null) {
@@ -803,6 +876,7 @@ public class EventPayload_v5
      * Get the name of this payload.
      * @return name
      */
+    @Override
     public String getPayloadName()
     {
         return "EventV5";
@@ -812,6 +886,7 @@ public class EventPayload_v5
      * Get the payload registry type
      * @return type
      */
+    @Override
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_EVENT_V5;
@@ -821,6 +896,7 @@ public class EventPayload_v5
      * Unimplemented
      * @return Error
      */
+    @Override
     public List getPayloads()
     {
         throw new Error("Unimplemented");
@@ -830,6 +906,7 @@ public class EventPayload_v5
      * Unimplemented
      * @return Error
      */
+    @Override
     public List getReadoutDataPayloads()
     {
         throw new Error("Unimplemented");
@@ -839,6 +916,7 @@ public class EventPayload_v5
      * Get the run number
      * @return run number
      */
+    @Override
     public int getRunNumber()
     {
         return runNum;
@@ -848,6 +926,7 @@ public class EventPayload_v5
      * Unimplemented
      * @return Error
      */
+    @Override
     public ISourceID getSourceID()
     {
         throw new Error("Unimplemented");
@@ -857,6 +936,7 @@ public class EventPayload_v5
      * Get the subrun number
      * @return subrun number
      */
+    @Override
     public int getSubrunNumber()
     {
         return subrunNum;
@@ -866,6 +946,7 @@ public class EventPayload_v5
      * Unimplemented
      * @return Error
      */
+    @Override
     public int getTriggerConfigID()
     {
         throw new Error("Unimplemented");
@@ -875,6 +956,7 @@ public class EventPayload_v5
      * Get the list of trigger records
      * @return list of trigger records
      */
+    @Override
     public Iterable<IEventTriggerRecord> getTriggerRecords()
     {
         return trigRecList;
@@ -884,6 +966,7 @@ public class EventPayload_v5
      * Unimplemented
      * @return Error
      */
+    @Override
     public ITriggerRequestPayload getTriggerRequestPayload()
     {
         throw new Error("Unimplemented");
@@ -893,6 +976,7 @@ public class EventPayload_v5
      * Unimplemented
      * @return Error
      */
+    @Override
     public int getTriggerType()
     {
         throw new Error("Unimplemented");
@@ -902,6 +986,7 @@ public class EventPayload_v5
      * Get the year in which this event took place
      * @return year
      */
+    @Override
     public short getYear()
     {
         return year;
@@ -916,6 +1001,7 @@ public class EventPayload_v5
      * @return number of bytes loaded
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int loadBody(ByteBuffer buf, int offset, long utcTime,
                         boolean isEmbedded)
         throws PayloadException
@@ -1024,6 +1110,7 @@ public class EventPayload_v5
      * @param len total number of bytes
      * @throws PayloadException if the essential fields cannot be preloaded
      */
+    @Override
     public void preloadSpliceableFields(ByteBuffer buf, int offset, int len)
         throws PayloadException
     {
@@ -1037,6 +1124,7 @@ public class EventPayload_v5
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int putBody(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -1114,6 +1202,7 @@ public class EventPayload_v5
     /**
      * Clear out any cached data.
      */
+    @Override
     public void recycle()
     {
         super.recycle();
@@ -1144,6 +1233,7 @@ public class EventPayload_v5
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         String subStr;

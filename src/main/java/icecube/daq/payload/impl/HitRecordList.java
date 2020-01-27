@@ -2,14 +2,12 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.IHitRecordList;
-import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
-import icecube.daq.util.DOMRegistry;
-import icecube.daq.util.DeployedDOM;
+import icecube.daq.util.IDOMRegistry;
+import icecube.daq.util.DOMInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -23,7 +21,7 @@ import java.util.List;
  */
 public class HitRecordList
     extends BasePayload
-    implements IHitRecordList, ILoadablePayload, IWriteablePayload, Spliceable
+    implements IHitRecordList, Spliceable
 {
     /** Offset of unique ID field */
     private static final int OFFSET_UID = 0;
@@ -79,7 +77,7 @@ public class HitRecordList
      * @param hitList list of hits
      * @throws PayloadException if there is a problem
      */
-    public HitRecordList(DOMRegistry reg, long utcTime, int uid,
+    public HitRecordList(IDOMRegistry reg, long utcTime, int uid,
                          ISourceID srcId, List<DOMHit> hitList)
         throws PayloadException
     {
@@ -94,7 +92,7 @@ public class HitRecordList
         // those which are logically inconsistent
         hitRecList = new ArrayList<IEventHitRecord>();
         for (DOMHit hit : hitList) {
-            DeployedDOM dom = reg.getDom(hit.getDomId());
+            DOMInfo dom = reg.getDom(hit.getDomId());
             if(dom == null)
             {
                 log.error("Cannot send hit from unregistered " +
@@ -134,6 +132,7 @@ public class HitRecordList
      * @param spl object being compared
      * @return -1, 0, or 1
      */
+    @Override
     public int compareSpliceable(Spliceable spl)
     {
         if (spl == null) {
@@ -158,6 +157,7 @@ public class HitRecordList
      * Compute the number of bytes needed to save this payload to a byte buffer
      * @return number of bytes
      */
+    @Override
     public int computeBufferLength()
     {
         if (!isLoaded()) {
@@ -176,6 +176,7 @@ public class HitRecordList
      * Unimplemented
      * @return Error
      */
+    @Override
     public Object deepCopy()
     {
         throw new Error("Unimplemented");
@@ -184,6 +185,7 @@ public class HitRecordList
     /**
      * Unimplemented
      */
+    @Override
     public void dispose()
     {
         throw new Error("Unimplemented");
@@ -193,6 +195,7 @@ public class HitRecordList
      * Get the name of this payload.
      * @return name
      */
+    @Override
     public String getPayloadName()
     {
         return "HitRecordList";
@@ -202,6 +205,7 @@ public class HitRecordList
      * Get the payload registry type
      * @return type
      */
+    @Override
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_HIT_RECORD_LIST;
@@ -211,6 +215,7 @@ public class HitRecordList
      * Get the unique ID
      * @return unique ID
      */
+    @Override
     public int getUID()
     {
         return uid;
@@ -234,6 +239,7 @@ public class HitRecordList
      * @return number of bytes loaded
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int loadBody(ByteBuffer buf, int offset, long utcTime,
                         boolean isEmbedded)
         throws PayloadException
@@ -290,6 +296,7 @@ public class HitRecordList
      * @param len total number of bytes
      * @throws PayloadException if the essential fields cannot be preloaded
      */
+    @Override
     public void preloadSpliceableFields(ByteBuffer buf, int offset, int len)
         throws PayloadException
     {
@@ -321,6 +328,7 @@ public class HitRecordList
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int putBody(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -339,6 +347,7 @@ public class HitRecordList
     /**
      * Clear out any cached data.
      */
+    @Override
     public void recycle()
     {
         super.recycle();
@@ -352,6 +361,7 @@ public class HitRecordList
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         String hrStr;

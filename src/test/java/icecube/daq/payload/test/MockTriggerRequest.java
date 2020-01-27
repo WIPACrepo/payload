@@ -48,6 +48,7 @@ public class MockTriggerRequest
         this.rReq = rReq;
     }
 
+    @Override
     public Object deepCopy()
     {
         if (failDeepCopy) {
@@ -76,81 +77,97 @@ public class MockTriggerRequest
                                       firstTime, lastTime, newList, newReq);
     }
 
+    @Override
     public void dispose()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public IUTCTime getFirstTimeUTC()
     {
         return new MockUTCTime(firstTime);
     }
 
+    @Override
     public List getHitList()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public IUTCTime getLastTimeUTC()
     {
         return new MockUTCTime(lastTime);
     }
 
+    @Override
     public ByteBuffer getPayloadBacking()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public int getPayloadInterfaceType()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public IUTCTime getPayloadTimeUTC()
     {
         return getFirstTimeUTC();
     }
 
+    @Override
     public int getPayloadType()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public List getPayloads()
     {
         return dataList;
     }
 
+    @Override
     public IReadoutRequest getReadoutRequest()
     {
         return rReq;
     }
 
+    @Override
     public ISourceID getSourceID()
     {
         return new MockSourceID(srcId);
     }
 
+    @Override
     public int getTriggerConfigID()
     {
         return cfgId;
     }
 
+    @Override
     public String getTriggerName()
     {
         return null;
     }
 
+    @Override
     public int getTriggerType()
     {
         return type;
     }
 
+    @Override
     public int getUID()
     {
         return uid;
     }
 
+    @Override
     public long getUTCTime()
     {
         return utcTime;
@@ -161,11 +178,13 @@ public class MockTriggerRequest
      *
      * @return <tt>true</tt> if this is a merged request
      */
+    @Override
     public boolean isMerged()
     {
         return type == -1;
     }
 
+    @Override
     public int length()
     {
         final int hitLen;
@@ -197,6 +216,7 @@ public class MockTriggerRequest
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
+    @Override
     public void loadPayload()
     {
         // do nothing
@@ -205,11 +225,13 @@ public class MockTriggerRequest
     /**
      * Object knows how to recycle itself
      */
+    @Override
     public void recycle()
     {
         // do nothing
     }
 
+    @Override
     public void setCache(IByteBufferCache cache)
     {
         throw new Error("Unimplemented");
@@ -230,11 +252,13 @@ public class MockTriggerRequest
      *
      * @param uid new UID
      */
+    @Override
     public void setUID(int uid)
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public int writePayload(boolean writeLoaded, int destOffset, ByteBuffer buf)
         throws IOException
     {

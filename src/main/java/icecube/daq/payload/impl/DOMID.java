@@ -54,6 +54,7 @@ public class DOMID
      * Return a copy of this object.
      * @return copied object
      */
+    @Override
     public Object deepCopy()
     {
         return new DOMID(domId);
@@ -62,6 +63,7 @@ public class DOMID
     /**
      * Do nothing
      */
+    @Override
     public void dispose()
     {
         // do nothing
@@ -72,6 +74,7 @@ public class DOMID
      * @param obj object being compared
      * @return <tt>true</tt> if the objects are equal
      */
+    @Override
     public boolean equals(Object obj)
     {
         return compareTo(obj) == 0;
@@ -81,6 +84,7 @@ public class DOMID
      * Unimplemented
      * @return Error
      */
+    @Override
     public Poolable getPoolable()
     {
         throw new Error("Unimplemented");
@@ -90,6 +94,7 @@ public class DOMID
      * Return this object's hash code
      * @return hash code
      */
+    @Override
     public int hashCode()
     {
         final long modValue = Integer.MAX_VALUE / 256;
@@ -104,6 +109,7 @@ public class DOMID
      * Return the long integer value of this DOM ID
      * @return value
      */
+    @Override
     public long longValue()
     {
         return domId;
@@ -112,6 +118,7 @@ public class DOMID
     /**
      * Clear out any cached data.
      */
+    @Override
     public void recycle()
     {
         domId = -1L;
@@ -140,6 +147,7 @@ public class DOMID
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         return toString(domId);

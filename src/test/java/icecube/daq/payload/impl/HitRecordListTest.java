@@ -5,7 +5,8 @@ import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.payload.test.MockSourceID;
 import icecube.daq.payload.test.TestUtil;
-import icecube.daq.util.DOMRegistry;
+import icecube.daq.util.DOMRegistryFactory;
+import icecube.daq.util.IDOMRegistry;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import junit.textui.TestRunner;
@@ -22,7 +23,7 @@ public class HitRecordListTest
         extends LoggingCase
 {
 
-    DOMRegistry domRegistry;
+    IDOMRegistry domRegistry;
 
     //the dom geometry loaded in the test config
     private static long GOOD_DOM_A = 0xfedcba987654L;
@@ -45,27 +46,28 @@ public class HitRecordListTest
         return new TestSuite(HitRecordListTest.class);
     }
 
+    @Override
     protected void setUp() throws Exception
     {
         super.setUp();
         if (domRegistry == null) {
             String configDir = getClass().getResource("/config").getPath();
-                domRegistry = DOMRegistry.loadRegistry(configDir);
+                domRegistry = DOMRegistryFactory.load(configDir);
         }
 
         //verify loaded dom info
         String MSG = "Bad Setup Data";
         assertNotNull(MSG, domRegistry.getDom(GOOD_DOM_A));
         assertEquals(MSG, 1, domRegistry.getDom(GOOD_DOM_A).getHubId());
-        assertEquals(MSG, 123, domRegistry.getDom(GOOD_DOM_A).getChannelId());
+        assertEquals(MSG, 122, domRegistry.getDom(GOOD_DOM_A).getChannelId());
 
         assertNotNull(MSG, domRegistry.getDom(GOOD_DOM_B));
         assertEquals(MSG, 1, domRegistry.getDom(GOOD_DOM_B).getHubId());
-        assertEquals(MSG, 124, domRegistry.getDom(GOOD_DOM_B).getChannelId());
+        assertEquals(MSG, 123, domRegistry.getDom(GOOD_DOM_B).getChannelId());
 
         assertNotNull(MSG, domRegistry.getDom(DOM_WRONG_STRING));
         assertEquals(MSG, 2, domRegistry.getDom(DOM_WRONG_STRING).getHubId());
-        assertEquals(MSG, 125,
+        assertEquals(MSG, 129,
                 domRegistry.getDom(DOM_WRONG_STRING).getChannelId());
 
         assertNull(MSG, domRegistry.getDom(BAD_DOM_NOT_REGISTERED));

@@ -45,14 +45,6 @@ public interface IPayloadDestination
         throws IOException;
 
     /**
-     * Returns boolean to tell if label operation should be performed.
-     * this saves objects work if they are using the label feature for
-     * PayloadDestinations which do not do labeling.
-     * @return boolean true if labeling is on, false if off.
-     */
-    boolean doLabel();
-
-    /**
      * simple labeling routine which is a stub but is useful for debugging.
      * this is NOT INTENDED to contribute to the output stream.
      * @param sLabel String which indicates some aspect of how the destination

@@ -1,11 +1,9 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.ICopyable;
-import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.IReadoutRequestElement;
 import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
@@ -19,7 +17,7 @@ import java.util.List;
  */
 public class ReadoutRequest
     extends BasePayload
-    implements ILoadablePayload, IReadoutRequest, IWriteablePayload, Spliceable
+    implements IReadoutRequest, Spliceable
 {
     /** Offset of order check field */
     private static final int OFFSET_ORDERCHK = 0;
@@ -132,6 +130,7 @@ public class ReadoutRequest
      * @param lastTime ending time
      * @param domId DOM ID
      */
+    @Override
     public void addElement(int type, int srcId, long firstTime, long lastTime,
                            long domId)
     {
@@ -150,6 +149,7 @@ public class ReadoutRequest
      * @param spliceable object being compared
      * @return -1, 0, or 1
      */
+    @Override
     public int compareSpliceable(Spliceable spliceable)
     {
         if (!(spliceable instanceof ReadoutRequest)) {
@@ -166,6 +166,7 @@ public class ReadoutRequest
      * Compute the number of bytes needed to save this payload to a byte buffer
      * @return number of bytes
      */
+    @Override
     public int computeBufferLength()
     {
         if (!isLoaded()) {
@@ -179,6 +180,7 @@ public class ReadoutRequest
      * Return a copy of this object.
      * @return copied object
      */
+    @Override
     public Object deepCopy()
     {
         List<IReadoutRequestElement> newData =
@@ -194,6 +196,7 @@ public class ReadoutRequest
     /**
      * Unimplemented
      */
+    @Override
     public void dispose()
     {
         throw new Error("Unimplemented");
@@ -203,6 +206,7 @@ public class ReadoutRequest
      * Get the length of an embedded readout request
      * @return number of bytes
      */
+    @Override
     public int getEmbeddedLength()
     {
         if (elemData == null) {
@@ -216,6 +220,7 @@ public class ReadoutRequest
      * Get the name of this payload.
      * @return name
      */
+    @Override
     public String getPayloadName()
     {
         return "ReadoutRequest";
@@ -225,6 +230,7 @@ public class ReadoutRequest
      * Get the payload registry type
      * @return type
      */
+    @Override
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_READOUT_REQUEST;
@@ -234,6 +240,7 @@ public class ReadoutRequest
      * Get the list of readout request elements
      * @return list of readout request elements
      */
+    @Override
     public List getReadoutRequestElements()
     {
         return elemData;
@@ -243,6 +250,7 @@ public class ReadoutRequest
      * Get the source ID object
      * @return source ID object
      */
+    @Override
     public ISourceID getSourceID()
     {
         if (srcObj == null) {
@@ -256,6 +264,7 @@ public class ReadoutRequest
      * Get the unique ID
      * @return unique ID
      */
+    @Override
     public int getUID()
     {
         return uid;
@@ -270,6 +279,7 @@ public class ReadoutRequest
      * @return number of bytes loaded
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int loadBody(ByteBuffer buf, int offset, long utcTime,
                         boolean isEmbedded)
         throws PayloadException
@@ -315,6 +325,7 @@ public class ReadoutRequest
      * @param len total number of bytes
      * @throws PayloadException if the essential fields cannot be preloaded
      */
+    @Override
     public void preloadSpliceableFields(ByteBuffer buf, int offset, int len)
         throws PayloadException
     {
@@ -346,6 +357,7 @@ public class ReadoutRequest
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int putBody(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -367,6 +379,7 @@ public class ReadoutRequest
     /**
      * Clear out any cached data.
      */
+    @Override
     public void recycle()
     {
         super.recycle();
@@ -384,6 +397,7 @@ public class ReadoutRequest
      *
      * @param srcId new source ID
      */
+    @Override
     public void setSourceID(ISourceID srcId)
     {
         this.srcId = srcId.getSourceID();
@@ -394,6 +408,7 @@ public class ReadoutRequest
      *
      * @param uid new UID
      */
+    @Override
     public void setUID(int uid)
     {
         this.uid = uid;
@@ -403,6 +418,7 @@ public class ReadoutRequest
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         String elemStr;

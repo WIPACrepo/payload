@@ -30,6 +30,7 @@ public class SourceID
      * @param obj object being compared
      * @return -1, 0, or 1
      */
+    @Override
     public int compareTo(Object obj)
     {
         if (obj == null) {
@@ -45,6 +46,7 @@ public class SourceID
      * Return a copy of this object.
      * @return copied object
      */
+    @Override
     public Object deepCopy()
     {
         return new SourceID(id);
@@ -53,6 +55,7 @@ public class SourceID
     /**
      * Do nothing
      */
+    @Override
     public void dispose()
     {
         // do nothing
@@ -63,6 +66,7 @@ public class SourceID
      * @param obj object being compared
      * @return <tt>true</tt> if the objects are equal
      */
+    @Override
     public boolean equals(Object obj)
     {
         return compareTo(obj) == 0;
@@ -73,6 +77,7 @@ public class SourceID
      *
      * @return object of this type from the object pool.
      */
+    @Override
     public Poolable getPoolable()
     {
         return new SourceID(-1);
@@ -82,6 +87,7 @@ public class SourceID
      * Get the integer value of this source ID
      * @return value
      */
+    @Override
     public int getSourceID()
     {
         return id;
@@ -91,6 +97,7 @@ public class SourceID
      * Return this object's hash code
      * @return hash code
      */
+    @Override
     public int hashCode()
     {
         return id;
@@ -99,6 +106,7 @@ public class SourceID
     /**
      * Clear out any cached data.
      */
+    @Override
     public void recycle()
     {
         id = -1;
@@ -107,11 +115,24 @@ public class SourceID
     /**
      * Get the string representation of this source ID.
      *
+     * @param id source ID
+     *
      * @return DAQName#DAQId
      */
-    public String toString()
+    public static final String toString(int id)
     {
         return SourceIdRegistry.getDAQNameFromSourceID(id) + "#" +
             SourceIdRegistry.getDAQIdFromSourceID(id);
+    }
+
+    /**
+     * Get the string representation of this source ID.
+     *
+     * @return DAQName#DAQId
+     */
+    @Override
+    public String toString()
+    {
+        return toString(id);
     }
 }

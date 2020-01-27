@@ -42,6 +42,7 @@ public class MockHit
         this.trigMode = trigMode;
     }
 
+    @Override
     public Object deepCopy()
     {
         if (failDeepCopy) {
@@ -56,11 +57,19 @@ public class MockHit
      * This means it is able to return itself to the pool from
      * which it came.
      */
+    @Override
     public void dispose()
     {
         // do nothing
     }
 
+    @Override
+    public short getChannelID()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    @Override
     public IDOMID getDOMID()
     {
         if (domObj == null) {
@@ -70,11 +79,13 @@ public class MockHit
         return domObj;
     }
 
+    @Override
     public IEventHitRecord getEventHitRecord(short chanId)
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public IUTCTime getHitTimeUTC()
     {
         if (utcObj == null) {
@@ -84,26 +95,31 @@ public class MockHit
         return utcObj;
     }
 
+    @Override
     public double getIntegratedCharge()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public ByteBuffer getPayloadBacking()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public int getPayloadInterfaceType()
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public IUTCTime getPayloadTimeUTC()
     {
         return getHitTimeUTC();
     }
 
+    @Override
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT;
@@ -114,11 +130,13 @@ public class MockHit
      *
      * @return object of this type from the object pool.
      */
+    @Override
     public Poolable getPoolable()
     {
         return new MockSourceID(-1);
     }
 
+    @Override
     public ISourceID getSourceID()
     {
         if (srcObj == null) {
@@ -128,21 +146,31 @@ public class MockHit
         return srcObj;
     }
 
+    @Override
     public int getTriggerConfigID()
     {
         return cfgId;
     }
 
+    @Override
     public int getTriggerType()
     {
         return trigType;
     }
 
+    @Override
     public long getUTCTime()
     {
         return utcTime;
     }
 
+    @Override
+    public boolean hasChannelID()
+    {
+        return false;
+    }
+
+    @Override
     public int length()
     {
         return 40;
@@ -151,6 +179,7 @@ public class MockHit
     /**
      * Initializes Payload from backing so it can be used as an IPayload.
      */
+    @Override
     public void loadPayload()
     {
         // do nothing
@@ -159,11 +188,13 @@ public class MockHit
     /**
      * Object knows how to recycle itself
      */
+    @Override
     public void recycle()
     {
         // do nothing
     }
 
+    @Override
     public void setCache(IByteBufferCache cache)
     {
         throw new Error("Unimplemented");
@@ -179,11 +210,13 @@ public class MockHit
         failDeepCopy = fail;
     }
 
+    @Override
     public int writePayload(ByteBuffer buf, int offset)
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public int writePayload(boolean writeLoaded, int offset, ByteBuffer buf)
         throws IOException
     {

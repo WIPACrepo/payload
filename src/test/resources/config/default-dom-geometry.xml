@@ -3,23 +3,25 @@
   <string>
     <number>1</number>
     <dom>
+      <position>59</position>
       <mainBoardId>fedcba987654</mainBoardId>
-      <channelId>123</channelId>
+      <channelId>122</channelId>
+      <name>One_FiftyNine</name>
     </dom>
     <dom>
+      <position>60</position>
       <mainBoardId>edcba9876543</mainBoardId>
-      <channelId>124</channelId>
-    </dom>
-    <dom>
-      <mainBoardId>edcba9876544</mainBoardId>
-      <!--<channelId>MISSING</channelId> should show up as channel 0-->
+      <channelId>123</channelId>
+      <name>One_Sixty</name>
     </dom>
   </string>
   <string>
    <number>2</number>
    <dom>
+      <position>2</position>
       <mainBoardId>fedcba987699</mainBoardId>
-      <channelId>125</channelId>
+      <channelId>129</channelId>
+      <name>Two_OneTwentyNine</name>
    </dom>
   </string>
 </domGeometry>

@@ -10,6 +10,8 @@ import icecube.daq.splicer.Spliceable;
 import icecube.daq.splicer.SpliceableFactory;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 import java.util.List;
 
@@ -52,6 +54,7 @@ public class PayloadFactory
      * @param i1 ignored
      * @param i2 ignored
      */
+    @Override
     public void backingBufferShift(List x0, int i1, int i2)
     {
         throw new Error("Unimplemented");
@@ -62,6 +65,7 @@ public class PayloadFactory
      * @param buf byte buffer
      * @return new spliceable payload
      */
+    @Override
     public Spliceable createSpliceable(ByteBuffer buf)
     {
         try {
@@ -70,6 +74,16 @@ public class PayloadFactory
             LOG.error("Cannot get payload", pe);
             return null;
         }
+    }
+
+    /**
+     * Get the buffer cache used to allocate payloads
+     *
+     * @return buffer cache
+     */
+    public IByteBufferCache getByteBufferCache()
+    {
+        return bufCache;
     }
 
     /**
@@ -112,16 +126,14 @@ public class PayloadFactory
             break;
         case PayloadRegistry.PAYLOAD_ID_ENGFORMAT_DOMHIT:
             if (hitSrc == null) {
-                hitSrc =
-                    new SourceID(SourceIdRegistry.STRING_HUB_SOURCE_ID);
+                setSourceID();
             }
 
             pay = DOMHitFactory.getHit(hitSrc, buf, 0);
             break;
         case PayloadRegistry.PAYLOAD_ID_DELTA_DOMHIT:
             if (hitSrc == null) {
-                hitSrc =
-                    new SourceID(SourceIdRegistry.STRING_HUB_SOURCE_ID);
+                setSourceID();
             }
 
             pay = DOMHitFactory.getHit(hitSrc, buf, 0);
@@ -167,6 +179,9 @@ public class PayloadFactory
         case PayloadRegistry.PAYLOAD_ID_HIT_RECORD_LIST:
             pay = new HitRecordList(buf, offset, len, utcTime);
             break;
+        case PayloadRegistry.PAYLOAD_ID_SIMPLER_HIT:
+            pay = new SimplerHit(buf, offset, len, utcTime);
+            break;
         default:
             throw new PayloadException("Unknown payload type #" + type);
         }
@@ -193,6 +208,7 @@ public class PayloadFactory
      * Unimplemented
      * @param x0 ignored
      */
+    @Override
     public void invalidateSpliceables(List x0)
     {
         throw new Error("Unimplemented");
@@ -213,15 +229,79 @@ public class PayloadFactory
     }
 
     /**
+     * Set the source ID used for hits, based on the current host name.
+     */
+    public void setSourceID()
+    {
+        int srcNum = SourceIdRegistry.STRING_HUB_SOURCE_ID;
+
+        String hostname;
+        try {
+            hostname = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException uhe) {
+            LOG.error("Cannot get host name", uhe);
+            hostname = null;
+        }
+
+        if (hostname != null) {
+            // lose domain name
+            int idx = hostname.indexOf(".");
+            if (idx > 0) {
+                hostname = hostname.substring(0, idx);
+            }
+
+            if (hostname.startsWith("ichub") || hostname.startsWith("ithub")) {
+                // extract hub number from host name
+                try {
+                    int hubNum = Integer.parseInt(hostname.substring(5));
+                    srcNum += hubNum;
+                } catch (NumberFormatException nfe) {
+                    LOG.error("Bad hub number for host " + hostname);
+                }
+
+                // if this is an icetop hub, add the offset
+                if (hostname.charAt(1) == 't') {
+                    srcNum += SourceIdRegistry.ICETOP_ID_OFFSET;
+                }
+            }
+        }
+
+        // set source ID
+        setSourceID(srcNum);
+    }
+
+    /**
+     * Set the source ID used for hits
+     *
+     * @param srcId numeric source ID
+     */
+    public void setSourceID(int srcId)
+    {
+        setSourceID(new SourceID(srcId));
+    }
+
+    /**
+     * Set the source ID used for hits
+     *
+     * @param srcId source ID
+     */
+    public void setSourceID(SourceID srcId)
+    {
+        hitSrc = srcId;
+    }
+
+    /**
      * Unimplemented
      * @param x0 ignored
      * @return Error
      */
+    @Override
     public boolean skipSpliceable(ByteBuffer x0)
     {
         throw new Error("Unimplemented");
     }
 
+    @Override
     public String toString()
     {
         return "PayloadFactory[" + bufCache + "]";

@@ -83,6 +83,7 @@ public class EventPayload_v6
      * Get event version
      * @return <tt>6</tt>
      */
+    @Override
     public int getEventVersion()
     {
         return 6;
@@ -92,6 +93,7 @@ public class EventPayload_v6
      * Get extra debugging string (so Event V6 toString() returns extra data)
      * @return extra debugging string
      */
+    @Override
     public String getExtraString()
     {
         if (compressed == 0) {
@@ -107,6 +109,7 @@ public class EventPayload_v6
      *
      * @return hit record length
      */
+    @Override
     int getHitRecordLength()
     {
         if (!isLoaded()) {
@@ -143,6 +146,7 @@ public class EventPayload_v6
      * Get the name of this payload.
      * @return name
      */
+    @Override
     public String getPayloadName()
     {
         return "EventV6";
@@ -152,6 +156,7 @@ public class EventPayload_v6
      * Get the payload registry type
      * @return type
      */
+    @Override
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_EVENT_V6;
@@ -161,6 +166,7 @@ public class EventPayload_v6
      * This event can vary in size due to the compressed hit records
      * @return <tt>false</tt>
      */
+    @Override
     public boolean isConstantSize()
     {
         return false;
@@ -174,6 +180,7 @@ public class EventPayload_v6
      * @return number of bytes loaded
      * @throws PayloadException if there is a problem
      */
+    @Override
     int loadHitRecords(ByteBuffer buf, int offset, long baseTime)
         throws PayloadException
     {
@@ -225,6 +232,7 @@ public class EventPayload_v6
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     int putHitRecords(ByteBuffer buf, int offset, long baseTime)
         throws PayloadException
     {

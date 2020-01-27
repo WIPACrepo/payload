@@ -26,6 +26,7 @@ public class DataOutputAdapter implements DataOutput {
      * @param      v   the boolean to be written.
      * @exception  IOException  if an I/O error occurs.
      */
+    @Override
     public void writeBoolean(boolean v) throws IOException {
         errorUnimplementedMethod("writeBoolean()");
     }
@@ -38,6 +39,7 @@ public class DataOutputAdapter implements DataOutput {
      * @param      b   the byte to be written.
      * @exception  IOException  if an I/O error occurs.
      */
+    @Override
     public void write(int b) throws IOException {
         errorUnimplementedMethod("write(int b)");
     }
@@ -75,6 +77,7 @@ public class DataOutputAdapter implements DataOutput {
      * @param      v   the <code>short</code> value to be written.
      * @exception  IOException  if an I/O error occurs.
      */
+    @Override
     public void writeShort(int v) throws IOException {
         errorUnimplementedMethod("writeShort(int v)");
     }
@@ -120,6 +123,7 @@ public class DataOutputAdapter implements DataOutput {
      * @param      v   the <code>int</code> value to be written.
      * @exception  IOException  if an I/O error occurs.
      */
+    @Override
     public void writeInt(int v) throws IOException {
         errorUnimplementedMethod("writeInt(int v)");
     }
@@ -138,6 +142,7 @@ public class DataOutputAdapter implements DataOutput {
      * @param      v   the byte value to be written.
      * @exception  IOException  if an I/O error occurs.
      */
+    @Override
     public void writeByte(int v) throws IOException {
         errorUnimplementedMethod("writeByte(int v)");
     }
@@ -158,6 +163,7 @@ public class DataOutputAdapter implements DataOutput {
      * @param      v   the <code>float</code> value to be written.
      * @exception  IOException  if an I/O error occurs.
      */
+    @Override
     public void writeFloat(float v) throws IOException {
         errorUnimplementedMethod("writeFloat(float v)");
     }
@@ -180,6 +186,7 @@ public class DataOutputAdapter implements DataOutput {
      * @param      v   the <code>char</code> value to be written.
      * @exception  IOException  if an I/O error occurs.
      */
+    @Override
     public void writeChar(int v) throws IOException {
         errorUnimplementedMethod("writeChar(int v)");
     }
@@ -203,6 +210,7 @@ public class DataOutputAdapter implements DataOutput {
      * @param      s   the string of bytes to be written.
      * @exception  IOException  if an I/O error occurs.
      */
+    @Override
     public void writeBytes(String s) throws IOException {
         errorUnimplementedMethod("writeBytes(String s)");
     }
@@ -230,6 +238,7 @@ public class DataOutputAdapter implements DataOutput {
      * @param      v   the <code>long</code> value to be written.
      * @exception  IOException  if an I/O error occurs.
      */
+    @Override
     public void writeLong(long v) throws IOException {
         errorUnimplementedMethod("writeLong(long v)");
     }
@@ -283,6 +292,7 @@ public class DataOutputAdapter implements DataOutput {
      * @param      str   the string value to be written.
      * @exception  IOException  if an I/O error occurs.
      */
+    @Override
     public void writeUTF(String str) throws IOException {
         errorUnimplementedMethod("writeUTF(String str)");
     }
@@ -303,6 +313,7 @@ public class DataOutputAdapter implements DataOutput {
      * @param      v   the <code>double</code> value to be written.
      * @exception  IOException  if an I/O error occurs.
      */
+    @Override
     public void writeDouble(double v) throws IOException {
         errorUnimplementedMethod("writeDouble(double v)");
     }
@@ -324,6 +335,7 @@ public class DataOutputAdapter implements DataOutput {
      * @param      s   the string value to be written.
      * @exception  IOException  if an I/O error occurs.
      */
+    @Override
     public void writeChars(String s) throws IOException {
         errorUnimplementedMethod("writeChars(String s)");
     }

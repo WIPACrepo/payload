@@ -290,6 +290,7 @@ public class EngineeringHitRecord
      * Get a debugging string for the hit record's raw data.
      * @return debugging string
      */
+    @Override
     public String getRawDataString()
     {
         StringBuilder strBuf = new StringBuilder();
@@ -344,6 +345,7 @@ public class EngineeringHitRecord
      * Get the name of this hit type (used in base class error messages)
      * @return name
      */
+    @Override
     String getTypeName()
     {
         return "Engineering";
@@ -357,6 +359,7 @@ public class EngineeringHitRecord
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int writeRecord(ByteBuffer buf, int offset, long baseTime)
         throws PayloadException
     {

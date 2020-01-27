@@ -95,7 +95,7 @@ public class ReadoutDataTest
             IHitPayload hit = (IHitPayload) rdpHits.get(i);
 
             assertEquals("Bad hit time", (i == 0 ? hitTime1 : hitTime2),
-                         hit.getHitTimeUTC().longValue());
+                         hit.getUTCTime());
             assertEquals("Bad hit type", (i == 0 ? hitType1 : hitType2),
                          hit.getTriggerType());
             assertEquals("Bad hit DOM ID", (i == 0 ? hitDomId1 : hitDomId2),
@@ -173,7 +173,7 @@ public class ReadoutDataTest
             IHitPayload hit = (IHitPayload) rdpHits.get(i);
 
             assertEquals("Bad hit time", (i == 0 ? hitTime1 : hitTime2),
-                         hit.getHitTimeUTC().longValue());
+                         hit.getUTCTime());
 //            assertEquals("Bad hit type", (i == 0 ? hitType1 : hitType2),
 //                         hit.getTriggerType());
             assertEquals("Bad hit DOM ID", (i == 0 ? hitDomId1 : hitDomId2),

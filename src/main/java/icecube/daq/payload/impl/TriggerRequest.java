@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class TriggerRequest
     extends BasePayload
-    implements ILoadablePayload, ITriggerRequestPayload, Spliceable
+    implements ITriggerRequestPayload, Spliceable
 {
     /** Internal trigger request record type */
     public static final short RECORD_TYPE = 4;
@@ -164,6 +164,7 @@ public class TriggerRequest
      * @param spliceable object being compared
      * @return -1, 0, or 1
      */
+    @Override
     public int compareSpliceable(Spliceable spliceable)
     {
         if (!(spliceable instanceof ILoadablePayload)) {
@@ -185,6 +186,7 @@ public class TriggerRequest
      * Compute the number of bytes needed to save this payload to a byte buffer
      * @return number of bytes
      */
+    @Override
     public int computeBufferLength()
     {
         if (!isLoaded()) {
@@ -205,6 +207,7 @@ public class TriggerRequest
      * Return a copy of this object.
      * @return copied object
      */
+    @Override
     public Object deepCopy()
     {
         if (!isLoaded()) {
@@ -231,6 +234,7 @@ public class TriggerRequest
     /**
      * Unimplemented
      */
+    @Override
     public void dispose()
     {
         throw new Error("Unimplemented");
@@ -240,6 +244,7 @@ public class TriggerRequest
      * Get request starting time
      * @return starting time object
      */
+    @Override
     public IUTCTime getFirstTimeUTC()
     {
         if (firstTimeObj == null) {
@@ -253,6 +258,7 @@ public class TriggerRequest
      * Unimplemented
      * @return Error
      */
+    @Override
     public List getHitList()
     {
         throw new Error("Unimplemented");
@@ -262,6 +268,7 @@ public class TriggerRequest
      * Get request ending time
      * @return ending time object
      */
+    @Override
     public IUTCTime getLastTimeUTC()
     {
         if (lastTimeObj == null) {
@@ -284,6 +291,7 @@ public class TriggerRequest
      * Get the payload interface type.
      * @return interface type
      */
+    @Override
     public int getPayloadInterfaceType()
     {
         return PayloadInterfaceRegistry.I_TRIGGER_REQUEST;
@@ -293,6 +301,7 @@ public class TriggerRequest
      * Get the name of this payload.
      * @return name
      */
+    @Override
     public String getPayloadName()
     {
         return "TriggerRequest";
@@ -302,6 +311,7 @@ public class TriggerRequest
      * Get the payload registry type
      * @return type
      */
+    @Override
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_TRIGGER_REQUEST;
@@ -311,6 +321,7 @@ public class TriggerRequest
      * Get the list of composite payloads included in this trigger request
      * @return list of payloads
      */
+    @Override
     public List getPayloads()
     {
         return compList;
@@ -320,6 +331,7 @@ public class TriggerRequest
      * Get the readout request associated with this trigger request
      * @return readout request
      */
+    @Override
     public IReadoutRequest getReadoutRequest()
     {
         return rdoutReq;
@@ -329,6 +341,7 @@ public class TriggerRequest
      * Get the source ID
      * @return source ID object
      */
+    @Override
     public ISourceID getSourceID()
     {
         if (srcObj == null) {
@@ -342,6 +355,7 @@ public class TriggerRequest
      * Get the trigger configuration ID
      * @return trigger config ID
      */
+    @Override
     public int getTriggerConfigID()
     {
         return cfgId;
@@ -351,6 +365,7 @@ public class TriggerRequest
      * Get the trigger type
      * @return trigger type
      */
+    @Override
     public int getTriggerType()
     {
         return trigType;
@@ -381,6 +396,7 @@ public class TriggerRequest
      *
      * @return trigger name
      */
+    @Override
     public String getTriggerName()
     {
         return getTriggerName(trigType, cfgId, uid);
@@ -414,6 +430,7 @@ public class TriggerRequest
      * Get the unique ID
      * @return unique ID
      */
+    @Override
     public int getUID()
     {
         return uid;
@@ -424,6 +441,7 @@ public class TriggerRequest
      *
      * @return <tt>true</tt> if this is a merged request
      */
+    @Override
     public boolean isMerged()
     {
         return trigType == -1;
@@ -438,6 +456,7 @@ public class TriggerRequest
      * @return number of bytes loaded
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int loadBody(ByteBuffer buf, int offset, long utcTime,
                         boolean isEmbedded)
         throws PayloadException
@@ -543,6 +562,7 @@ public class TriggerRequest
      * @param len total number of bytes
      * @throws PayloadException if the essential fields cannot be preloaded
      */
+    @Override
     public void preloadSpliceableFields(ByteBuffer buf, int offset, int len)
         throws PayloadException
     {
@@ -577,6 +597,7 @@ public class TriggerRequest
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int putBody(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -641,6 +662,7 @@ public class TriggerRequest
     /**
      * Clear out any cached data.
      */
+    @Override
     public void recycle()
     {
         super.recycle();
@@ -679,6 +701,7 @@ public class TriggerRequest
      *
      * @param uid new UID
      */
+    @Override
     public void setUID(int uid)
     {
         if (rdoutReq == null) {
@@ -707,6 +730,7 @@ public class TriggerRequest
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         String szStr;

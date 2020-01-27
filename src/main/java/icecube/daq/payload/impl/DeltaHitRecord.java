@@ -2,7 +2,7 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.SourceIdRegistry;
-import icecube.daq.util.DeployedDOM;
+import icecube.daq.util.DOMInfo;
 import icecube.daq.util.IDOMRegistry;
 
 import java.nio.ByteBuffer;
@@ -64,7 +64,7 @@ public class DeltaHitRecord
     }
 
     /**
-     * Derive the original hit sent to the triggers.
+     * Condense the original hit to the minimal hit sent to the triggers.
      *
      * @return (mostly) original hit
      *
@@ -77,7 +77,7 @@ public class DeltaHitRecord
             throw new Error("DOM registry has not been set");
         }
 
-        DeployedDOM dom = domRegistry.getDom(getChannelID());
+        DOMInfo dom = domRegistry.getDom(getChannelID());
         if (dom == null) {
             throw new PayloadException("Unknown channel ID " + getChannelID());
         }
@@ -98,9 +98,30 @@ public class DeltaHitRecord
     }
 
     /**
+     * Condense the original hit to the minimal hit sent to the triggers.
+     *
+     * @return (mostly) original hit
+     *
+     * @throws PayloadException if the channel ID is not valid
+     */
+    public SimplerHit getSimplerHit()
+        throws PayloadException
+    {
+        ByteBuffer buf = ByteBuffer.wrap(getRawData());
+        int word0 = buf.getInt(0);
+        short trigMode = DeltaCompressedHit.getTriggerModeFromWord0(word0);
+
+        // fake these two values
+        int trigType = trigMode;
+
+        return new SimplerHit(getHitTime(), getChannelID(), trigMode);
+    }
+
+    /**
      * Get the name of this hit type (used in base class error messages)
      * @return name
      */
+    @Override
     String getTypeName()
     {
         return "Delta";
@@ -125,6 +146,7 @@ public class DeltaHitRecord
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int writeRecord(ByteBuffer buf, int offset, long baseTime)
         throws PayloadException
     {

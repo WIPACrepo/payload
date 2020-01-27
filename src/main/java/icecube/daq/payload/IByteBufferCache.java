@@ -9,7 +9,6 @@ import java.nio.ByteBuffer;
  * @author dwharton
  */
 public interface IByteBufferCache
-    extends IByteBufferReceiver
 {
     /**
      * Get name of buffer cache.
@@ -66,6 +65,12 @@ public interface IByteBufferCache
      * @return ByteBuffer whose actual length is &gt;= iLength, or null.
      */
     ByteBuffer acquireBuffer(int iLength);
+
+    /**
+     * Receives a ByteBuffer from a source.
+     * @param tBuffer ByteBuffer the new buffer to be processed.
+     */
+    void receiveByteBuffer(ByteBuffer tBuffer);
 
     /**
      * Returns the ByteBuffer to the cache.

@@ -97,6 +97,7 @@ public class EngineeringHit
      * Compute the number of bytes needed to save this payload to a byte buffer
      * @return number of bytes
      */
+    @Override
     public int computeBufferLength()
     {
         if (!isLoaded()) {
@@ -110,6 +111,7 @@ public class EngineeringHit
      * Get the length of this DOM hit's data payload
      * @return number of bytes
      */
+    @Override
     public int getHitDataLength()
     {
         return EngineeringHitData.computeLength(waveformData.length);
@@ -121,6 +123,7 @@ public class EngineeringHit
      * @return hit record
      * @throws PayloadException if there is a problem
      */
+    @Override
     public IEventHitRecord getHitRecord(short chanId)
         throws PayloadException
     {
@@ -133,6 +136,7 @@ public class EngineeringHit
      * Get the local coincidence mode
      * @return local coincidence mode
      */
+    @Override
     public int getLocalCoincidenceMode()
     {
         //return (trigMode >> 5) & 0x3;
@@ -143,6 +147,7 @@ public class EngineeringHit
      * Get the name of this payload.
      * @return name
      */
+    @Override
     public String getPayloadName()
     {
         return "EngineeringHit";
@@ -152,6 +157,7 @@ public class EngineeringHit
      * Get the payload registry type
      * @return type
      */
+    @Override
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_ENGFORMAT_HIT;
@@ -161,6 +167,7 @@ public class EngineeringHit
      * Get the trigger mode
      * @return trigger mode
      */
+    @Override
     public short getTriggerMode()
     {
         return trigMode;
@@ -175,6 +182,7 @@ public class EngineeringHit
      * @return Error
      * @throws PayloadException never
      */
+    @Override
     public int loadBody(ByteBuffer buf, int offset, long utcTime,
                                  boolean isEmbedded)
         throws PayloadException
@@ -189,6 +197,7 @@ public class EngineeringHit
      * @return Error
      * @throws PayloadException never
      */
+    @Override
     public int putBody(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -202,6 +211,7 @@ public class EngineeringHit
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int writeHitData(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -232,6 +242,7 @@ public class EngineeringHit
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         String clkStr;

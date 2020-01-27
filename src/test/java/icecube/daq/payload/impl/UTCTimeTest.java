@@ -5,6 +5,8 @@ import icecube.daq.payload.test.LoggingCase;
 import icecube.daq.util.Leapseconds;
 
 import java.io.File;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -100,6 +102,15 @@ public class UTCTimeTest
                          timeVal + ((long)( d * 10.0)),
                          offTime.longValue());
         }
+    }
+
+    public void testCalendarInit()
+    {
+        final Calendar now = GregorianCalendar.getInstance();
+        final String exp = String.format("%tF %tT.%tL0000000", now, now, now);
+
+        final UTCTime utc = new UTCTime(now);
+        assertEquals("Bad time string", exp, utc.toDateString());
     }
 
     public void testDateString()
@@ -263,7 +274,7 @@ public class UTCTimeTest
             Integer year = entry.getKey();
             String predicted = entry.getValue();
 
-            int daysInYear = Leapseconds.getInstance().get_days_in_year(year);
+            int daysInYear = Leapseconds.getInstance().getDaysInYear(year);
             long newYearMoment =
                     daysInYear == 365 ? newYearMostYears : newYearLeapYears;
             String answered =

@@ -32,8 +32,6 @@ public final class SourceIdRegistry
     public static final int SIMULATION_HUB_SOURCE_ID = 13000;
     /** Secondary builders (monitor, supernova, and time calibration) */
     public static final int SECONDARY_BUILDERS_SOURCE_ID = 14000;
-    /** Track engine **/
-    public static final int TRACK_ENGINE_SOURCE_ID = 15000;
 
     /** Offset of DeepCore hub IDs inside the Hub "namespace" **/
     public static final int DEEPCORE_ID_OFFSET = 78;
@@ -102,10 +100,6 @@ public final class SourceIdRegistry
             srcId < SECONDARY_BUILDERS_SOURCE_ID + 1000)
         {
             return srcId - SECONDARY_BUILDERS_SOURCE_ID;
-        } else if (srcId >= TRACK_ENGINE_SOURCE_ID &&
-            srcId < TRACK_ENGINE_SOURCE_ID + 1000)
-        {
-            return srcId - TRACK_ENGINE_SOURCE_ID;
         } else if (srcId == -1) {
             return srcId;
         }
@@ -172,10 +166,6 @@ public final class SourceIdRegistry
             srcId < SECONDARY_BUILDERS_SOURCE_ID + 1000)
         {
             return DAQCmdInterface.DAQ_SECONDARY_BUILDERS;
-        } else if (srcId >= TRACK_ENGINE_SOURCE_ID &&
-            srcId < TRACK_ENGINE_SOURCE_ID + 1000)
-        {
-            return DAQCmdInterface.DAQ_TRACK_ENGINE;
         }
 
         return "unknownComponent(" + srcId + ")";
@@ -240,9 +230,6 @@ public final class SourceIdRegistry
         } else if (name.compareTo(DAQCmdInterface.DAQ_SECONDARY_BUILDERS) == 0)
         {
             return SECONDARY_BUILDERS_SOURCE_ID + id;
-        } else if (name.compareTo(DAQCmdInterface.DAQ_TRACK_ENGINE) == 0)
-        {
-            return TRACK_ENGINE_SOURCE_ID + id;
         } else if (name.compareTo(DAQCmdInterface.DAQ_REPLAY_HUB) == 0) {
             return STRING_HUB_SOURCE_ID + id;
         }

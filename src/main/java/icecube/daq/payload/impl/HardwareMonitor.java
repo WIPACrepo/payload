@@ -474,6 +474,7 @@ public class HardwareMonitor
      * Get the name of this payload.
      * @return name
      */
+    @Override
     public String getPayloadName()
     {
         return "HardwareMonitor";
@@ -483,6 +484,7 @@ public class HardwareMonitor
      * Get the length of the data specific to this monitoring message.
      * @return number of bytes
      */
+    @Override
     public int getRecordLength()
     {
         return RECORD_LEN;
@@ -492,6 +494,7 @@ public class HardwareMonitor
      * Get the monitoring message type
      * @return type
      */
+    @Override
     public short getRecordType()
     {
         return HARDWARE;
@@ -531,6 +534,7 @@ public class HardwareMonitor
      * @return number of bytes loaded
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int loadRecord(ByteBuffer buf, int offset, int len)
         throws PayloadException
     {
@@ -557,6 +561,7 @@ public class HardwareMonitor
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int putRecord(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -582,6 +587,7 @@ public class HardwareMonitor
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         if (data == null) {

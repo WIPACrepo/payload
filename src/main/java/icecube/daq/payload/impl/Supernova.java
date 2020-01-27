@@ -1,8 +1,6 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
@@ -15,8 +13,11 @@ import java.nio.ByteOrder;
  */
 public class Supernova
     extends BasePayload
-    implements ILoadablePayload, IWriteablePayload, Spliceable
+    implements Spliceable
 {
+    /** Magic byte value */
+    public static final short MAGIC_NUMBER = 300;
+
     /** Offset of DOM ID field */
     private static final int OFFSET_DOMID = 0;
     /** Offset of block length field */
@@ -33,8 +34,6 @@ public class Supernova
 
     /** DOM ID */
     private long domId;
-    /** format ID */
-    private short fmtId;
     /** DOM clock bytes */
     private byte[] clockBytes;
     /** scalar data */
@@ -70,12 +69,11 @@ public class Supernova
      * Create a supernova payload
      * @param utcTime UTC time
      * @param domId DOM ID
-     * @param fmtId format ID
      * @param clockBytes 6-byte DOM clock
      * @param scalarData scalar data
      * @throws PayloadException if there is a problem
      */
-    public Supernova(long utcTime, long domId, short fmtId, byte[] clockBytes,
+    public Supernova(long utcTime, long domId, byte[] clockBytes,
                      byte[] scalarData)
         throws PayloadException
     {
@@ -88,7 +86,6 @@ public class Supernova
         }
 
         this.domId = domId;
-        this.fmtId = fmtId;
         this.clockBytes = clockBytes;
         this.scalarData = scalarData;
     }
@@ -100,6 +97,7 @@ public class Supernova
      * @param spliceable object being compared
      * @return -1, 0, or 1
      */
+    @Override
     public int compareSpliceable(Spliceable spliceable)
     {
         if (!(spliceable instanceof Supernova)) {
@@ -132,6 +130,7 @@ public class Supernova
      * Compute the number of bytes needed to save this payload to a byte buffer
      * @return number of bytes
      */
+    @Override
     public int computeBufferLength()
     {
         return LEN_PAYLOAD_HEADER + OFFSET_SCALARDATA + scalarData.length;
@@ -141,6 +140,7 @@ public class Supernova
      * Unimplemented
      * @return Error
      */
+    @Override
     public Object deepCopy()
     {
         throw new Error("Unimplemented");
@@ -149,6 +149,7 @@ public class Supernova
     /**
      * Unimplemented
      */
+    @Override
     public void dispose()
     {
         throw new Error("Unimplemented");
@@ -167,6 +168,7 @@ public class Supernova
      * Get the name of this payload.
      * @return name
      */
+    @Override
     public String getPayloadName()
     {
         return "Supernova";
@@ -176,6 +178,7 @@ public class Supernova
      * Unimplemented
      * @return Error
      */
+    @Override
     public IUTCTime getPayloadTimeUTC()
     {
         throw new Error("Unimplemented");
@@ -185,6 +188,7 @@ public class Supernova
      * Get the payload registry type
      * @return type
      */
+    @Override
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_SN;
@@ -208,6 +212,7 @@ public class Supernova
      * @return number of bytes loaded
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int loadBody(ByteBuffer buf, int offset, long utcTime,
                         boolean isEmbedded)
         throws PayloadException
@@ -228,7 +233,14 @@ public class Supernova
             buf.order(ByteOrder.BIG_ENDIAN);
 
             final int blockLen = buf.getShort(pos + OFFSET_BLOCKLEN);
-            fmtId = buf.getShort(pos + OFFSET_FORMATID);
+
+            final short magic = buf.getShort(pos + OFFSET_FORMATID);
+            if (magic != MAGIC_NUMBER) {
+                final String msg =
+                    String.format("\"Magic\" bytes should be %04x, not %04x",
+                                  MAGIC_NUMBER, magic);
+                throw new PayloadException(msg);
+            }
 
             clockBytes = new byte[6];
             buf.position(pos + OFFSET_DOMCLOCK);
@@ -252,6 +264,7 @@ public class Supernova
      * @param len total number of bytes
      * @throws PayloadException if the essential fields cannot be preloaded
      */
+    @Override
     public void preloadSpliceableFields(ByteBuffer buf, int offset, int len)
         throws PayloadException
     {
@@ -283,6 +296,7 @@ public class Supernova
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int putBody(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -295,7 +309,7 @@ public class Supernova
 
         buf.putShort(offset + OFFSET_BLOCKLEN,
                      (short) (HEADER_LEN + scalarData.length));
-        buf.putShort(offset + OFFSET_FORMATID, fmtId);
+        buf.putShort(offset + OFFSET_FORMATID, MAGIC_NUMBER);
 
         buf.position(offset + OFFSET_DOMCLOCK);
         buf.put(clockBytes);
@@ -312,12 +326,12 @@ public class Supernova
     /**
      * Clear out any cached data.
      */
+    @Override
     public void recycle()
     {
         super.recycle();
 
         domId = -1L;
-        fmtId = (short) -1;
         clockBytes = null;
         scalarData = null;
     }
@@ -326,12 +340,12 @@ public class Supernova
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         return "Supernova[time " + getUTCTime() +
             " dom " + String.format("%012x", domId) +
-            " clk " + String.format("%016x", getDomClock(clockBytes)) +
-            " fmt " + fmtId +
+            " clk " + String.format("%012x", getDomClock(clockBytes)) +
             (scalarData == null ? "" : " scalarData*" + scalarData.length) +
             "]";
     }

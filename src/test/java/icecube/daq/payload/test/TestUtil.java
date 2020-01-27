@@ -134,6 +134,7 @@ class RequestData
         return expLen;
     }
 
+    @Override
     public String toString()
     {
         return "RequestData[type " + type + " cfg " + cfgId + " src " + srcId +
@@ -1574,7 +1575,7 @@ public abstract class TestUtil
         for (Object obj : hitList) {
             IHitDataPayload hit = (IHitDataPayload) obj;
 
-            final long hitTime = hit.getHitTimeUTC().longValue();
+            final long hitTime = hit.getUTCTime();
             final int hitSrc = (hit.getSourceID() == null ? -1 :
                                 hit.getSourceID().getSourceID());
             final long hitDom = (hit.getDOMID() == null ? -1 :
@@ -1974,7 +1975,7 @@ public abstract class TestUtil
         for (Object obj : hitList) {
             IHitPayload hit = (IHitPayload) obj;
 
-            final long hitTime = hit.getHitTimeUTC().longValue();
+            final long hitTime = hit.getUTCTime();
             final int hitSrc = (hit.getSourceID() == null ? -1 :
                                 hit.getSourceID().getSourceID());
             final long hitDom = (hit.getDOMID() == null ? -1 :

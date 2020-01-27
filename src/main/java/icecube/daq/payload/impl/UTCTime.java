@@ -5,6 +5,7 @@ import icecube.daq.payload.Poolable;
 import icecube.daq.util.Leapseconds;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
@@ -130,7 +131,7 @@ final class DateFormatter
         //       the number of days in the year.  This works for 48 hours into
         //       the next year.
         int dayOfYear = (int) (secs / SECS_PER_DAY) + 1;
-        int leapSecs = LEAP_SECONDS_OBJ.get_leap_offset(year, dayOfYear);
+        int leapSecs = LEAP_SECONDS_OBJ.getLeapOffset(dayOfYear, year);
         if (leapSecs > 0) {
             cal.add(GregorianCalendar.SECOND, -leapSecs);
         }
@@ -146,8 +147,19 @@ final class DateFormatter
 public class UTCTime
     implements Comparable, IUTCTime, Poolable
 {
+    /** First millisecond of the current year */
+    private static long jan1Millis = Long.MIN_VALUE;
+
     /** time value */
     private long time;
+
+    /**
+     * Get the current time
+     */
+    public UTCTime()
+    {
+        this(GregorianCalendar.getInstance());
+    }
 
     /**
      * Create a time
@@ -159,10 +171,31 @@ public class UTCTime
     }
 
     /**
+     * Create a time
+     * @param time value
+     */
+    public UTCTime(Calendar cal)
+    {
+        if (jan1Millis < 0) {
+            synchronized (this) {
+                GregorianCalendar gcal = new GregorianCalendar();
+                final int year = gcal.get(GregorianCalendar.YEAR);
+                gcal.set(year, 0, 1, 0, 0, 0);
+                gcal.set(GregorianCalendar.MILLISECOND, 0);
+                jan1Millis = gcal.getTimeInMillis() ;
+            }
+        }
+
+        this.time = (cal.getTimeInMillis() + cal.get(Calendar.DST_OFFSET) -
+                     jan1Millis) * (long) 1E7;
+    }
+
+    /**
      * Compare UTC time against another object
      * @param obj object being compared
      * @return -1, 0, or 1
      */
+    @Override
     public int compareTo(Object obj)
     {
         if (obj == null) {
@@ -185,6 +218,7 @@ public class UTCTime
      * Make a deep copy of this object
      * @return copied object
      */
+    @Override
     public Object deepCopy()
     {
         return new UTCTime(time);
@@ -193,6 +227,7 @@ public class UTCTime
     /**
      * Clear out any cached data.
      */
+    @Override
     public void dispose()
     {
         time = -1L;
@@ -203,6 +238,7 @@ public class UTCTime
      * @param obj object being compared
      * @return <tt>true</tt> if the objects are equal
      */
+    @Override
     public boolean equals(Object obj)
     {
         return compareTo(obj) == 0;
@@ -213,6 +249,7 @@ public class UTCTime
      * @param nanoSec number of nanoseconds to add
      * @return new time
      */
+    @Override
     public IUTCTime getOffsetUTCTime(double nanoSec)
     {
         return new UTCTime(time + (long) (nanoSec * 10.0));
@@ -222,6 +259,7 @@ public class UTCTime
      * Unimplemented
      * @return Error
      */
+    @Override
     public Poolable getPoolable()
     {
         throw new Error("Unimplemented");
@@ -231,6 +269,7 @@ public class UTCTime
      * Return this object's hash code
      * @return hash code
      */
+    @Override
     public int hashCode()
     {
         return (int) (time & (long) Integer.MAX_VALUE);
@@ -240,6 +279,7 @@ public class UTCTime
      * Return the long integer value of this UTC time
      * @return value
      */
+    @Override
     public long longValue()
     {
         return time;
@@ -248,6 +288,7 @@ public class UTCTime
     /**
      * Clear out any cached data.
      */
+    @Override
     public void recycle()
     {
         dispose();
@@ -258,6 +299,7 @@ public class UTCTime
      * @param otherTime time to subtract
      * @return difference
      */
+    @Override
     public long timeDiff(IUTCTime otherTime)
     {
         return time - otherTime.longValue();
@@ -268,6 +310,7 @@ public class UTCTime
      * @param otherTime time to subtract
      * @return difference in nanoseconds
      */
+    @Override
     public double timeDiff_ns(IUTCTime otherTime)
     {
         return (double) (time - otherTime.longValue()) / 10.0;
@@ -277,6 +320,7 @@ public class UTCTime
      * Return a human-readable date/time string
      * @return human-readable date/time string
      */
+    @Override
     public String toDateString()
     {
         return toDateString(time);
@@ -306,11 +350,11 @@ public class UTCTime
      *
      *       The Dec 31st, 1973 leap second.
      *
-     *       315359990000000000 --> 1973-12-31 23:59:59.0000000000
-     *       315359995000000000 --> 1973-12-31 23:59:59.5000000000
-     *       315360000000000000 --> 1973-12-31 23:59:59.0000000000 (23:59:60)
-     *       315360005000000000 --> 1973-12-31 23:59:59.5000000000 (23:59:60)
-     *       315360010000000000 --> 1974-01-01 00:00:00.0000000000
+     *       315359990000000000 --&gt; 1973-12-31 23:59:59.0000000000
+     *       315359995000000000 --&gt; 1973-12-31 23:59:59.5000000000
+     *       315360000000000000 --&gt; 1973-12-31 23:59:59.0000000000 (23:59:60)
+     *       315360005000000000 --&gt; 1973-12-31 23:59:59.5000000000 (23:59:60)
+     *       315360010000000000 --&gt; 1974-01-01 00:00:00.0000000000
      *
      *       This is a limitation of the java calendar library which does
      *       not support UTC leap seconds.
@@ -329,6 +373,7 @@ public class UTCTime
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         return Long.toString(time);

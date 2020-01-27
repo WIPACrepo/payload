@@ -110,6 +110,7 @@ public class DeltaCompressedHitData
      * Compute the number of bytes needed to save this payload to a byte buffer
      * @return number of bytes
      */
+    @Override
     public int computeBufferLength()
     {
         if (!isLoaded()) {
@@ -130,9 +131,20 @@ public class DeltaCompressedHitData
     }
 
     /**
+     * Get channel ID
+     * @return channel ID
+     */
+    @Override
+    public short getChannelID()
+    {
+        throw new Error("Unimplemented");
+    }
+
+    /**
      * Get the DOM ID object
      * @return DOM ID object
      */
+    @Override
     public IDOMID getDOMID()
     {
         if (domObj == null) {
@@ -147,6 +159,7 @@ public class DeltaCompressedHitData
      * @param chanId this DOM's channel ID
      * @return hit record
      */
+    @Override
     public IEventHitRecord getEventHitRecord(short chanId)
     {
         return new DeltaHitRecord((byte) (pedestal & 0x3), chanId,
@@ -157,6 +170,7 @@ public class DeltaCompressedHitData
      * Get the hit time object
      * @return hit time object
      */
+    @Override
     public IUTCTime getHitTimeUTC()
     {
         if (timeObj == null) {
@@ -170,6 +184,7 @@ public class DeltaCompressedHitData
      * Get the name of this payload.
      * @return name
      */
+    @Override
     public String getPayloadName()
     {
         return "DeltaCompressedHitData";
@@ -179,6 +194,7 @@ public class DeltaCompressedHitData
      * Get the payload registry type
      * @return type
      */
+    @Override
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_COMPRESSED_HIT_DATA;
@@ -188,6 +204,7 @@ public class DeltaCompressedHitData
      * Get the source ID object
      * @return source ID object
      */
+    @Override
     public ISourceID getSourceID()
     {
         if (srcObj == null) {
@@ -201,6 +218,7 @@ public class DeltaCompressedHitData
      * Unimplemented
      * @return Error
      */
+    @Override
     public int getTriggerType()
     {
         // return trigType;
@@ -208,9 +226,20 @@ public class DeltaCompressedHitData
     }
 
     /**
+     * Return<tt>true</tt> if this hit has a channel ID instead of
+     * source and DOM IDs
+     */
+    @Override
+    public boolean hasChannelID()
+    {
+        return false;
+    }
+
+    /**
      * Get the number of bytes needed to save this payload to a byte buffer
      * @return number of bytes
      */
+    @Override
     public int length()
     {
         return computeLength(data.length);
@@ -225,6 +254,7 @@ public class DeltaCompressedHitData
      * @return Error
      * @throws PayloadException never
      */
+    @Override
     public int loadBody(ByteBuffer buf, int offset, long utcTime,
                                  boolean isEmbedded)
         throws PayloadException
@@ -239,6 +269,7 @@ public class DeltaCompressedHitData
      * @return Error
      * @throws PayloadException never
      */
+    @Override
     public int putBody(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -252,6 +283,7 @@ public class DeltaCompressedHitData
      * @return number of bytes written
      * @throws PayloadException if there is a problem
      */
+    @Override
     public int writePayload(ByteBuffer buf, int offset)
         throws PayloadException
     {
@@ -326,6 +358,7 @@ public class DeltaCompressedHitData
      * Get a debugging string representing this object.
      * @return debugging string
      */
+    @Override
     public String toString()
     {
         return "DeltaCompressedHitData[time " + getUTCTime() +

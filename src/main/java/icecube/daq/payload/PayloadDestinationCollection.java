@@ -1,7 +1,7 @@
 /*
  * class: PayloadDestinationCollection
  *
- * Version $Id: PayloadDestinationCollection.java 15128 2014-08-20 16:37:50Z dglo $
+ * Version $Id: PayloadDestinationCollection.java 17114 2018-09-26 09:51:56Z dglo $
  *
  * Date: October 19 2005
  *
@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * This class is a simple implementation of the IPayloadDestinationCollection interface.
  *
- * @version $Id: PayloadDestinationCollection.java 15128 2014-08-20 16:37:50Z dglo $
+ * @version $Id: PayloadDestinationCollection.java 17114 2018-09-26 09:51:56Z dglo $
  * @author pat
  */
 public class PayloadDestinationCollection implements IPayloadDestinationCollection
@@ -58,6 +58,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @param sourceId     SourceId of this destination
      * @param destination  PayloadDestination
      */
+    @Override
     public void addPayloadDestination(ISourceID sourceId, IPayloadDestination destination) {
         destinationMap.put(sourceId, destination);
     }
@@ -67,6 +68,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @param sourceId SourceId of the destination
      * @return a PayloadDestination, or null if one is not associated with the SourceId
      */
+    @Override
     public IPayloadDestination getPayloadDestination(ISourceID sourceId) {
         return (IPayloadDestination) destinationMap.get(sourceId);
     }
@@ -75,6 +77,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * Get all PayloadDestinations.
      * @return a Collection of PayloadDestinations
      */
+    @Override
     public Collection getAllPayloadDestinations() {
         return destinationMap.values();
     }
@@ -85,6 +88,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      *
      * @return collection of source IDs
      */
+    @Override
     public Collection getAllSourceIDs()
     {
         return destinationMap.keySet();
@@ -97,6 +101,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @return number of bytes written
      * @throws IOException if there is a write error from the underlying PayloadDestination
      */
+    @Override
     public int writePayload(ISourceID sourceId, IWriteablePayload payload) throws IOException {
         if (!destinationMap.containsKey(sourceId)) {
             final String errMsg = "No destination for source ID " +
@@ -113,6 +118,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @return total number of bytes written
      * @throws IOException if there is a write error from the underlying PayloadDestination
      */
+    @Override
     public int writePayload(IWriteablePayload payload) throws IOException {
         int nWrite = 0;
         Iterator destinationIter = destinationMap.keySet().iterator();
@@ -127,6 +133,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @param sourceId SourceId of destination to close
      * @throws IOException if there is a close error from the underlying PayloadDestination
      */
+    @Override
     public void closePayloadDestination(ISourceID sourceId) throws IOException {
         ((IPayloadDestination) destinationMap.get(sourceId)).close();
         destinationMap.remove(sourceId);
@@ -142,6 +149,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * Close all PayloadDestinations.
      * @throws IOException if there is a close error from the underlying PayloadDestination
      */
+    @Override
     public void close() throws IOException {
         closeAllPayloadDestinations();
     }
@@ -150,6 +158,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * Close all PayloadDestinations.
      * @throws IOException if there is a close error from the underlying PayloadDestination
      */
+    @Override
     public synchronized void closeAllPayloadDestinations() throws IOException {
         Iterator destinationIter = destinationMap.keySet().iterator();
         while (destinationIter.hasNext()) {
@@ -161,6 +170,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * Register a Controller object for this collection.
      * @param controller object that will control this collection
      */
+    @Override
     public void registerController(IPayloadDestinationCollectionController controller) {
         this.controller = controller;
     }
@@ -169,6 +179,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * Stop all PayloadDestinations.
      * @throws IOException
      */
+    @Override
     public void stop() throws IOException {
         stopAllPayloadDestinations();
     }
@@ -177,6 +188,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * Stop all PayloadDestinations.
      * @throws IOException
      */
+    @Override
     public void stopAllPayloadDestinations() throws IOException {
         if (controller != null) {
             controller.allPayloadDestinationsClosed();
@@ -188,6 +200,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @param sourceId SourceId of destination to stop
      * @throws IOException
      */
+    @Override
     public void stopPayloadDestination(ISourceID sourceId) throws IOException{
         if (controller != null) {
             controller.payloadDestinationClosed(sourceId);

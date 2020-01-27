@@ -296,6 +296,7 @@ class TriggerConfigEntry
         }
     }
 
+    @Override
     public String toString()
     {
         StringBuilder buf = new StringBuilder(name);
@@ -366,6 +367,7 @@ class TriggerConfig
         return name;
     }
 
+    @Override
     public String toString()
     {
         return name + "*" + entries.size();
@@ -488,7 +490,7 @@ public abstract class PayloadChecker
      */
     private static String getHitString(IHitPayload hit)
     {
-        return "hit@" + hit.getHitTimeUTC();
+        return "hit@" + hit.getUTCTime();
     }
 
     /**
@@ -645,8 +647,7 @@ public abstract class PayloadChecker
                     getTrigReqHits((ITriggerRequestPayload) obj,
                                           hitList);
                 } else if (obj instanceof IHitPayload) {
-                    long hitTime =
-                        ((IHitPayload) obj).getHitTimeUTC().longValue();
+                    long hitTime = ((IHitPayload) obj).getUTCTime();
                     if (hitTime >= trigStart && hitTime <= trigFinish) {
                         hitList.add((IHitPayload) obj);
                         numHits++;
@@ -1411,10 +1412,6 @@ public abstract class PayloadChecker
         if (rReq != null) {
             List elemList = rReq.getReadoutRequestElements();
 
-            IReadoutRequestElement[] elems =
-                new IReadoutRequestElement[elemList.size()];
-
-            int nextElem = 0;
             for (Object obj : elemList) {
                 IReadoutRequestElement elem = (IReadoutRequestElement) obj;
 
@@ -1435,8 +1432,6 @@ public abstract class PayloadChecker
                 {
                     return false;
                 }
-
-                elems[nextElem++] = elem;
             }
         }
 
