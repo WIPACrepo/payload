@@ -83,9 +83,6 @@ public class UTCTimeTest
 
             assertEquals("Unexpected timeDiff",
                          timeVal - newVal, time.timeDiff(newTime));
-            assertEquals("Unexpected timeDiff_ns",
-                         (double) (timeVal - newVal) / 10.0,
-                         time.timeDiff_ns(newTime));
         }
     }
 
@@ -95,11 +92,11 @@ public class UTCTimeTest
 
         UTCTime time = new UTCTime(timeVal);
 
-        for (double d = 10.0; d >= 0.0; d -= 0.1) {
-            IUTCTime offTime = time.getOffsetUTCTime(d);
-            assertNotNull("Offset time for " + d + " is null", offTime);
-            assertEquals("Unexpected time for " + d,
-                         timeVal + ((long)( d * 10.0)),
+        for (long tick = 100; tick >= 0; tick -= 1) {
+            IUTCTime offTime = time.getOffsetUTCTime(tick);
+            assertNotNull("Offset time for " + tick + " is null", offTime);
+            assertEquals("Unexpected time for " + tick,
+                         timeVal + tick,
                          offTime.longValue());
         }
     }
