@@ -104,9 +104,9 @@ public class SimplerHit
             return 1;
         }
 
-        if (getChannelID() < hit.getChannelID()) {
+        if (getDOMID().longValue() < hit.getDOMID().longValue()) {
             return -1;
-        } else if (getChannelID() > hit.getChannelID()) {
+        } else if (getDOMID().longValue() > hit.getDOMID().longValue()) {
             return 1;
         }
 
