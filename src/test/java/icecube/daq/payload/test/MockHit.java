@@ -108,12 +108,6 @@ public class MockHit
     }
 
     @Override
-    public int getPayloadInterfaceType()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    @Override
     public IUTCTime getPayloadTimeUTC()
     {
         return getHitTimeUTC();

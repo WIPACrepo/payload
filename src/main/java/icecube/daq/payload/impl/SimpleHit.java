@@ -7,7 +7,6 @@ import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
-import icecube.daq.payload.PayloadInterfaceRegistry;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
 import icecube.daq.util.DOMInfo;
@@ -262,12 +261,6 @@ public class SimpleHit
     public double getIntegratedCharge()
     {
         throw new Error("Unimplemented");
-    }
-
-    @Override
-    public int getPayloadInterfaceType()
-    {
-        return PayloadInterfaceRegistry.I_HIT_PAYLOAD;
     }
 
     /**

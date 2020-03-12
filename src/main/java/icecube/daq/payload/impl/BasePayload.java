@@ -167,16 +167,6 @@ public abstract class BasePayload
     }
 
     /**
-     * Unimplemented
-     * @return Error
-     */
-    @Override
-    public int getPayloadInterfaceType()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
      * Get the name of this payload.
      * @return name
      */

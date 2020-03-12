@@ -1,7 +1,7 @@
 /*
  * class: IPayload
  *
- * Version $Id: IPayload.java 15194 2014-10-17 19:26:00Z dglo $
+ * Version $Id: IPayload.java 17760 2020-03-12 14:29:31Z dglo $
  *
  * Date: September 17 2004
  *
@@ -15,7 +15,7 @@ import java.nio.ByteBuffer;
 /**
  * Basic interface defining a trigger primitive payload
  *
- * @version $Id: IPayload.java 15194 2014-10-17 19:26:00Z dglo $
+ * @version $Id: IPayload.java 17760 2020-03-12 14:29:31Z dglo $
  * @author hellwig, dwharton
  */
 public interface IPayload
@@ -35,13 +35,6 @@ public interface IPayload
      * @return type from PayloadRegistry
      */
     int getPayloadType();
-
-    /**
-     * returns the Payload interface type as defined
-     * in the PayloadInterfaceRegistry.
-     * @return one of the defined types in PayloadInterfaceRegistry
-     */
-    int getPayloadInterfaceType();
 
     /**
      * gets the UTC time tag of a payload
