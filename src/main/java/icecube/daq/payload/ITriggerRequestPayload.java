@@ -10,6 +10,8 @@
 
 package icecube.daq.payload;
 
+import java.util.Collection;
+
 /**
  * This object is an ICompositePayload that represents the fact
  * that a trigger has been produced (as a composite) which has
@@ -20,10 +22,11 @@ package icecube.daq.payload;
 public interface ITriggerRequestPayload extends ICompositePayload
 {
     /**
-     * Returns the unique id assigned to this ITriggerRequestPayload
-     * @return the unique id for this event.
+     * get list of Payload's.
+     * @return list of Payloads
+     * @throws PayloadFormatException for some unknown reason
      */
-    int getUID();
+    Collection<IPayload> getPayloads() throws PayloadFormatException;
 
     /**
      *  Returns the IReadoutRequest which has been associated
@@ -38,6 +41,12 @@ public interface ITriggerRequestPayload extends ICompositePayload
      * @return trigger name
      */
     String getTriggerName();
+
+    /**
+     * Returns the unique id assigned to this ITriggerRequestPayload
+     * @return the unique id for this event.
+     */
+    int getUID();
 
     /**
      * Is this a merged request?

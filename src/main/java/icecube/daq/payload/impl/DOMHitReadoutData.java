@@ -1,5 +1,6 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IHitData;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
 import icecube.daq.payload.PayloadException;
@@ -78,7 +79,7 @@ public class DOMHitReadoutData
      * @return Error
      */
     @Override
-    public List getHitList()
+    public List<IHitData> getHitList()
     {
         throw new Error("Unimplemented");
     }

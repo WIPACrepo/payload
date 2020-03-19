@@ -1,9 +1,8 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IByteBufferCache;
-import icecube.daq.payload.ILoadablePayload;
+import icecube.daq.payload.IPayload;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadFormatException;
 
@@ -14,7 +13,7 @@ import java.nio.ByteBuffer;
  * Base payload class
  */
 public abstract class BasePayload
-    implements ILoadablePayload, IWriteablePayload
+    implements IPayload
 {
     /** Offset of payload length field */
     public static final int OFFSET_LENGTH = 0;

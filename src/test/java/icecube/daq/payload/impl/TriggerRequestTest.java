@@ -1,9 +1,9 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IHitPayload;
+import icecube.daq.payload.IPayload;
 import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.IReadoutRequestElement;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.ReadoutRequestElement;
 import icecube.daq.payload.test.MockDOMID;
@@ -15,6 +15,7 @@ import icecube.daq.payload.test.TestUtil;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import junit.framework.Test;
@@ -73,8 +74,7 @@ public class TriggerRequestTest
         mockReq.addElement(type1, firstTime1, lastTime1, domId1, srcId1);
         mockReq.addElement(type2, firstTime2, lastTime2, domId2, srcId2);
 
-        ArrayList<IWriteablePayload> hitList =
-            new ArrayList<IWriteablePayload>();
+        ArrayList<IPayload> hitList = new ArrayList<IPayload>();
         hitList.add(new MockHit(hitTime, hitType, hitCfgId, hitSrcId, hitDomId,
                                 hitMode));
 
@@ -118,19 +118,19 @@ public class TriggerRequestTest
                          elem.getLastTimeUTC().longValue());
             assertEquals("Bad element#" + i + " DOM ID",
                          (i == 0 ? domId1 : domId2),
-                         (elem.getDomID() == null ? -1L :
-                          elem.getDomID().longValue()));
+                         (elem.getDOMID() == null ? -1L :
+                          elem.getDOMID().longValue()));
             assertEquals("Bad element#" + i + " source ID",
                          (i == 0 ? srcId1 : srcId2),
                          (elem.getSourceID() == null ? -1 :
                           elem.getSourceID().getSourceID()));
         }
 
-        List reqHits = req.getPayloads();
+        Collection<IPayload> reqHits = req.getPayloads();
         assertEquals("Bad number of hits", 1, reqHits.size());
 
-        for (int i = 0; i < reqHits.size(); i++) {
-            IHitPayload hit = (IHitPayload) reqHits.get(i);
+        for (IPayload pay : reqHits) {
+            IHitPayload hit = (IHitPayload) pay;
 
             assertEquals("Bad hit time", hitTime, hit.getUTCTime());
             assertEquals("Bad hit type", hitType, hit.getTriggerType());
@@ -217,19 +217,19 @@ public class TriggerRequestTest
         assertEquals("Bad rrElem last time",
                      rrLastTime, elem.getLastTimeUTC().longValue());
         assertEquals("Bad rrElem DOM ID",
-                     rrDomId, (elem.getDomID() == null ? -1L :
-                               elem.getDomID().longValue()));
+                     rrDomId, (elem.getDOMID() == null ? -1L :
+                               elem.getDOMID().longValue()));
         assertEquals("Bad rrElem source ID",
                      rrSrcId, (elem.getSourceID() == null ? -1 :
                                elem.getSourceID().getSourceID()));
 
 //        assertNull("Non-null hit list", req.getHitList());
 
-        List reqHits = req.getPayloads();
+        Collection<IPayload> reqHits = req.getPayloads();
         assertEquals("Bad number of hits", 1, reqHits.size());
 
-        for (int i = 0; i < reqHits.size(); i++) {
-            IHitPayload hit = (IHitPayload) reqHits.get(i);
+        for (IPayload pay : reqHits) {
+            IHitPayload hit = (IHitPayload) pay;
 
             assertEquals("Bad hit time", hitTime, hit.getUTCTime());
             assertEquals("Bad hit type", hitType, hit.getTriggerType());
@@ -299,7 +299,7 @@ public class TriggerRequestTest
             }
         }
     }
- 
+
     public static void main(String[] args)
     {
         TestRunner.run(suite());

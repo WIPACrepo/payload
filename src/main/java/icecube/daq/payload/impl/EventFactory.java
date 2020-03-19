@@ -1,9 +1,8 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IByteBufferCache;
-import icecube.daq.payload.IEventFactory;
 import icecube.daq.payload.IEventHitRecord;
-import icecube.daq.payload.ILoadablePayload;
+import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
@@ -19,7 +18,6 @@ import org.apache.log4j.Logger;
  * Create events
  */
 public class EventFactory
-    implements IEventFactory
 {
     /** Logging object */
     private static final Logger LOG = Logger.getLogger(EventFactory.class);
@@ -59,13 +57,11 @@ public class EventFactory
      * @param dataList readout data payloads
      * @return new event
      */
-    @Override
-    public ILoadablePayload createPayload(int uid, ISourceID srcId,
-                                          IUTCTime firstTime,
-                                          IUTCTime lastTime, short year,
-                                          int runNum, int subrunNum,
-                                          ITriggerRequestPayload trigReq,
-                                          List dataList)
+    public IPayload createPayload(int uid, ISourceID srcId,
+                                  IUTCTime firstTime, IUTCTime lastTime,
+                                  short year, int runNum, int subrunNum,
+                                  ITriggerRequestPayload trigReq,
+                                  List dataList)
     {
         if (version != 4) {
             throw new Error("Unimplemented");
@@ -80,7 +76,7 @@ public class EventFactory
         } else {
             copyList = new ArrayList();
             for (Object obj : dataList) {
-                copyList.add(((ILoadablePayload) obj).deepCopy());
+                copyList.add(((IPayload) obj).deepCopy());
             }
         }
 
@@ -105,12 +101,11 @@ public class EventFactory
      * @param hitRecList list of hit records
      * @return new event
      */
-    @Override
-    public ILoadablePayload createPayload(int uid, IUTCTime firstTime,
-                                          IUTCTime lastTime, short year,
-                                          int runNum, int subrunNum,
-                                          ITriggerRequestPayload trigReq,
-                                          List<IEventHitRecord> hitRecList)
+    public IPayload createPayload(int uid, IUTCTime firstTime,
+                                  IUTCTime lastTime, short year, int runNum,
+                                  int subrunNum,
+                                  ITriggerRequestPayload trigReq,
+                                  List<IEventHitRecord> hitRecList)
         throws PayloadException
     {
         switch (version) {
@@ -141,7 +136,6 @@ public class EventFactory
      * Set the byte buffer cache associated with payloads from this factory
      * @param bufCache buffer cache
      */
-    @Override
     public void setByteBufferCache(IByteBufferCache bufCache)
     {
         if (this.bufCache != null && this.bufCache != bufCache) {
@@ -157,7 +151,6 @@ public class EventFactory
      *
      * @param domRegistry DOM registry
      */
-    @Override
     public void setDOMRegistry(IDOMRegistry domRegistry)
     {
         EventPayload_v5.setDOMRegistry(domRegistry);

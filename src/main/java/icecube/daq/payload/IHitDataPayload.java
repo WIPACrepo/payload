@@ -14,7 +14,7 @@ package icecube.daq.payload;
  * @author dwharton
  */
 public interface IHitDataPayload
-    extends IHitPayload
+    extends IHitPayload, IHitData
 {
     /**
      * Get access to the underlying data for an engineering hit

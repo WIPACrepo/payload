@@ -154,12 +154,12 @@ public class ReadoutRequestElement
         }
 
         if (val == 0) {
-            if (rre.getDomID() == null) {
+            if (rre.getDOMID() == null) {
                 if (domId >= 0) {
                     val = 1;
                 }
             } else {
-                long lval = domId - rre.getDomID().longValue();
+                long lval = domId - rre.getDOMID().longValue();
                 if (lval < 0) {
                     val = -1;
                 } else if (lval > 0) {
@@ -201,7 +201,7 @@ public class ReadoutRequestElement
      * @return DOM ID object
      */
     @Override
-    public IDOMID getDomID()
+    public IDOMID getDOMID()
     {
         if (domObj == null) {
             domObj = new DOMID(domId);

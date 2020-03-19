@@ -55,15 +55,6 @@ public abstract class DOMHit
     }
 
     /**
-     * Unimplemented
-     */
-    @Override
-    public void dispose()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
      * Get the configuration ID
      * @return 0
      */
@@ -76,7 +67,7 @@ public abstract class DOMHit
      * Get the DOM ID
      * @return DOM ID
      */
-    public long getDomId()
+    public long getDOMID()
     {
         return domId;
     }

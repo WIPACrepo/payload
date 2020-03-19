@@ -3,12 +3,11 @@ package icecube.daq.payload.impl;
 import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.IEventPayload;
 import icecube.daq.payload.IEventTriggerRecord;
-import icecube.daq.payload.ILoadablePayload;
+import icecube.daq.payload.IPayload;
 import icecube.daq.payload.IReadoutDataPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 
@@ -78,7 +77,7 @@ public class EventPayload_v4
     /** trigger request */
     private ITriggerRequestPayload trigReq;
     /** composite data */
-    private List<IWriteablePayload> dataList;
+    private List<IPayload> dataList;
 
     /** cached source ID object */
     private SourceID srcObj;
@@ -128,7 +127,7 @@ public class EventPayload_v4
     public EventPayload_v4(int uid, ISourceID srcId, IUTCTime firstTime,
                            IUTCTime lastTime, short year, int runNum,
                            int subrunNum, ITriggerRequestPayload trigReq,
-                           List<IWriteablePayload> dataList)
+                           List<IPayload> dataList)
     {
         super(firstTime.longValue());
 
@@ -140,7 +139,7 @@ public class EventPayload_v4
         this.runNum = runNum;
         this.subrunNum = subrunNum;
         this.trigReq = trigReq;
-        this.dataList = new ArrayList<IWriteablePayload>(dataList);
+        this.dataList = new ArrayList<IPayload>(dataList);
     }
 
     /**
@@ -157,7 +156,7 @@ public class EventPayload_v4
         int len = LEN_PAYLOAD_HEADER + OFFSET_COMPOSITE + OFFSET_COMPDATA +
             trigReq.length();
 
-        for (IWriteablePayload datum : dataList) {
+        for (IPayload datum : dataList) {
             len += datum.length();
         }
 
@@ -170,15 +169,6 @@ public class EventPayload_v4
      */
     @Override
     public Object deepCopy()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
-     * Unimplemented
-     */
-    @Override
-    public void dispose()
     {
         throw new Error("Unimplemented");
     }
@@ -206,16 +196,6 @@ public class EventPayload_v4
     }
 
     /**
-     * Get unique ID
-     * @return unique ID
-     */
-    @Override
-    public int getEventUID()
-    {
-        return uid;
-    }
-
-    /**
      * Get event version
      * @return <tt>4</tt>
      */
@@ -237,16 +217,6 @@ public class EventPayload_v4
         }
 
         return firstTimeObj;
-    }
-
-    /**
-     * Unimplemented
-     * @return Error
-     */
-    @Override
-    public List getHitList()
-    {
-        throw new Error("Unimplemented");
     }
 
     /**
@@ -291,16 +261,6 @@ public class EventPayload_v4
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_EVENT_V4;
-    }
-
-    /**
-     * Unimplemented
-     * @return Error
-     */
-    @Override
-    public List getPayloads()
-    {
-        throw new Error("Unimplemented");
     }
 
     /**
@@ -388,6 +348,16 @@ public class EventPayload_v4
     }
 
     /**
+     * Get unique ID
+     * @return unique ID
+     */
+    @Override
+    public int getUID()
+    {
+        return uid;
+    }
+
+    /**
      * Get the year in which this event took place
      * @return year
      */
@@ -451,7 +421,7 @@ public class EventPayload_v4
 
         final int numComp = (int) buf.getShort(compPos + OFFSET_COMPNUM);
 
-        List<IWriteablePayload> compList = new ArrayList<IWriteablePayload>();
+        List<IPayload> compList = new ArrayList<IPayload>();
         int loadedBytes = loadCompositeData(buf, compPos + OFFSET_COMPDATA,
                                             numComp, compList);
 
@@ -486,17 +456,17 @@ public class EventPayload_v4
      * @throws PayloadException if there is a problem
      */
     private int loadCompositeData(ByteBuffer buf, int offset, int numData,
-                                  List<IWriteablePayload> compList)
+                                  List<IPayload> compList)
         throws PayloadException
     {
         int totLen = 0;
 
         PayloadFactory factory = getPayloadFactory();
         for (int i = 0; i < numData; i++) {
-            IWriteablePayload pay = factory.getPayload(buf, offset + totLen);
+            IPayload pay = factory.getPayload(buf, offset + totLen);
 
             try {
-                ((ILoadablePayload) pay).loadPayload();
+                ((IPayload) pay).loadPayload();
             } catch (IOException ioe) {
                 throw new PayloadException("Couldn't load composite payload #" +
                                            i, ioe);
@@ -544,7 +514,7 @@ public class EventPayload_v4
         buf.putInt(offset + OFFSET_RUNNUMBER, runNum);
         buf.putInt(offset + OFFSET_SUBRUNNUMBER, subrunNum);
 
-        List<IWriteablePayload> compList = new ArrayList<IWriteablePayload>();
+        List<IPayload> compList = new ArrayList<IPayload>();
         compList.add(trigReq);
         compList.addAll(dataList);
 
@@ -558,7 +528,7 @@ public class EventPayload_v4
         buf.putShort(compPos + OFFSET_COMPNUM, (short) compList.size());
 
         int totLen = 0;
-        for (IWriteablePayload pay : compList) {
+        for (IPayload pay : compList) {
             final int expLen = pay.length();
 
             int len;
@@ -603,7 +573,7 @@ public class EventPayload_v4
         }
 
         if (dataList != null) {
-            for (IWriteablePayload pay : dataList) {
+            for (IPayload pay : dataList) {
                 pay.recycle();
             }
             dataList = null;
@@ -637,7 +607,7 @@ public class EventPayload_v4
             totData = dataList.size();
 
             totHits = 0;
-            for (IWriteablePayload pay : dataList) {
+            for (IPayload pay : dataList) {
                 IReadoutDataPayload rdout = (IReadoutDataPayload) pay;
                 totHits += rdout.getNumHits();
             }

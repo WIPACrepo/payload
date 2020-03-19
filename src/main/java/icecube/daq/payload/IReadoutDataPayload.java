@@ -8,7 +8,7 @@ import java.util.List;
  * a single IReadoutRequest and it's associated IReadoutRequestElements.
  * The event-builder will expect extactly ONE group of these from a single
  * string processor (or IceTopDataHandler) for a single IReadoutRequest
- * which is sent to them. This group is defined by the getRequestUID() and
+ * which is sent to them. This group is defined by the getUID() and
  * is enumerated by the getReadoutDataPayloadNumber, and IsLastPayloadOfGroup
  * methods.
  * @author dwharton, mhellwig
@@ -17,28 +17,28 @@ public interface IReadoutDataPayload
     extends ICompositePayload
 {
     /**
-     * get's the ISourceID from which this has been sent.
-     * @return source ID
-     */
-    @Override
-    ISourceID getSourceID();
-
-    /**
-     * This is the number that associates all read's for a givent EB event
-     * together
-     * @return the unique id for this data requests
-     */
-    int getRequestUID();
-
-    /**
      * A list of the IHitDataPayload's which correspond
      * to the hit-data that has been requested.
      * @return a list of IHitDataPayload's which contain the desired data.
      */
     List getDataPayloads();
+
+    /**
+     * get timeordered list of all hits contained in Composite, this
+     * is the unique list of  Payload's which are IHitPayload's
+     * @return list of hits
+     */
+    List<IHitData> getHitList();
+
+    /**
+     * Get the number of hits
+     * @return number of hits
+     */
+    int getNumHits();
+
     /**
      * The order number of this payload in the group of payload's
-     * which have been sent in the group corresponding to the getRequestUID()
+     * which have been sent in the group corresponding to the getUID()
      * value.
      * ---
      * the number (of a sub-sequence of payloads which are
@@ -48,6 +48,14 @@ public interface IReadoutDataPayload
      * @return the number of this payload relative to this group by uid.
      */
     int getReadoutDataPayloadNumber();
+
+    /**
+     * This is the number that associates all read's for a givent EB event
+     * together
+     * @return the unique id for this data requests
+     */
+    int getUID();
+
     /**
      * Boolean which indicates if this is the final
      * data payload for this group.
@@ -62,10 +70,4 @@ public interface IReadoutDataPayload
      * ---
      */
     boolean isLastPayloadOfGroup();
-
-    /**
-     * Get the number of hits
-     * @return number of hits
-     */
-    int getNumHits();
 }

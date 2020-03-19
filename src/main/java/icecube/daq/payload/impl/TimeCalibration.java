@@ -160,15 +160,6 @@ public class TimeCalibration
     }
 
     /**
-     * Unimplemented
-     */
-    @Override
-    public void dispose()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
      * Extract an integer value from the string
      * @param fldName field name
      * @param str integer string
@@ -238,7 +229,7 @@ public class TimeCalibration
      * Get the DOM ID
      * @return DOM ID
      */
-    public long getDomId()
+    public long getDOMID()
     {
         return domId;
     }

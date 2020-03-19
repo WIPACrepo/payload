@@ -41,15 +41,7 @@ public class UTCTimeTest
 
         UTCTime timeCopy = (UTCTime) time.deepCopy();
 
-        time.recycle();
-        assertEquals("Unexpected time", -1L, time.longValue());
-
         assertEquals("Unexpected time", timeVal, timeCopy.longValue());
-
-        UTCTime timeClone = new UTCTime(timeCopy.longValue());
-
-        timeCopy.dispose();
-        assertEquals("Unexpected time", -1L, timeCopy.longValue());
     }
 
     public void testCompare()

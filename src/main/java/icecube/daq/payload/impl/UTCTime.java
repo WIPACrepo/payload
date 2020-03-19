@@ -1,7 +1,6 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.Poolable;
 import icecube.daq.util.Leapseconds;
 
 import java.text.SimpleDateFormat;
@@ -145,7 +144,7 @@ final class DateFormatter
  * UTC time value
  */
 public class UTCTime
-    implements Comparable, IUTCTime, Poolable
+    implements Comparable, IUTCTime
 {
     /** First millisecond of the current year */
     private static long jan1Millis = Long.MIN_VALUE;
@@ -225,15 +224,6 @@ public class UTCTime
     }
 
     /**
-     * Clear out any cached data.
-     */
-    @Override
-    public void dispose()
-    {
-        time = -1L;
-    }
-
-    /**
      * Is the specified object equal to this object?
      * @param obj object being compared
      * @return <tt>true</tt> if the objects are equal
@@ -256,16 +246,6 @@ public class UTCTime
     }
 
     /**
-     * Unimplemented
-     * @return Error
-     */
-    @Override
-    public Poolable getPoolable()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
      * Return this object's hash code
      * @return hash code
      */
@@ -283,15 +263,6 @@ public class UTCTime
     public long longValue()
     {
         return time;
-    }
-
-    /**
-     * Clear out any cached data.
-     */
-    @Override
-    public void recycle()
-    {
-        dispose();
     }
 
     /**

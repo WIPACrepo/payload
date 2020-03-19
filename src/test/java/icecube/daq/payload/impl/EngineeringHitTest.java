@@ -62,7 +62,7 @@ public class EngineeringHitTest
         assertEquals("Bad payload type", hit.getPayloadType(),
                      PayloadRegistry.PAYLOAD_ID_ENGFORMAT_HIT);
 
-        assertEquals("Bad DOM ID", domId, hit.getDomId());
+        assertEquals("Bad DOM ID", domId, hit.getDOMID());
         assertEquals("Bad hit time",
                      utcTime, hit.getTimestamp());
         assertEquals("Bad trigger mode", trigMode, hit.getTriggerMode());

@@ -137,15 +137,6 @@ public abstract class Monitor
     }
 
     /**
-     * Unimplemented
-     */
-    @Override
-    public void dispose()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
      * Get the DOM clock value.
      * @return clock value
      */
@@ -162,7 +153,7 @@ public abstract class Monitor
      * Get the DOM ID.
      * @return DOM ID
      */
-    public long getDomId()
+    public long getDOMID()
     {
         return domId;
     }

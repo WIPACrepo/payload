@@ -1,7 +1,7 @@
 /*
  * class: PayloadDestinationCollection
  *
- * Version $Id: PayloadDestinationCollection.java 17114 2018-09-26 09:51:56Z dglo $
+ * Version $Id: PayloadDestinationCollection.java 17771 2020-03-19 22:06:07Z dglo $
  *
  * Date: October 19 2005
  *
@@ -19,15 +19,18 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * This class is a simple implementation of the IPayloadDestinationCollection interface.
+ * This class is a simple implementation of the IPayloadDestinationCollection
+ * interface.
  *
- * @version $Id: PayloadDestinationCollection.java 17114 2018-09-26 09:51:56Z dglo $
+ * @version $Id: PayloadDestinationCollection.java 17771 2020-03-19 22:06:07Z dglo $
  * @author pat
  */
-public class PayloadDestinationCollection implements IPayloadDestinationCollection
+public class PayloadDestinationCollection
+    implements IPayloadDestinationCollection
 {
 
-    Map destinationMap = new HashMap();
+    Map<ISourceID, IPayloadDestination> destinationMap =
+        new HashMap<ISourceID, IPayloadDestination>();
     IPayloadDestinationCollectionController controller;
 
     /**
@@ -70,7 +73,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      */
     @Override
     public IPayloadDestination getPayloadDestination(ISourceID sourceId) {
-        return (IPayloadDestination) destinationMap.get(sourceId);
+        return destinationMap.get(sourceId);
     }
 
     /**
@@ -78,7 +81,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @return a Collection of PayloadDestinations
      */
     @Override
-    public Collection getAllPayloadDestinations() {
+    public Collection<IPayloadDestination> getAllPayloadDestinations() {
         return destinationMap.values();
     }
 
@@ -89,7 +92,7 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @return collection of source IDs
      */
     @Override
-    public Collection getAllSourceIDs()
+    public Collection<ISourceID> getAllSourceIDs()
     {
         return destinationMap.keySet();
     }
@@ -102,14 +105,16 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @throws IOException if there is a write error from the underlying PayloadDestination
      */
     @Override
-    public int writePayload(ISourceID sourceId, IWriteablePayload payload) throws IOException {
+    public int writePayload(ISourceID sourceId, IPayload payload)
+        throws IOException
+    {
         if (!destinationMap.containsKey(sourceId)) {
             final String errMsg = "No destination for source ID " +
                 sourceId.getSourceID();
             throw new IllegalArgumentException(errMsg);
         }
 
-        return ((IPayloadDestination) destinationMap.get(sourceId)).writePayload(payload);
+        return ((IPayloadDestination) destinationMap.get(sourceId)).writePayload(false, payload);
     }
 
     /**
@@ -119,7 +124,9 @@ public class PayloadDestinationCollection implements IPayloadDestinationCollecti
      * @throws IOException if there is a write error from the underlying PayloadDestination
      */
     @Override
-    public int writePayload(IWriteablePayload payload) throws IOException {
+    public int writePayload(IPayload payload)
+        throws IOException
+    {
         int nWrite = 0;
         Iterator destinationIter = destinationMap.keySet().iterator();
         while (destinationIter.hasNext()) {

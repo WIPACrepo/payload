@@ -91,11 +91,11 @@ public class HitRecordList
         // those which are logically inconsistent
         hitRecList = new ArrayList<IEventHitRecord>();
         for (DOMHit hit : hitList) {
-            DOMInfo dom = reg.getDom(hit.getDomId());
+            DOMInfo dom = reg.getDom(hit.getDOMID());
             if(dom == null)
             {
                 log.error("Cannot send hit from unregistered " +
-                          String.format("DOM [%012x]", hit.getDomId()));
+                          String.format("DOM [%012x]", hit.getDOMID()));
                 continue;
             }
             if (dom.getHubId() % 1000 != hubId) {
@@ -177,15 +177,6 @@ public class HitRecordList
      */
     @Override
     public Object deepCopy()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
-     * Unimplemented
-     */
-    @Override
-    public void dispose()
     {
         throw new Error("Unimplemented");
     }

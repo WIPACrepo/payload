@@ -42,7 +42,7 @@ public class SupernovaTest
         Supernova sn = new Supernova(buf, 0);
         sn.loadPayload();
 
-        assertEquals("Bad DOM ID", domId, sn.getDomId());
+        assertEquals("Bad DOM ID", domId, sn.getDOMID());
         //assertEquals("Bad DOM clock", domClock, sn.getDomClock());
 
         byte[] scalarData = sn.getScalarData();

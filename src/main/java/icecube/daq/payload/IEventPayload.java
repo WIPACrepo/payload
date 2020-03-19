@@ -63,34 +63,21 @@ public interface IEventPayload
     Iterable<IEventHitRecord> getHitRecords();
 
     /**
+     * Returns the IReadoutDataPayload's which represent the actual data
+     * associated with the event.
+     * @return list of IReadoutDataPayload's which can be queried for
+     *         IHitDataPayload's
+     */
+    @Deprecated
+    List getReadoutDataPayloads();
+
+    /**
      * Get the run number for this event which provides a key to the
      * instrumentation configuration at the time that this event was produced.
      * @return the run number
      *  NOTE:a value of -1 indicates that this is not implemented by this object
      */
     int getRunNumber();
-
-    /**
-     * Returns the unique id assigned to this event by the GlobalTrigger.
-     *
-     * @return the unique id for this event.
-     */
-    int getEventUID();
-
-    /**
-     * Returns the ITriggerRequestPayload which provides the
-     * context for the data of this event.
-     * @return the payload representing the trigger context.
-     */
-    ITriggerRequestPayload getTriggerRequestPayload();
-
-    /**
-     * Returns the IReadoutDataPayload's which represent the actual data
-     * associated with the event.
-     * @return list of IReadoutDataPayload's which can be queried for
-     *         IHitDataPayload's
-     */
-    List getReadoutDataPayloads();
 
     /**
      * Get the number of the active subrun for this event.
@@ -105,6 +92,20 @@ public interface IEventPayload
      * @return trigger record iterator
      */
     Iterable<IEventTriggerRecord> getTriggerRecords();
+
+    /**
+     * Returns the ITriggerRequestPayload which provides the
+     * context for the data of this event.
+     * @return the payload representing the trigger context.
+     */
+    ITriggerRequestPayload getTriggerRequestPayload();
+
+    /**
+     * Returns the unique id assigned to this event by the GlobalTrigger.
+     *
+     * @return the unique id for this event.
+     */
+    int getUID();
 
     /**
      * Get the year in which this event occurred.

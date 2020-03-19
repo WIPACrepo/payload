@@ -1,13 +1,12 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IDOMID;
-import icecube.daq.payload.Poolable;
 
 /**
  * DOM ID
  */
 public class DOMID
-    implements IDOMID, Poolable
+    implements IDOMID
 {
     /** Used to quickly build DOMID strings */
     private static final char[] hexChars = new char[] {
@@ -61,15 +60,6 @@ public class DOMID
     }
 
     /**
-     * Do nothing
-     */
-    @Override
-    public void dispose()
-    {
-        // do nothing
-    }
-
-    /**
      * Is the specified object equal to this object?
      * @param obj object being compared
      * @return <tt>true</tt> if the objects are equal
@@ -78,16 +68,6 @@ public class DOMID
     public boolean equals(Object obj)
     {
         return compareTo(obj) == 0;
-    }
-
-    /**
-     * Unimplemented
-     * @return Error
-     */
-    @Override
-    public Poolable getPoolable()
-    {
-        throw new Error("Unimplemented");
     }
 
     /**
@@ -113,15 +93,6 @@ public class DOMID
     public long longValue()
     {
         return domId;
-    }
-
-    /**
-     * Clear out any cached data.
-     */
-    @Override
-    public void recycle()
-    {
-        domId = -1L;
     }
 
     /**

@@ -85,8 +85,8 @@ public class HitDataReadoutData
     @Override
     public Object deepCopy()
     {
-        return new HitDataReadoutData(getRequestUID(), getSourceId(),
-                                      getFirstTime(), getLastTime(), hitList);
+        return new HitDataReadoutData(getUID(), getSourceId(), getFirstTime(),
+                                      getLastTime(), hitList);
     }
 
     /**
@@ -104,7 +104,7 @@ public class HitDataReadoutData
      * @return list of hits
      */
     @Override
-    public List getHitList()
+    public List<IHitData> getHitList()
     {
         return hitList;
     }

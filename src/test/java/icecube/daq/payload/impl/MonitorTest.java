@@ -1,6 +1,5 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.test.MockDOMID;
 import icecube.daq.payload.test.MockHit;
@@ -53,7 +52,7 @@ public class MonitorTest
             ASCIIMonitor moni = new ASCIIMonitor(buf, 0);
             moni.loadPayload();
 
-            assertEquals("Bad DOM ID", domId, moni.getDomId());
+            assertEquals("Bad DOM ID", domId, moni.getDOMID());
             assertEquals("Bad DOM clock", domClock, moni.getDomClock());
             assertEquals("Bad ascii data", str, moni.getString());
 
@@ -132,7 +131,7 @@ public class MonitorTest
             ConfigMonitor moni = new ConfigMonitor(buf, 0);
             moni.loadPayload();
 
-            assertEquals("Bad DOM ID", domId, moni.getDomId());
+            assertEquals("Bad DOM ID", domId, moni.getDOMID());
             assertEquals("Bad DOM clock", domClock, moni.getDomClock());
             assertEquals("Bad event version",
                          evtVersion, moni.getEventVersion());
@@ -275,7 +274,7 @@ public class MonitorTest
                 ConfigChangeMonitor moni = new ConfigChangeMonitor(buf, 0);
                 moni.loadPayload();
 
-                assertEquals("Bad DOM ID", domId, moni.getDomId());
+                assertEquals("Bad DOM ID", domId, moni.getDOMID());
                 assertEquals("Bad DOM clock", domClock, moni.getDomClock());
                 assertEquals("Bad event code",
                              states[c].code, moni.getEventCode());
@@ -364,7 +363,7 @@ public class MonitorTest
             GenericMonitor moni = new GenericMonitor(buf, 0);
             moni.loadPayload();
 
-            assertEquals("Bad DOM ID", domId, moni.getDomId());
+            assertEquals("Bad DOM ID", domId, moni.getDOMID());
             assertEquals("Bad DOM clock", domClock, moni.getDomClock());
 
             byte[] moniData = moni.getData();
@@ -437,7 +436,7 @@ public class MonitorTest
             HardwareMonitor moni = new HardwareMonitor(buf, 0);
             moni.loadPayload();
 
-            assertEquals("Bad DOM ID", domId, moni.getDomId());
+            assertEquals("Bad DOM ID", domId, moni.getDOMID());
             assertEquals("Bad DOM clock", domClock, moni.getDomClock());
             assertEquals("Bad format version",
                          (byte) 0, moni.getStateEventVersion());

@@ -80,7 +80,7 @@ public class ReadoutDataTest
                      firstTime, rdp.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
                      lastTime, rdp.getLastTimeUTC().longValue());
-        assertEquals("Bad request UID", uid, rdp.getRequestUID());
+        assertEquals("Bad request UID", uid, rdp.getUID());
 //        assertEquals("Bad payload number",
 //                     payNum, rdp.getReadoutDataNumber());
 //        assertEquals("Bad isLastPayload value",
@@ -88,22 +88,26 @@ public class ReadoutDataTest
 
         assertNotNull("Non-null hit list", rdp.getHitList());
 
-        List rdpHits = rdp.getHitList();
+        List<IHitData> rdpHits = rdp.getHitList();
         assertEquals("Bad number of hits", 2, rdpHits.size());
 
-        for (int i = 0; i < rdpHits.size(); i++) {
-            IHitPayload hit = (IHitPayload) rdpHits.get(i);
+        boolean useFirst = true;
+        for (IHitData hdata : rdpHits) {
+            IHitPayload hit = (IHitPayload) hdata;
 
-            assertEquals("Bad hit time", (i == 0 ? hitTime1 : hitTime2),
+            assertEquals("Bad hit time", (useFirst ? hitTime1 : hitTime2),
                          hit.getUTCTime());
-            assertEquals("Bad hit type", (i == 0 ? hitType1 : hitType2),
+            assertEquals("Bad hit type", (useFirst ? hitType1 : hitType2),
                          hit.getTriggerType());
-            assertEquals("Bad hit DOM ID", (i == 0 ? hitDomId1 : hitDomId2),
+            assertEquals("Bad hit DOM ID", (useFirst ? hitDomId1 : hitDomId2),
                          (hit.getDOMID() == null ? -1L :
                           hit.getDOMID().longValue()));
-            assertEquals("Bad hit source ID", (i == 0 ? hitSrcId1 : hitSrcId2),
+            assertEquals("Bad hit source ID",
+                         (useFirst ? hitSrcId1 : hitSrcId2),
                          (hit.getSourceID() == null ? -1 :
                           hit.getSourceID().getSourceID()));
+
+            useFirst = false;
         }
 
         rdp.recycle();
@@ -158,7 +162,7 @@ public class ReadoutDataTest
                      firstTime, rdp.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
                      lastTime, rdp.getLastTimeUTC().longValue());
-        assertEquals("Bad request UID", uid, rdp.getRequestUID());
+        assertEquals("Bad request UID", uid, rdp.getUID());
 //        assertEquals("Bad payload number",
 //                     payNum, rdp.getReadoutDataNumber());
 //        assertEquals("Bad isLastPayload value",
@@ -169,19 +173,23 @@ public class ReadoutDataTest
         List rdpHits = rdp.getHitList();
         assertEquals("Bad number of hits", 2, rdpHits.size());
 
+        boolean useFirst = true;
         for (int i = 0; i < rdpHits.size(); i++) {
             IHitPayload hit = (IHitPayload) rdpHits.get(i);
 
-            assertEquals("Bad hit time", (i == 0 ? hitTime1 : hitTime2),
+            assertEquals("Bad hit time", (useFirst ? hitTime1 : hitTime2),
                          hit.getUTCTime());
-//            assertEquals("Bad hit type", (i == 0 ? hitType1 : hitType2),
+//            assertEquals("Bad hit type", (useFirst ? hitType1 : hitType2),
 //                         hit.getTriggerType());
-            assertEquals("Bad hit DOM ID", (i == 0 ? hitDomId1 : hitDomId2),
+            assertEquals("Bad hit DOM ID", (useFirst ? hitDomId1 : hitDomId2),
                          (hit.getDOMID() == null ? -1L :
                           hit.getDOMID().longValue()));
-            assertEquals("Bad hit source ID", (i == 0 ? hitSrcId1 : hitSrcId2),
+            assertEquals("Bad hit source ID",
+                         (useFirst ? hitSrcId1 : hitSrcId2),
                          (hit.getSourceID() == null ? -1 :
                           hit.getSourceID().getSourceID()));
+
+            useFirst = false;
         }
 
         rdp.recycle();

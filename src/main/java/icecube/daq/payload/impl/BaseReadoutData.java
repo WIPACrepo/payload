@@ -1,5 +1,6 @@
 package icecube.daq.payload.impl;
 
+import icecube.daq.payload.IHitData;
 import icecube.daq.payload.IReadoutDataPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
@@ -149,15 +150,6 @@ public abstract class BaseReadoutData
     public abstract Object deepCopy();
 
     /**
-     * Unimplemented
-     */
-    @Override
-    public void dispose()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
      * Get the list of data payloads
      * @return list of data payloads
      */
@@ -192,7 +184,7 @@ public abstract class BaseReadoutData
      * @return list of hits
      */
     @Override
-    public abstract List getHitList();
+    public abstract List<IHitData> getHitList();
 
     /**
      * Get the ending time
@@ -239,29 +231,9 @@ public abstract class BaseReadoutData
      * @return Error
      */
     @Override
-    public List getPayloads()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
-     * Unimplemented
-     * @return Error
-     */
-    @Override
     public int getReadoutDataPayloadNumber()
     {
         throw new Error("Unimplemented");
-    }
-
-    /**
-     * Get the unique ID
-     * @return unique ID
-     */
-    @Override
-    public int getRequestUID()
-    {
-        return uid;
     }
 
     /**
@@ -305,6 +277,16 @@ public abstract class BaseReadoutData
     public int getTriggerType()
     {
         throw new Error("Unimplemented");
+    }
+
+    /**
+     * Get the unique ID
+     * @return unique ID
+     */
+    @Override
+    public int getUID()
+    {
+        return uid;
     }
 
     /**

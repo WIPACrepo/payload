@@ -6,7 +6,7 @@ import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.IEventPayload;
 import icecube.daq.payload.IEventTriggerRecord;
 import icecube.daq.payload.IHitPayload;
-import icecube.daq.payload.ILoadablePayload;
+import icecube.daq.payload.IPayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
@@ -19,6 +19,7 @@ import icecube.daq.util.IDOMRegistry;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -46,12 +47,6 @@ class TemporaryHit
 
     @Override
     public Object deepCopy()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    @Override
-    public void dispose()
     {
         throw new Error("Unimplemented");
     }
@@ -238,7 +233,7 @@ class TriggerRecord
                                        trigReq, ioe);
         }
 
-        List payList;
+        Collection<IPayload> payList;
         try {
             payList = trigReq.getPayloads();
         } catch (PayloadFormatException pfe) {
@@ -248,22 +243,22 @@ class TriggerRecord
         }
 
         if (payList != null) {
-            for (Object obj : payList) {
-                if (!(obj instanceof IHitPayload)) {
+            for (IPayload pay : payList) {
+                if (!(pay instanceof IHitPayload)) {
                     continue;
                 }
 
                 try {
-                    ((ILoadablePayload) obj).loadPayload();
+                    pay.loadPayload();
                 } catch (IOException ioe) {
-                    LOG.error("Ignoring unloadable payload " + obj, ioe);
+                    LOG.error("Ignoring unloadable payload " + pay, ioe);
                     continue;
                 } catch (PayloadFormatException pfe) {
-                    LOG.error("Ignoring unloadable payload " + obj, pfe);
+                    LOG.error("Ignoring unloadable payload " + pay, pfe);
                     continue;
                 }
 
-                hitList.add(new TemporaryHit((IHitPayload) obj));
+                hitList.add(new TemporaryHit((IHitPayload) pay));
             }
         }
     }
@@ -689,15 +684,6 @@ public class EventPayload_v5
     }
 
     /**
-     * Unimplemented
-     */
-    @Override
-    public void dispose()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
      * Extract all trigger requests and convert to trigger records.
      * @param trigRecList list to be filled with new trigger records
      * @param hitRecList list of hit records for this event
@@ -711,27 +697,27 @@ public class EventPayload_v5
     {
         trigRecList.add(new TriggerRecord(trigReq));
 
-        List payList = trigReq.getPayloads();
+        Collection<IPayload> payList = trigReq.getPayloads();
         if (payList != null) {
-            for (Object obj : payList) {
+            for (IPayload pay : payList) {
                 try {
-                    ((ILoadablePayload) obj).loadPayload();
+                    pay.loadPayload();
                 } catch (IOException ioe) {
-                    LOG.error("Ignoring unloadable trigger request " + obj,
+                    LOG.error("Ignoring unloadable trigger request " + pay,
                               ioe);
                     continue;
                 } catch (PayloadFormatException pfe) {
-                    LOG.error("Ignoring unloadable trigger request " + obj,
+                    LOG.error("Ignoring unloadable trigger request " + pay,
                               pfe);
                     continue;
                 }
 
-                if (obj instanceof ITriggerRequestPayload) {
+                if (pay instanceof ITriggerRequestPayload) {
                     fillTriggerRecordList(trigRecList, hitRecList,
-                                          (ITriggerRequestPayload) obj);
-                } else if (!(obj instanceof IHitPayload)) {
+                                          (ITriggerRequestPayload) pay);
+                } else if (!(pay instanceof IHitPayload)) {
                     LOG.error("Ignoring non-trigger " +
-                              obj.getClass().getName() + " " + obj);
+                              pay.getClass().getName() + " " + pay);
                 }
             }
         }
@@ -757,16 +743,6 @@ public class EventPayload_v5
     public int getEventType()
     {
         return -1;
-    }
-
-    /**
-     * Get unique ID
-     * @return unique ID
-     */
-    @Override
-    public int getEventUID()
-    {
-        return uid;
     }
 
     /**
@@ -812,16 +788,6 @@ public class EventPayload_v5
     long getFirstTime()
     {
         return firstTime;
-    }
-
-    /**
-     * Unimplemented
-     * @return Error
-     */
-    @Override
-    public List getHitList()
-    {
-        throw new Error("Unimplemented");
     }
 
     /**
@@ -883,16 +849,6 @@ public class EventPayload_v5
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_EVENT_V5;
-    }
-
-    /**
-     * Unimplemented
-     * @return Error
-     */
-    @Override
-    public List getPayloads()
-    {
-        throw new Error("Unimplemented");
     }
 
     /**
@@ -973,6 +929,16 @@ public class EventPayload_v5
     public int getTriggerType()
     {
         throw new Error("Unimplemented");
+    }
+
+    /**
+     * Get unique ID
+     * @return unique ID
+     */
+    @Override
+    public int getUID()
+    {
+        return uid;
     }
 
     /**

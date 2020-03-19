@@ -92,11 +92,6 @@ public interface IReadoutRequest
         throws PayloadException;
 
     /**
-     * Recycle this payload.  It will be useless after this call.
-     */
-    void recycle();
-
-    /**
      * Set the source ID. Needed for backward compatiblility with the old
      * global request handler implementation.
      *

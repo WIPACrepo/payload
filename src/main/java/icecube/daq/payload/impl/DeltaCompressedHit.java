@@ -236,7 +236,7 @@ public class DeltaCompressedHit
         return DeltaCompressedHitData.writePayloadToBuffer(buf, offset,
                                                            getTimestamp(),
                                                            -1, getTriggerMode(),
-                                                           srcId, getDomId(),
+                                                           srcId, getDOMID(),
                                                            version, pedestal,
                                                            domClock, word0,
                                                            word2, data);

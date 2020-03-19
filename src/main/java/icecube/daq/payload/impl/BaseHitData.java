@@ -39,15 +39,6 @@ abstract class BaseHitData
     }
 
     /**
-     * Unimplemented
-     */
-    @Override
-    public void dispose()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
      * Return the ID of the DOM which recorded this hit
      * @return DOM ID
      */

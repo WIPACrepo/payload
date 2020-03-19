@@ -9,12 +9,12 @@ public interface VitreousBufferCacheMBean
      * Get number of currently acquired buffers
      * @return value
      */
-    int getCurrentAquiredBuffers();
+    int getCurrentAcquiredBuffers();
     /**
      * Get number of currently acquired bytes
      * @return value
      */
-    long getCurrentAquiredBytes();
+    long getCurrentAcquiredBytes();
     /**
      * Get number of buffers returned.
      * @return value

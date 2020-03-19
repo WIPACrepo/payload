@@ -17,20 +17,8 @@ package icecube.daq.payload;
  * @author hellwig, dwharton
  */
 public interface IHitPayload
-    extends ITriggerPayload
+    extends IPayload
 {
-    /**
-     * Get Hit Time (leading edge)
-     * @return hit time
-     */
-    IUTCTime getHitTimeUTC();
-
-    /**
-     * Get Charge
-     * @return charge value
-     */
-    double getIntegratedCharge();
-
     /**
      * Get channel ID
      * @return channel ID
@@ -42,6 +30,35 @@ public interface IHitPayload
      * @return DOM ID
      */
     IDOMID getDOMID();
+
+    /**
+     * Get Hit Time (leading edge)
+     * @return hit time
+     */
+    IUTCTime getHitTimeUTC();
+
+    /**
+     * Get Charge
+     * @return charge value
+     */
+    double getIntegratedCharge();
+    /**
+     * returns ID of component that is responsible for this payload
+     * @return source ID
+     */
+    ISourceID getSourceID();
+
+    /**
+     * returns ID of trigger
+     * @return configuration ID
+     */
+    int getTriggerConfigID();
+
+    /**
+     * returns type of trigger
+     * @return trigger type
+     */
+    int getTriggerType();
 
     /**
      * Return<tt>true</tt> if this hit has a channel ID instead of

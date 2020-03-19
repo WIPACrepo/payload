@@ -15,7 +15,8 @@ import org.apache.log4j.Logger;
 public class VitreousBufferCache
     implements IByteBufferCache, VitreousBufferCacheMBean
 {
-    private static final Logger LOG = Logger.getLogger(VitreousBufferCache.class);
+    private static final Logger LOG =
+        Logger.getLogger(VitreousBufferCache.class);
 
     private String name;
     private int acquiredBufferCount;
@@ -64,19 +65,11 @@ public class VitreousBufferCache
     }
 
     /**
-     * Do nothing
-     */
-    @Override
-    public void flush()
-    {
-    }
-
-    /**
      * Get number of currently buffers acquired
      * @return value
      */
     @Override
-    public synchronized int getCurrentAquiredBuffers()
+    public synchronized int getCurrentAcquiredBuffers()
     {
         return acquiredBufferCount;
     }
@@ -86,7 +79,7 @@ public class VitreousBufferCache
      * @return value
      */
     @Override
-    public synchronized long getCurrentAquiredBytes()
+    public synchronized long getCurrentAcquiredBytes()
     {
         return acquiredBytes;
     }
@@ -181,15 +174,6 @@ public class VitreousBufferCache
     }
 
     /**
-     * Do nothing
-     * @param tBuffer ignored
-     */
-    @Override
-    public void receiveByteBuffer(ByteBuffer tBuffer)
-    {
-    }
-
-    /**
      * Get number of buffers returned.
      * @return value
      */
@@ -200,29 +184,11 @@ public class VitreousBufferCache
     }
 
     /**
-     * Return 0.
-     * @return 0
-     */
-    public int getReturnBufferEntryCount()
-    {
-        return 0;
-    }
-
-    /**
-     * Return 0.
-     * @return 0
-     */
-    public long getReturnBufferTime()
-    {
-        return 0;
-    }
-
-    /**
      * Does this buffer cache have an upper limit?
      * @return <tt>true</tt> if cache is bounded
      */
     @Override
-    public boolean getIsCacheBounded()
+    public boolean isCacheBounded()
     {
         return (maxAcquiredBytes > 0);
     }
@@ -232,7 +198,7 @@ public class VitreousBufferCache
      * @return value
      */
     @Override
-    public long getMaxAquiredBytes()
+    public long getMaxAcquiredBytes()
     {
         return maxAcquiredBytes;
     }

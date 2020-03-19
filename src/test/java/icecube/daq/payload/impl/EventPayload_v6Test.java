@@ -2,7 +2,6 @@ package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.IHitDataPayload;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadChecker;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.test.LoggingCase;
@@ -101,7 +100,7 @@ public class EventPayload_v6Test
 
         assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
-        assertEquals("Bad UID", uid, evt.getEventUID());
+        assertEquals("Bad UID", uid, evt.getUID());
         assertEquals("Bad first UTC time",
                      firstTime, evt.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",
@@ -183,7 +182,7 @@ public class EventPayload_v6Test
 
             assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
-            assertEquals("Bad UID", uid, evt.getEventUID());
+            assertEquals("Bad UID", uid, evt.getUID());
             assertEquals("Bad first UTC time",
                          firstTime, evt.getFirstTimeUTC().longValue());
             assertEquals("Bad last UTC time",
@@ -301,7 +300,7 @@ public class EventPayload_v6Test
 
         assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
-        assertEquals("Bad UID", uid, evt.getEventUID());
+        assertEquals("Bad UID", uid, evt.getUID());
         assertEquals("Bad first UTC time",
                      firstTime, evt.getFirstTimeUTC().longValue());
         assertEquals("Bad last UTC time",

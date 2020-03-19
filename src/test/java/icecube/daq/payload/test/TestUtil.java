@@ -3,7 +3,7 @@ package icecube.daq.payload.test;
 import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.IHitDataPayload;
-import icecube.daq.payload.ILoadablePayload;
+import icecube.daq.payload.IPayload;
 import icecube.daq.payload.IReadoutDataPayload;
 import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.IReadoutRequestElement;
@@ -18,6 +18,7 @@ import icecube.daq.payload.impl.TriggerRequest;
 import icecube.daq.util.IDOMRegistry;
 
 import java.lang.reflect.Array;
+import java.util.Collection;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -42,20 +43,20 @@ class RequestData
         srcId = tr.getSourceID().getSourceID();
         startTime = tr.getFirstTimeUTC().longValue();
         endTime = tr.getLastTimeUTC().longValue();
-        List payList = tr.getPayloads();
+        Collection<IPayload> payList = tr.getPayloads();
         if (payList != null) {
             hitIndices = buildHitIndexList(domRegistry, payList, hitList);
         }
     }
 
     private static int[] buildHitIndexList(IDOMRegistry domRegistry,
-                                           List reqHits,
+                                           Collection<IPayload> reqHits,
                                            List<IEventHitRecord> hitList)
     {
         ArrayList<IHitDataPayload> tmpHits = new ArrayList<IHitDataPayload>();
-        for (Object obj : reqHits) {
-            if (obj instanceof IHitDataPayload) {
-                tmpHits.add((IHitDataPayload) obj);
+        for (IPayload pay : reqHits) {
+            if (pay instanceof IHitDataPayload) {
+                tmpHits.add((IHitDataPayload) pay);
             }
         }
 
@@ -669,7 +670,7 @@ public abstract class TestUtil
         }
 
         try {
-            ((ILoadablePayload) trigReq).loadPayload();
+            ((IPayload) trigReq).loadPayload();
         } catch (Exception ex) {
             throw new PayloadFormatException("Cannot load trigger request " +
                                              trigReq);
@@ -682,22 +683,22 @@ public abstract class TestUtil
         trigList.add(topReq);
         trigLen += topReq.length();
 
-        List subtrigs = trigReq.getPayloads();
+        Collection<IPayload> subtrigs = trigReq.getPayloads();
         if (subtrigs != null) {
-            for (Object tr : subtrigs) {
-                if (tr instanceof ITriggerRequestPayload) {
+            for (IPayload pay : subtrigs) {
+                if (pay instanceof ITriggerRequestPayload) {
                     try {
-                        ((ILoadablePayload) tr).loadPayload();
+                        pay.loadPayload();
                     } catch (Exception ex) {
                         System.err.println("Ignoring unloadable subtrigger " +
-                                           tr);
+                                           pay);
                         ex.printStackTrace();
                         continue;
                     }
 
                     RequestData reqData =
                         new RequestData(domRegistry,
-                                        (ITriggerRequestPayload) tr,
+                                        (ITriggerRequestPayload) pay,
                                         hitList);
                     trigList.add(reqData);
                     trigLen += reqData.length();
@@ -763,7 +764,7 @@ public abstract class TestUtil
             createHitRecords(hitList, firstTime, true, forceCompression);
 
         try {
-            ((ILoadablePayload) trigReq).loadPayload();
+            ((IPayload) trigReq).loadPayload();
         } catch (Exception ex) {
             throw new PayloadFormatException("Cannot load trigger request " +
                                              trigReq);
@@ -776,23 +777,22 @@ public abstract class TestUtil
         trigList.add(topReq);
         trigLen += topReq.length();
 
-        List subtrigs = trigReq.getPayloads();
+        Collection<IPayload> subtrigs = trigReq.getPayloads();
         if (subtrigs != null) {
-            for (Object tr : subtrigs) {
-                if (tr instanceof ITriggerRequestPayload) {
+            for (IPayload pay : subtrigs) {
+                if (pay instanceof ITriggerRequestPayload) {
                     try {
-                        ((ILoadablePayload) tr).loadPayload();
+                        pay.loadPayload();
                     } catch (Exception ex) {
                         System.err.println("Ignoring unloadable subtrigger " +
-                                           tr);
+                                           pay);
                         ex.printStackTrace();
                         continue;
                     }
 
                     RequestData reqData =
                         new RequestData(domRegistry,
-                                        (ITriggerRequestPayload) tr,
-                                        hitList);
+                                        (ITriggerRequestPayload) pay, hitList);
                     trigList.add(reqData);
                     trigLen += reqData.length();
                 }
@@ -1873,7 +1873,7 @@ public abstract class TestUtil
 
         List hitList = new ArrayList();
 
-        List pList;
+        Collection<IPayload> pList;
         try {
             pList = req.getPayloads();
         } catch (Exception ex) {
@@ -1882,9 +1882,9 @@ public abstract class TestUtil
             pList = null;
         }
         if (pList != null) {
-            for (Object pay : pList) {
+            for (IPayload pay : pList) {
                 try {
-                    ((ILoadablePayload) pay).loadPayload();
+                    pay.loadPayload();
                 } catch (Exception ex) {
                     System.err.println("Ignoring unloadable payload " + pay);
                     ex.printStackTrace();
@@ -2093,10 +2093,10 @@ public abstract class TestUtil
         }
 
         long domId;
-        if (elem.getDomID() == null) {
+        if (elem.getDOMID() == null) {
             domId = -1;
         } else {
-            domId = elem.getDomID().longValue();
+            domId = elem.getDOMID().longValue();
         }
 
         putReadoutRequestElement(buf, elem.getReadoutType(), srcId, firstTime,

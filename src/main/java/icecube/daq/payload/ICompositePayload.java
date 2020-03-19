@@ -13,13 +13,13 @@ package icecube.daq.payload;
 import java.util.List;
 
 /**
- * Composite of ITriggerPayloads
+ * Composite of IPayloads
  *
  * @version $Id: ICompositePayload.java,v 1.3 2004/12/13 16:16:27 dwharton Exp $
  * @author hellwig, dwharton
  */
 public interface ICompositePayload
-    extends ITriggerPayload
+    extends IPayload
 {
     /**
      * returns start time of interval
@@ -34,16 +34,20 @@ public interface ICompositePayload
     IUTCTime getLastTimeUTC();
 
     /**
-     * get list of Payload's.
-     * @return list of Payloads
-     * @throws PayloadFormatException for some unknown reason
+     * returns ID of component that is responsible for this payload
+     * @return source ID
      */
-    List getPayloads() throws PayloadFormatException;
+    ISourceID getSourceID();
 
     /**
-     * get timeordered list of all hits contained in Composite, this
-     * is the unique list of  Payload's which are IHitPayload's
-     * @return list of hits
+     * returns ID of trigger
+     * @return configuration ID
      */
-    List getHitList();
+    int getTriggerConfigID();
+
+    /**
+     * returns type of trigger
+     * @return trigger type
+     */
+    int getTriggerType();
 }

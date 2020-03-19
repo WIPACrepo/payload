@@ -40,16 +40,6 @@ public class MockHitData
     }
 
     @Override
-    public void dispose()
-    {
-        utcTime = -1L;
-        trigType = -1;
-        cfgId = -1;
-        srcId = -1;
-        domId = -1L;
-    }
-
-    @Override
     public short getChannelID()
     {
         throw new Error("Unimplemented");
@@ -148,7 +138,11 @@ public class MockHitData
     @Override
     public void recycle()
     {
-        dispose();
+        utcTime = -1L;
+        trigType = -1;
+        cfgId = -1;
+        srcId = -1;
+        domId = -1L;
     }
 
     @Override

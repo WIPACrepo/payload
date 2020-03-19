@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -477,7 +478,7 @@ public abstract class PayloadChecker
      */
     private static String getEventString(IEventPayload evt)
     {
-        return "event #" + evt.getEventUID();
+        return "event #" + evt.getUID();
     }
 
     /**
@@ -501,7 +502,7 @@ public abstract class PayloadChecker
      */
     private static String getReadoutDataString(IReadoutDataPayload rdp)
     {
-        return "RDP #" + rdp.getRequestUID();
+        return "RDP #" + rdp.getUID();
     }
 
     /**
@@ -513,7 +514,7 @@ public abstract class PayloadChecker
      */
     private static String getRRElementString(IReadoutRequestElement elem)
     {
-        String domStr = getDOMString(elem.getDomID());
+        String domStr = getDOMString(elem.getDOMID());
         String srcStr = getSourceString(elem.getSourceID());
 
         return "rrElem[" + getReadoutType(elem.getReadoutType()) +
@@ -627,7 +628,7 @@ public abstract class PayloadChecker
     private static List<IHitPayload> getTrigReqHits(ITriggerRequestPayload tr,
                                                     List<IHitPayload> hitList)
     {
-        List payList;
+        Collection<IPayload> payList;
         try {
             payList = tr.getPayloads();
         } catch (PayloadFormatException pfe) {
@@ -641,20 +642,19 @@ public abstract class PayloadChecker
             long trigStart = tr.getFirstTimeUTC().longValue();
             long trigFinish = tr.getLastTimeUTC().longValue();
 
-            for (Object obj : payList) {
-                if (obj instanceof ITriggerRequestPayload) {
-                    getTrigReqHits((ITriggerRequestPayload) obj,
-                                          hitList);
-                } else if (obj instanceof IHitPayload) {
-                    long hitTime = ((IHitPayload) obj).getUTCTime();
+            for (IPayload pay : payList) {
+                if (pay instanceof ITriggerRequestPayload) {
+                    getTrigReqHits((ITriggerRequestPayload) pay, hitList);
+                } else if (pay instanceof IHitPayload) {
+                    long hitTime = ((IHitPayload) pay).getUTCTime();
                     if (hitTime >= trigStart && hitTime <= trigFinish) {
-                        hitList.add((IHitPayload) obj);
+                        hitList.add((IHitPayload) pay);
                         numHits++;
                     } else {
-                        LOG.error("Trigger contains bogus hit " + obj);
+                        LOG.error("Trigger contains bogus hit " + pay);
                     }
                 } else {
-                    LOG.error("Unrecognized payload " + obj +
+                    LOG.error("Unrecognized payload " + pay +
                               " in " + tr);
                 }
             }
@@ -887,10 +887,8 @@ public abstract class PayloadChecker
      */
     private static boolean loadPayload(IPayload pay)
     {
-        ILoadablePayload loadable = (ILoadablePayload) pay;
-
         try {
-            loadable.loadPayload();
+            pay.loadPayload();
         } catch (IOException ioe) {
             LOG.error("Couldn't load payload", ioe);
             return false;
@@ -979,7 +977,7 @@ public abstract class PayloadChecker
      * @param pay payload to dump
      * @return string dump of payload bytes
      */
-    public static String dumpPayloadBytes(IWriteablePayload pay)
+    public static String dumpPayloadBytes(IPayload pay)
     {
         return dumpPayloadBytes(pay, "payBytes");
     }
@@ -990,7 +988,7 @@ public abstract class PayloadChecker
      * @param name name  of byte array
      * @return string dump of payload bytes
      */
-    public static String dumpPayloadBytes(IWriteablePayload pay, String name)
+    public static String dumpPayloadBytes(IPayload pay, String name)
     {
         ByteBuffer buf = ByteBuffer.allocate(pay.length());
         try {
@@ -1167,10 +1165,10 @@ public abstract class PayloadChecker
                     return false;
                 }
 
-                List rdpHits = rdp.getHitList();
+                List<IHitData> rdpHits = rdp.getHitList();
                 if (rdpHits != null) {
-                    for (Object rh : rdpHits) {
-                        evtHits.add((IHitDataPayload) rh);
+                    for (IHitData rhit : rdpHits) {
+                        evtHits.add((IHitDataPayload) rhit);
                     }
                 }
 
@@ -1178,7 +1176,7 @@ public abstract class PayloadChecker
             } else if (obj instanceof IHitRecordList) {
                 IHitRecordList recList = (IHitRecordList) obj;
 
-                LOG.error("Event #" + evt.getEventUID() + " contains" +
+                LOG.error("Event #" + evt.getUID() + " contains" +
                           " hit record list #" + recList.getUID() +
                           " instead of readout data payload");
                 return false;
@@ -1324,8 +1322,9 @@ public abstract class PayloadChecker
         } else if (pay instanceof IHitPayload) {
             // hits have nothing to validate
             rtnVal = true;
-        } else if (pay instanceof IDomHit) {
-            // DOM hits have nothing to validate
+        } else if (pay instanceof IHitRecordList) {
+            // XXX fill this in!
+            LOG.error("Not validating IHitRecordList objects");
             rtnVal = true;
         } else {
             LOG.error("Unknown payload type " + pay.getClass().getName());
@@ -1434,7 +1433,7 @@ public abstract class PayloadChecker
             }
         }
 
-        List payList;
+        Collection<IPayload> payList;
         try {
             payList = tr.getPayloads();
         } catch (PayloadFormatException pfe) {
@@ -1443,9 +1442,9 @@ public abstract class PayloadChecker
         }
 
         if (payList != null) {
-            for (Object obj : payList) {
-                if (obj instanceof ITriggerRequestPayload) {
-                    ITriggerRequestPayload subTR = (ITriggerRequestPayload) obj;
+            for (IPayload pay : payList) {
+                if (pay instanceof ITriggerRequestPayload) {
+                    ITriggerRequestPayload subTR = (ITriggerRequestPayload) pay;
                     loadPayload(subTR);
 
                     String subDesc = getTriggerRequestString(subTR);
@@ -1466,8 +1465,8 @@ public abstract class PayloadChecker
                     if (!validateTriggerRequest(subTR, verbose)) {
                         return false;
                     }
-                } else if (obj instanceof IHitPayload) {
-                    IHitPayload hit = (IHitPayload) obj;
+                } else if (pay instanceof IHitPayload) {
+                    IHitPayload hit = (IHitPayload) pay;
                     loadPayload(hit);
 
                     IUTCTime time = hit.getHitTimeUTC();
@@ -1480,7 +1479,7 @@ public abstract class PayloadChecker
                     }
                 } else {
                     LOG.error("Unknown payload type " +
-                              obj.getClass().getName() + " in " + trDesc);
+                              pay.getClass().getName() + " in " + trDesc);
                     return false;
                 }
             }

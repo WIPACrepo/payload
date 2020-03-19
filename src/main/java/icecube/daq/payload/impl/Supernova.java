@@ -147,19 +147,10 @@ public class Supernova
     }
 
     /**
-     * Unimplemented
-     */
-    @Override
-    public void dispose()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
      * Get the DOM ID
      * @return DOM ID
      */
-    public long getDomId()
+    public long getDOMID()
     {
         return domId;
     }

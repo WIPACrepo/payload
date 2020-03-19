@@ -133,15 +133,6 @@ public class SimplerHit
     }
 
     /**
-     * Unimplemented
-     */
-    @Override
-    public void dispose()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
      * Get a byte buffer containing this payload
      * @param cache buffer cache
      * @param utcTime UTC time

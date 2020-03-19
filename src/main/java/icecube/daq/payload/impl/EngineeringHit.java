@@ -219,7 +219,7 @@ public class EngineeringHit
         return EngineeringHitData.writePayloadToBuffer(buf, offset,
                                                        getTimestamp(),
                                                        getTriggerMode(), srcId,
-                                                       getDomId(), clockBytes,
+                                                       getDOMID(), clockBytes,
                                                        atwdChip, lenFADC,
                                                        affByte0, affByte1,
                                                        trigMode, waveformData);

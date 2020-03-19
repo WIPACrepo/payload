@@ -55,11 +55,11 @@ public interface IReadoutRequestElement
     int getReadoutType();
 
     /**
-     * getDomID()
+     * getDOMID()
      * @return IDOMID object if request is for single DOM
      *                  null if request is not specific to a single DOM.
      */
-    IDOMID getDomID();
+    IDOMID getDOMID();
 
     /**
      * getSourceID()

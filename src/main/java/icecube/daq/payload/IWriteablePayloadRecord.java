@@ -9,12 +9,24 @@ import java.nio.ByteBuffer;
  * @author dwharton
  */
 public interface IWriteablePayloadRecord
-    extends IPayloadRecord
 {
     /**
-     * Method to de-initialize this object in preparation for reuse.
+     * Determines if this record is loaded with valid data.
+     * @return true if data is loaded, false otherwise.
      */
-    void dispose();
+    boolean isDataLoaded();
+
+    /**
+     * Loads the data from the buffer into the container record.
+     * @param iRecordOffset the offset from which to start loading the data
+     *                      from the engine.
+     * @param tBuffer ByteBuffer from which to construct the record.
+     *
+     * @exception PayloadFormatException if the record is not of the correct
+     *            format
+     */
+    void loadData(int iRecordOffset, ByteBuffer tBuffer)
+        throws PayloadFormatException;
 
     /**
      * Method to write this record to the payload destination.

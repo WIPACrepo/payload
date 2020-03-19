@@ -70,8 +70,8 @@ public class ReadoutRequestElementTest
                          elem.getLastTimeUTC().longValue());
             assertEquals("Bad element#" + i + " DOM ID",
                          (i == 0 ? domId1 : domId2),
-                         (elem.getDomID() == null ? -1L :
-                          elem.getDomID().longValue()));
+                         (elem.getDOMID() == null ? -1L :
+                          elem.getDOMID().longValue()));
             assertEquals("Bad element#" + i + " source ID",
                          (i == 0 ? srcId1 : srcId2),
                          (elem.getSourceID() == null ? -1 :
@@ -144,10 +144,10 @@ public class ReadoutRequestElementTest
                         assertTrue("Badly sorted source: " + prevRRE + " > " +
                                    rre, val <= 0);
                         if (val == 0) {
-                            long pdom = prevRRE.getDomID() == null ? -1L :
-                                prevRRE.getDomID().longValue();
-                            long dom = rre.getDomID() == null ? -1L :
-                                rre.getDomID().longValue();
+                            long pdom = prevRRE.getDOMID() == null ? -1L :
+                                prevRRE.getDOMID().longValue();
+                            long dom = rre.getDOMID() == null ? -1L :
+                                rre.getDOMID().longValue();
 
                             val = psrc - src;
                             assertTrue("Badly sorted DOM: " + prevRRE + " > " +
@@ -202,8 +202,8 @@ public class ReadoutRequestElementTest
         assertEquals("Bad elem last time",
                      lastTime, elem.getLastTimeUTC().longValue());
         assertEquals("Bad elem DOM ID",
-                     domId, (elem.getDomID() == null ? -1L :
-                               elem.getDomID().longValue()));
+                     domId, (elem.getDOMID() == null ? -1L :
+                               elem.getDOMID().longValue()));
         assertEquals("Bad elem source ID",
                      srcId, (elem.getSourceID() == null ? -1 :
                                elem.getSourceID().getSourceID()));

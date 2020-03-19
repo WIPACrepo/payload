@@ -5,19 +5,15 @@ import icecube.daq.payload.IDOMID;
 import icecube.daq.payload.IEventHitRecord;
 import icecube.daq.payload.IHitData;
 import icecube.daq.payload.IHitPayload;
-import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadRegistry;
-import icecube.daq.payload.Poolable;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class MockHit
-    implements IHitData, IHitPayload, ILoadablePayload, IWriteablePayload,
-               Poolable
+    implements IHitData, IHitPayload
 {
     private long utcTime;
     private IUTCTime utcObj;
@@ -50,17 +46,6 @@ public class MockHit
         }
 
         return new MockHit(utcTime, trigType, cfgId, srcId, domId, trigMode);
-    }
-
-    /**
-     * Object is able to dispose of itself.
-     * This means it is able to return itself to the pool from
-     * which it came.
-     */
-    @Override
-    public void dispose()
-    {
-        // do nothing
     }
 
     @Override
@@ -117,17 +102,6 @@ public class MockHit
     public int getPayloadType()
     {
         return PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT;
-    }
-
-    /**
-     * Get an object from the pool in a non-static context.
-     *
-     * @return object of this type from the object pool.
-     */
-    @Override
-    public Poolable getPoolable()
-    {
-        return new MockSourceID(-1);
     }
 
     @Override

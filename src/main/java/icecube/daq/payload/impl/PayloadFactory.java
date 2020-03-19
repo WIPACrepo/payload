@@ -1,8 +1,7 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IByteBufferCache;
-import icecube.daq.payload.ILoadablePayload;
-import icecube.daq.payload.IWriteablePayload;
+import icecube.daq.payload.IPayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.SourceIdRegistry;
@@ -92,7 +91,7 @@ public class PayloadFactory
      * @return new payload
      * @throws PayloadException if there is a problem
      */
-    public IWriteablePayload getPayload(ByteBuffer buf, int offset)
+    public IPayload getPayload(ByteBuffer buf, int offset)
         throws PayloadException
     {
         if (buf == null) {
@@ -117,7 +116,7 @@ public class PayloadFactory
         final int type = buf.getInt(offset + BasePayload.OFFSET_TYPE);
         final long utcTime = buf.getLong(offset + BasePayload.OFFSET_UTCTIME);
 
-        IWriteablePayload pay;
+        IPayload pay;
 
         switch (type) {
         case PayloadRegistry.PAYLOAD_ID_SIMPLE_HIT:
@@ -187,7 +186,7 @@ public class PayloadFactory
 
         if (DOUBLE_CHECK_LENGTH) {
             try {
-                ((ILoadablePayload) pay).loadPayload();
+                ((IPayload) pay).loadPayload();
             } catch (IOException ioe) {
                 throw new PayloadException("Couldn't load payload", ioe);
             }

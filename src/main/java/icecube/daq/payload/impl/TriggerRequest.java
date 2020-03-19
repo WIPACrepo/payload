@@ -1,11 +1,11 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.ILoadablePayload;
+import icecube.daq.payload.IManagedObject;
+import icecube.daq.payload.IPayload;
 import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
 import icecube.daq.payload.IUTCTime;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.splicer.Spliceable;
@@ -13,7 +13,7 @@ import icecube.daq.splicer.Spliceable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Trigger request
@@ -82,7 +82,7 @@ public class TriggerRequest
     private IReadoutRequest rdoutReq;
 
     /** list of composite payloads */
-    private List<IWriteablePayload> compList;
+    private Collection<IPayload> compList;
 
     /** cached source ID object */
     private SourceID srcObj;
@@ -131,7 +131,7 @@ public class TriggerRequest
     public TriggerRequest(int uid, int trigType, int cfgId, int srcId,
                           long firstTime, long lastTime,
                           IReadoutRequest rdoutReq,
-                          List<IWriteablePayload> compList)
+                          Collection<IPayload> compList)
     {
         super(firstTime);
 
@@ -150,9 +150,9 @@ public class TriggerRequest
         this.lastTime = lastTime;
         this.rdoutReq = rdoutReq;
         if (compList == null) {
-            this.compList = new ArrayList<IWriteablePayload>();
+            this.compList = new ArrayList<IPayload>();
         } else {
-            this.compList = new ArrayList<IWriteablePayload>(compList);
+            this.compList = new ArrayList<IPayload>(compList);
         }
     }
 
@@ -166,12 +166,12 @@ public class TriggerRequest
     @Override
     public int compareSpliceable(Spliceable spliceable)
     {
-        if (!(spliceable instanceof ILoadablePayload)) {
+        if (!(spliceable instanceof IPayload)) {
             final String className = spliceable.getClass().getName();
             return getClass().getName().compareTo(className);
         }
 
-        long payTime = ((ILoadablePayload) spliceable).getUTCTime();
+        long payTime = ((IPayload) spliceable).getUTCTime();
         if (firstTime < payTime) {
             return -1;
         } else if (firstTime > payTime) {
@@ -195,7 +195,7 @@ public class TriggerRequest
         int bufLen = OFFSET_RDOUTREQ + rdoutReq.length() +
             LEN_COMPOSITE_HEADER;
 
-        for (IWriteablePayload comp : compList) {
+        for (IPayload comp : compList) {
             bufLen += comp.length();
         }
 
@@ -219,24 +219,15 @@ public class TriggerRequest
         }
 
         IReadoutRequest newRReq =
-            (IReadoutRequest) ((ILoadablePayload) rdoutReq).deepCopy();
+            (IReadoutRequest) ((IPayload) rdoutReq).deepCopy();
 
-        List<IWriteablePayload> newList = new ArrayList<IWriteablePayload>();
-        for (IWriteablePayload comp : compList) {
-            newList.add((IWriteablePayload) comp.deepCopy());
+        Collection<IPayload> newList = new ArrayList<IPayload>();
+        for (IPayload comp : compList) {
+            newList.add((IPayload) comp.deepCopy());
         }
 
         return new TriggerRequest(uid, trigType, cfgId, srcId, firstTime,
                                   lastTime, newRReq, newList);
-    }
-
-    /**
-     * Unimplemented
-     */
-    @Override
-    public void dispose()
-    {
-        throw new Error("Unimplemented");
     }
 
     /**
@@ -251,16 +242,6 @@ public class TriggerRequest
         }
 
         return firstTimeObj;
-    }
-
-    /**
-     * Unimplemented
-     * @return Error
-     */
-    @Override
-    public List getHitList()
-    {
-        throw new Error("Unimplemented");
     }
 
     /**
@@ -311,7 +292,7 @@ public class TriggerRequest
      * @return list of payloads
      */
     @Override
-    public List getPayloads()
+    public Collection<IPayload> getPayloads()
     {
         return compList;
     }
@@ -478,7 +459,7 @@ public class TriggerRequest
 
         rdoutReq = new ReadoutRequest(buf, pos + OFFSET_RDOUTREQ, firstTime);
         try {
-            ((ILoadablePayload) rdoutReq).loadPayload();
+            ((IPayload) rdoutReq).loadPayload();
         } catch (IOException ioe) {
             throw new PayloadException("Cannot load readout request", ioe);
         }
@@ -496,7 +477,7 @@ public class TriggerRequest
 
         final int numComp = (int) buf.getShort(rrPos + OFFSET_COMPNUM);
 
-        compList = new ArrayList<IWriteablePayload>();
+        compList = new ArrayList<IPayload>();
 
         int loadedBytes = loadCompositeData(buf, rrPos + OFFSET_COMPLEN +
                                             LEN_COMPOSITE_HEADER, numComp);
@@ -531,9 +512,9 @@ public class TriggerRequest
 
         PayloadFactory factory = getPayloadFactory();
         for (int i = 0; i < numData; i++) {
-            IWriteablePayload pay = factory.getPayload(buf, offset + totLen);
+            IPayload pay = factory.getPayload(buf, offset + totLen);
             try {
-                ((ILoadablePayload) pay).loadPayload();
+                ((IPayload) pay).loadPayload();
             } catch (IOException ioe) {
                 throw new PayloadException("Cannot load composite#" + i, ioe);
             }
@@ -625,7 +606,7 @@ public class TriggerRequest
         buf.putShort(pos + OFFSET_COMPNUM, (short) compList.size());
 
         int totLen = 0;
-        for (IWriteablePayload pay : compList) {
+        for (IPayload pay : compList) {
             final int expLen = pay.length();
 
             int len;
@@ -664,12 +645,12 @@ public class TriggerRequest
         lastTime = -1L;
 
         if (rdoutReq != null) {
-            rdoutReq.recycle();
+            ((IManagedObject) rdoutReq).recycle();
             rdoutReq = null;
         }
 
         if (compList != null) {
-            for (IWriteablePayload pay : compList) {
+            for (IPayload pay : compList) {
                 pay.recycle();
             }
             compList = null;

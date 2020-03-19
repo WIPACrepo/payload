@@ -1,14 +1,13 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.ISourceID;
-import icecube.daq.payload.Poolable;
 import icecube.daq.payload.SourceIdRegistry;
 
 /**
  * Component source ID
  */
 public class SourceID
-    implements ISourceID, Poolable
+    implements ISourceID
 {
     /** Value used by the trigger package */
     public static final int SIZE = 4;
@@ -53,15 +52,6 @@ public class SourceID
     }
 
     /**
-     * Do nothing
-     */
-    @Override
-    public void dispose()
-    {
-        // do nothing
-    }
-
-    /**
      * Is the specified object equal to this object?
      * @param obj object being compared
      * @return <tt>true</tt> if the objects are equal
@@ -70,17 +60,6 @@ public class SourceID
     public boolean equals(Object obj)
     {
         return compareTo(obj) == 0;
-    }
-
-    /**
-     * Get an object from the pool in a non-static context.
-     *
-     * @return object of this type from the object pool.
-     */
-    @Override
-    public Poolable getPoolable()
-    {
-        return new SourceID(-1);
     }
 
     /**
@@ -101,15 +80,6 @@ public class SourceID
     public int hashCode()
     {
         return id;
-    }
-
-    /**
-     * Clear out any cached data.
-     */
-    @Override
-    public void recycle()
-    {
-        id = -1;
     }
 
     /**

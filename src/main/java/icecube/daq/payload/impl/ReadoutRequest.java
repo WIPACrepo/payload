@@ -194,15 +194,6 @@ public class ReadoutRequest
     }
 
     /**
-     * Unimplemented
-     */
-    @Override
-    public void dispose()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
      * Get the length of an embedded readout request
      * @return number of bytes
      */

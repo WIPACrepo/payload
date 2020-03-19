@@ -1,9 +1,9 @@
 package icecube.daq.payload.impl;
 
 import icecube.daq.payload.IByteBufferCache;
+import icecube.daq.payload.IPayload;
 import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.ITriggerRequestPayload;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadException;
 import icecube.daq.splicer.Spliceable;
 
@@ -60,7 +60,7 @@ public class TriggerRequestFactory
                                                 int cfgId, int srcId,
                                                 long firstTime, long lastTime,
                                                 IReadoutRequest rdoutReq,
-                                                List<IWriteablePayload> list)
+                                                List<IPayload> list)
     {
         TriggerRequest trigReq =
             new TriggerRequest(uid, trigType, cfgId, srcId, firstTime, lastTime,

@@ -1,7 +1,7 @@
 package icecube.daq.payload.test;
 
-import icecube.daq.payload.ILoadablePayload;
 import icecube.daq.payload.IByteBufferCache;
+import icecube.daq.payload.IPayload;
 import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.ISourceID;
 import icecube.daq.payload.ITriggerRequestPayload;
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class MockTriggerRequest
-    implements ILoadablePayload, ITriggerRequestPayload
+    implements IPayload, ITriggerRequestPayload
 {
     private long utcTime;
     private int uid;
@@ -62,7 +62,7 @@ public class MockTriggerRequest
             newList = new ArrayList(dataList.size());
 
             for (Iterator iter = dataList.iterator(); iter.hasNext(); ) {
-                newList.add(((ILoadablePayload) iter.next()).deepCopy());
+                newList.add(((IPayload) iter.next()).deepCopy());
             }
         }
 
@@ -70,7 +70,7 @@ public class MockTriggerRequest
         if (rReq == null) {
             newReq = null;
         } else {
-            newReq = (IReadoutRequest) ((ILoadablePayload) rReq).deepCopy();
+            newReq = (IReadoutRequest) ((IPayload) rReq).deepCopy();
         }
 
         return new MockTriggerRequest(utcTime, uid, type, cfgId, srcId,
@@ -78,21 +78,9 @@ public class MockTriggerRequest
     }
 
     @Override
-    public void dispose()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    @Override
     public IUTCTime getFirstTimeUTC()
     {
         return new MockUTCTime(firstTime);
-    }
-
-    @Override
-    public List getHitList()
-    {
-        throw new Error("Unimplemented");
     }
 
     @Override

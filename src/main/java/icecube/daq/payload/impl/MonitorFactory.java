@@ -1,6 +1,6 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.IWriteablePayload;
+import icecube.daq.payload.IPayload;
 import icecube.daq.payload.PayloadException;
 
 import java.nio.ByteBuffer;
@@ -31,8 +31,8 @@ public final class MonitorFactory
      * @return created payload
      * @throws PayloadException if there is a problem
      */
-    public static IWriteablePayload getPayload(ByteBuffer buf, int offset,
-                                               int len, long utcTime)
+    public static IPayload getPayload(ByteBuffer buf, int offset, int len,
+                                      long utcTime)
         throws PayloadException
     {
         short recLen = buf.getShort(offset + OFFSET_RECLEN);

@@ -1,6 +1,5 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.test.MockDOMID;
 import icecube.daq.payload.test.MockHit;
@@ -71,7 +70,7 @@ public class TimeCalibrationTest
         TimeCalibration tcal = new TimeCalibration(buf, 0);
         tcal.loadPayload();
 
-        assertEquals("Bad DOM ID", domId, tcal.getDomId());
+        assertEquals("Bad DOM ID", domId, tcal.getDOMID());
 
         short[] waveForm;
 

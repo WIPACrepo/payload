@@ -3,7 +3,6 @@ package icecube.daq.payload.impl;
 import icecube.daq.payload.IHitPayload;
 import icecube.daq.payload.IReadoutRequest;
 import icecube.daq.payload.IReadoutRequestElement;
-import icecube.daq.payload.IWriteablePayload;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.impl.ReadoutRequestElement;
 import icecube.daq.payload.test.MockDOMID;
@@ -84,8 +83,8 @@ public class ReadoutRequestTest
                          elem.getLastTimeUTC().longValue());
             assertEquals("Bad element#" + i + " DOM ID",
                          (i == 0 ? domId1 : domId2),
-                         (elem.getDomID() == null ? -1L :
-                          elem.getDomID().longValue()));
+                         (elem.getDOMID() == null ? -1L :
+                          elem.getDOMID().longValue()));
             assertEquals("Bad element#" + i + " source ID",
                          (i == 0 ? srcId1 : srcId2),
                          (elem.getSourceID() == null ? -1 :
@@ -138,8 +137,8 @@ public class ReadoutRequestTest
         assertEquals("Bad rrElem last time",
                      rrLastTime, elem.getLastTimeUTC().longValue());
         assertEquals("Bad rrElem DOM ID",
-                     rrDomId, (elem.getDomID() == null ? -1L :
-                               elem.getDomID().longValue()));
+                     rrDomId, (elem.getDOMID() == null ? -1L :
+                               elem.getDOMID().longValue()));
         assertEquals("Bad rrElem source ID",
                      rrSrcId, (elem.getSourceID() == null ? -1 :
                                elem.getSourceID().getSourceID()));

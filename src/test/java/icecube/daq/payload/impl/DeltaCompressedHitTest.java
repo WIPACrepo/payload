@@ -79,7 +79,7 @@ public class DeltaCompressedHitTest
         assertEquals("Bad loaded triggerMode",
                      TestUtil.getEngFmtTriggerMode(trigFlags),
                      hit.getTriggerMode());
-        assertEquals("Bad DOM ID value", domId, hit.getDomId());
+        assertEquals("Bad DOM ID value", domId, hit.getDOMID());
         assertEquals("Bad timestamp", utcTime, hit.getTimestamp());
 
         byte[] compressedData = hit.getCompressedData();

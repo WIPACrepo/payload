@@ -1,6 +1,6 @@
 package icecube.daq.payload.impl;
 
-import icecube.daq.payload.IWriteablePayload;
+import icecube.daq.payload.IPayload;
 import icecube.daq.payload.PayloadChecker;
 import icecube.daq.payload.PayloadRegistry;
 import icecube.daq.payload.test.LoggingCase;
@@ -84,8 +84,7 @@ setVerbose(true);
             new MockReadoutData(uid, srcId, firstTime, lastTime);
         rdp.add(hitData);
 
-        ArrayList<IWriteablePayload> rdpList =
-            new ArrayList<IWriteablePayload>();
+        ArrayList<IPayload> rdpList = new ArrayList<IPayload>();
         rdpList.add(rdp);
 
         EventPayload_v4 evt =
@@ -99,7 +98,7 @@ setVerbose(true);
 
         assertTrue("Bad event", PayloadChecker.validateEvent(evt, true));
 
-        assertEquals("Bad UID", uid, evt.getEventUID());
+        assertEquals("Bad UID", uid, evt.getUID());
         assertEquals("Bad source ID", srcId, evt.getSourceID().getSourceID());
         assertEquals("Bad first UTC time",
                      firstTime, evt.getFirstTimeUTC().longValue());
@@ -116,8 +115,7 @@ setVerbose(true);
 //        assertNull("Non-null hit list", evt.getHitList());
 
 /*
-        ArrayList<IWriteablePayload> hitList =
-            new ArrayList<IWriteablePayload>();
+        ArrayList<IPayload> hitList = new ArrayList<IPayload>();
         hitList.add(hitData);
 
         ByteBuffer buf =
@@ -205,7 +203,7 @@ setVerbose(true);
 //        assertEquals("Bad payload UTC time",
 //                     firstTime, evt.getPayloadTimeUTC().longValue());
 
-        assertEquals("Bad UID", uid, evt.getEventUID());
+        assertEquals("Bad UID", uid, evt.getUID());
         assertEquals("Bad source ID", srcId, evt.getSourceID().getSourceID());
         assertEquals("Bad first UTC time",
                      firstTime, evt.getFirstTimeUTC().longValue());

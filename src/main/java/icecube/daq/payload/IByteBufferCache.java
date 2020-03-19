@@ -40,13 +40,13 @@ public interface IByteBufferCache
      * but have not yet been returned.
      * @return current number of buffers acquired but not returned
      */
-    int getCurrentAquiredBuffers();
+    int getCurrentAcquiredBuffers();
     /**
      * Returns the current number of bytes which are contained in the buffers
      * which have not yet been returned.
      * @return current number of bytes acquired but not returned
      */
-    long getCurrentAquiredBytes();
+    long getCurrentAcquiredBytes();
 
     /**
      * Have all acquired bytes/buffers been returned and do total buffers
@@ -67,12 +67,6 @@ public interface IByteBufferCache
     ByteBuffer acquireBuffer(int iLength);
 
     /**
-     * Receives a ByteBuffer from a source.
-     * @param tBuffer ByteBuffer the new buffer to be processed.
-     */
-    void receiveByteBuffer(ByteBuffer tBuffer);
-
-    /**
      * Returns the ByteBuffer to the cache.
      * @param tByteBuffer ByteBuffer to be returned.
      */
@@ -85,20 +79,15 @@ public interface IByteBufferCache
     void returnBuffer(int numBytes);
 
     /**
-     * Flushes all the unused buffers in the cache.
-     */
-    void flush();
-
-    /**
      * Returns whether or not the cache is bounded.
      * @return has an upper bound been set for this cache?
      */
-    boolean getIsCacheBounded();
+    boolean isCacheBounded();
 
     /**
      * Returns the current number of bytes which are contained in the buffers
      * which have not yet been returned.
      * @return nothing?!?!?
      */
-    long getMaxAquiredBytes();
+    long getMaxAcquiredBytes();
 }
