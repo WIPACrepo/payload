@@ -194,16 +194,6 @@ public class EngineeringHitData
     }
 
     /**
-     * Unimplemented
-     * @return Error
-     */
-    @Override
-    public IUTCTime getHitTimeUTC()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    /**
      * Get the name of this payload.
      * @return name
      */

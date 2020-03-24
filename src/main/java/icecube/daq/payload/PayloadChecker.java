@@ -1359,7 +1359,7 @@ public abstract class PayloadChecker
 
                 ISourceID hitSrc = hit.getSourceID();
                 String hitDesc = getHitString(hit);
-                IUTCTime time = hit.getHitTimeUTC();
+                IUTCTime time = hit.getPayloadTimeUTC();
 
                 if (!isIntervalContained(rdpDesc, rdpFirst, rdpLast,
                                          hitDesc, time, time, verbose))
@@ -1469,7 +1469,7 @@ public abstract class PayloadChecker
                     IHitPayload hit = (IHitPayload) pay;
                     loadPayload(hit);
 
-                    IUTCTime time = hit.getHitTimeUTC();
+                    IUTCTime time = hit.getPayloadTimeUTC();
                     String hitDesc = "hit@" + time;
 
                     if (!isIntervalContained(trDesc, trFirst, trLast,

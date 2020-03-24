@@ -72,12 +72,6 @@ class TemporaryHit
     }
 
     @Override
-    public IUTCTime getHitTimeUTC()
-    {
-        throw new Error("Unimplemented");
-    }
-
-    @Override
     public double getIntegratedCharge()
     {
         throw new Error("Unimplemented");

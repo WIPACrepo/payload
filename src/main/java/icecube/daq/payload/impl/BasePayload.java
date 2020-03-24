@@ -32,6 +32,8 @@ public abstract class BasePayload
 
     /** This payload's time */
     private long utcTime;
+    /** the cached UTCTime */
+    private UTCTime timeObj;
 
     /** The byte buffer from which this payload was extracted (may be null) */
     private ByteBuffer buf;
@@ -178,7 +180,11 @@ public abstract class BasePayload
     @Override
     public IUTCTime getPayloadTimeUTC()
     {
-        return new UTCTime(utcTime);
+        if (timeObj == null) {
+            timeObj = new UTCTime(getUTCTime());
+        }
+
+        return timeObj;
     }
 
     /**
@@ -295,6 +301,7 @@ public abstract class BasePayload
     public void recycle()
     {
         utcTime = -1L;
+        timeObj = null;
 
         // XXX the 'offset == 0' check is a bit of a hack to ensure we
         //     don't "deallocate" a payload which was inside another payload
@@ -323,6 +330,7 @@ public abstract class BasePayload
     public void setUTCTime(long time)
     {
         utcTime = time;
+        timeObj = null;
     }
 
     /**

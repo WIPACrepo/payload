@@ -16,6 +16,9 @@ abstract class BaseHitData
     extends BasePayload
     implements IHitData, IHitDataPayload
 {
+    /** Cached UTC time object */
+    private UTCTime timeObj;
+
     /**
      * Create base class of a hit data payload
      * @param utcTime hit time
@@ -56,13 +59,6 @@ abstract class BaseHitData
     }
 
     /**
-     * Return the time this hit occurred.
-     * @return hit time
-     */
-    @Override
-    public abstract IUTCTime getHitTimeUTC();
-
-    /**
      * Unimplemented
      * @return Error
      */
@@ -79,7 +75,11 @@ abstract class BaseHitData
     @Override
     public IUTCTime getPayloadTimeUTC()
     {
-        return getHitTimeUTC();
+        if (timeObj == null) {
+            timeObj = new UTCTime(getUTCTime());
+        }
+
+        return timeObj;
     }
 
     /**

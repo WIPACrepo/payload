@@ -32,12 +32,6 @@ public interface IHitPayload
     IDOMID getDOMID();
 
     /**
-     * Get Hit Time (leading edge)
-     * @return hit time
-     */
-    IUTCTime getHitTimeUTC();
-
-    /**
      * Get Charge
      * @return charge value
      */

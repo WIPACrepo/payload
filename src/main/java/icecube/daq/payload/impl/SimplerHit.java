@@ -201,20 +201,6 @@ public class SimplerHit
     }
 
     /**
-     * Get the hit time object
-     * @return hit time object
-     */
-    @Override
-    public IUTCTime getHitTimeUTC()
-    {
-        if (utcTimeObj == null) {
-            utcTimeObj = new UTCTime(getUTCTime());
-        }
-
-        return utcTimeObj;
-    }
-
-    /**
      * Unimplemented
      * @return Error
      */
@@ -241,7 +227,11 @@ public class SimplerHit
     @Override
     public IUTCTime getPayloadTimeUTC()
     {
-        return getHitTimeUTC();
+        if (utcTimeObj == null) {
+            utcTimeObj = new UTCTime(getUTCTime());
+        }
+
+        return utcTimeObj;
     }
 
     /**

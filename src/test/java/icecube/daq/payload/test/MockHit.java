@@ -71,16 +71,6 @@ public class MockHit
     }
 
     @Override
-    public IUTCTime getHitTimeUTC()
-    {
-        if (utcObj == null) {
-            utcObj = new MockUTCTime(utcTime);
-        }
-
-        return utcObj;
-    }
-
-    @Override
     public double getIntegratedCharge()
     {
         throw new Error("Unimplemented");
@@ -95,7 +85,11 @@ public class MockHit
     @Override
     public IUTCTime getPayloadTimeUTC()
     {
-        return getHitTimeUTC();
+        if (utcObj == null) {
+            utcObj = new MockUTCTime(utcTime);
+        }
+
+        return utcObj;
     }
 
     @Override

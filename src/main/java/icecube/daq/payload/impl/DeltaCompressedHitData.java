@@ -62,8 +62,6 @@ public class DeltaCompressedHitData
 
     /** Cached DOM ID object */
     private DOMID domObj;
-    /** Cached UTC time object */
-    private UTCTime timeObj;
     /** Cached source ID object */
     private SourceID srcObj;
 
@@ -164,20 +162,6 @@ public class DeltaCompressedHitData
     {
         return new DeltaHitRecord((byte) (pedestal & 0x3), chanId,
                                   getUTCTime(), word0, word2, data);
-    }
-
-    /**
-     * Get the hit time object
-     * @return hit time object
-     */
-    @Override
-    public IUTCTime getHitTimeUTC()
-    {
-        if (timeObj == null) {
-            timeObj = new UTCTime(getUTCTime());
-        }
-
-        return timeObj;
     }
 
     /**
